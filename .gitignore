@@ -1,0 +1,11 @@
+# Ignore local archives and temporary files
+Archive*/
+*.tmp
+*.log
+
+# Ignore editor settings
+.vscode/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
