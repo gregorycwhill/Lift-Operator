@@ -1,0 +1,79 @@
+        body { font-family: sans-serif; display: flex; flex-direction: row; gap: 20px; padding: 20px; background-color: #f4f4f9; }
+        #sidebar { width: 300px; display: flex; flex-direction: column; gap: 10px; }
+        
+        #world { position: relative; background: white; overflow: hidden; display: inline-grid; border: 3px solid #333; }
+        
+        .floor { display: flex; border-bottom: 1px solid #ccc; box-sizing: border-box; transition: background 1s; }
+        .label { width: 50px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: bold; background: #eee; border-right: 1px solid #ccc; z-index: 2; box-sizing: border-box; }
+        
+        .lobby { width: 360px; flex-shrink: 0; display: flex; align-items: center; flex-direction: row-reverse; justify-content: flex-start; gap: 2px; border-right: 1px dashed #999; padding-right: 5px; flex-wrap: wrap; height: 100%; position: relative; box-sizing: border-box; overflow: hidden; }
+        
+        .shaft { width: 120px; flex-shrink: 0; border-right: 1px solid #ddd; cursor: pointer; transition: background 0.2s; box-sizing: border-box; }
+        .shaft:hover { background: rgba(52, 152, 219, 0.1); }
+        
+        .lift { width: 116px; background: #3498db; position: absolute; z-index: 5; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: 2px; gap: 1px; box-sizing: border-box; transition: background 0.3s; }
+        .lift.sweep-mode { background: #9b59b6; }
+        .lift.priority-sweep-mode { background: #e74c3c; }
+        .lift.voting-mode { background: #f1c40f; } 
+        .lift.weighted-voting-mode { background: #e67e22; } 
+        
+        /* Hazards & Events */
+        .lift.jammed { animation: jamPulse 1s infinite; z-index: 6; }
+        .lift.jammed::after { content: "⚠️ JAMMED"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: yellow; font-size: 12px; font-weight: bold; background: rgba(0,0,0,0.8); padding: 2px 4px; border-radius: 4px; z-index: 20; pointer-events: none; width: 80%; text-align: center; }
+        
+        .lift.stinky { background-color: #8c9c3e !important; box-shadow: inset 0 0 15px 5px rgba(100, 255, 100, 0.4); animation: stinkPulse 2s infinite; }
+        .lift.stinky::before { content: "💨"; position: absolute; top: -18px; right: 2px; font-size: 18px; z-index: 20; }
+        .lift.stinky::after { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(144, 238, 144, 0.5); pointer-events: none; z-index: 10; animation: gasSwirl 2s infinite alternate; }
+        
+        .rooftop-party { background: linear-gradient(45deg, #ff9a9e, #fecfef, #a1c4fd) !important; animation: discoBg 3s infinite alternate; }
+        
+        @keyframes jamPulse { 0% { opacity: 1; filter: grayscale(0%); } 50% { opacity: 0.7; filter: grayscale(80%); } 100% { opacity: 1; filter: grayscale(0%); } }
+        @keyframes stinkPulse { 0% { filter: brightness(1); } 50% { filter: brightness(1.2); } 100% { filter: brightness(1); } }
+        @keyframes gasSwirl { 0% { opacity: 0.4; transform: scale(1); } 100% { opacity: 0.7; transform: scale(1.05); } }
+        @keyframes discoBg { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+        
+        .guest { width: 20px; height: 20px; border-radius: 4px; color: white; display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: bold; border: 1px solid rgba(0,0,0,0.1); position: relative; z-index: 15; }
+        
+		.guest.swol { min-width: 30px; padding: 0 4px; }
+		
+        /* VIP Star Shape */
+        .guest.vip { clip-path: polygon(50% 0%, 65% 32%, 100% 38%, 73% 63%, 80% 100%, 50% 80%, 20% 100%, 27% 63%, 0% 38%, 35% 32%); width: 28px; height: 28px; border-radius: 0; font-size: 12px; border: none; z-index: 18; }
+        
+        .happy { background: #2ecc71; } 
+        .annoyed { background: #f39c12; } 
+        .critical { background: #c0392b; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.4; } }
+        
+        .rage { background: #000000 !important; color: #fff; z-index: 25; }
+        
+        .partying { animation: partyBounce 0.4s infinite alternate; }
+        @keyframes partyBounce { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+        
+        .flying-out { position: absolute !important; animation: rageFly 2s linear forwards; pointer-events: none; margin: 0 !important; z-index: 100; }
+        @keyframes rageFly { 0% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-600px); opacity: 0; } }
+        
+        .stat-box { background: #fff; border: 2px solid #333; padding: 10px; border-radius: 8px; font-size: 18px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .clock { font-size: 24px; font-family: monospace; color: #2980b9; }
+        .lives { color: #e74c3c; }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: white; padding: 30px; border-radius: 8px; text-align: center; color: #333; box-shadow: 0 4px 15px rgba(0,0,0,0.3); min-width: 280px; max-height: 90vh; overflow-y: auto; }
+        .modal input { padding: 8px; font-size: 14px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; width: 80%; display: inline-block; }
+        .modal button { padding: 8px 15px; font-size: 14px; background-color: #27ae60; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .modal button:hover { background-color: #219150; }
+        
+        #lbList { text-align: left; margin: 15px 0; padding: 0; list-style: none; }
+        #lbList li { padding: 6px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-weight: bold; }
+
+        .debug-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 14px; padding-bottom: 5px; border-bottom: 1px solid #eee; }
+        .debug-row span { text-align: left; flex-grow: 1; font-weight: bold; }
+        .spinner-ctrl { display: flex; align-items: center; gap: 10px; }
+        .spinner-ctrl button { background: #34495e; padding: 4px 10px; font-size: 16px; border-radius: 4px; min-width: 32px; color: white; cursor: pointer; border: none; }
+        .spinner-ctrl button:hover { background: #2c3e50; }
+        .spinner-ctrl div { width: 60px; text-align: center; font-family: monospace; font-size: 14px; }
+		 
+		/* Make sure the inventory buttons don't have outline when clicked */
+        #inventory-bar button:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(41, 128, 185, 0.8) !important;
+        }

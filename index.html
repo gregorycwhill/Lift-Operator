@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lift Operator</title>
+    
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h2><span id="pilotNameDisplay">Pilot</span></h2>
+            <div class="seed-text">Seed: <span id="seedDisplay">----</span></div>
+        </div>
+        
+        <div class="stat-box" id="clock-display">3:00</div>
+        
+        <div class="stats-row">
+            <div>Round: <span id="round-display">1</span></div>
+            <div id="lives-display">Lives: ❤️ 20</div>
+        </div>
+
+        <div class="inventory-bay">
+            <div class="inventory-title">Power-Ups</div>
+            <div id="inventory-bar" class="inventory-bar">
+                <span class="inventory-empty">Empty</span>
+            </div>
+        </div>
+
+        <div class="sidebar-controls">
+            <div class="control-row">
+                <select id="jumpRoundSelect" class="jump-select">
+                    <option value="1">Round 1</option>
+                    <option value="2">Round 2</option>
+                    <option value="3">Round 3</option>
+                    <option value="4">Round 4</option>
+                    <option value="5">Round 5</option>
+                    <option value="6">Round 6</option>
+                    <option value="7">Round 7</option>
+                    <option value="8">Round 8</option>
+                    <option value="9">Round 9</option>
+                    <option value="10">Round 10</option>
+                    <option value="11">Round 11</option>
+                </select>
+                <button id="jumpRoundBtn" class="btn btn-orange">Warp</button>
+            </div>
+            
+            <button id="openWorkshopBtn" class="btn btn-purple">Workshop</button>
+            <button id="leaderboardBtn" class="btn btn-yellow">Leaderboard</button>
+            <button id="restartBtn" class="btn btn-red">Restart Game</button>
+            <button id="openDebugBtn" class="btn btn-gray btn-margin-top">Debug Menu</button>
+        </div>
+    </div>
+
+    <div id="game-area" class="game-area">
+        <div id="world"></div>
+        
+        <!-- NEW: IMMIGRATION & CUSTOMS GATEWAY MODAL FOR SHARED DATA PAYLOADS -->
+        <div class="overlay" id="manifestOverlay">
+            <div class="modal-content">
+                <h2>⚠️ Inbound Transmission</h2>
+                <p id="manifestInstructions" style="font-size: 14px; margin: 15px 0; line-height: 1.4; color: #2c3e50;"></p>
+                
+                <div style="display: flex; gap: 10px; margin-top: 25px;">
+                    <button id="manifestRejectBtn" class="btn btn-red btn-large" style="flex: 1;">Reject</button>
+                    <button id="manifestAcceptBtn" class="btn btn-green btn-large" style="flex: 1;">Accept</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="roundModalOverlay">
+            <div class="modal-content">
+                <h2 id="roundTitle">Welcome Pilot</h2>
+                <p id="roundInstructions" class="modal-instructions">Click on a lift shaft to send the car to that floor.</p>
+                
+                <div class="modal-form-row" id="playerNameContainer">
+                    <label class="modal-form-label">Player:</label>
+                    <div class="modal-form-input-group">
+                        <input type="text" id="playerName" placeholder="Enter Name" class="player-name-input">
+                    </div>
+                </div>
+                
+                <div class="modal-form-row" id="gameIdContainer">
+                    <label class="modal-form-label">Game ID:</label>
+                    <div class="modal-form-input-group">
+                        <input type="text" id="gameSeed" class="game-id-input">
+                    </div>
+                </div>
+                
+                <!-- Dynamic Trophy Cabinet Showcase targeting panel container mounts here -->
+                <div id="trophyWorkshopContainer"></div>
+                
+                <button id="startRoundBtn" class="btn btn-green btn-large btn-full-width">Start Round</button>
+            </div>
+        </div>
+
+        <div class="overlay" id="workshopOverlay">
+            <div class="modal-content">
+                <div class="workshop-controls">
+                    <h2>Automation Workshop</h2>
+                    <button id="closeWorkshopBtn" class="btn btn-red btn-small">Close</button>
+                </div>
+                
+                <div class="workshop-layout">
+                    <div class="workshop-sidebar">
+                        
+                        <div class="workshop-input-group">
+                            <select id="scriptSelect" class="workshop-select"></select>
+                        </div>
+                        
+                        <div class="workshop-actions">
+                            <button id="saveScriptBtn" class="btn btn-green btn-small" title="Save Script">💾 Save</button>
+                            <button id="copyScriptBtn" class="btn btn-blue btn-small" title="Copy as Template">📑 Copy</button>
+                            <button id="deleteScriptBtn" class="btn btn-red btn-small" title="Delete Script">🗑️ Delete</button>
+                        </div>
+                        
+                        <input type="text" id="scriptNameInput" placeholder="Script Name" class="workshop-input">
+                        <textarea id="scriptDescInput" placeholder="Description..." class="workshop-textarea"></textarea>
+                        
+                        <div class="workshop-meta">
+                            <div>Author: <span id="scriptAuthorSpan" class="workshop-meta-val"></span></div>
+                            <div class="meta-margin">Date: <span id="scriptDateSpan" class="workshop-meta-val"></span></div>
+                        </div>
+                        
+                        <div class="compiled-container">
+                            <label class="compiled-label">Compiled JS:</label>
+                            <textarea id="policyInput" readonly class="compiled-textarea"></textarea>
+                        </div>
+                        <button id="shareScriptBtn" class="btn btn-blue btn-small">🔗 Share Blueprint</button>
+                    </div>
+                    
+                    <div id="blocklyArea" class="blockly-area">
+                        <div id="blocklyDiv"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="leaderboardOverlay">
+            <div class="modal-content">
+                <h2 id="lbTitle">Leaderboard</h2>
+                <ul id="lbList" class="leaderboard-list"></ul>
+                <button id="lbRestartBtn" class="btn btn-red btn-full-width btn-margin-top">Restart Game</button>
+                <button id="closeLbBtn" class="btn btn-gray btn-full-width btn-margin-top">Resume</button>
+            </div>
+        </div>
+        
+        <div class="overlay" id="roundReviewOverlay">
+            <div class="modal-content">
+                <h2>Round Complete!</h2>
+                
+                <div class="review-stats-row">
+                    <!-- COLUMN 1: PERFORMANCE TRACKING -->
+                    <div class="review-stat">
+                        <div class="review-stat-value-container">
+                            <span id="reviewServedText" class="review-stat-val text-blue">0</span>
+                            <div class="review-stat-breakdown">
+                                <span class="text-green">Happy: <strong id="breakdownHappy">0</strong></span>
+                                <span class="text-orange">Annoyed: <strong id="breakdownAnnoyed">0</strong></span>
+                                <span class="text-red">Critical: <strong id="breakdownCritical">0</strong></span>
+                            </div>
+                            <div class="review-stat-casualty">
+                                💀 Defenestrated: <strong id="breakdownDefenestrations" class="text-red">0</strong>
+                            </div>
+                        </div>
+                        <span>Served</span>
+                    </div>
+                    
+                    <!-- COLUMN 2: OPERATIONS TELEMETRY -->
+                    <div class="review-stat">
+                        <div class="review-stat-value-container">
+                            <span id="reviewPointsEarned" class="review-stat-val text-green">+0</span>
+                            <div class="review-stat-metric">
+                                Avg Wait: <strong id="reviewAvgWait">0.0s</strong>
+                            </div>
+                        </div>
+                        <span>Round Performance</span>
+                    </div>
+                    
+                    <!-- COLUMN 3: ACCOUNTING -->
+                    <div class="review-stat">
+                        <div class="review-stat-value-container">
+                            <span id="reviewTotalPoints" class="review-stat-val text-orange">0</span>
+                        </div>
+                        <span>Total Bank</span>
+                    </div>
+                </div>
+                
+                <ul id="reviewAchievementsList" class="review-list"></ul>
+                <button id="continueToBriefingBtn" class="btn btn-green btn-large btn-full-width">Supply Closet & Next Round</button>
+            </div>
+        </div>
+        
+        <div class="overlay" id="debugOverlay">
+            <div class="modal-content">
+                <h2>Engine Config</h2>
+                <div id="debugControls" class="debug-controls"></div>
+                <button id="closeDebugBtn" class="btn btn-green btn-full-width">Apply & Resume</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="config.js"></script>
+    <script src="powerups.js"></script>
+    <script src="achievements.js"></script>
+    <script src="workshop.js"></script>
+
+    <script src="engine-core.js"></script>
+    <script src="engine-spawner.js"></script>
+    <script src="engine-physics.js"></script>
+
+    <script src="ui-overlay.js"></script>
+    <script src="ui-core.js"></script>
+</body>
+</html>
