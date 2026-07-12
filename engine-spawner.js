@@ -2,20 +2,22 @@
 // ENGINE-SPAWNER.JS : PASSENGER SPAWNING MECHANICS & ENVIRONMENT EVENTS
 // ============================================================================
 
+const GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
+
 window.forceFirstSpawn = function(now) {
-    let start = Math.floor(seededRandom() * Config.numFloors);
+    let start = window.getRandomFloor();
     let dest;
     if (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance) {
         dest = 0;
-        if (start === 0) start = Math.floor(seededRandom() * (Config.numFloors - 1)) + 1;
+        if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
     } else {
-        dest = Math.floor(seededRandom() * Config.numFloors);
-        while (dest === start) dest = Math.floor(seededRandom() * Config.numFloors);
+        dest = window.getRandomFloor();
+        while (dest === start) dest = window.getRandomFloor();
     }
     let isGym = (start === Registry.gymFloor);
     Registry.floors[start].waitingGuests.push({
         dest: dest, 
-        status: 'happy', 
+        status: GuestStatus.HAPPY, 
         spawnTime: now, 
         isVip: false, 
         isFarter: false, 
@@ -43,14 +45,14 @@ window.runSpawnerTick = function(now) {
 
     // 2. VIP Event Orchestration
     if (Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
-        let start = Math.floor(seededRandom() * Config.numFloors);
-        let dest = Math.floor(seededRandom() * Config.numFloors);
-        while (dest === start) dest = Math.floor(seededRandom() * Config.numFloors);
+        let start = window.getRandomFloor();
+        let dest = window.getRandomFloor();
+        while (dest === start) dest = window.getRandomFloor();
         
         let isGym = (start === Registry.gymFloor);
         Registry.floors[start].waitingGuests.push({
             dest: dest, 
-            status: 'annoyed', 
+            status: GuestStatus.ANNOYED, 
             spawnTime: now - (Config.happySec * 1000) - 100, 
             isVip: true, 
             isFarter: false, 
@@ -99,21 +101,21 @@ window.runSpawnerTick = function(now) {
     
     while (tempChance > 0) {
         if (seededRandom() < tempChance) {
-            let start = Math.floor(seededRandom() * Config.numFloors);
+            let start = window.getRandomFloor();
             let dest;
             
             if (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance) {
                 dest = 0;
-                if (start === 0) start = Math.floor(seededRandom() * (Config.numFloors - 1)) + 1;
+                if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
             } else {
-                dest = Math.floor(seededRandom() * Config.numFloors);
-                while (dest === start) dest = Math.floor(seededRandom() * Config.numFloors);
+                dest = window.getRandomFloor();
+                while (dest === start) dest = window.getRandomFloor();
             }
             
             let isGym = (start === Registry.gymFloor);
             let newGuest = {
                 dest: dest, 
-                status: 'happy', 
+                status: GuestStatus.HAPPY, 
                 spawnTime: now, 
                 isVip: false, 
                 isFarter: false, 
@@ -136,6 +138,22 @@ window.runSpawnerTick = function(now) {
     if (spawnedThisTick) {
         Registry.lastSpawnTime = now;
     } else if (now - Registry.lastSpawnTime >= Config.maxSpawnDelaySec * 1000) {
-        window.forceFirstSpawn(now); 
+        const spawner = GameSpawner();
+        if (typeof spawner.forceFirstSpawn === 'function') {
+            spawner.forceFirstSpawn(now);
+        } else {
+            window.forceFirstSpawn(now);
+        }
     }
 };
+
+window.Spawner = window.Spawner || {};
+window.Spawner.forceFirstSpawn = window.forceFirstSpawn;
+window.Spawner.runSpawnerTick = window.runSpawnerTick;
+window.forceFirstSpawn = window.Spawner.forceFirstSpawn;
+window.runSpawnerTick = window.Spawner.runSpawnerTick;
+
+window.Game = window.Game || {};
+window.Game.Spawner = window.Game.Spawner || {};
+window.Game.Spawner.forceFirstSpawn = window.forceFirstSpawn;
+window.Game.Spawner.runSpawnerTick = window.runSpawnerTick;

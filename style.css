@@ -28,6 +28,8 @@ body {
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .btn-small { padding: 5px 10px; font-size: 12px; }
+
+.hidden { display: none !important; }
 .btn-large { padding: 15px; font-size: 18px; }
 .btn-full-width { width: 100%; }
 .btn-margin-top { margin-top: 10px; }
@@ -125,12 +127,22 @@ body {
     border-radius: 8px; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
     display: grid; 
+    --floor-height: 60px;
+    --shaft-width: 120px;
+    --label-width: 50px;
+    --lobby-width: 360px;
 }
 
 /* Grid Elements */
-.floor { display: flex; border-bottom: 2px solid #95a5a6; box-sizing: border-box; position: relative; }
+.floor { 
+    display: flex; 
+    border-bottom: 2px solid #95a5a6; 
+    box-sizing: border-box; 
+    position: relative;
+    height: var(--floor-height);
+}
 .label { 
-    width: 50px; 
+    width: var(--label-width); 
     display: flex; 
     justify-content: center; 
     align-items: center; 
@@ -141,7 +153,7 @@ body {
     box-sizing: border-box; 
 }
 .lobby { 
-    width: 360px; 
+    width: var(--lobby-width); 
     display: flex; 
     align-items: center; 
     padding: 5px; 
@@ -151,7 +163,7 @@ body {
     box-sizing: border-box; 
 }
 .shaft { 
-    width: 120px; 
+    width: var(--shaft-width); 
     border-right: 2px dashed #95a5a6; 
     background: #d0d6d9; 
     cursor: crosshair; 
@@ -162,7 +174,7 @@ body {
 /* Entities */
 .lift { 
     position: absolute; 
-    width: 100px; 
+    width: var(--lift-width, 100px); 
     background: #ecf0f1; 
     border: 3px solid #34495e; 
     border-radius: 6px; 
@@ -175,6 +187,10 @@ body {
     z-index: 10; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
     gap: 2px; 
+    bottom: calc(var(--lift-pos, 0px) + var(--lift-bottom-offset, 40px));
+    left: var(--lift-left, 412px);
+    height: var(--lift-height, 50px);
+    transition: bottom var(--lift-anim-speed, 0.016s) linear;
 }
 .lift::before { 
     content: ''; 
@@ -196,7 +212,8 @@ body {
     font-size: 10px; 
     font-weight: bold; 
     color: white; 
-    transition: all 0.3s; 
+    transition: transform 0.3s, background-color 0.3s; 
+    flex-shrink: 0;
 }
 
 /* Status Colors & Guest Modifiers */

@@ -2,18 +2,69 @@
 // CONFIG.JS : GAME DATA, BALANCING, & REGISTRY
 // ============================================================================
 
-let currentSeed = 1;
-function setSeed(seed) {
-    currentSeed = seed % 2147483647;
-    if (currentSeed <= 0) currentSeed += 2147483646;
-}
-function seededRandom() {
-    currentSeed = currentSeed * 16807 % 2147483647;
-    return (currentSeed - 1) / 2147483646;
-}
+window.Game = window.Game || {};
 
-function safeGetItem(key, fallback) { try { return localStorage.getItem(key) || fallback; } catch (e) { return fallback; } }
-function safeSetItem(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
+// Randomized Seeded Logic
+window.Game.Seed = {
+    current: 1,
+    set: function(seed) {
+        this.current = (seed % 2147483647) || 1;
+        if (this.current <= 0) this.current += 2147483646;
+    },
+    random: function() {
+        this.current = (this.current * 16807) % 2147483647;
+        return (this.current - 1) / 2147483646;
+    }
+};
+
+// Storage Helpers
+window.Game.Storage = {
+    get: function(key, fallback) {
+        try { return localStorage.getItem(key) || fallback; }
+        catch (e) { return fallback; }
+    },
+    set: function(key, value) {
+        try { localStorage.setItem(key, value); }
+        catch (e) {}
+    }
+};
+
+// Storage Key Mappings
+window.Game.Keys = {
+    TROPHIES: 'liftOp_v2_activeTrophies',
+    PLAYER: 'liftOp_v2_lastPlayer',
+    ACHIEVEMENTS: 'liftOp_v2_achievements_',
+    LEADERBOARD: 'liftOp_v2_arcadeBoard',
+    SCRIPTS: 'liftOp_v2_scripts_'
+};
+
+// Shared Constants
+window.Game.Constants = {
+    GuestStatus: {
+        HAPPY: 'happy',
+        ANNOYED: 'annoyed',
+        CRITICAL: 'critical',
+        RAGE: 'rage'
+    }
+};
+
+const GuestStatus = window.Game.Constants.GuestStatus;
+
+// Component Aliases (Internal Compatibility)
+const setSeed = (s) => window.Game.Seed.set(s);
+const seededRandom = () => window.Game.Seed.random();
+const safeGetItem = (k, f) => window.Game.Storage.get(k, f);
+const safeSetItem = (k, v) => window.Game.Storage.set(k, v);
+
+// Global Helper: Get random integer between min and max (inclusive)
+window.getRandomInt = function(min, max) {
+    return Math.floor(seededRandom() * (max - min + 1)) + min;
+};
+
+// Global Helper: Get random floor index
+window.getRandomFloor = function() {
+    return Math.floor(seededRandom() * Config.numFloors);
+};
 
 const Config = {
     debugMode: true, 
@@ -39,75 +90,6 @@ const Config = {
     sunsetMinSec: 30, sunsetMaxSec: 90, sunsetDurationSec: 30, sunsetGuestRatio: 0.50,
     
     gymBroStinkThreshold: 3
-};
-
-const Registry = { 
-    lifts: [], floors: [], 
-    stats: { lives: Config.startingLives, round: 1, timeLeft: Config.roundTime, served: 0, currentSpawnChance: Config.spawnR1Start, totalPointsEarned: 0 }, 
-    
-    points: 0,
-    inventory: [],
-    
-    // Core Telemetry Upgrades for Achievements & Round Review
-    roundStats: { 
-        manualClicks: 0, 
-        jammedLiftsFixed: 0, 
-        fullyLoadedLifts: 0, 
-        servedThisRound: 0,
-        happyServed: 0,
-        annoyedServed: 0,
-        criticalServed: 0,
-        vipServed: 0,
-        defenestrationsThisRound: 0,
-        totalWaitTimeServed: 0
-    },
-    
-    // Social Sharing, Manifest & Trophy States
-    pendingManifest: [],
-    trophyCase: [], // Array of up to 6 keys selected for leaderboard view
-    
-    highestUnlockedRound: 1, 
-    gameActive: false, pauseStartTime: 0, lastSpawnTime: 0, floorHeight: 60, 
-    fallbackName: "Pilot 1", seed: 1234,
-    vipSpawned: false, vipTargetTime: 0,
-    sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,
-    gymFloor: -1,
-
-    getNearestTarget: function(lift, targetType) {
-        let bestFloor = -1;
-        let minDist = Infinity;
-        let currentFloor = Math.round(lift.pos / Registry.floorHeight);
-        
-        for (let f = 0; f < Config.numFloors; f++) {
-            let hasTarget = false;
-            if (targetType === 'destination') hasTarget = lift.passengers.some(p => p.dest === f);
-            else if (targetType === 'any_waiting') hasTarget = Registry.floors[f].waitingGuests.length > 0;
-            else hasTarget = Registry.floors[f].waitingGuests.some(g => g.status === targetType || (targetType === 'vip' && g.isVip));
-            
-            if (hasTarget) {
-                let dist = Math.abs(f - currentFloor);
-                if (dist < minDist) { minDist = dist; bestFloor = f; }
-            }
-        }
-        return bestFloor;
-    },
-    getWaitingCount: function(floor) {
-        if(floor < 0 || floor >= Config.numFloors) return 0;
-        return Registry.floors[floor].waitingGuests.length;
-    },
-    isFloorClaimedByOther: function(floor, myLiftId) {
-        return Registry.lifts.some(l => l.id !== myLiftId && l.targetFloor === floor && l.jamTimer <= 0);
-    },
-    getPhysicalDirection: function(lift) {
-        let currentFloor = Math.round(lift.pos / Registry.floorHeight);
-        if (lift.targetFloor > currentFloor) return "UP";
-        if (lift.targetFloor < currentFloor) return "DOWN";
-        return "IDLE";
-    },
-    prng: { randomFloor: () => Math.floor(seededRandom() * Config.numFloors) },
-    getLiftWeight: function(lift) {
-        return lift.passengers.reduce((sum, p) => sum + (p.isGymBro ? 2 : 1), 0);
-    }
 };
 
 const debugDefinitions = [

@@ -47,8 +47,10 @@ const PowerUps = {
             const effect = document.createElement('div');
             effect.innerText = icon;
             effect.style.position = 'absolute';
-            effect.style.left = car.style.left;
-            effect.style.width = car.style.width || '50px';
+            const worldRect = world.getBoundingClientRect();
+            const carRect = car.getBoundingClientRect();
+            effect.style.left = (carRect.left - worldRect.left) + 'px';
+            effect.style.width = (carRect.width ? `${carRect.width}px` : '50px');
             effect.style.textAlign = 'center';
             effect.style.fontSize = '32px';
             effect.style.zIndex = '9999';
@@ -57,11 +59,11 @@ const PowerUps = {
             effect.style.textShadow = '0 2px 10px rgba(0,0,0,0.5)';
             world.appendChild(effect);
             
-            effect.style.bottom = `calc(${car.style.bottom} + 20px)`;
+            effect.style.top = (carRect.top - worldRect.top + 20) + 'px';
             
-            void effect.offsetWidth; 
-            
-            effect.style.bottom = `calc(${car.style.bottom} + 80px)`;
+            void effect.offsetWidth;
+
+            effect.style.top = (carRect.top - worldRect.top - 80) + 'px';
             effect.style.opacity = '0';
             
             setTimeout(() => { if (effect.parentNode) effect.remove(); }, 1000);
@@ -129,8 +131,8 @@ const PowerUps = {
                       PowerUps.timers.globalAngerPause = 15; 
                       Registry.lifts.forEach(l => PowerUps.showEffectOnLift(l.id, '🎵'));
                       const soothe = (g) => {
-                          if (g.status === 'critical') { g.status = 'annoyed'; g.spawnTime += (Config.annoyedSec - Config.happySec) * 1000; }
-                          else if (g.status === 'annoyed') { g.status = 'happy'; g.spawnTime = Date.now(); }
+                          if (g.status === GuestStatus.CRITICAL) { g.status = GuestStatus.ANNOYED; g.spawnTime += (Config.annoyedSec - Config.happySec) * 1000; }
+                          else if (g.status === GuestStatus.ANNOYED) { g.status = GuestStatus.HAPPY; g.spawnTime = Date.now(); }
                       };
                       Registry.floors.forEach(f => f.waitingGuests.forEach(soothe));
                       Registry.lifts.forEach(l => l.passengers.forEach(soothe));

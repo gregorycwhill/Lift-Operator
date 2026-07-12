@@ -49,9 +49,9 @@ const Achievements = {
         let logMessages = [];
 
         // Load current career profile history maps from persistent storage records
-        const currentPlayer = Registry.playerName || safeGetItem('lastPlayer', 'Pilot 1');
-        const storageKey = `liftOperator_achievements_${currentPlayer}`;
-        let careerLog = JSON.parse(safeGetItem(storageKey, '{}'));
+        const currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+        const storageKey = window.Game.Keys.ACHIEVEMENTS + currentPlayer;
+        let careerLog = JSON.parse(window.Game.Storage.get(storageKey, '{}'));
 
         Object.values(this.definitions).forEach(feat => {
             const currentVal = feat.check(stats);
@@ -84,7 +84,7 @@ const Achievements = {
         });
 
         // Save progress back to career record databases
-        safeSetItem(storageKey, JSON.stringify(careerLog));
+        window.Game.Storage.set(storageKey, JSON.stringify(careerLog));
 
         // Commit point transaction balance direct to operational wallet bank
         const netRoundPayout = generatedPoints + featBonusPoints;
@@ -107,7 +107,7 @@ const Achievements = {
                     Registry.trophyCase.push(`${featId}_${careerLog[featId]}`);
                 }
             });
-            safeSetItem('liftOperator_activeTrophies', JSON.stringify(Registry.trophyCase));
+            window.Game.Storage.set(window.Game.Keys.TROPHIES, JSON.stringify(Registry.trophyCase));
         }
 
         return {
@@ -133,14 +133,28 @@ const Achievements = {
             if (startBtn) startBtn.parentNode.insertBefore(container, startBtn);
         }
 
-        const currentPlayer = Registry.playerName || safeGetItem('lastPlayer', 'Pilot 1');
-        const storageKey = `liftOperator_achievements_${currentPlayer}`;
-        const careerLog = JSON.parse(safeGetItem(storageKey, '{}'));
+        const currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+        const storageKey = window.Game.Keys.ACHIEVEMENTS + currentPlayer;
+        const careerLog = JSON.parse(window.Game.Storage.get(storageKey, '{}'));
 
-        let html = `
-        <div style="text-align:left; margin-top:20px; border-top:2px solid #ecf0f1; padding-top:15px; width:100%;">
-            <h4 style="margin:0 0 10px 0; color:#2c3e50;">🏆 Career Showcase (Max 6 for Scoreboard)</h4>
-            <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-start;">`;
+        let headerDiv = document.createElement('div');
+        headerDiv.style.textAlign = 'left';
+        headerDiv.style.marginTop = '20px';
+        headerDiv.style.borderTop = '2px solid #ecf0f1';
+        headerDiv.style.paddingTop = '15px';
+        headerDiv.style.width = '100%';
+        
+        let subTitle = document.createElement('h4');
+        subTitle.style.margin = '0 0 10px 0';
+        subTitle.style.color = '#2c3e50';
+        subTitle.textContent = '🏆 Career Showcase (Max 6 for Scoreboard)';
+        headerDiv.appendChild(subTitle);
+
+        let flexContainer = document.createElement('div');
+        flexContainer.style.display = 'flex';
+        flexContainer.style.flexWrap = 'wrap';
+        flexContainer.style.gap = '8px';
+        flexContainer.style.justifyContent = 'flex-start';
 
         let hasAny = false;
         Object.values(this.definitions).forEach(feat => {
@@ -162,24 +176,40 @@ const Achievements = {
                     borderStyle = '2px solid #3498db';
                 }
 
-                html += `
-                <button onclick="Achievements.toggleTrophy('${badgeKey}')" 
-                    title="${feat.name}: ${asset.label} - ${feat.desc}"
-                    style="padding:8px 14px; border-radius:20px; font-weight:bold; cursor:pointer; font-size:16px; display:flex; align-items:center; gap:4px; transition:all 0.2s;
-                    border:${borderStyle}; 
-                    background:${isSelected ? '#e0f7fa' : '#f8f9fa'};
-                    box-shadow:${isSelected ? '0 0 8px rgba(52,152,219,0.5)' : 'none'};">
-                    <span>${unicodeIcon}</span>
-                </button>`;
+                const btn = document.createElement('button');
+                btn.title = `${feat.name}: ${asset.label} - ${feat.desc}`;
+                btn.style.padding = '8px 14px';
+                btn.style.borderRadius = '20px';
+                btn.style.fontWeight = 'bold';
+                btn.style.cursor = 'pointer';
+                btn.style.fontSize = '16px';
+                btn.style.display = 'flex';
+                btn.style.alignItems = 'center';
+                btn.style.gap = '4px';
+                btn.style.transition = 'all 0.2s';
+                btn.style.border = borderStyle;
+                btn.style.background = isSelected ? '#e0f7fa' : '#f8f9fa';
+                btn.style.boxShadow = isSelected ? '0 0 8px rgba(52,152,219,0.5)' : 'none';
+                
+                const span = document.createElement('span');
+                span.textContent = unicodeIcon;
+                btn.appendChild(span);
+
+                btn.addEventListener('click', () => Achievements.toggleTrophy(badgeKey));
+                flexContainer.appendChild(btn);
             }
         });
 
         if (!hasAny) {
-            html += `<span style="font-size:12px; color:#7f8c8d; font-style:italic;">No career medals unlocked yet. Complete shifts to populate cabinet!</span>`;
+            const emptyHint = document.createElement('span');
+            emptyHint.style.fontSize = '12px';
+            emptyHint.style.color = '#7f8c8d';
+            emptyHint.style.fontStyle = 'italic';
+            emptyHint.textContent = 'No career medals unlocked yet. Complete shifts to populate cabinet!';
+            flexContainer.appendChild(emptyHint);
         }
 
-        html += `</div></div>`;
-        container.innerHTML = html;
+        container.replaceChildren(headerDiv, flexContainer);
     },
 
     toggleTrophy: function(badgeKey) {
@@ -193,7 +223,7 @@ const Achievements = {
             }
             Registry.trophyCase.push(badgeKey);
         }
-        safeSetItem('liftOperator_activeTrophies', JSON.stringify(Registry.trophyCase));
+        window.Game.Storage.set(window.Game.Keys.TROPHIES, JSON.stringify(Registry.trophyCase));
         this.renderTrophyWorkshop();
     }
 };

@@ -2,38 +2,54 @@
 // ENGINE-PHYSICS.JS : CORE PHYSICS LOOP, BOARDING PROTOCOLS, & PASSENGER DECAY
 // ============================================================================
 
+const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
+const GameEngine = () => (window.Game && window.Game.Engine) || window;
+const GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
+
 window.gameTick = function() {
     if (!Registry.gameActive) return;
     const now = Date.now();
     
-    if (Registry.stats.timeLeft <= 0) {
-        window.pauseGame();
-        
-        Registry.highestUnlockedRound = Math.max(Registry.highestUnlockedRound, Registry.stats.round + 1);
-        if (typeof updateLocksUI === 'function') updateLocksUI();
-        
-        if (Registry.stats.round >= 11) {
-            const records = JSON.parse(safeGetItem('liftArcadeBoard', '[]'));
-            records.push({ 
-                name: Registry.playerName, 
-                score: parseInt(Registry.stats.served),
-                trophies: Registry.trophyCase 
-            });
-            records.sort((a, b) => b.score - a.score); 
-            safeSetItem('liftArcadeBoard', JSON.stringify(records));
-            if (typeof showLeaderboard === 'function') showLeaderboard("You Won!");
-        } else {
-            if (typeof showRoundReview === 'function') showRoundReview(Registry.stats.round);
+    try {
+        if (Registry.stats.timeLeft <= 0) {
+            const engine = GameEngine();
+            const ui = GameUI();
+            if (typeof engine.pause === 'function') engine.pause();
+            
+            Registry.highestUnlockedRound = Math.max(Registry.highestUnlockedRound, Registry.stats.round + 1);
+            if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
+            
+            if (Registry.stats.round >= 11) {
+                const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));
+                records.push({ 
+                    name: Registry.playerName, 
+                    score: parseInt(Registry.stats.served),
+                    trophies: Registry.trophyCase 
+                });
+                records.sort((a, b) => b.score - a.score); 
+                window.Game.Storage.set(window.Game.Keys.LEADERBOARD, JSON.stringify(records));
+                const ui = GameUI();
+                if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("You Won!");
+            } else {
+                const ui = GameUI();
+                if (typeof ui.showRoundReview === 'function') ui.showRoundReview(Registry.stats.round);
+            }
+            return;
         }
-        return;
+    } catch (e) {
+        if (typeof Telemetry !== 'undefined') {
+            Telemetry.add('PHYSICS', `Logic crash: ${e.message}`, 'error');
+        }
+        console.error("Physics Crash", e);
     }
 
     if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick();
     
     Registry.stats.timeLeft--;
 
-    if (typeof window.runSpawnerTick === 'function') {
-        window.runSpawnerTick(now);
+    const spawner = GameSpawner();
+    if (typeof spawner.runSpawnerTick === 'function') {
+        spawner.runSpawnerTick(now);
     }
 
     // Process Lift Timers & Hazards
@@ -51,14 +67,14 @@ window.gameTick = function() {
         if (Registry.stats.round >= 6) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
             if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
-                lift.jamTimer = Math.floor(seededRandom() * (Config.jamMaxSec - Config.jamMinSec + 1)) + Config.jamMinSec;
+                lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec);
             }
             
             if (Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
                 if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
                     lift.stinkTimer = Config.fartStinkSec;
-                    const farterIndex = Math.floor(seededRandom() * lift.passengers.length);
+                    const farterIndex = window.getRandomInt(0, lift.passengers.length - 1);
                     lift.passengers[farterIndex].isFarter = true;
                 }
             }
@@ -67,10 +83,10 @@ window.gameTick = function() {
 
     const checkStatus = (g) => {
         const wait = now - g.spawnTime;
-        if (wait > Config.criticalSec * 1000) return 'rage';       
-        if (wait > Config.annoyedSec * 1000) return 'critical';   
-        if (wait > Config.happySec * 1000) return 'annoyed';    
-        return 'happy';                        
+        if (wait > Config.criticalSec * 1000) return GuestStatus.RAGE;       
+        if (wait > Config.annoyedSec * 1000) return GuestStatus.CRITICAL;   
+        if (wait > Config.happySec * 1000) return GuestStatus.ANNOYED;    
+        return GuestStatus.HAPPY;                        
     };
     
     // Process Floor Aging Logic
@@ -85,12 +101,12 @@ window.gameTick = function() {
             const oldStatus = g.status;
             g.status = checkStatus(g);
             
-            if (g.status === 'rage' && oldStatus !== 'rage') {
+            if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 Registry.stats.lives -= (g.isVip ? Config.vipPenalty : 1);
                 Registry.roundStats.defenestrationsThisRound++;
-                const lobbies = document.querySelectorAll('.lobby');
-                if (lobbies.length > 0 && typeof triggerDefenestration === 'function') {
-                    triggerDefenestration(lobbies[Config.numFloors - 1 - floorIdx].children[i], floorIdx);
+                const ui = GameUI();
+                if (typeof ui.triggerDefenestration === 'function') {
+                    ui.triggerDefenestration(null, floorIdx, i);
                 }
                 floor.waitingGuests.splice(i, 1);
             }
@@ -112,70 +128,67 @@ window.gameTick = function() {
             
             const oldStatus = p.status;
             p.status = checkStatus(p);
-            if (p.status === 'rage' && oldStatus !== 'rage') {
+            if (p.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 Registry.stats.lives -= (p.isVip ? Config.vipPenalty : 1);
                 Registry.roundStats.defenestrationsThisRound++;
-                if (typeof triggerDefenestration === 'function') {
+                const ui = GameUI();
+                if (typeof ui.triggerDefenestration === 'function') {
                     const currentFloor = Math.round(lift.pos / Registry.floorHeight);
-                    triggerDefenestration(null, currentFloor);
+                    ui.triggerDefenestration(null, currentFloor);
                 }
             }
         });
         
         for (let i = lift.passengers.length - 1; i >= 0; i--) {
-            if (lift.passengers[i].status === 'rage') lift.passengers.splice(i, 1);
+            if (lift.passengers[i].status === GuestStatus.RAGE) lift.passengers.splice(i, 1);
         }
     });
     
     if (Registry.stats.lives <= 0) {
-        Registry.stats.lives = 0; 
-        if (typeof updateScoreboardUI === 'function') updateScoreboardUI();     
-        window.pauseGame();
-        const records = JSON.parse(safeGetItem('liftArcadeBoard', '[]'));
-        records.push({ 
-            name: Registry.playerName, 
+        Registry.stats.lives = 0;
+        const ui = GameUI();
+        if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
+        const engine = GameEngine();
+        if (typeof engine.pause === 'function') engine.pause();
+        const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));
+        records.push({
+            name: Registry.playerName,
             score: parseInt(Registry.stats.served),
             trophies: Registry.trophyCase
         });
-        records.sort((a, b) => b.score - a.score); 
-        safeSetItem('liftArcadeBoard', JSON.stringify(records));
-        if (typeof showLeaderboard === 'function') showLeaderboard("Game Over!");
+        records.sort((a, b) => b.score - a.score);
+        window.Game.Storage.set(window.Game.Keys.LEADERBOARD, JSON.stringify(records));
+        if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("Game Over!");
         return;
     }
 
-    if (typeof updateScoreboardUI === 'function') updateScoreboardUI();
-    if (typeof draw === 'function') draw();
+    const ui = GameUI();
+    if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
 };
 
 window.animationTick = function() {
     if (!Registry.gameActive) return;
     const now = Date.now();
+
+    const ui = GameUI();
+    try {
+        if (typeof ui.draw === 'function') ui.draw();
+    } catch (e) {
+        if (typeof Telemetry !== 'undefined') {
+            Telemetry.add('RENDER', `Draw crash: ${e.message}`, 'error');
+        }
+        console.error("Render Crash", e);
+    }
+
     let stateChanged = false;
 
     const pixelsPerSecond = Registry.floorHeight / Config.liftSpeedSec;
     const basePixelsPerTick = pixelsPerSecond * (16 / 1000);
 
     Registry.lifts.forEach((lift, index) => {
-        const car = document.getElementById(`lift-el-${index}`);
-        
-        if (lift.jamTimer > 0) {
-            lift.isJammed = true; 
-            if (car && !car.classList.contains('jammed')) car.classList.add('jammed');
-            return; 
-        } else {
-            lift.isJammed = false;
-            if (car && car.classList.contains('jammed')) car.classList.remove('jammed');
-        }
-        
-        let gymBroCount = lift.passengers.filter(p => p.isGymBro).length;
-        let isStinky = lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold;
-        let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
-        if (hasStinkImmunity) isStinky = false;
-        
-        if (isStinky) {
-            if (car && !car.classList.contains('stinky')) car.classList.add('stinky');
-        } else {
-            if (car && car.classList.contains('stinky')) car.classList.remove('stinky');
+        const ui = GameUI();
+        if (typeof ui.updateLiftVisualState === 'function') {
+            ui.updateLiftVisualState(lift, index);
         }
 
         const currentFloor = Math.round(lift.pos / Registry.floorHeight);
@@ -222,9 +235,9 @@ window.animationTick = function() {
                             Registry.roundStats.totalWaitTimeServed += Math.max(0, waitSeconds);
                             
                             if (p.isVip) Registry.roundStats.vipServed++;
-                            if (p.status === 'happy') Registry.roundStats.happyServed++;
-                            else if (p.status === 'annoyed') Registry.roundStats.annoyedServed++;
-                            else if (p.status === 'critical') Registry.roundStats.criticalServed++;
+                            if (p.status === GuestStatus.HAPPY) Registry.roundStats.happyServed++;
+                            else if (p.status === GuestStatus.ANNOYED) Registry.roundStats.annoyedServed++;
+                            else if (p.status === GuestStatus.CRITICAL) Registry.roundStats.criticalServed++;
                         }
                     } else {
                         p.isFarter = false; 
@@ -243,7 +256,7 @@ window.animationTick = function() {
                         let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g => {
                             let gWeight = g.isGymBro ? 2 : 1;
                             if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
-                            if (g.status === 'rage') return false;
+                            if (g.status === GuestStatus.RAGE) return false;
                             if (isStinky && !g.isGymBro) return false;
                             if (lift.passengers.some(p => p.isVip)) return false; 
                             if (g.isVip && lift.passengers.length > 0) return false; 
@@ -277,17 +290,8 @@ window.animationTick = function() {
                     if (lift.manualOverride) lift.manualOverride = false;
 
                     if (lift.automation.startsWith('custom_') && !lift.manualOverride) {
-                        let scriptId = lift.automation.replace('custom_', ''); 
-                        let scriptObj = AutomationWorkshop.scripts.find(s => s.id == scriptId);
-                        
-                        if (scriptObj && scriptObj.compiledJS) {
-                            try {
-                                const customLogic = new Function('lift', 'Registry', 'Config', scriptObj.compiledJS);
-                                customLogic(lift, Registry, Config);
-                            } catch (error) {
-                                console.error(`Error in Custom Script [${scriptObj.name}]:`, error);
-                                lift.targetFloor = 0; 
-                            }
+                        if (window.Game.Automation) {
+                            window.Game.Automation.execute(lift, lift.automation);
                         }
                     }
                     else if (lift.automation === 'sweep' && !lift.manualOverride) {
@@ -331,9 +335,9 @@ window.animationTick = function() {
                             return Array.from(targets);
                         };
 
-                        const criticalTargets = getTargets('critical');
-                        const annoyedTargets = getTargets('annoyed');
-                        const happyTargets = getTargets('happy');
+                        const criticalTargets = getTargets(GuestStatus.CRITICAL);
+                        const annoyedTargets = getTargets(GuestStatus.ANNOYED);
+                        const happyTargets = getTargets(GuestStatus.HAPPY);
 
                         let activeTargets = [];
                         if (criticalTargets.length > 0) activeTargets = criticalTargets;
@@ -363,10 +367,10 @@ window.animationTick = function() {
                         let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
 
                         const getGuestWeight = (guest) => {
-                            if (guest.status === 'rage') return 0;
+                            if (guest.status === GuestStatus.RAGE) return 0;
                             if (lift.automation === 'weighted-voting') {
-                                if (guest.status === 'critical') return 4;
-                                if (guest.status === 'annoyed') return 2;
+                                if (guest.status === GuestStatus.CRITICAL) return 4;
+                                if (guest.status === GuestStatus.ANNOYED) return 2;
                                 return 1; 
                             }
                             return 1; 
@@ -402,17 +406,25 @@ window.animationTick = function() {
                                     closestFloors.push(f);
                                 }
                             });
-                            lift.targetFloor = closestFloors[Math.floor(seededRandom() * closestFloors.length)];
+                            lift.targetFloor = closestFloors[window.getRandomInt(0, closestFloors.length - 1)];
+                        }
+                    }
+                    else if (lift.automation.startsWith('custom_') && !lift.manualOverride) {
+                        const scriptId = lift.automation.replace('custom_', '');
+                        if (typeof AutomationVM !== 'undefined' && typeof AutomationVM.execute === 'function') {
+                            AutomationVM.execute(lift, scriptId);
                         }
                     }
                 }
             }
         }
         
-        const liftHeight = Math.min(50, Registry.floorHeight * 0.85);
-        const bottomOffset = 40 + (Registry.floorHeight - liftHeight) / 2;
-        if (car) car.style.bottom = (lift.pos + bottomOffset) + 'px'; 
     });
-
-    if (stateChanged && typeof draw === 'function') draw();
 };
+
+window.Game = window.Game || {};
+window.Game.Engine = window.Game.Engine || {};
+window.Game.Engine.gameTick = window.gameTick;
+window.Game.Engine.animationTick = window.animationTick;
+window.gameTick = window.Game.Engine.gameTick;
+window.animationTick = window.Game.Engine.animationTick;
