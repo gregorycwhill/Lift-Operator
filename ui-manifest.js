@@ -64,10 +64,13 @@ window.processNextManifestItem = function() {
                         compiledJS: ""
                     };
 
-                    AutomationWorkshop.scripts.push(newScriptObj);
-                    const playerName = (typeof Registry !== 'undefined' && Registry.playerName) ? Registry.playerName : "Pilot 1";
-                    const customScripts = AutomationWorkshop.scripts.filter(s => s.author !== 'System');
-                    window.Game.Storage.set(window.Game.Keys.SCRIPTS + playerName, JSON.stringify(customScripts));
+                    const VM = window.Game.Automation;
+                    if (VM) {
+                        VM.scripts.push(newScriptObj);
+                        VM.saveScripts();
+                    } else if (typeof AutomationWorkshop !== 'undefined') {
+                        AutomationWorkshop.scripts.push(newScriptObj);
+                    }
 
                     if (typeof ui.updateWorkshopScriptList === 'function') ui.updateWorkshopScriptList();
                     if (typeof ui.buildWorld === 'function') ui.buildWorld();

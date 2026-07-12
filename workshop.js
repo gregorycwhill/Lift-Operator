@@ -100,6 +100,8 @@ const AutomationWorkshop = {
                 this.deleteCurrentScript();
             }
         });
+
+        document.getElementById("shareScriptBtn")?.addEventListener("click", () => this.shareCurrentScript());
     },
 
     getVM: function() {
@@ -241,7 +243,11 @@ const AutomationWorkshop = {
             if (scriptObj.blocklyData) {
                 Blockly.serialization.workspaces.load(scriptObj.blocklyData, this.workspace);
             }
-            setTimeout(() => { Blockly.svgResize(this.workspace); }, 10);
+            setTimeout(() => { 
+                Blockly.svgResize(this.workspace); 
+                // Track execution for Hacker Awards
+                if (window.Registry && !window.Registry.customScriptTicks) window.Registry.customScriptTicks = 0;
+            }, 10);
         }
         
         this.updateSidebarUI(); 
@@ -273,6 +279,41 @@ const AutomationWorkshop = {
         }
         
         if (VM.scripts.length > 0) this.openScript(VM.scripts[0].id);
+    },
+
+    shareCurrentScript: function() {
+        const VM = this.getVM();
+        if (!this.currentScriptId || !VM) return;
+
+        const script = VM.scripts.find(s => s.id === this.currentScriptId);
+        if (!script) return;
+
+        // Ensure we include all components for a complete restoration on the other side
+        // Note: Manifest expects 'xml' for the compressed blockly data
+        const payload = {
+            type: 'blueprint',
+            data: {
+                name: script.name,
+                description: script.description || "",
+                author: script.author,
+                date: script.date,
+                version: script.version || "1.0",
+                xml: LZString.compressToEncodedURIComponent(JSON.stringify(script.blocklyData)),
+                compiledJS: script.compiledJS
+            }
+        };
+
+        const encoded = window.Game.encodePayload(payload);
+        if (encoded) {
+            const url = new URL(window.location.href);
+            url.searchParams.set('Data', encoded);
+            
+            navigator.clipboard.writeText(url.toString()).then(() => {
+                if (typeof window.UI.showToast === 'function') {
+                    window.UI.showToast("🔗 Blueprint link copied to clipboard!");
+                }
+            });
+        }
     },
 
     updateSidebarUI: function() {

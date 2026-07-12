@@ -13,7 +13,8 @@ const PowerUps = {
         stinkImmunity: 0,
         globalAngerPause: 0,
         globalTurbo: 0, // Replaced globalTeleport
-        globalTardis: 0
+        globalTardis: 0,
+        wideDoors: 0
     },
 
     init: function() {
@@ -29,6 +30,12 @@ const PowerUps = {
         if (this.timers.globalAngerPause > 0) this.timers.globalAngerPause--;
         if (this.timers.globalTurbo > 0) this.timers.globalTurbo--;
         if (this.timers.globalTardis > 0) this.timers.globalTardis--;
+        if (this.timers.wideDoors > 0) {
+            this.timers.wideDoors--;
+            if (this.timers.wideDoors <= 0) {
+                Config.boardingSpeedMultiplier = 1.0;
+            }
+        }
     },
 
     calculateRoundPoints: function() {
@@ -132,7 +139,7 @@ const PowerUps = {
                       Registry.lifts.forEach(l => PowerUps.showEffectOnLift(l.id, '🎵'));
                       const soothe = (g) => {
                           if (g.status === GuestStatus.CRITICAL) { g.status = GuestStatus.ANNOYED; g.spawnTime += (Config.annoyedSec - Config.happySec) * 1000; }
-                          else if (g.status === GuestStatus.ANNOYED) { g.status = GuestStatus.HAPPY; g.spawnTime = Date.now(); }
+                          else if (g.status === GuestStatus.ANNOYED) { g.status = GuestStatus.HAPPY; g.spawnTime = (window.Game.virtualTime || Date.now()); }
                       };
                       Registry.floors.forEach(f => f.waitingGuests.forEach(soothe));
                       Registry.lifts.forEach(l => l.passengers.forEach(soothe));
@@ -174,6 +181,17 @@ const PowerUps = {
                 { cost: 5, desc: 'ALL lifts get infinite capacity for 30s.', target: 'instant', 
                   execute: () => { PowerUps.timers.globalTardis = 30; Registry.lifts.forEach(l => PowerUps.showEffectOnLift(l.id, '🌌')); } }
             ]
+        },
+        doors: {
+            id: 'doors', name: 'Wide Doors', icon: '🚪',
+            tiers: [
+                { cost: 1, desc: 'Halve boarding time (2x speed) for 20s.', target: 'instant', 
+                  execute: () => { Config.boardingSpeedMultiplier = 0.5; PowerUps.timers.wideDoors = 20; PowerUps.flashScreen('rgba(241, 196, 15, 0.4)'); } },
+                { cost: 3, desc: 'Triple boarding speed for 30s.', target: 'instant', 
+                  execute: () => { Config.boardingSpeedMultiplier = 0.33; PowerUps.timers.wideDoors = 30; PowerUps.flashScreen('rgba(241, 196, 15, 0.5)'); } },
+                { cost: 5, desc: 'Instantly board/unboard all guests for 30s.', target: 'instant', 
+                  execute: () => { Config.boardingSpeedMultiplier = 0.05; PowerUps.timers.wideDoors = 30; PowerUps.flashScreen('rgba(241, 196, 15, 0.7)'); } }
+            ]
         }
     },
 
@@ -190,6 +208,7 @@ const PowerUps = {
         const ability = this.catalog[powerUpId].tiers[tierIndex];
         
         if (ability.target === 'instant') {
+            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('powerup');
             ability.execute(null, null);
             this.consumeFromInventory(powerUpId, tierIndex);
             this.flashScreen('rgba(46, 204, 113, 0.6)'); 
@@ -228,6 +247,7 @@ const PowerUps = {
         }
 
         const ability = this.catalog[abilityId].tiers[this.activeTargeting.tier];
+        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('powerup');
         ability.execute(liftId, floorId);
         
         this.flashScreen('rgba(46, 204, 113, 0.6)'); 

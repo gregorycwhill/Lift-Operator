@@ -146,7 +146,7 @@ window.initializeUI = function() {
         if (roundOverlay) roundOverlay.style.display = "none";
         
         if (Registry.pauseStartTime === 0 && typeof GameSpawner === "function" && typeof GameSpawner().forceFirstSpawn === "function") {
-            GameSpawner().forceFirstSpawn(Date.now());
+            GameSpawner().forceFirstSpawn(window.Game.virtualTime || Date.now());
         }
         
         if (typeof engine.resume === "function") engine.resume();

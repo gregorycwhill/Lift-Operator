@@ -83,7 +83,7 @@ const Config = {
     spawnR11Start: 1.75, spawnR11End: 2.00,
     
     happySec: 10, annoyedSec: 20, criticalSec: 30,
-    liftCapacity: 10, liftSpeedSec: 0.5, boardSpeedSec: 1.0,
+    liftCapacity: 10, liftSpeedSec: 0.5, boardSpeedSec: 1.0, boardingSpeedMultiplier: 1.0,
     
     vipSpawnMinSec: 30, vipSpawnMaxSec: 120, vipPenalty: 10,
     fartChancePerSec: 0.005, fartStinkSec: 10,

@@ -6,9 +6,9 @@ const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
 const GameEngine = () => (window.Game && window.Game.Engine) || window;
 const GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
 
-window.gameTick = function() {
+window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
-    const now = Date.now();
+    const now = timestamp || Date.now();
     
     try {
         if (Registry.stats.timeLeft <= 0) {
@@ -102,6 +102,7 @@ window.gameTick = function() {
             g.status = checkStatus(g);
             
             if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
+                if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('error');
                 Registry.stats.lives -= (g.isVip ? Config.vipPenalty : 1);
                 Registry.roundStats.defenestrationsThisRound++;
                 const ui = GameUI();
@@ -166,9 +167,9 @@ window.gameTick = function() {
     if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
 };
 
-window.animationTick = function() {
+window.animationTick = function(timestamp) {
     if (!Registry.gameActive) return;
-    const now = Date.now();
+    const now = timestamp || Date.now();
 
     const ui = GameUI();
     try {
@@ -209,7 +210,8 @@ window.animationTick = function() {
         } else {
             lift.pos = targetPos; 
             
-            if (now - lift.lastActionTime > (Config.boardSpeedSec * 1000)) {
+            const effectiveBoardSpeed = Config.boardSpeedSec * (Config.boardingSpeedMultiplier || 1.0);
+            if (now - lift.lastActionTime > (effectiveBoardSpeed * 1000)) {
                 const f = lift.targetFloor;
                 let performedAction = false;
                 
@@ -224,6 +226,7 @@ window.animationTick = function() {
                     
                     const p = lift.passengers.splice(indexToDrop, 1)[0];
                     if (p.dest === f) {
+                        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('ding');
                         if (p.isSunset && f === Config.numFloors - 1) {
                             p.isPartying = true;
                             Registry.floors[f].waitingGuests.push(p);

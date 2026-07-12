@@ -33,6 +33,21 @@ window.renderDebugMenu = function() {
         if (typeof ui.showToast === 'function') ui.showToast("Wiped career achievement storage map.");
     };
     quickGroup.appendChild(resetAwardsBtn);
+
+    const runTestsBtn = document.createElement('button');
+    runTestsBtn.className = "btn btn-blue btn-small";
+    runTestsBtn.innerText = "🧪 Run Simulation Tests";
+    runTestsBtn.onclick = async () => {
+        if (typeof window.Game.Tests !== 'undefined' && typeof window.Game.Tests.runAll === 'function') {
+            runTestsBtn.disabled = true;
+            runTestsBtn.innerText = "⏳ Running...";
+            await window.Game.Tests.runAll();
+            runTestsBtn.innerText = "🧪 Tests Detailed in Console";
+            runTestsBtn.disabled = false;
+        }
+    };
+    quickGroup.appendChild(runTestsBtn);
+
     container.appendChild(quickGroup);
     
     // Telemetry Console Section

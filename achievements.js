@@ -31,6 +31,15 @@ const Achievements = {
             silver: { label: 'Silver Packer', req: 3, icon: '⬜📦' },
             gold: { label: 'Gold Packer', req: 5, icon: '🟨📦' },
             check: (stats) => stats.fullyLoadedLifts
+        },
+        hacker: {
+            id: 'hacker',
+            name: 'Hacker Award',
+            desc: 'Optimize custom logic to run for thousands of simulation cycles.',
+            bronze: { label: 'Bronze Logic', req: 500, icon: '🟫⌨️' },
+            silver: { label: 'Silver Logic', req: 5000, icon: '⬜⌨️' },
+            gold: { label: 'Master Coder', req: 20000, icon: '🟨⌨️' },
+            check: (stats) => Registry.customScriptTicks || 0
         }
     },
 

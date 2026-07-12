@@ -85,6 +85,11 @@ window.Game = window.Game || {};
                 // Pass a restricted 'Building' bridge instead of full Registry
                 const bridge = this.getBuildingBridge(lift);
                 fn(lift, bridge, window.Config);
+
+                // Career Progress: Track script execution ticks
+                if (window.Registry) {
+                    window.Registry.customScriptTicks = (window.Registry.customScriptTicks || 0) + 1;
+                }
             } catch (e) {
                 if (typeof Telemetry !== 'undefined') {
                     Telemetry.add('VM', `Runtime error in [${script.name}]: ${e.message}`, 'error');

@@ -191,12 +191,12 @@ window.skipToRound = function(targetRound) {
     else if (targetRound === 8) { 
         numLifts = Config.liftsR8; Registry.stats.currentSpawnChance = Config.spawnR8Start; 
         const spawnDelaySec = window.getRandomInt(Config.vipSpawnMinSec, Config.vipSpawnMaxSec);
-        Registry.vipTargetTime = Date.now() + (spawnDelaySec * 1000);
+        Registry.vipTargetTime = (window.Game.virtualTime || Date.now()) + (spawnDelaySec * 1000);
     }
     else if (targetRound === 9) { 
         numLifts = Config.liftsR9; Registry.stats.currentSpawnChance = Config.spawnR9Start; 
         const sunsetDelaySec = window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec);
-        Registry.sunsetTargetTime = Date.now() + (sunsetDelaySec * 1000);
+        Registry.sunsetTargetTime = (window.Game.virtualTime || Date.now()) + (sunsetDelaySec * 1000);
     }
     else if (targetRound === 10) { numLifts = Config.liftsR10; Registry.stats.currentSpawnChance = Config.spawnR10Start; }
     else if (targetRound === 11) { 
