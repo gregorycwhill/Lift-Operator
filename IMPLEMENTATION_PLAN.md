@@ -4,7 +4,7 @@ This document maps the conceptual goals in `ROADMAP.md` to specific architectura
 
 ---
 
-## 🏗️ Phase 1: Technical Foundation & QA
+## 🏗️ Phase 1: Technical Foundation & QA [COMPLETED]
 **Focus:** Infrastructure that makes all future features easier to verify without manual clicking.
 
 ### 1.1 Headless Physics Runner ("The Time-Warp") [COMPLETED]
@@ -12,37 +12,56 @@ This document maps the conceptual goals in `ROADMAP.md` to specific architectura
 *   **Change:** Decoupled physics loops from real-time clocks by passing `now` timestamps.
 *   **New Object:** `window.Game.Simulator`.
 *   **Key Function:** `runRound(seed, scriptMap, round)`.
-*   **UI Integration:** "Run Simulation Tests" button added to Debug Menu. Baseline tests cover Round 1 and Round 7 stress.
+*   **UI Integration:** "Run Regression Suite" button in Debug and Main menus.
 
 ### 1.2 The Manifest Gateway Evolution [COMPLETED]
 *   **Target:** `ui-manifest.js` and `engine-core.js`.
 *   **Change:** Transitioned to a robust **Manifest Controller** using a `switch` statement.
 *   **Logic Refactor:** Handles `challenge` payloads (fixed seed/lives) and blueprint versioning.
-*   **Reconciler UI:** Added naming conflict detection for imported scripts.
+*   **Sanitization:** Implemented script ID cleaning/deduplication.
 
 ---
 
-## 🚀 Phase 2: Gameplay Depth (Power-ups & Hazards)
+## 🚀 Phase 2: Gameplay Depth (Power-ups & Hazards) [COMPLETED]
 **Focus:** Modifying the passenger and lift data structures to accommodate complex interactions and "Weight-based" physics.
 
-### 2.1 Physics Engine Extensions: The State Machine
+### 2.1 Physics Engine Extensions: The State Machine [COMPLETED]
 *   **Target:** `engine-physics.js` (Boarding Loop) and `config.js`.
-*   **Architecture Change:** The boarding/unboarding logic in `animationTick` is currently a timer-gate. Refactor this into a **State Machine** on the Lift object: `IDLE` -> `BOARDING(progress/total)` -> `DOORS_MOVING` -> `DONE`.
+*   **Architecture Change:** Refactor the boarding/unboarding logic in `animationTick` from a timer-gate into a formal **Discrete State Machine** on the Lift object.
+*   **States:**
+    *   `IDLE`: Waiting for command.
+    *   `DOORS_OPENING`: Transitioning to open state.
+    *   `BOARDING`: Actively transferring passengers (Progress tracked).
+    *   `DOORS_CLOSING`: Transitioning to closed state.
+    *   `TRANSIT`: Physically moving between floors.
 *   **Dynamic Boarding:**
-    *   **Room Service:** Add `isBulky` flag to guests. 
-    *   **Calculation:** Instead of a fixed 1s, boarding progress increments by `deltaTime / (Config.boardSpeedSec * guest.boardingWeight)`.
-    *   **Wide Doors:** This power-up simply decreases the `guest.boardingWeight` modifier temporarily.
+    *   **Room Service:** Occupies 3x weight, boards at $1/3$ speed, slows other boarders in the same state by $50\%$.
+    *   **Wide Doors:** Multiplier applied directly to the state transition speed.
 
-### 2.2 Pedal Physics & Gravity
+### 2.2 Pedal Power & Gravity [COMPLETED]
 *   **Target:** `engine-physics.js` (Movement Logic).
 *   **Change:** Introduce a variable speed factor based on lift load.
 *   **New Formula:** `effectivePixelsPerTick = basePixels * (1 - (lift.currentWeight / lift.maxCapacity) * gravityConstant)`.
-*   **Constraint:** This only applies when `lift.targetFloor > currentFloor` (moving up).
+*   **Constraint:** This only applies in **Round 13** when `lift.targetFloor > currentFloor` (moving up).
 
-### 2.3 Advanced Power-up Effects Hooks
+### 2.3 Advanced Power-up Effects Hooks [COMPLETED]
 *   **Target:** `powerups.js` and `Registry` in `state.js`.
 *   **Change:** Add an `effects` array to both `Lift` and `Guest` objects. 
-*   **Group Think Implementation:** A power-up that iterates through the `lift.passengers` array, finds the mode (most common) destination, and overwrites all `p.dest` values. Triggers a visual "💡" icon on the lift.
+*   **Visuals:** Room Service carts now render with `🛎️🍽️` indicators.
+
+### 2.4 Survival Round Logic (Endurance) [COMPLETED]
+*   **Target:** `engine-physics.js` and `ui-briefing.js`.
+*   **Change:** Round 12 bypasses timer logic. Shift ends only on 50 guests served or 0 lives.
+*   **Refinement:** Fixed modal loop bug where review screen wouldn't transition to Round 13.
+
+### 2.5 Advanced Power-up Expansion & Safety [COMPLETED]
+*   **Double-Decker:** Dual-deck physics allowing for two `passengers` arrays per lift. Alignment check targets the bottom deck by default.
+*   **Routing Safety:** Implemented `targetFloor` clamping for multi-floor entities in `engine-physics.js` to prevent shaft overflow.
+*   **Hazards Correction:** Removed `/60` math divisor from `gameTick` hazard checks to ensure 0.5% chance per second matches Config at 1Hz execution.
+*   **Open Plan (Lateral Transfer): [IN-PROGRESS]** 
+    *   **Trigger:** Active whenever aligned lifts have the `openPlan` effect.
+    *   **Decision Logic:** Guests move if target lift is healthy and closer/moving to their destination.
+    *   **Visuals:** Side walls transition to "airflow" dashed lines; icons slide horizontally. Logic present in prototype form in `engine-physics.js`.
 
 ---
 
@@ -52,15 +71,16 @@ This document maps the conceptual goals in `ROADMAP.md` to specific architectura
 ### 3.1 The Memory API & Bounded Loops
 *   **Target:** `automation-vm.js`.
 *   **Persistence:** Initialize a `lift.scriptMemory = {}` object in the Registry.
-*   **Bridge Expansion:** Add `writeMemory(key, val)` and `readMemory(key)` to the `Building` bridge. This allows scripts to "remember" they are heading to floor 5 to pick up a specific VIP, even if the nearest target changes.
-*   **Safety:** Expose a `forEachPassenger(callback)` method in the bridge that wraps a standard loop but limits execution time to prevent infinite loops (Hacker Award safety).
+*   **Bridge Expansion:** Add `writeMemory(key, val)` and `readMemory(key)` to the `Building` bridge. 
+*   **Dynamic Observation:** Add `onFloorReached(floor)` callback hooks to allow event-driven automation.
+*   **Safety:** Expose a `forEachPassenger(callback)` method in the bridge that wraps a standard loop but limits execution time to prevent infinite loops.
 
 ### 3.2 Social Meta & Career Logic
 *   **Target:** `ui-leaderboard.js` and `achievements.js`.
 *   **Change:** Refactor `Achievements.evaluateRound()` from a linear check into a **Career Registry**. 
 *   **Achievements Expansion:**
-    *   **Hands Free Award:** Track `manualClickCount` in `Registry`. If 0 and round complete, trigger unique Achievement.
-    *   **Inventor Award:** Track cumulative `served` stats specifically when `lift.automation` starts with `custom_`.
+    *   **Hands Free Award (RESTORED):** Verified in regression suite. Track `manualClickCount` in `Registry`.
+    *   **Inventor Award:** Track cumulative `served` stats specifically when `lift.automation` starts with a custom script.
 
 ---
 

@@ -39,7 +39,7 @@ window.showRoundModal = function(round) {
         instructions.innerText = "Click on a lift shaft to send the car to that floor. Don't leave guests waiting too long!";
         const savedPlayer = window.Game.Storage.get(window.Game.Keys.PLAYER, Registry.fallbackName || "Pilot 1");
         if (document.getElementById('playerName')) document.getElementById('playerName').value = savedPlayer;
-        btn.innerText = `Start Round ${round}`;
+        btn.innerText = `Start Session: Round ${round}`;
         btn.className = 'btn btn-green btn-large btn-full-width';
     } 
     else if (round === 2) { title.innerText = `Round 2: Automations Unlocked (${rank})`; instructions.innerText = "Manual control is tough! Activate 'Sweep' to let the lift manage itself."; }
@@ -51,7 +51,10 @@ window.showRoundModal = function(round) {
     else if (round === 8) { title.innerText = `Round 8: VIP Arrival (${rank})`; instructions.innerText = "A VIP demands an entirely empty lift. If they are left waiting, it will cost us 10 lives. Watch for the Star!"; }
     else if (round === 9) { title.innerText = `Round 9: Happy Hour & Hazards (${rank})`; instructions.innerText = "The Rooftop bar opens! Watch out for Farts. Stinky lifts force evacuations and block boarding. Adapt!"; }
     else if (round === 10) { title.innerText = `Round 10: Sandbox Unlocked (${rank})`; instructions.innerText = "You can now write Custom Scripts in the Automation Workshop to handle the intense passenger loads!"; }
-    else if (round >= 11) { title.innerText = `Round ${round}: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
+    else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
+    else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. The shift doesn't end until you run out of lives. Survive the increasing chaos as long as you can!"; }
+    else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity is DOUBLED. Every passenger makes the climb significantly slower."; }
+    else if (round >= 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "High-density traffic detected. Use every automation and script at your disposal!"; }
 
     let shopDiv = document.getElementById('shopContainer');
     if (!shopDiv && btn) {

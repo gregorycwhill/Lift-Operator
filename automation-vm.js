@@ -121,12 +121,15 @@ window.Game = window.Game || {};
                 isFloorClaimed: (floor) => R.isFloorClaimedByOther(floor, lift.id),
                 findSweepTarget: (dir, prio) => R.findSweepTarget(lift, dir, prio),
                 getBestFloor: (weighted) => R.getBestFloor(lift, weighted),
-                randomFloor: () => R.prng.randomFloor(),
+                randomFloor: () => (typeof window.getRandomFloor === 'function' ? window.getRandomFloor() : Math.floor(Math.random() * window.Config.numFloors)),
                 
                 // Control Methods
                 setTarget: (floor) => {
-                    const f = parseInt(floor);
-                    if (!isNaN(f) && f >= 0 && f < window.Config.numFloors) {
+                    let f = parseInt(floor);
+                    const isDouble = lift.isDoubleDecker || (lift.doubleDeckerTimer && lift.doubleDeckerTimer > 0);
+                    const maxAllowed = isDouble ? (window.Config.numFloors - 2) : (window.Config.numFloors - 1);
+                    if (!isNaN(f)) {
+                        f = Math.max(0, Math.min(f, maxAllowed));
                         lift.targetFloor = f;
                     }
                 },

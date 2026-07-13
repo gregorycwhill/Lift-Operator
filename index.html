@@ -24,6 +24,7 @@
             <div>Round: <span id="round-display">1</span></div>
             <div id="lives-display">Lives: ❤️ 20</div>
         </div>
+        <div id="round-subtitle" style="font-size: 11px; color: #7f8c8d; text-align: center; margin-top: -5px; margin-bottom: 10px; font-style: italic; text-transform: uppercase; letter-spacing: 1px;">Welcome Pilot</div>
 
         <div class="inventory-bay">
             <div class="inventory-title">Power-Ups</div>
@@ -46,6 +47,8 @@
                     <option value="9">Round 9</option>
                     <option value="10">Round 10</option>
                     <option value="11">Round 11</option>
+                    <option value="12">Round 12</option>
+                    <option value="13">Round 13</option>
                 </select>
                 <button id="jumpRoundBtn" class="btn btn-orange">Warp</button>
             </div>
@@ -54,7 +57,6 @@
             <button id="leaderboardBtn" class="btn btn-yellow">Leaderboard</button>
             <button id="restartBtn" class="btn btn-red">Restart Game</button>
             <button id="openDebugBtn" class="btn btn-gray btn-margin-top">Debug Menu</button>
-            <button id="runTestsBtn" class="btn btn-blue btn-margin-top">Run Regression Suite</button>
         </div>
     </div>
 
@@ -221,7 +223,8 @@
             <div class="modal-content">
                 <h2>Engine Config</h2>
                 <div id="debugControls" class="debug-controls"></div>
-                <button id="closeDebugBtn" class="btn btn-green btn-full-width">Apply & Resume</button>
+                <button id="runTestsBtn" class="btn btn-blue btn-full-width btn-margin-top">Run Regression Suite</button>
+                <button id="closeDebugBtn" class="btn btn-green btn-full-width btn-margin-top">Apply & Resume</button>
             </div>
         </div>
 

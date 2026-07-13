@@ -20,7 +20,9 @@ const Registry = {
         criticalServed: 0,
         vipServed: 0,
         defenestrationsThisRound: 0,
-        totalWaitTimeServed: 0
+        totalWaitTimeServed: 0,
+        lateralTransfers: 0,
+        doubleDeckerServed: 0
     },
     
     // Social Sharing, Manifest & Trophy States
@@ -74,8 +76,10 @@ const Registry = {
         let maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(lift.id) : (Config.liftCapacity || 10);
         let isStinky = lift.stinkTimer > 0;
         let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
+        const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
+        const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
 
-        for (let checkF = currentFloor + dir; checkF >= 0 && checkF < Config.numFloors; checkF += dir) {
+        for (let checkF = currentFloor + dir; checkF >= 0 && checkF <= maxF; checkF += dir) {
             // Dropoff check: passengers always want to get off
             if (lift.passengers.some(p => p.dest === checkF)) return checkF;
             
@@ -113,7 +117,10 @@ const Registry = {
             return 1;
         };
 
-        for (let f = 0; f < Config.numFloors; f++) {
+        const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
+        const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
+
+        for (let f = 0; f <= maxF; f++) {
             let score = 0;
             lift.passengers.forEach(p => { if (p.dest === f) score += getVal(p); });
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {

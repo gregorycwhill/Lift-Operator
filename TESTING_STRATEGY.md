@@ -1,4 +1,4 @@
-# Testing Strategy: Lift Operator
+-0phgs# Testing Strategy: Lift Operator
 
 This document outlines the automated testing strategy for the *Lift Operator* engine, automation sandbox, and UI components. The goal is to ensure stability as new power-ups, achievements, and hazards are added to the simulation.
 
@@ -14,13 +14,17 @@ This document outlines the automated testing strategy for the *Lift Operator* en
     *   Negative Test: Ensure tampered strings or incorrect secrets fail gracefully without crashing the `handleSharedData` loop.
 *   **Guest Mechanics & Hazards:**
     *   **Aging Logic:** Verify transitions (HAPPY -> ANNOYED -> CRITICAL -> RAGE).
-    *   **Guest Weights:** Verify "Gym Bros" contribute double weight (2.0 vs 1.0).
+    *   **Guest Weights:** Verify "Gym Bros" contribute double weight (2.0 vs 1.0) and "Room Service" contributes triple weight (3.0).
     *   **Jam Hazards:** Verify that jammings suspend lift operations and the "Wrench" power-up correctly resets `jamTimer`.
+    *   **Physics: Gravity:** Verify upward speed deceleration is linear to the current lift weight ratio.
 
 ## 2. Regression & Simulation Testing ("The Golden Run")
 **Focus:** Physics stability, balancing, and deterministic outcomes.
 **Implementation:** `tests/regression-suite.js` (DeterministicSim) and `tests/simulation-tests.js`.
 
+*   **State Machine Verification:**
+    *   Continuous logging of state transitions (`IDLE` -> `DOORS_OPENING` -> `BOARDING` -> `DOORS_CLOSING` -> `TRANSIT`).
+    *   Verify that `BOARDING` time is strictly granular (per-guest) rather than a block delay.
 *   **Golden Run Determinism:**
     *   Execute a round simulation with a fixed seed and script twice.
     *   Ensure `servedCount` and `livesRemaining` are identical.

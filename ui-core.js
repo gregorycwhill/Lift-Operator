@@ -127,7 +127,8 @@ window.buildWorld = function() {
         shaftContainer.style.padding = '5px';
         shaftContainer.style.cursor = 'default';
 
-        const select = document.createElement('select');
+            // Pedal Power icon removed from here
+            const select = document.createElement('select');
         select.dataset.liftIndex = index;
         if (!isAutoUnlocked) select.disabled = true;
         select.style.width = '90%';
@@ -203,6 +204,21 @@ window.buildWorld = function() {
     });
     
     world.style.width = (410 + Registry.lifts.length * 120) + 'px';
+
+    // Pedal Power Decoration (Roof Top)
+    if (Registry.stats.round === 13) {
+        Registry.lifts.forEach((lift, index) => {
+            const bike = document.createElement('div');
+            bike.innerText = '🚲';
+            bike.style.position = 'absolute';
+            bike.style.top = '-32px'; // Shifted up further from -25px
+            bike.style.left = `${412 + index * 120 + 5}px`; // Moved slightly more left
+            bike.style.fontSize = '20px';
+            bike.style.zIndex = '100';
+            bike.style.opacity = '0.8';
+            world.appendChild(bike);
+        });
+    }
     
     const seedContainer = document.getElementById('seedDisplay');
     if (seedContainer && !document.getElementById('spontaneousShareLink')) {
@@ -258,20 +274,41 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     const hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
     if (hasStinkImmunity) isStinky = false;
     car.classList.toggle('stinky', isStinky);
+    
+    // State-based classes
+    car.classList.toggle('transit', lift.state === 'TRANSIT');
+    car.classList.toggle('doors-opening', lift.state === 'DOORS_OPENING');
+    car.classList.toggle('boarding', lift.state === 'BOARDING');
+    car.classList.toggle('doors-closing', lift.state === 'DOORS_CLOSING');
+    car.classList.toggle('idle', lift.state === 'IDLE');
 
-    const liftHeight = Math.min(50, Registry.floorHeight * 0.85);
-    const bottomOffset = 40 + (Registry.floorHeight - liftHeight) / 2;
+    // Phase 2.5: Power-up Expansions Rendering
+    const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
+    const isOpenPlan = lift.openPlanTimer > 0;
+
+    car.classList.toggle('double-decker', isDouble);
+    car.classList.toggle('open-plan', isOpenPlan);
+
+    const liftHeight = isDouble ? (Math.min(50, Registry.floorHeight * 0.85) * 2) : Math.min(50, Registry.floorHeight * 0.85);
+    const bottomOffset = 40 + (Registry.floorHeight - Math.min(50, Registry.floorHeight * 0.85)) / 2;
     
     // Calculate animation speed based on turbo
     const isTurbo = lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0);
     const animSpeed = isTurbo ? '0.008s' : '0.016s';
+
+    // Update guest state hash if classes changed
+    const guestStateKey = lift.passengers.map(p => `${p.dest}-${p.status}`).join('|');
+    const stateHash = `${guestStateKey}-${isDouble}-${isStinky}-${lift.isJammed}`;
+    if (car.dataset.guestState !== stateHash) {
+        // This will trigger a re-draw in draw() next frame
+        car.dataset.guestState = 'dirty'; 
+    }
     
+    car.style.setProperty('--lift-width', `${110}px`);
     car.style.setProperty('--lift-height', `${liftHeight}px`);
     car.style.setProperty('--lift-pos', `${lift.pos}px`);
     car.style.setProperty('--lift-bottom-offset', `${bottomOffset}px`);
-    car.style.setProperty('--lift-left', `${412 + index * 120}px`);
-    car.style.setProperty('--lift-anim-speed', animSpeed);
-    car.style.setProperty('--lift-left', `${412 + index * 120}px`);
+    car.style.setProperty('--lift-left', `${415 + index * 120}px`);
     car.style.setProperty('--lift-anim-speed', animSpeed);
 };
 
@@ -293,18 +330,50 @@ window.draw = function() {
         if (car) {
             // OPTIMIZATION: Only update if passenger state has changed
             const guestStateKey = lift.passengers.map(p => `${p.dest}-${p.status}`).join('|');
-            if (car.dataset.guestState === guestStateKey) {
+            const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
+            const stateHash = `${guestStateKey}-${isDouble}`;
+
+            if (car.dataset.guestState === stateHash) {
                 // Icons still need checking though, or we can hash them too
             } else {
-                car.dataset.guestState = guestStateKey;
+                car.dataset.guestState = stateHash;
                 while (car.firstChild) car.removeChild(car.firstChild);
 
-                lift.passengers.forEach(p => {
-                    const guest = document.createElement('div');
-                    guest.className = `guest ${p.status} ${p.isVip ? 'vip' : ''} ${p.isGymBro ? 'swol' : ''}`;
-                    guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
-                    car.appendChild(guest);
-                });
+                if (isDouble) {
+                    const topDeck = document.createElement('div');
+                    topDeck.className = 'lift-deck top';
+                    const bottomDeck = document.createElement('div');
+                    bottomDeck.className = 'lift-deck bottom';
+                    car.appendChild(topDeck);
+                    car.appendChild(bottomDeck);
+
+                    lift.passengers.forEach((p, i) => {
+                        const guest = document.createElement('div');
+                        let classList = `guest ${p.status}`;
+                        if (p.isVip) classList += ' vip';
+                        if (p.isPartying) classList += ' partying';
+                        if (p.isGymBro) classList += ' swol';
+                        if (p.isRoomService) classList += ' room-service';
+                        guest.className = classList;
+                        guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
+                        
+                        // Roughly split passengers between decks
+                        if (i % 2 === 0) topDeck.appendChild(guest);
+                        else bottomDeck.appendChild(guest);
+                    });
+                } else {
+                    lift.passengers.forEach(p => {
+                        const guest = document.createElement('div');
+                        let classList = `guest ${p.status}`;
+                        if (p.isVip) classList += ' vip';
+                        if (p.isPartying) classList += ' partying';
+                        if (p.isGymBro) classList += ' swol';
+                        if (p.isRoomService) classList += ' room-service';
+                        guest.className = classList;
+                        guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
+                        car.appendChild(guest);
+                    });
+                }
             }
 
             // Icons rendering (always check these for now as they are few)
@@ -315,8 +384,16 @@ window.draw = function() {
             if (lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0)) activeIcons.push({type: 'emoji', val: '🚀'});
             if (lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0)) activeIcons.push({type: 'emoji', val: '🌲'});
             if (lift.musakTimer > 0) activeIcons.push({type: 'emoji', val: '🎵'});
+            if (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0) activeIcons.push({type: 'emoji', val: '🚪'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) activeIcons.push({type: 'emoji', val: '🔧'});
             if (lift.isJammed) activeIcons.push({type: 'jam', val: '⚠️'});
+            
+            // Render active effects
+            if (lift.effects) {
+                lift.effects.forEach(eff => {
+                    activeIcons.push({ type: 'effect', val: eff.icon });
+                });
+            }
 
             if (activeIcons.length > 0) {
                 if (!iconsDiv) {
@@ -364,7 +441,12 @@ window.draw = function() {
 
                 guests.forEach(g => {
                     const guest = document.createElement('div');
-                    guest.className = `guest ${g.status} ${g.isVip ? 'vip' : ''} ${g.isPartying ? 'partying' : ''} ${g.isGymBro ? 'swol' : ''}`;
+                    let classList = `guest ${g.status}`;
+                    if (g.isVip) classList += ' vip';
+                    if (g.isPartying) classList += ' partying';
+                    if (g.isGymBro) classList += ' swol';
+                    if (g.isRoomService) classList += ' room-service';
+                    guest.className = classList;
                     guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(g) : window.getGuestText(g);
                     lobby.appendChild(guest);
                 });
@@ -452,6 +534,12 @@ window.updateScoreboardUI = function() {
     const s = (Registry.stats.timeLeft % 60).toString().padStart(2, '0');
     if (document.getElementById('clock-display')) document.getElementById('clock-display').innerText = `${m}:${s}`;
     if (document.getElementById('round-display')) document.getElementById('round-display').innerText = Registry.stats.round;
+    
+    const subTitle = document.getElementById('round-subtitle');
+    if (subTitle && Config.roundTitles) {
+        subTitle.innerText = Config.roundTitles[Registry.stats.round] || "";
+    }
+
     if (document.getElementById('lives-display')) document.getElementById('lives-display').innerText = `Lives: ❤️ ${Registry.stats.lives}`;
 };
 
@@ -461,6 +549,7 @@ window.getGuestText = function(g) {
     
     let txt = g.dest === 0 ? 'G' : g.dest;
     
+    if (g.isRoomService) return `🍽️${txt}`;
     if (g.isGymBro) return `💪${txt}`;
     if (g.isSunset) return 'R';
     

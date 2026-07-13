@@ -41,7 +41,30 @@ window.gameTick = function(timestamp) {
 
     if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick();
     
-    Registry.stats.timeLeft--;
+    // Round 12 Endurance: No timer, just ragers
+    if (Registry.stats.round === 12) {
+        // In Round 12, the clock stays at 1:00 (or whatever it started at)
+        // and we check for "Victory" based on a score or just let it transition?
+        // User wants to ensure progress to Round 13.
+        // Let's make Round 12 end successfully after a certain amount of guests served 
+        // to move to 13, OR let the user "end" it through a specific condition.
+        // However, if we just stop timeLeft depletion, it never ends.
+        
+        // MODIFICATION: Round 12 depletion is slowed/controlled?
+        // Actually, user said: "ensure the player doesn't 'die' (stop the game) and progresses through to round 13."
+        // This implies Round 12 should be survivable or have a progression trigger.
+        
+        if (Registry.stats.lives <= 0) {
+            // Instead of death in R12, we force the transition to R13 to see the challenge?
+            // Or maybe just let them finish R12 normally but without the timer.
+            // Let's use a "Served" goal for R12 to trigger Round Complete.
+            if (Registry.roundStats.servedThisRound >= 50) {
+                 Registry.stats.timeLeft = 0; 
+            }
+        }
+    } else {
+        Registry.stats.timeLeft--;
+    }
 
     const spawner = GameSpawner();
     if (typeof spawner.runSpawnerTick === 'function') {
@@ -52,6 +75,14 @@ window.gameTick = function(timestamp) {
     Registry.lifts.forEach((lift, i) => {
         // Fix for "ghost" jammed border: Ensure isJammed is initialized
         if (typeof lift.isJammed === 'undefined') lift.isJammed = false;
+
+        const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
+        if (isDouble) {
+            const maxF = Config.numFloors - 1;
+            if (lift.targetFloor >= maxF) {
+                lift.targetFloor = maxF - 1;
+            }
+        }
         
         if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) lift.jamTimer = 0;
 
@@ -69,16 +100,57 @@ window.gameTick = function(timestamp) {
         if (lift.turboTimer > 0) lift.turboTimer--; 
         if (lift.freshenerTimer > 0) lift.freshenerTimer--;
         if (lift.musakTimer > 0) lift.musakTimer--;
+        if (lift.doubleDeckerTimer > 0) lift.doubleDeckerTimer--;
+        else lift.isDoubleDecker = false;
+        
+        if (lift.openPlanTimer > 0) {
+            lift.openPlanTimer--;
+            // Lateral Transfer Logic
+            Registry.lifts.forEach((other, otherIdx) => {
+                if (i === otherIdx) return;
+                if (other.openPlanTimer <= 0) return; // Only if both have it? 
+                // Or maybe only one needs it to "open" their gate? 
+                // Let's say one lift having it allows it to push/pull guests if BOTH are aligned.
+                
+                const posDiff = Math.abs(lift.pos - other.pos);
+                if (posDiff < 0.2 * Registry.floorHeight) {
+                    // Lifts are aligned. Check for guest utility.
+                    for (let pIdx = lift.passengers.length - 1; pIdx >= 0; pIdx--) {
+                        const p = lift.passengers[pIdx];
+                        const otherCap = PowerUps.getLiftCapacity(otherIdx);
+                        if (Registry.getLiftWeight(other) + (p.boardingWeight || 1) <= otherCap) {
+                            // Utility Check: Is other lift closer to destination? 
+                            // Or is it moving in the right direction?
+                            const myDist = Math.abs(lift.targetFloor - p.dest);
+                            const otherDist = Math.abs(other.targetFloor - p.dest);
+                            
+                            // Simple heuristic: If other lift is closer to their target or heading there
+                            if (otherDist < myDist) {
+                                lift.passengers.splice(pIdx, 1);
+                                other.passengers.push(p);
+                                Registry.roundStats.lateralTransfers++;
+                                if (typeof PowerUps !== 'undefined') PowerUps.showEffectOnLift(otherIdx, '↔️');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Clear expired effects
+        if (lift.effects) {
+            lift.effects = lift.effects.filter(eff => (now - eff.startTime) < eff.duration);
+        }
         
         if (Registry.stats.round >= 6) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
-            if (lift.jamTimer <= 0 && seededRandom() < (Config.jamChancePerSec / 60) && !jamImmune) {
+            if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
                 lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec) * 60; // Convert sec to roughly 60fps ticks
             }
             
             if (Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
-                if (seededRandom() < (Config.fartChancePerSec / 60) && !stinkImmune) {
+                if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
                     lift.stinkTimer = Config.fartStinkSec * 60; // Convert sec to ticks
                     const farterIndex = window.getRandomInt(0, lift.passengers.length - 1);
                     lift.passengers[farterIndex].isFarter = true;
@@ -208,6 +280,18 @@ window.animationTick = function(timestamp) {
             }
         }
 
+        // --- 2.2 Gravity & Weight Physics ---
+        if (targetPos > lift.pos) {
+            const currentWeight = Registry.getLiftWeight(lift);
+            const maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+            // Gravity is ONLY active in Round 13 (Pedal Power)
+            // Double-Decker doubles weight sensitivity (gravity penalty)
+            let gravityMultiplier = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0) ? 2.0 : 1.0;
+            const liftGravity = (Registry.stats.round === 13) ? (Config.gravityConstant * 2 * gravityMultiplier) : 0;
+            const gravityEffect = 1 - ((currentWeight / maxCap) * liftGravity);
+            actualPixelsPerTick *= Math.max(0.1, gravityEffect); 
+        }
+
         let isStinky = lift.stinkTimer > 0;
         let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
 
@@ -238,15 +322,17 @@ window.animationTick = function(timestamp) {
 
             // --- STATE MACHINE ---
             if (lift.state === 'IDLE' || lift.state === 'DONE') {
+                const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
                 let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
-                const hasDropoffs = lift.passengers.some(p => p.dest === f || (forceExodus && !p.isGymBro));
+                const hasDropoffs = lift.passengers.some(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
                 
                 let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-                const canPickUp = (Registry.getLiftWeight(lift) < maxCap && Registry.floors[f].waitingGuests.length > 0);
+                const canPickUp = (Registry.getLiftWeight(lift) < maxCap && 
+                                  (Registry.floors[f].waitingGuests.length > 0 || (isDouble && Registry.floors[f+1] && Registry.floors[f+1].waitingGuests.length > 0)));
                 
                 if (hasDropoffs || canPickUp) {
-                    lift.state = 'BOARDING';
-                    lift.stateProgress = 1.0; 
+                    lift.state = 'DOORS_OPENING';
+                    lift.stateProgress = 0;
                     lift.lastActionTime = now;
                 } else {
                     if (lift.manualOverride) lift.manualOverride = false;
@@ -254,22 +340,37 @@ window.animationTick = function(timestamp) {
                 }
             }
             
-            if (lift.state === 'BOARDING') {
+            if (lift.state === 'DOORS_OPENING') {
+                lift.stateProgress += 16 / (Config.doorSpeedSec * 1000);
+                if (lift.stateProgress >= 1) {
+                    lift.state = 'BOARDING';
+                    lift.stateProgress = 0; 
+                }
+            }
+
+            else if (lift.state === 'BOARDING') {
                 if (lift.stateProgress >= 1) {
                     let performedAction = false;
+                    const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
                     let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
-                    const indexToDrop = lift.passengers.findIndex(p => p.dest === f || (forceExodus && !p.isGymBro));
+                    
+                    const indexToDrop = lift.passengers.findIndex(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
                     
                     if (indexToDrop !== -1) {
                         const p = lift.passengers.splice(indexToDrop, 1)[0];
-                        if (p.dest === f) {
+                        const exitF = (isDouble && p.dest === f + 1) ? f + 1 : f;
+                        
+                        if (!forceExodus || p.dest === exitF) {
                             if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('ding');
-                            if (p.isSunset && f === Config.numFloors - 1) {
+                            if (p.isSunset && exitF === Config.numFloors - 1) {
                                 p.isPartying = true;
-                                Registry.floors[f].waitingGuests.push(p);
+                                Registry.floors[exitF].waitingGuests.push(p);
                             } else {
                                 Registry.stats.served++;
                                 Registry.roundStats.servedThisRound++; 
+                                if (isDouble) {
+                                    Registry.roundStats.doubleDeckerServed++;
+                                }
                                 let waitSeconds = (now - p.spawnTime) / 1000;
                                 Registry.roundStats.totalWaitTimeServed += Math.max(0, waitSeconds);
                                 if (p.isVip) Registry.roundStats.vipServed++;
@@ -285,58 +386,72 @@ window.animationTick = function(timestamp) {
                         
                         performedAction = true;
                         lift.stateProgress = 0;
-                        lift.lastBoardingWeight = p.boardingWeight || 1.0;
+                        lift.lastBoardingWeight = p.boardingWeight || (p.type === 'room-service' ? 3.0 : (p.isGymBro ? 2.0 : 1.0));
                     } 
                     else {
                         let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-                        if (Registry.getLiftWeight(lift) < maxCap && Registry.floors[f].waitingGuests.length > 0) {
-                            let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g => {
-                                let gWeight = g.isGymBro ? 2 : 1;
+                        let targetFloorToBoard = f;
+                        let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g => {
+                            let gWeight = g.boardingWeight || (g.type === 'room-service' ? 3.0 : (g.isGymBro ? 2.0 : 1.0));
+                            if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
+                            if (g.status === GuestStatus.RAGE) return false;
+                            if (isStinky && !g.isGymBro) return false;
+                            if (lift.passengers.some(p => p.isVip)) return false; 
+                            if (g.isVip && lift.passengers.length > 0) return false; 
+                            if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
+                            const guestDir = g.dest > f ? 1 : -1;
+                            if (lift.passengers.length > 0) return guestDir === lift.sweepDirection;
+                            return true;
+                        });
+
+                        if (boardableGuestIndex === -1 && isDouble && Registry.floors[f+1]) {
+                            targetFloorToBoard = f + 1;
+                            boardableGuestIndex = Registry.floors[f+1].waitingGuests.findIndex(g => {
+                                let gWeight = g.boardingWeight || (g.type === 'room-service' ? 3.0 : (g.isGymBro ? 2.0 : 1.0));
                                 if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
                                 if (g.status === GuestStatus.RAGE) return false;
                                 if (isStinky && !g.isGymBro) return false;
                                 if (lift.passengers.some(p => p.isVip)) return false; 
                                 if (g.isVip && lift.passengers.length > 0) return false; 
-
                                 if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
-                                
-                                const guestDir = g.dest > f ? 1 : -1;
+                                const guestDir = g.dest > (f + 1) ? 1 : -1;
                                 if (lift.passengers.length > 0) return guestDir === lift.sweepDirection;
                                 return true;
                             });
+                        }
 
-                            if (boardableGuestIndex !== -1) {
-                                let parkedLifts = Registry.lifts.filter(l => l.targetFloor === f && Math.abs(l.pos - f * Registry.floorHeight) < 1 && Registry.getLiftWeight(l) < (typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity) && l.jamTimer <= 0 && l.stinkTimer <= 0);
-                                parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
-                                
-                                if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
-                                    const guestToBoard = Registry.floors[f].waitingGuests.splice(boardableGuestIndex, 1)[0];
-                                    if (lift.passengers.length === 0 && (lift.automation === 'sweep' || lift.automation === 'priority-sweep')) {
-                                        lift.sweepDirection = guestToBoard.dest > f ? 1 : -1;
-                                    }
-                                    lift.passengers.push(guestToBoard);
-                                    performedAction = true;
-                                    lift.stateProgress = 0;
-                                    lift.lastBoardingWeight = guestToBoard.boardingWeight || 1.0;
+                        if (boardableGuestIndex !== -1) {
+                            let parkedLifts = Registry.lifts.filter(l => l.targetFloor === f && Math.abs(l.pos - f * Registry.floorHeight) < 1 && Registry.getLiftWeight(l) < (typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity) && l.jamTimer <= 0 && l.stinkTimer <= 0);
+                            parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
+                            if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
+                                const guestToBoard = Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1)[0];
+                                if (lift.passengers.length === 0 && (lift.automation === 'sweep' || lift.automation === 'priority-sweep')) {
+                                    lift.sweepDirection = guestToBoard.dest > targetFloorToBoard ? 1 : -1;
                                 }
+                                lift.passengers.push(guestToBoard);
+                                performedAction = true;
+                                lift.stateProgress = 0;
+                                lift.lastBoardingWeight = guestToBoard.boardingWeight || (guestToBoard.type === 'room-service' ? 3.0 : (guestToBoard.isGymBro ? 2.0 : 1.0));
                             }
                         }
                     }
 
                     if (!performedAction) {
-                        lift.state = 'DOORS_MOVING';
+                        lift.state = 'DOORS_CLOSING';
                         lift.stateProgress = 0;
                     }
                 } else {
+                    let multiplier = 1.0;
+                    if (typeof PowerUps !== 'undefined' && PowerUps.activePowers && PowerUps.activePowers.includes('wideDoors')) multiplier *= 2.0;
                     const weight = lift.lastBoardingWeight || 1.0;
-                    const effectiveBoardSpeed = Config.boardSpeedSec * (Config.boardingSpeedMultiplier || 1.0) * weight;
+                    const effectiveBoardSpeed = Config.boardSpeedSec * (Config.boardingSpeedMultiplier || 1.0) * weight / multiplier;
                     lift.stateProgress += 16 / (effectiveBoardSpeed * 1000);
                 }
             }
-            else if (lift.state === 'DOORS_MOVING') {
+            else if (lift.state === 'DOORS_CLOSING') {
                 lift.stateProgress += 16 / (Config.doorSpeedSec * 1000); 
                 if (lift.stateProgress >= 1) {
-                    lift.state = 'DONE';
+                    lift.state = 'IDLE';
                     lift.stateProgress = 0;
                     if (lift.manualOverride) lift.manualOverride = false;
                     window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
@@ -347,6 +462,8 @@ window.animationTick = function(timestamp) {
 };
 
 window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasStinkImmunity, now) {
+    if (lift.manualOverride) return;
+
     const VM = window.Game.Automation;
     if (!VM || !lift.automation || lift.automation === 'manual') return;
 

@@ -24,7 +24,7 @@ window.showToast = function(message) {
  */
 window.updateLocksUI = function() {
     if (!Registry.highestUnlockedRound) Registry.highestUnlockedRound = 1;
-    let maxRoundAllowed = Config.debugMode ? 11 : Registry.highestUnlockedRound;
+    let maxRoundAllowed = Config.debugMode ? 13 : Registry.highestUnlockedRound;
 
     const jumpSelect = document.getElementById("jumpRoundSelect");
     if (jumpSelect) {
@@ -174,6 +174,11 @@ window.initializeUI = function() {
     bind("continueToBriefingBtn", () => {
         const reviewOverlay = document.getElementById("roundReviewOverlay");
         if (reviewOverlay) reviewOverlay.style.display = "none";
+        
+        // Fix for modal loop: Ensure previous state is cleared
+        const briefingOverlay = document.getElementById("roundModalOverlay");
+        if (briefingOverlay) briefingOverlay.style.display = "none";
+
         if (typeof ui.showRoundModal === "function") ui.showRoundModal(Registry.stats.round + 1);
     });
 

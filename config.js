@@ -83,6 +83,8 @@ window.Config = {
     spawnR7Start: 1.25, spawnR7End: 1.40, spawnR8Start: 1.00, spawnR8End: 1.25, 
     spawnR9Start: 1.25, spawnR9End: 1.50, spawnR10Start: 1.50, spawnR10End: 1.75,
     spawnR11Start: 1.75, spawnR11End: 2.00,
+    spawnR12Start: 2.00, spawnR12End: 2.50,
+    spawnR13Start: 1.50, spawnR13End: 1.75,
     
     happySec: 20, annoyedSec: 40, criticalSec: 60,
     liftCapacity: 10, liftSpeedSec: 0.5, doorSpeedSec: 0.2, boardSpeedSec: 1.0, boardingSpeedMultiplier: 1.0,
@@ -91,7 +93,25 @@ window.Config = {
     fartChancePerSec: 0.005, fartStinkSec: 20,
     sunsetMinSec: 30, sunsetMaxSec: 90, sunsetDurationSec: 30, sunsetGuestRatio: 0.50,
     
-    gymBroStinkThreshold: 3
+    gymBroStinkThreshold: 3,
+    roomServiceChance: 0.05,
+    gravityConstant: 0.4,
+    
+    roundTitles: {
+        1: "Welcome Pilot",
+        2: "Automation 101",
+        3: "Trainee Rush",
+        4: "Triage Protocol",
+        5: "Democratic Flow",
+        6: "Maintenance Crisis",
+        7: "Check-out Challenge",
+        8: "VIP Security",
+        9: "Happy Hour",
+        10: "Workshop Sandbox",
+        11: "Heavy Lifting",
+        12: "Endurance Test",
+        13: "Pedal Power"
+    }
 };
 
 const Config = window.Config;
@@ -140,5 +160,6 @@ const debugDefinitions = [
     { key: 'criticalSec', label: 'Defenestrate Timeout (sec)', min: 10, max: 200, step: 1, dispFormat: (v)=>v },
     { key: 'liftCapacity', label: 'Lift Capacity', min: 1, max: 30, step: 1, dispFormat: (v)=>v },
     { key: 'liftSpeedSec', label: 'Lift Speed (sec/floor)', min: 0.1, max: 5.0, step: 0.1, dispFormat: (v)=>v.toFixed(1) },
-    { key: 'boardSpeedSec', label: 'Boarding Speed (sec/person)', min: 0.1, max: 5.0, step: 0.1, dispFormat: (v)=>v.toFixed(1) }
+    { key: 'boardSpeedSec', label: 'Boarding Speed (sec/person)', min: 0.1, max: 5.0, step: 0.1, dispFormat: (v)=>v.toFixed(1) },
+    { key: 'gravityConstant', label: 'Gravity Penalty (Up)', min: 0.0, max: 0.8, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' }
 ];

@@ -48,6 +48,11 @@ const PowerUps = {
     },
 
     showEffectOnLift: function(liftId, icon) {
+        const lift = Registry.lifts[liftId];
+        if (lift && lift.effects) {
+            lift.effects.push({ icon, startTime: Date.now(), duration: 1500 });
+        }
+
         const world = document.getElementById('world');
         const car = document.getElementById(`lift-el-${liftId}`);
         if (world && car) {
@@ -192,6 +197,136 @@ const PowerUps = {
                 { cost: 5, desc: 'Instantly board/unboard all guests for 30s.', target: 'instant', 
                   execute: () => { Config.boardingSpeedMultiplier = 0.05; PowerUps.timers.wideDoors = 30; PowerUps.flashScreen('rgba(241, 196, 15, 0.7)'); } }
             ]
+        },
+        groupThink: {
+            id: 'groupThink', name: 'Group Think', icon: '✨',
+            tiers: [
+                { cost: 2, desc: 'Target a floor: All waiting guests change dest to the majority choice.', target: 'floor', 
+                  execute: (liftId, floorId) => { 
+                      const guests = Registry.floors[floorId].waitingGuests;
+                      if (!guests.length) return;
+                      const counts = {};
+                      guests.forEach(g => counts[g.dest] = (counts[g.dest] || 0) + 1);
+                      let majorityDest = guests[0].dest;
+                      let maxCount = 0;
+                      for (const d in counts) {
+                          if (counts[d] > maxCount) {
+                              maxCount = counts[d];
+                              majorityDest = parseInt(d);
+                          }
+                      }
+                      guests.forEach(g => g.dest = majorityDest);
+                      PowerUps.showEffectOnFloor(floorId, '✨');
+                  } 
+                },
+                { cost: 4, desc: 'Target a lift: All passengers change dest to the majority choice.', target: 'lift', 
+                  execute: (liftId, floorId) => { 
+                      const passengers = Registry.lifts[liftId].passengers;
+                      if (!passengers.length) return;
+                      const counts = {};
+                      passengers.forEach(p => counts[p.dest] = (counts[p.dest] || 0) + 1);
+                      let majorityDest = passengers[0].dest;
+                      let maxCount = 0;
+                      for (const d in counts) {
+                          if (counts[d] > maxCount) {
+                              maxCount = counts[d];
+                              majorityDest = parseInt(d);
+                          }
+                      }
+                      passengers.forEach(p => p.dest = majorityDest);
+                      PowerUps.showEffectOnLift(liftId, '✨');
+                  } 
+                },
+                { cost: 6, desc: 'Global Consensus: All guests (floors & lifts) sync to their group majority.', target: 'instant', 
+                  execute: () => { 
+                      Registry.floors.forEach((f, fIdx) => {
+                          const guests = f.waitingGuests;
+                          if (!guests.length) return;
+                          const counts = {};
+                          guests.forEach(g => counts[g.dest] = (counts[g.dest] || 0) + 1);
+                          let majorityDest = guests[0].dest;
+                          let maxCount = 0;
+                          for (const d in counts) {
+                              if (counts[d] > maxCount) {
+                                  maxCount = counts[d];
+                                  majorityDest = parseInt(d);
+                              }
+                          }
+                          guests.forEach(g => g.dest = majorityDest);
+                          PowerUps.showEffectOnFloor(fIdx, '✨');
+                      });
+                      Registry.lifts.forEach((l, lIdx) => {
+                          const passengers = l.passengers;
+                          if (!passengers.length) return;
+                          const counts = {};
+                          passengers.forEach(p => counts[p.dest] = (counts[p.dest] || 0) + 1);
+                          let majorityDest = passengers[0].dest;
+                          let maxCount = 0;
+                          for (const d in counts) {
+                              if (counts[d] > maxCount) {
+                                  maxCount = counts[d];
+                                  majorityDest = parseInt(d);
+                              }
+                          }
+                          passengers.forEach(p => p.dest = majorityDest);
+                          PowerUps.showEffectOnLift(lIdx, '✨');
+                      });
+                  } 
+                }
+            ]
+        },
+        doubleDecker: {
+            id: 'doubleDecker', name: 'Double-Decker', icon: '🚡',
+            tiers: [
+                { cost: 3, desc: 'Bronze: One lift gains double capacity for 30s.', target: 'lift', 
+                  execute: (liftId, floorId) => { 
+                      Registry.lifts[liftId].doubleDeckerTimer = 30 * 60; // ticks
+                      Registry.lifts[liftId].isDoubleDecker = true;
+                      PowerUps.showEffectOnLift(liftId, '🚡'); 
+                  } 
+                },
+                { cost: 5, desc: 'Silver: One lift gains double capacity for 60s.', target: 'lift', 
+                  execute: (liftId, floorId) => { 
+                      Registry.lifts[liftId].doubleDeckerTimer = 60 * 60; // ticks
+                      Registry.lifts[liftId].isDoubleDecker = true;
+                      PowerUps.showEffectOnLift(liftId, '🚡'); 
+                  } 
+                },
+                { cost: 8, desc: 'Gold: ALL lifts gain double capacity for 45s.', target: 'instant', 
+                  execute: () => { 
+                      Registry.lifts.forEach(l => {
+                          l.doubleDeckerTimer = 45 * 60;
+                          l.isDoubleDecker = true;
+                          PowerUps.showEffectOnLift(l.id, '🚡');
+                      });
+                  } 
+                }
+            ]
+        },
+        openPlan: {
+            id: 'openPlan', name: 'Open Plan', icon: '↔️',
+            tiers: [
+                { cost: 4, desc: 'Bronze: One lift allows lateral transfer for 20s.', target: 'lift', 
+                  execute: (liftId, floorId) => { 
+                      Registry.lifts[liftId].openPlanTimer = 20 * 60; 
+                      PowerUps.showEffectOnLift(liftId, '↔️'); 
+                  } 
+                },
+                { cost: 6, desc: 'Silver: One lift allows lateral transfer for 45s.', target: 'lift', 
+                  execute: (liftId, floorId) => { 
+                      Registry.lifts[liftId].openPlanTimer = 45 * 60; 
+                      PowerUps.showEffectOnLift(liftId, '↔️'); 
+                  } 
+                },
+                { cost: 10, desc: 'Gold: ALL lifts allow lateral transfer for 30s.', target: 'instant', 
+                  execute: () => { 
+                      Registry.lifts.forEach(l => {
+                          l.openPlanTimer = 30 * 60;
+                          PowerUps.showEffectOnLift(l.id, '↔️');
+                      });
+                  } 
+                }
+            ]
         }
     },
 
@@ -286,7 +421,13 @@ const PowerUps = {
     
     getLiftCapacity: function(liftId) {
         if (this.timers.globalTardis > 0) return 999;
-        if (liftId !== null && Registry.lifts[liftId] && Registry.lifts[liftId].tardisTimer > 0) return 999;
+        if (liftId !== null && Registry.lifts[liftId]) {
+            const lift = Registry.lifts[liftId];
+            if (lift.tardisTimer > 0) return 999;
+            let cap = Config.liftCapacity;
+            if (lift.isDoubleDecker || lift.doubleDeckerTimer > 0) cap *= 2;
+            return cap;
+        }
         return Config.liftCapacity;
     }
 };

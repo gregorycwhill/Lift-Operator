@@ -132,7 +132,8 @@ window.resetGame = function() {
     Registry.roundStats = { 
         manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
         happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
-        defenestrationsThisRound: 0, totalWaitTimeServed: 0
+        defenestrationsThisRound: 0, totalWaitTimeServed: 0,
+        lateralTransfers: 0, doubleDeckerServed: 0
     };
     
     Config.numFloors = 10;
@@ -148,7 +149,8 @@ window.resetGame = function() {
             manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0, 
             tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
             musakTimer: 0, sardineScored: false,
-            state: 'IDLE', stateProgress: 0
+            state: 'IDLE', stateProgress: 0,
+            effects: []
         });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
@@ -205,6 +207,14 @@ window.skipToRound = function(targetRound) {
         numLifts = Config.liftsR11; Registry.stats.currentSpawnChance = Config.spawnR11Start; 
         Registry.gymFloor = window.getRandomInt(1, Config.numFloors - 2);
     }
+    else if (targetRound === 12) { 
+        numLifts = Config.liftsR12 || 4; 
+        Registry.stats.currentSpawnChance = Config.spawnR12Start || 0.04;
+    }
+    else if (targetRound === 13) { 
+        numLifts = Config.liftsR13 || 4; 
+        Registry.stats.currentSpawnChance = Config.spawnR13Start || 0.05;
+    }
     
     Registry.lifts = [];
     for (let i = 0; i < numLifts; i++) {
@@ -214,7 +224,8 @@ window.skipToRound = function(targetRound) {
             manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0, 
             tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
             musakTimer: 0, sardineScored: false,
-            state: 'IDLE', stateProgress: 0
+            state: 'IDLE', stateProgress: 0,
+            effects: []
         });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
@@ -268,9 +279,10 @@ window.initializeEngine = function() {
             id: i, targetFloor: 0, pos: 0, passengers: [], lastActionTime: 0, 
             automation: 'manual', sweepDirection: 1, manualOverride: false, 
             isJammed: false, jamTimer: 0, stinkTimer: 0, 
-            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, musakTimer: 0, 
+            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
             musakTimer: 0, sardineScored: false,
-            state: 'IDLE', stateProgress: 0
+            state: 'IDLE', stateProgress: 0,
+            effects: []
         });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));

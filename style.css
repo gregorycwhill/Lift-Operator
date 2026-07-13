@@ -156,6 +156,7 @@ body {
     width: var(--lobby-width); 
     display: flex; 
     align-items: center; 
+    justify-content: flex-end; /* Queue next to the lift on the right */
     padding: 5px; 
     gap: 5px; 
     border-right: 2px solid #7f8c8d; 
@@ -174,23 +175,22 @@ body {
 /* Entities */
 .lift { 
     position: absolute; 
-    width: var(--lift-width, 100px); 
+    width: var(--lift-width, 110px); 
     background: #ecf0f1; 
     border: 3px solid #000; 
     border-radius: 6px; 
-    margin-left: 5px;
+    left: var(--lift-left, 415px);
     display: flex; 
     flex-wrap: wrap; 
     align-items: center; 
     justify-content: center; 
-    transition: bottom 0.016s linear; 
     z-index: 10; 
     box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
     gap: 2px; 
     bottom: calc(var(--lift-pos, 0px) + var(--lift-bottom-offset, 40px));
-    left: var(--lift-left, 412px);
     height: var(--lift-height, 50px);
     transition: bottom var(--lift-anim-speed, 0.016s) linear;
+    box-sizing: border-box;
 }
 .lift::before { 
     content: ''; 
@@ -223,11 +223,27 @@ body {
 .rage { background: #000; animation: shake 0.5s infinite; }
 .vip { border: 2px solid #f1c40f; box-shadow: 0 0 10px #f1c40f; }
 .swol { 
-    width: max-content; 
-    min-width: 30px; 
-    padding: 0 4px; 
+    width: 30px; 
     border-radius: 4px; 
-    font-size: 13px; 
+    font-size: 14px; 
+} 
+
+.room-service {
+    width: 60px !important; 
+    min-width: 60px !important; 
+    height: 20px !important;
+    border-radius: 10px !important; /* Half height for perfect pill ends */
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px !important;
+    font-size: 14px;
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 1px solid #7f8c8d;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0 !important;
 }
 .partying { animation: bounce 0.5s infinite alternate; }
 
@@ -246,6 +262,45 @@ body {
     pointer-events: none;
     animation: float 2s infinite ease-in-out;
 }
+
+/* Phase 2.5: Expansion Power-ups */
+/* Double-Decker internal layout */
+.lift-deck {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    height: 50%;
+    width: 100%;
+    box-sizing: border-box;
+}
+.lift-deck.top {
+    border-bottom: none;
+}
+.lift-deck.bottom {
+    border-top: none;
+}
+
+.lift.double-decker {
+    border-width: 4px;
+}
+.lift.open-plan {
+    border-color: #3498db;
+    box-shadow: 0 0 15px rgba(52, 152, 219, 0.8);
+    animation: openPlanPulse 1.5s infinite alternate;
+}
+
+@keyframes openPlanPulse {
+    from { border-color: #3498db; box-shadow: 0 0 5px rgba(52, 152, 219, 0.4); }
+    to { border-color: #5dade2; box-shadow: 0 0 20px rgba(52, 152, 219, 0.9); }
+}
+
+/* Doors States */
+.lift.doors-opening { background: #cfd8dc; }
+.lift.boarding { background: #ffffff; border-color: #2ecc71; border-width: 3px; }
+.lift.doors-closing { background: #cfd8dc; }
+.lift.transit { opacity: 0.95; }
 
 /* ==========================================================================
    STANDARD MODALS (Welcome, Review, Leaderboard)

@@ -117,12 +117,12 @@ window.showLeaderboard = function(titleText) {
         } else {
             records.slice(0, 10).forEach((record, index) => { 
                 let badgeIcons = "";
-                if (record.trophies && Array.isArray(record.trophies)) {
+                if (record.trophies && Array.isArray(record.trophies) && typeof Achievements !== 'undefined') {
                     record.trophies.forEach(tKey => {
-                        const parts = tKey.split('_');
-                        if (parts.length >= 2) {
-                            const icon = parts[1];
-                            badgeIcons += ` <span title="${tKey}">${icon}</span>`;
+                        const [featId, tier] = tKey.split('_');
+                        const feat = Achievements.definitions[featId];
+                        if (feat && feat[tier]) {
+                            badgeIcons += ` <span title="${feat.name}: ${feat[tier].label}">${feat[tier].icon}</span>`;
                         }
                     });
                 }

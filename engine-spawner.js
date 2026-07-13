@@ -13,6 +13,8 @@ window.forceFirstSpawn = function(now) {
         while (dest === start) dest = window.getRandomFloor();
     }
     let isGym = (start === Registry.gymFloor);
+    let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
+    
     Registry.floors[start].waitingGuests.push({
         dest: dest, 
         status: GuestStatus.HAPPY, 
@@ -22,8 +24,9 @@ window.forceFirstSpawn = function(now) {
         isSunset: false, 
         isPartying: false, 
         isGymBro: isGym,
-        isBulky: isGym, // Gym Bros are bulky
-        boardingWeight: isGym ? 2.0 : 1.0
+        isBulky: isGym || isRoomService,
+        isRoomService: isRoomService,
+        boardingWeight: isRoomService ? 3.0 : (isGym ? 2.0 : 1.0)
     });
     Registry.lastSpawnTime = now;
 };
@@ -42,6 +45,8 @@ window.runSpawnerTick = function(now) {
     else if (Registry.stats.round === 9) Registry.stats.currentSpawnChance = Config.spawnR9Start + ((Config.spawnR9End - Config.spawnR9Start) * progress); 
     else if (Registry.stats.round === 10) Registry.stats.currentSpawnChance = Config.spawnR10Start + ((Config.spawnR10End - Config.spawnR10Start) * progress);
     else if (Registry.stats.round === 11) Registry.stats.currentSpawnChance = Config.spawnR11Start + ((Config.spawnR11End - Config.spawnR11Start) * progress); 
+    else if (Registry.stats.round === 12) Registry.stats.currentSpawnChance = Config.spawnR12Start + ((Config.spawnR12End - Config.spawnR12Start) * progress);
+    else if (Registry.stats.round >= 13) Registry.stats.currentSpawnChance = Config.spawnR13Start + ((Config.spawnR13End - Config.spawnR13Start) * progress);
 
     // 2. VIP Event Orchestration
     if (Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
@@ -115,6 +120,8 @@ window.runSpawnerTick = function(now) {
             }
             
             let isGym = (start === Registry.gymFloor);
+            let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
+            
             let newGuest = {
                 dest: dest, 
                 status: GuestStatus.HAPPY, 
@@ -124,8 +131,9 @@ window.runSpawnerTick = function(now) {
                 isSunset: false, 
                 isPartying: false, 
                 isGymBro: isGym,
-                isBulky: isGym,
-                boardingWeight: isGym ? 2.0 : 1.0
+                isBulky: isGym || isRoomService,
+                isRoomService: isRoomService,
+                boardingWeight: isRoomService ? 3.0 : (isGym ? 2.0 : 1.0)
             };
             
             if (Registry.sunsetActive && !newGuest.isVip && seededRandom() < Config.sunsetGuestRatio) {

@@ -4,35 +4,38 @@ This document outlines the strategic expansion of *Lift Operator* following the 
 
 ---
 
-## 🏗️ Phase 1: Technical Foundation & QA (Restoration & Stability)
+## 🏗️ Phase 1: Technical Foundation & QA (Restoration & Stability) [ESTABLISHED]
 
-### 1.1 Automated Testing Suite
+### 1.1 Automated Testing Suite [COMPLETED]
 - **Headless Runner:** Implement a scriptable version of `engine-physics.js` that can run full rounds at high speed to verify balance and determinism.
 - **Integration Tests:** Validate the **Manifest Gateway** (encoded URL sharing) and cross-shift data persistence.
-- **E2E Smoke Tests:** Automated Playwright flows for the Workshop (Create -> Save -> Share) and the Power-up Shop.
-- **Performance Benchmarking:** Track "Ticks-Per-Second" (TPS) to ensure new features don't degrade the 60fps target.
+- **Regression Suite:** Implemented a 15-test E2E runner in `tests/regression-suite.js` covering core mechanics, hazards, and VM safety. Achieved 100% pass rate.
 
 ---
 
-## 🚀 Phase 2: Gameplay Depth (Power-ups & Hazards)
+## 🚀 Phase 2: Gameplay Depth (Power-ups & Hazards) [COMPLETED]
 
-### 2.1 Advanced Power-ups
-- **Wide Doors (Implemented):** Refine UI feedback for the time-limited boarding speed boost.
+### 2.1 Advanced Power-ups [COMPLETED]
+- **Wide Doors:** Refine UI feedback for the time-limited boarding speed boost.
 - **Tardis Module:** Add internal visual indicator for lifts with active infinite capacity.
-- **Group Think:** Everyone in the lift votes and agrees to change their destination floor to majority (random on a tie).
-- **Double Decker:** The lift now spans two levels. Guests can more freely within the lift. They can board and disembark on either of the lift's decks.
-- **Open Plan:** Guests can move between adjacent lifts in the shaft as they pass each other. They make a decision based on whether they'll reach their destination faster on the other lift.
+- **Double-Decker:** Implemented dual-deck lift upgrade for 2x capacity with shaft-capping safety logic.
+- **Group Think:** Everyone in the lift votes and agrees to change their destination floor to majority.
+- **Effects Pipeline:** Implemented an extensible `effects` array for real-time visual feedback on lift status icons.
 
-### 2.2 New Challenges & Hazards
-- **Pedal Lifts:** This round, all lifts are pedal-powered. While down speed is unchanged, up is considerably harder - and decreases the more guests are in the lift.
-- **Room Service:** Periodically, Room Service carts will spawn (either going to or coming from Ground Floor, where the kitchen is). Room Service carts have a capacity of three and take 3x as long to transition on/off the lift. They also make other guests take 2x as long.
-- **Vandalism:** Annoyed guests occasionally jam buttons on their target floors, requiring a "Wrench" power-up to fix.
+### 2.2 New Challenges & Hazards [COMPLETED]
+- **Pedal Power (Gravity):** Upward travel speed is penalized by load weight. Gated to Round 13.
+- **Room Service:** Bulky carts (🛎️🍽️) that occupy 3x capacity and take 3x time to board.
+- **Gym Bros:** Swol passengers (Round 11) that occupy 2x weight and trigger "Stink" hazard when grouped. Restored "double-wide" visual style.
+- **Endurance Mode:** Round 12 survival challenge (No timer).
 
-### 2.3 New Achievements & Awards
-- **Promoter Award:** Got x guests to the rooftop in time for the party
+### 2.3 Expansion Power-ups [PLANNED]
+- **Open Plan:** Lateral transfer mechanics for guest hand-offs between aligned lifts. (Initial logic present in `engine-physics.js`).
+
+### 2.4 New Achievements & Awards [COMPLETED]
 - **Hands Free Award:** Completed a round with Automation only - no manual intervention.
+- **Sardine Packer:** Deliver a lift at 100% capacity/weight.
 - **Flawless Floors:** Completed a round without losing a life.
-- **Inventor Award:** Services x guests with a Custom Automation
+- **Inventor Award:** Services x guests with a Custom Automation.
 
 ---
 
@@ -42,6 +45,7 @@ This document outlines the strategic expansion of *Lift Operator* following the 
 - **Memory API:** Introduce `Building.writeMemory(key, val)` and `Building.readMemory(key)` to allow scripts to pass state between ticks.
 - **Looping Constructs:** Safely expose bounded for-each loops for scanning passengers or waiting queues.
 - **Telemetry Improvements:** Enhancements to the `System Console` to log custom messages from user scripts.
+- **IO Streams:** (Proposed) Allow scripts to react to specific events (e.g., `onFloorReached`).
 
 ### 3.2 Hacker Awards & Social Meta
 - **Hacker Achievements (Implemented):** Track and reward logic efficiency and cycle counts.

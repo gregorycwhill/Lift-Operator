@@ -8,7 +8,7 @@ const Achievements = {
         service: {
             id: 'service',
             name: 'Service Award',
-            desc: 'Safely deliver heavy passenger guest volumes inside a single shift.',
+            desc: 'Safely deliver heavy passenger guest volumes inside a single round.',
             bronze: { label: 'Bronze Fish', req: 10, icon: '🟫🐟' },
             silver: { label: 'Silver Fish', req: 30, icon: '⬜🐟' },
             gold: { label: 'Gold Fish', req: 50, icon: '🟨🐟' },
@@ -35,11 +35,29 @@ const Achievements = {
         hacker: {
             id: 'hacker',
             name: 'Hacker Award',
-            desc: 'Optimize custom logic to run for thousands of simulation cycles.',
+            desc: 'Optimise custom logic to run for thousands of simulation cycles.',
             bronze: { label: 'Bronze Logic', req: 500, icon: '🟫⌨️' },
             silver: { label: 'Silver Logic', req: 5000, icon: '⬜⌨️' },
             gold: { label: 'Master Coder', req: 20000, icon: '🟨⌨️' },
             check: (stats) => Registry.customScriptTicks || 0
+        },
+        parallel: {
+            id: 'parallel',
+            name: 'Parallel Universe',
+            desc: 'Successfully bridge gaps between shafts using lateral transfer logic.',
+            bronze: { label: 'Bronze Bridge', req: 1, icon: '🟫↔️' },
+            silver: { label: 'Silver Bridge', req: 10, icon: '⬜↔️' },
+            gold: { label: 'Quantum Leap', req: 25, icon: '🟨↔️' },
+            check: (stats) => stats.lateralTransfers || 0
+        },
+        doubleup: {
+            id: 'doubleup',
+            name: 'Double Trouble',
+            desc: 'Utilise double-decker infrastructure to move large volumes of people.',
+            bronze: { label: 'Bronze Deck', req: 5, icon: '🟫🚡' },
+            silver: { label: 'Silver Deck', req: 15, icon: '⬜🚡' },
+            gold: { label: 'Ocean Liner', req: 40, icon: '🟨🚡' },
+            check: (stats) => stats.doubleDeckerServed || 0
         }
     },
 
@@ -106,7 +124,7 @@ const Achievements = {
         }
 
         if (logMessages.length === 0) {
-            logMessages.push("Shift completed cleanly. Optimize scripts further to claim higher elite badges!");
+            logMessages.push("Round completed cleanly. Optimise scripts further to claim higher elite badges!");
         }
 
         // Auto-Equip Safety Gateway: Backfill trophy cabinet if scores are tracking empty
@@ -214,7 +232,7 @@ const Achievements = {
             emptyHint.style.fontSize = '12px';
             emptyHint.style.color = '#7f8c8d';
             emptyHint.style.fontStyle = 'italic';
-            emptyHint.textContent = 'No career medals unlocked yet. Complete shifts to populate cabinet!';
+            emptyHint.textContent = 'No career medals unlocked yet. Complete rounds to populate cabinet!';
             flexContainer.appendChild(emptyHint);
         }
 

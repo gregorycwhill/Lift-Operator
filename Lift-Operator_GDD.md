@@ -6,18 +6,35 @@
 
 ## 2. Core Mechanics
 * **The Grid:** 15 Floors (G, 1-14). 
-* **The Lift:** Capacity of 10. Travels at 0.5s per floor. Takes 1.0s to board/drop off.
+* **The Lift:** Capacity of 10. Travels at 0.5s per floor. Uses a state-driven physics model (`TRANSIT`, `DOORS_OPENING`, `BOARDING`, `DOORS_CLOSING`, `IDLE`).
 * **Progression Tracking:** Game runs on timed 3-minute rounds. Difficulty scales via an increasing "Spawn Rate" percentage.
 * **PRNG System:** Spawns are handled by a custom Park-Miller seeded random number generator. Players can input a "Game ID" (seed) to replay the exact same traffic patterns to test different algorithms.
 
 ### 2.1 Guest Lifecycle & Rage State
 Guests spawn on random floors with random destinations. They have a strict patience timer:
-* **Happy (Green):** 0–10 seconds.
-* **Annoyed (Orange):** 10–20 seconds.
-* **Critical (Red/Blinking):** 20–30 seconds.
-* **Rage (Black/Skull):** 30+ seconds. The guest defenestrates (flies out the window) and the player loses 1 Life. The player starts with 20 Lives.
+* **Happy (Green):** 0–20 seconds.
+* **Annoyed (Orange):** 20–40 seconds.
+* **Critical (Red/Blinking):** 40–60 seconds.
+* **Rage (Black/Skull):** 60+ seconds. The guest defenestrates (flies out the window) and the player loses 1 Life. The player starts with 20 Lives.
 
-## 3. The Progression Arc (Rounds 1–9)
+### 2.2 Advanced Guest Types
+* **Gym Bros (💪):** Found primarily on the Gym Floor (spawns in Round 11). They occupy **2.0 capacity units**. If 3 or more are in a lift, they cause a permanent "Stink" hazard.
+* **Room Service (🍽️):** Bulky carts introduced in Round 3. They occupy **3.0 capacity units** and take 3x longer to board/unboard ($3.0$s base). Rendering uses the plate indicator.
+
+### 2.3 Physics Extension: The State Machine
+Lifts use a discrete state machine for all cycle interactions: `IDLE`, `DOORS_OPENING`, `BOARDING`, `DOORS_CLOSING`, `TRANSIT`. Power-ups and cart types modify the speed of these state transitions.
+
+### 2.4 Physics: Gravity & Weight (Round 13 Only)
+Upward travel speed is penalized by lift load weight. Max load at default gravity slows the lift significantly. This mechanic is strictly gated to **Round 13: Pedal Power** to represent a power failure scenario.
+
+### 2.5 Planned Power-up Expansions
+* **Double-Decker (Lift Upgrade):** Splits the lift into two stacked compartments. Doubles capacity and doubles weight sensitivity in Round 13. *Footprint Constraint:* Occupies two shaft slots. `targetFloor` is engine-clamped to `Max - 1` to prevent overflow.
+* **Open Plan (Lateral Transfer):** A temporary lift-based state that removes shaft barriers. Allows passengers to move horizontally to adjacent lifts (shafts $n-1$ or $n+1$) when they are vertically aligned (at the same floor or passing through).
+    * **Bronze:** Applies to one lift. Short duration.
+    * **Silver:** Applies to one lift. Long duration.
+    * **Gold:** Applies to all lifts for a moderate duration.
+
+## 3. The Progression Arc (Rounds 1–13)
 * **Round 1 (Welcome):** 1 Lift. Manual click-to-route control.
 * **Round 2 (Auto):** Introduces **Sweep** automation.
 * **Round 3 (Rush Hour):** 2 Lifts. Higher spawn rate.
@@ -27,6 +44,10 @@ Guests spawn on random floors with random destinations. They have a strict patie
 * **Round 7 (Check-out):** 4 Lifts. 50% of all spawns are forced to the Ground (G) floor, creating massive traffic funnels.
 * **Round 8 (VIP):** Introduces **VIPs (⭐)**. VIPs demand a 100% empty lift, refuse to ride with others, and cost 10 Lives if they Rage. *Design Trap:* VIPs broadcast high priority to AI lifts, causing the AI to arrive empty, get "stolen" by normal queueing guests, and soft-lock while trying to pick up the VIP. Forces manual intervention.
 * **Round 9 (Happy Hour):** 5 Lifts. Introduces **Farts** and **Rooftop Sunset**.
+* **Round 10 (Sandbox):** Unlocks the **Automation Workshop**. Custom JavaScript/Blockly scripts can now be assigned to lifts.
+* **Round 11 (Gym Challenge):** Introduces **Gym Bros (💪)**. Weight management becomes critical.
+* **Round 12 (Endurance):** **NO TIMER.** The shift does not end until the player delivers 50 guests or loses all lives. Difficulty scales indefinitely via spawn pressure.
+* **Round 13 (Pedal Power):** The Power Outage round. **Gravity is active** (and doubled). Lift speed is determined by weight. Heavier loads move slower upward.
 
 ### 3.1 Environmental Hazards (Round 9+)
 * **The Fart:** 0.5% chance per second for a passenger to fart. The lift turns green/stinky for 10 seconds.

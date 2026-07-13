@@ -44,6 +44,9 @@ window.Game.Simulator = {
 
             window.skipToRound(round);
             
+            // Re-initialize floors AFTER skipToRound to ensure dimensions match target Round
+            Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
+
             Object.keys(scripts).forEach(liftIdx => {
                 const scriptData = scripts[liftIdx];
                 Registry.lifts[liftIdx].automation = scriptData;
