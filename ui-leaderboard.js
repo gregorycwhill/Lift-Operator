@@ -2,10 +2,6 @@
 // UI-LEADERBOARD.JS : SCOREBOARD, SHARING, & ARCADE TELEMETRY
 // ============================================================================
 
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-const GameShared = () => window.Game || window;
-
 /**
  * Share the current local leaderboard via a data URL payload.
  */
@@ -23,12 +19,26 @@ window.shareLeaderboard = function() {
         const encoded = shared.encodePayload(payload);
         const shareUrl = window.location.origin + window.location.pathname + '?Data=' + encoded;
         
-        navigator.clipboard.writeText(shareUrl).then(() => {
-            if (typeof ui.showToast === 'function') ui.showToast("🔗 Leaderboard Link Copied to Clipboard!");
-        }).catch(err => {
-            console.error("Could not copy text: ", err);
-            if (typeof ui.showToast === 'function') ui.showToast("Failed to copy link.");
-        });
+        const shareData = {
+            title: 'Lift Operator Leaderboard',
+            text: 'Check out these high scores!',
+            url: shareUrl
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData).catch(() => {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    if (typeof ui.showToast === 'function') ui.showToast("🔗 Leaderboard Link Copied to Clipboard!");
+                });
+            });
+        } else {
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                if (typeof ui.showToast === 'function') ui.showToast("🔗 Leaderboard Link Copied to Clipboard!");
+            }).catch(err => {
+                console.error("Could not copy text: ", err);
+                if (typeof ui.showToast === 'function') ui.showToast("Failed to copy link.");
+            });
+        }
     }
 };
 
@@ -45,12 +55,26 @@ window.shareGame = function() {
         const encoded = shared.encodePayload(payload);
         const shareUrl = window.location.origin + window.location.pathname + '?Data=' + encoded;
         
-        navigator.clipboard.writeText(shareUrl).then(() => {
-            if (typeof ui.showToast === 'function') ui.showToast("🔗 Seed Configuration Link Saved to Clipboard!");
-        }).catch(err => {
-            console.error("Could not copy text: ", err);
-            if (typeof ui.showToast === 'function') ui.showToast("Failed to copy link.");
-        });
+        const shareData = {
+            title: 'Lift Operator',
+            text: `Try this Lift Operator seed: ${seed}`,
+            url: shareUrl
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData).catch(() => {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    if (typeof ui.showToast === 'function') ui.showToast("🔗 Seed Configuration Link Saved to Clipboard!");
+                });
+            });
+        } else {
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                if (typeof ui.showToast === 'function') ui.showToast("🔗 Seed Configuration Link Saved to Clipboard!");
+            }).catch(err => {
+                console.error("Could not copy text: ", err);
+                if (typeof ui.showToast === 'function') ui.showToast("Failed to copy link.");
+            });
+        }
     }
 };
 

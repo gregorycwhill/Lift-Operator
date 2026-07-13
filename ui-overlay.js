@@ -2,10 +2,6 @@
 // UI-OVERLAY.JS : CORE INTERFACE INITIALIZATION & SHARED UTILITIES
 // ============================================================================
 
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-const GameShared = () => window.Game || window;
-
 /**
  * Display a temporary on-screen toast message.
  */
@@ -101,13 +97,35 @@ window.initializeUI = function() {
     const shareBtn = document.getElementById("shareSeedBtn");
     if (shareBtn) {
         shareBtn.addEventListener("click", () => {
-            const seed = Registry.seed;
+            let seed = Registry.seed;
+            const seedInput = document.getElementById("gameSeed");
+            if (seedInput && !isNaN(parseInt(seedInput.value))) {
+                seed = parseInt(seedInput.value);
+            }
+            
             const url = new URL(window.location.href);
             url.searchParams.set('GameID', seed);
             
-            navigator.clipboard.writeText(url.toString()).then(() => {
-                if (typeof ui.showToast === 'function') ui.showToast(`Seed ${seed} copied to clipboard!`);
-            });
+            const shareData = {
+                title: 'Lift Operator',
+                text: `Try this Lift Operator seed: ${seed}`,
+                url: url.toString()
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {
+                    // Fallback to clipboard if share cancelled
+                    navigator.clipboard.writeText(url.toString()).then(() => {
+                        const ui = GameUI();
+                        if (typeof ui.showToast === 'function') ui.showToast(`Seed ${seed} copied to clipboard!`);
+                    });
+                });
+            } else {
+                navigator.clipboard.writeText(url.toString()).then(() => {
+                    const ui = GameUI();
+                    if (typeof ui.showToast === 'function') ui.showToast(`Seed ${seed} copied to clipboard!`);
+                });
+            }
         });
     }
 
@@ -213,6 +231,97 @@ window.initializeUI = function() {
             engine.skipToRound(targetRound);
         }
     });
+
+    // REGRESSION TEST SCORECARD BINDINGS
+    bind("runTestsBtn", () => {
+        if (typeof engine.pause === "function") engine.pause();
+        const scOverlay = document.getElementById("testScorecardOverlay");
+        if (scOverlay) scOverlay.style.display = "flex";
+        runVisualRegressionSuite();
+    });
+
+    bind("closeScorecardBtn", () => {
+        const scOverlay = document.getElementById("testScorecardOverlay");
+        if (scOverlay) scOverlay.style.display = "none";
+        if (typeof engine.resume === "function") engine.resume();
+    });
+
+    bind("rerunTestsBtn", () => {
+        runVisualRegressionSuite();
+    });
+
+    if (typeof window.processNextManifestItem === 'function') {
+        window.processNextManifestItem();
+    }
+};
+
+/**
+ * Runs the regression suite and populates the scorecard UI.
+ */
+window.runVisualRegressionSuite = async function() {
+    const statusText = document.getElementById('scorecardStatusText');
+    const passCount = document.getElementById('scorecardPassCount');
+    const failCount = document.getElementById('scorecardFailCount');
+    const resultsList = document.getElementById('testResultsList');
+
+    if (!statusText || !resultsList) return;
+
+    statusText.innerText = '🧪 Running...';
+    statusText.className = 'text-blue';
+    resultsList.innerHTML = '<div style="padding: 20px; text-align: center;">Running simulation cycles...</div>';
+
+    let passed = 0;
+    let failed = 0;
+
+    // Use current regression suite
+    if (window.Game && window.Game.Regression && typeof window.Game.Regression.runAll === 'function') {
+        const report = await window.Game.Regression.runAll((msg) => {
+            resultsList.innerHTML = `<div style="padding: 20px; text-align: center;">${msg}</div>`;
+        });
+        resultsList.innerHTML = '';
+        
+        report.forEach(test => {
+            const item = document.createElement('div');
+            item.style.padding = '10px 15px';
+            item.style.borderBottom = '1px solid #eee';
+            item.style.display = 'flex';
+            item.style.justifyContent = 'space-between';
+            item.style.alignItems = 'center';
+            if (!test.passed) item.style.backgroundColor = '#fff5f5';
+
+            const name = document.createElement('span');
+            name.style.fontWeight = 'bold';
+            name.style.fontSize = '14px';
+            name.innerText = test.name;
+
+            const status = document.createElement('span');
+            status.style.fontSize = '12px';
+            status.className = test.passed ? 'text-green' : 'text-red';
+            status.innerText = test.passed ? '✅ PASS' : '❌ FAIL';
+
+            const msg = document.createElement('div');
+            msg.style.fontSize = '11px';
+            msg.style.color = '#7f8c8d';
+            msg.innerText = test.message || '';
+
+            const leftSide = document.createElement('div');
+            leftSide.appendChild(name);
+            leftSide.appendChild(msg);
+
+            item.appendChild(leftSide);
+            item.appendChild(status);
+            resultsList.appendChild(item);
+
+            if (test.passed) passed++; else failed++;
+        });
+
+        statusText.innerText = failed === 0 ? '✅ ALL CLEAR' : '❌ REGRESSION';
+        statusText.className = failed === 0 ? 'text-green' : 'text-red';
+        passCount.innerText = passed;
+        failCount.innerText = failed;
+    } else {
+        resultsList.innerHTML = '<div style="padding: 20px; text-align: center; color: red;">Regression Suite not loaded!</div>';
+    }
 };
 
 // ============================================================================

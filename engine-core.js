@@ -43,11 +43,6 @@ window.handleSharedData = function(encodedStr) {
     Registry.pendingManifest = [...Registry.pendingManifest, ...incomingItems];
 };
 
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
-const GameShared = () => window.Game || window;
-
 window.pauseGame = function() {
     if (!Registry.gameActive) return;
     Registry.gameActive = false;
@@ -147,7 +142,14 @@ window.resetGame = function() {
 
     Registry.lifts = [];
     for (let i = 0; i < Config.liftsR1; i++) {
-        Registry.lifts.push({ id: i, targetFloor: 0, pos: 0, passengers: [], lastActionTime: 0, automation: 'manual', sweepDirection: 1, manualOverride: false, jamTimer: 0, stinkTimer: 0, tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, musakTimer: 0, sardineScored: false });
+        Registry.lifts.push({ 
+            id: i, targetFloor: 0, pos: 0, passengers: [], 
+            lastActionTime: 0, automation: 'manual', sweepDirection: 1, 
+            manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0, 
+            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
+            musakTimer: 0, sardineScored: false,
+            state: 'IDLE', stateProgress: 0
+        });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
     
@@ -206,7 +208,14 @@ window.skipToRound = function(targetRound) {
     
     Registry.lifts = [];
     for (let i = 0; i < numLifts; i++) {
-        Registry.lifts.push({ id: i, targetFloor: 0, pos: 0, passengers: [], lastActionTime: 0, automation: 'manual', sweepDirection: 1, manualOverride: false, jamTimer: 0, stinkTimer: 0, tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, musakTimer: 0, sardineScored: false });
+        Registry.lifts.push({ 
+            id: i, targetFloor: 0, pos: 0, passengers: [], 
+            lastActionTime: 0, automation: 'manual', sweepDirection: 1, 
+            manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0, 
+            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
+            musakTimer: 0, sardineScored: false,
+            state: 'IDLE', stateProgress: 0
+        });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
     
@@ -220,13 +229,19 @@ window.skipToRound = function(targetRound) {
 window.initializeEngine = function() {
     const ui = GameUI();
     const shared = GameShared();
-    const urlParams = new URLSearchParams(window.location.search);
-
+    
+    // 1. Initialize VM and Automation BEFORE building the world
+    const VM = window.Game.Automation || (typeof AutomationVM !== 'undefined' ? AutomationVM : null);
+    if (VM && typeof VM.init === 'function') {
+        VM.init();
+    }
+    
     if (typeof AutomationWorkshop !== 'undefined' && typeof AutomationWorkshop.loadScriptsFromStorage === 'function') {
         AutomationWorkshop.loadScriptsFromStorage();
     }
 
-    const dataParam = urlParams.get('Data') || urlParams.get('data');
+    const urlParams = new URLSearchParams(window.location.search);
+    const dataParam = urlParams.get('Data') || urlParams.get('data') || urlParams.get('blueprint');
     if (dataParam && typeof shared.handleSharedData === 'function') {
         shared.handleSharedData(dataParam);
     }
@@ -249,15 +264,38 @@ window.initializeEngine = function() {
     Registry.lifts = []; 
     
     for (let i = 0; i < Config.liftsR1; i++) {
-        Registry.lifts.push({ id: i, targetFloor: 0, pos: 0, passengers: [], lastActionTime: 0, automation: 'manual', sweepDirection: 1, manualOverride: false, jamTimer: 0, stinkTimer: 0, tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, musakTimer: 0, sardineScored: false });
+        Registry.lifts.push({ 
+            id: i, targetFloor: 0, pos: 0, passengers: [], lastActionTime: 0, 
+            automation: 'manual', sweepDirection: 1, manualOverride: false, 
+            isJammed: false, jamTimer: 0, stinkTimer: 0, 
+            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, musakTimer: 0, 
+            musakTimer: 0, sardineScored: false,
+            state: 'IDLE', stateProgress: 0
+        });
     }
-
+    Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
+    
     Registry.seed = Registry.seed || Math.floor(Math.random() * 9000) + 1000;
     setSeed(Registry.seed);
+
+    // Ensure First Guest spawns
+    window.forceFirstSpawn(window.Game.virtualTime || Date.now());
 };
 
 window.Game = window.Game || {};
 window.Game.SHARE_SECRET = window.SHARE_SECRET;
+
+// Shared data utilities
+window.Game.Shared = {
+    encodePayload: window.encodePayload,
+    decodePayload: window.decodePayload,
+    handleSharedData: window.handleSharedData
+};
+
+window.GameShared = function() {
+    return window.Game.Shared;
+};
+
 window.Game.Engine = window.Game.Engine || {};
 window.Game.Engine.initialize = window.initializeEngine;
 window.Game.encodePayload = window.encodePayload;
@@ -279,6 +317,11 @@ window.Game.UI.initializeUI = window.initializeUI;
 window.addEventListener('DOMContentLoaded', () => {
     if (typeof window.initializeEngine === 'function') window.initializeEngine();
     if (typeof window.initializeUI === 'function') window.initializeUI();
+
+    // Trigger manifest processing if we have inbound data
+    if (Registry.pendingManifest.length > 0 && typeof window.processNextManifestItem === 'function') {
+        window.processNextManifestItem();
+    }
 
     // Start Loops
     if (typeof gameTick === 'function') {

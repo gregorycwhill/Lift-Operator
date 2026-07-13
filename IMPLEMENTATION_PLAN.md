@@ -14,11 +14,11 @@ This document maps the conceptual goals in `ROADMAP.md` to specific architectura
 *   **Key Function:** `runRound(seed, scriptMap, round)`.
 *   **UI Integration:** "Run Simulation Tests" button added to Debug Menu. Baseline tests cover Round 1 and Round 7 stress.
 
-### 1.2 The Manifest Gateway Evolution
+### 1.2 The Manifest Gateway Evolution [COMPLETED]
 *   **Target:** `ui-manifest.js` and `engine-core.js`.
-*   **Change:** Transition from a simple "item type" check to a robust **Manifest Controller**.
-*   **Logic Refactor:** Replace nested `if/else` in `window.handleSharedData` with a switch statement that handles versioned blueprints (1.0 vs 2.0) and prepares for "Challenge" payloads (fixed seed + fixed lives).
-*   **Reconciler UI:** Update the manifest modal to show a "Diff" for scripts—notifying the user if they are importing a script that has the same name as a local one but different logic.
+*   **Change:** Transitioned to a robust **Manifest Controller** using a `switch` statement.
+*   **Logic Refactor:** Handles `challenge` payloads (fixed seed/lives) and blueprint versioning.
+*   **Reconciler UI:** Added naming conflict detection for imported scripts.
 
 ---
 

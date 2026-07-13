@@ -54,12 +54,32 @@
             <button id="leaderboardBtn" class="btn btn-yellow">Leaderboard</button>
             <button id="restartBtn" class="btn btn-red">Restart Game</button>
             <button id="openDebugBtn" class="btn btn-gray btn-margin-top">Debug Menu</button>
+            <button id="runTestsBtn" class="btn btn-blue btn-margin-top">Run Regression Suite</button>
         </div>
     </div>
 
     <div id="game-area" class="game-area">
         <div id="world"></div>
         
+        <!-- UI Component: Regression Test Scorecard -->
+        <div class="overlay" id="testScorecardOverlay">
+            <div class="modal-content" style="max-width: 600px;">
+                <h2>🧪 Regression Scorecard</h2>
+                <div id="testScorecardStats" style="display: flex; justify-content: space-around; background: #fdfdfd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
+                    <div>Status: <strong id="scorecardStatusText">Ready</strong></div>
+                    <div>Pass: <strong id="scorecardPassCount" class="text-green">0</strong></div>
+                    <div>Fail: <strong id="scorecardFailCount" class="text-red">0</strong></div>
+                </div>
+                <div id="testResultsList" style="text-align: left; max-height: 400px; overflow-y: auto; border: 1px solid #bdc3c7; border-radius: 4px; background: white;">
+                    <div style="padding: 20px; text-align: center; color: #7f8c8d;">No tests run yet.</div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button id="closeScorecardBtn" class="btn btn-gray" style="flex: 1;">Close</button>
+                    <button id="rerunTestsBtn" class="btn btn-blue" style="flex: 2;">Run All Tests</button>
+                </div>
+            </div>
+        </div>
+
         <!-- NEW: IMMIGRATION & CUSTOMS GATEWAY MODAL FOR SHARED DATA PAYLOADS -->
         <div class="overlay" id="manifestOverlay">
             <div class="modal-content">
@@ -233,5 +253,6 @@
 
     <!-- Testing Suite -->
     <script src="tests/simulation-tests.js"></script>
+    <script src="tests/regression-suite.js"></script>
 </body>
 </html>

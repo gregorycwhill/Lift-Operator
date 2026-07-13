@@ -4,7 +4,7 @@ This document outlines the automated testing strategy for the *Lift Operator* en
 
 ## 1. Automated Logic & Unit Testing
 **Focus:** Pure functions, calculations, and data codecs.
-**Implementation:** Vitest or Jest.
+**Implementation:** `tests/regression-suite.js` (Modular Functions).
 
 *   **PRNG Consistency:**
     *   Verify that `window.Game.Seed.set(12345)` followed by multiple `random()` calls produces the exact same sequence every time.
@@ -12,35 +12,37 @@ This document outlines the automated testing strategy for the *Lift Operator* en
 *   **Payload Encryption (XOR Codec):**
     *   Test `encodePayload` / `decodePayload` with nested objects (blueprints, seeds).
     *   Negative Test: Ensure tampered strings or incorrect secrets fail gracefully without crashing the `handleSharedData` loop.
-*   **Guest Aging Logic:**
-    *   Verify `checkStatus(g)` transitions through HAPPY -> ANNOYED -> CRITICAL -> RAGE at the exact thresholds defined in `Config`.
+*   **Guest Mechanics & Hazards:**
+    *   **Aging Logic:** Verify transitions (HAPPY -> ANNOYED -> CRITICAL -> RAGE).
+    *   **Guest Weights:** Verify "Gym Bros" contribute double weight (2.0 vs 1.0).
+    *   **Jam Hazards:** Verify that jammings suspend lift operations and the "Wrench" power-up correctly resets `jamTimer`.
 
-## 2. Headless Simulation Testing ("The Time-Warp")
-**Focus:** Physics stability, balancing, and rare hazard triggers.
-**Implementation:** Custom scripts using the existing `gameTick()` logic.
+## 2. Regression & Simulation Testing ("The Golden Run")
+**Focus:** Physics stability, balancing, and deterministic outcomes.
+**Implementation:** `tests/regression-suite.js` (DeterministicSim) and `tests/simulation-tests.js`.
 
+*   **Golden Run Determinism:**
+    *   Execute a round simulation with a fixed seed and script twice.
+    *   Ensure `servedCount` and `livesRemaining` are identical.
 *   **Stability Stress Test:**
-    *   Run a full 3-minute round at "High Speed" (skipping `requestAnimationFrame` and executing `gameTick` in a `while` loop) with a fixed seed.
-    *   Ensure `Registry.stats` values (served, lives, timeLeft) are valid numbers (no `NaN`).
-*   **Regression - Determinism Check:**
-    *   Record a "Golden Run" (a log of every served guest time for Seed X).
-    *   After adding code (e.g., a new Power-up), re-run Seed X. If the served count or timing changes without a power-up being used, a physics-breaking change was introduced.
+    *   Run a full Round 7 simulation (High volume) headlessly.
+    *   Ensure no `NaN` values in `Registry.stats`.
+*   **Power-up Overrides:**
+    *   Verify that `AutomationVM` and `PhysicsEngine` respect active timers (e.g., TARDIS mode providing infinite capacity).
 *   **Achievement Trigger Verification:**
-    *   Inject specific conditions (e.g., force 10 Critical guests) and verify `Achievements.evaluateRound()` returns the specific award.
+    *   Inject specific conditions (e.g., 50 guests served) and verify `Achievements.evaluateRound()` returns the specific award and point bonus.
 
 ## 3. Automation VM Validation
 **Focus:** The `Building` bridge and Blockly-generated code sandbox.
 
 *   **Sandbox Safety:**
-    *   Attempt to execute scripts that try to access `window`, `document`, or `Registry` directly. Verify the `AutomationVM` (via `new Function` scope) throws or prevents access.
+    *   Attempt to execute scripts that try to access `window`, `document`, or `Registry` directly.
 *   **Bridge Functionality:**
-    *   Mock a `lift` and verify `Building.getFloor()`, `Building.getLoad()`, and `Building.setTarget()` interact correctly with the mock object properties.
-*   **Blockly Consistency:**
-    *   Automated check to generate code from all `liftOperatorBlocks` definitions to ensure no missing generators (`jsGen.forBlock`).
+    *   Verify `findSweepTarget` returns expected results for both standard and priority sweep modes.
 
 ## 4. E2E (End-to-End) UI Testing
 **Focus:** User flow and DOM state changes.
-**Implementation:** Playwright / VS Code Browser Tools.
+**Implementation:** Playwright Integration tests.
 
 *   **The Workshop Loop:**
     *   Open Workshop -> Create Script -> Drag "Set Target Floor" block -> Save -> Share.

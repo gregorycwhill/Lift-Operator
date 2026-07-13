@@ -31,13 +31,13 @@ window.Game.Tests = {
         return results;
     },
 
-    testSweepAutomation: function() {
+    testSweepAutomation: async function() {
         console.log("Testing 'sweep' automation on Round 1...");
         const seed = 1234;
-        const scripts = { 0: 'sweep' }; // Lift 0 uses sweep
+        const scripts = { 0: 'sweep' }; 
         const round = 1;
 
-        const result = window.Game.Simulator.runRound(seed, scripts, round);
+        const result = await window.Game.Simulator.runRound(seed, scripts, round);
         
         const passed = result.served > 0 && result.success;
         return {
@@ -48,15 +48,15 @@ window.Game.Tests = {
         };
     },
 
-    testRound7Stress: function() {
+    testRound7Stress: async function() {
         console.log("Testing Round 7 Stress (15 floors, 3 lifts)...");
         const seed = 8888;
         const scripts = { 0: 'sweep', 1: 'sweep', 2: 'sweep' };
         const round = 7;
 
-        const result = window.Game.Simulator.runRound(seed, scripts, round);
+        const result = await window.Game.Simulator.runRound(seed, scripts, round);
         
-        const passed = result.success; // Just ensure we don't die
+        const passed = result.success; 
         return {
             name: "Round 7 Stress Test",
             passed: passed,

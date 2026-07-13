@@ -3,6 +3,11 @@
  * Consolidated utility functions for the Lift Operator engine.
  */
 
+window.GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
+window.GameEngine = () => (window.Game && window.Game.Engine) || window;
+window.GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
+window.GameShared = () => window.Game || window;
+
 const Utils = {
     /**
      * Seeded random number generator state.

@@ -8,12 +8,13 @@ window.Game = window.Game || {};
 window.Game.Seed = {
     current: 1,
     set: function(seed) {
-        this.current = (seed % 2147483647) || 1;
-        if (this.current <= 0) this.current += 2147483646;
+        let s = parseInt(seed);
+        if (isNaN(s)) s = 1234;
+        this.current = (Math.abs(s) % 2147483647) || 1;
     },
     random: function() {
         this.current = (this.current * 16807) % 2147483647;
-        return (this.current - 1) / 2147483646;
+        return Math.max(0, Math.min(0.9999999, (this.current - 1) / 2147483646));
     }
 };
 
@@ -63,14 +64,15 @@ window.getRandomInt = function(min, max) {
 
 // Global Helper: Get random floor index
 window.getRandomFloor = function() {
-    return Math.floor(seededRandom() * Config.numFloors);
+    let f = Math.floor(seededRandom() * window.Config.numFloors);
+    return Math.max(0, Math.min(window.Config.numFloors - 1, f));
 };
 
-const Config = {
+window.Config = {
     debugMode: true, 
     numFloors: 10, 
     roundTime: 180, startingLives: 20, maxSpawnDelaySec: 3, 
-    jamChancePerSec: 0.005, jamMinSec: 5, jamMaxSec: 15,
+    jamChancePerSec: 0.005, jamMinSec: 10, jamMaxSec: 25,
     checkoutChance: 0.50, 
     
     liftsR1: 1, liftsR2: 1, liftsR3: 2, liftsR4: 2, liftsR5: 3, liftsR6: 3, liftsR7: 4, liftsR8: 4, liftsR9: 5, liftsR10: 5, liftsR11: 5,
@@ -82,15 +84,17 @@ const Config = {
     spawnR9Start: 1.25, spawnR9End: 1.50, spawnR10Start: 1.50, spawnR10End: 1.75,
     spawnR11Start: 1.75, spawnR11End: 2.00,
     
-    happySec: 10, annoyedSec: 20, criticalSec: 30,
-    liftCapacity: 10, liftSpeedSec: 0.5, boardSpeedSec: 1.0, boardingSpeedMultiplier: 1.0,
+    happySec: 20, annoyedSec: 40, criticalSec: 60,
+    liftCapacity: 10, liftSpeedSec: 0.5, doorSpeedSec: 0.2, boardSpeedSec: 1.0, boardingSpeedMultiplier: 1.0,
     
     vipSpawnMinSec: 30, vipSpawnMaxSec: 120, vipPenalty: 10,
-    fartChancePerSec: 0.005, fartStinkSec: 10,
+    fartChancePerSec: 0.005, fartStinkSec: 20,
     sunsetMinSec: 30, sunsetMaxSec: 90, sunsetDurationSec: 30, sunsetGuestRatio: 0.50,
     
     gymBroStinkThreshold: 3
 };
+
+const Config = window.Config;
 
 const debugDefinitions = [
     { key: 'roundTime', label: 'Round Duration (sec)', min: 10, max: 600, step: 10, dispFormat: (v)=>v },
@@ -109,8 +113,28 @@ const debugDefinitions = [
     { key: 'sunsetDurationSec', label: 'Sunset Duration (sec)', min: 10, max: 120, step: 5, dispFormat: (v)=>v },
     { key: 'sunsetGuestRatio', label: 'Sunset Ratio', min: 0.1, max: 1.0, step: 0.1, dispFormat: (v)=>Math.round(v*100)+'%' },
     { key: 'liftsR1', label: 'Lifts in Round 1', min: 1, max: 5, step: 1, dispFormat: (v)=>v },
-    { key: 'spawnR1Start', label: 'R1 Start Spawn Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
-    { key: 'spawnR1End', label: 'R1 End Spawn Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR1Start', label: 'R1 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR1End', label: 'R1 End Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR2Start', label: 'R2 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR2End', label: 'R2 End Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR3Start', label: 'R3 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR3End', label: 'R3 End Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR4Start', label: 'R4 Start Rate', min: 0.05, max: 3.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR4End', label: 'R4 End Rate', min: 0.05, max: 3.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR5Start', label: 'R5 Start Rate', min: 0.05, max: 3.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR5End', label: 'R5 End Rate', min: 0.05, max: 3.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR6Start', label: 'R6 Start Rate', min: 0.05, max: 3.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR6End', label: 'R6 End Rate', min: 0.05, max: 3.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR7Start', label: 'R7 Start Rate', min: 0.05, max: 4.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR7End', label: 'R7 End Rate', min: 0.05, max: 4.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR8Start', label: 'R8 Start Rate', min: 0.05, max: 4.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR8End', label: 'R8 End Rate', min: 0.05, max: 4.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR9Start', label: 'R9 Start Rate', min: 0.05, max: 4.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR9End', label: 'R9 End Rate', min: 0.05, max: 4.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR10Start', label: 'R10 Start Rate', min: 0.05, max: 5.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR10End', label: 'R10 End Rate', min: 0.05, max: 5.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR11Start', label: 'R11 Start Rate', min: 0.05, max: 5.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
+    { key: 'spawnR11End', label: 'R11 End Rate', min: 0.05, max: 5.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
     { key: 'happySec', label: 'Happy Timeout (sec)', min: 2, max: 100, step: 1, dispFormat: (v)=>v },
     { key: 'annoyedSec', label: 'Annoyed Timeout (sec)', min: 5, max: 120, step: 1, dispFormat: (v)=>v },
     { key: 'criticalSec', label: 'Defenestrate Timeout (sec)', min: 10, max: 200, step: 1, dispFormat: (v)=>v },

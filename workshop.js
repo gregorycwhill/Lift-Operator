@@ -14,6 +14,10 @@ const liftOperatorBlocks = [
     { "type": "my_direction", "message0": "My Physical Direction", "output": "String", "colour": 230 },
     { "type": "my_sweep_direction", "message0": "My Sweep Direction", "output": "Number", "colour": 230 },
     { "type": "nearest_target", "message0": "Nearest Floor with %1", "args0": [{ "type": "field_dropdown", "name": "TARGET_TYPE", "options": [ [ "a Critical Guest", "critical" ], [ "an Annoyed Guest", "annoyed" ], [ "a Happy Guest", "happy" ], [ "a VIP ?", "vip" ], [ "a Passenger Destination", "destination" ], [ "Any Waiting Guest", "any_waiting" ] ] }], "output": "Number", "colour": 290 },
+    { "type": "find_sweep_target", "message0": "Next Stop In Direction %1 (Priority Mood: %2)", "args0": [
+        { "type": "input_value", "name": "DIRECTION", "check": "Number" },
+        { "type": "input_value", "name": "PRIORITY", "check": "Boolean" }
+    ], "output": "Number", "colour": 290 },
     { "type": "waiting_guests_on_floor", "message0": "Waiting Guests on Floor %1", "args0": [{ "type": "input_value", "name": "FLOOR", "check": "Number" }], "output": "Number", "colour": 290 },
     { "type": "is_floor_claimed", "message0": "Is Floor %1 claimed by another lift?", "args0": [{ "type": "input_value", "name": "FLOOR", "check": "Number" }], "output": "Boolean", "colour": 290 },
     { "type": "pick_random_floor", "message0": "Pick Random Floor", "output": "Number", "colour": 160 },
@@ -22,7 +26,9 @@ const liftOperatorBlocks = [
 
 if (typeof Blockly !== "undefined") Blockly.defineBlocksWithJsonArray(liftOperatorBlocks);
 
-jsGen.forBlock["set_target_floor"] = function(block, generator) { return `lift.targetFloor = ${generator.valueToCode(block, "FLOOR", javascript.Order.NONE) || "0"};\n`; };
+jsGen.forBlock["set_target_floor"] = function(block, generator) { 
+    return `Building.setTarget(${generator.valueToCode(block, "FLOOR", javascript.Order.NONE) || "0"});\n`; 
+};
 jsGen.forBlock["set_sweep_direction"] = function(block) { return `lift.sweepDirection = ${block.getFieldValue("DIRECTION")};\n`; };
 jsGen.forBlock["my_floor"] = function() { return ["Building.getFloor()", javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["my_free_space"] = function() { return ["(Config.liftCapacity - lift.passengers.length)", javascript.Order.ATOMIC]; };
@@ -31,6 +37,11 @@ jsGen.forBlock["is_full"] = function() { return ["(lift.passengers.length >= Con
 jsGen.forBlock["my_direction"] = function() { return ["Building.getPhysicalDirection()", javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["my_sweep_direction"] = function() { return ["lift.sweepDirection", javascript.Order.ATOMIC]; };
 jsGen.forBlock["nearest_target"] = function(block) { return [`Building.getNearestTarget("${block.getFieldValue("TARGET_TYPE")}")`, javascript.Order.FUNCTION_CALL]; };
+jsGen.forBlock["find_sweep_target"] = function(block, generator) {
+    const dir = generator.valueToCode(block, "DIRECTION", javascript.Order.NONE) || "1";
+    const prio = generator.valueToCode(block, "PRIORITY", javascript.Order.NONE) || "false";
+    return [`Building.findSweepTarget(${dir}, ${prio})`, javascript.Order.FUNCTION_CALL];
+};
 jsGen.forBlock["waiting_guests_on_floor"] = function(block, generator) { return [`Building.getWaitingCount(${generator.valueToCode(block, "FLOOR", javascript.Order.NONE) || "0"})`, javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["is_floor_claimed"] = function(block, generator) { return [`Building.isFloorClaimed(${generator.valueToCode(block, "FLOOR", javascript.Order.NONE) || "0"})`, javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["pick_random_floor"] = function() { return ["Building.randomFloor()", javascript.Order.FUNCTION_CALL]; };
@@ -40,7 +51,7 @@ const toolboxXML = `
 <xml id="toolbox" style="display: none">
   <category name="Lift Actions" colour="355"><block type="set_target_floor"></block><block type="set_sweep_direction"></block></category>
   <category name="Lift Telemetry" colour="230"><block type="my_floor"></block><block type="my_free_space"></block><block type="is_empty"></block><block type="is_full"></block><block type="my_direction"></block><block type="my_sweep_direction"></block></category>
-  <category name="Building Sensors" colour="290"><block type="nearest_target"></block><block type="waiting_guests_on_floor"></block><block type="is_floor_claimed"></block></category>
+  <category name="Building Sensors" colour="290"><block type="nearest_target"></block><block type="find_sweep_target"></block><block type="waiting_guests_on_floor"></block><block type="is_floor_claimed"></block></category>
   <category name="Logic" colour="#5b80a5"><block type="controls_if"></block><block type="logic_compare"></block><block type="logic_operation"></block><block type="logic_boolean"></block></category>
   <category name="Maths" colour="160"><block type="math_number"></block><block type="math_arithmetic"></block><block type="constant_none"></block><block type="pick_random_floor"></block></category>
   <category name="Loops" colour="#5ba55b"><block type="controls_for"></block></category>
@@ -61,36 +72,27 @@ const AutomationWorkshop = {
         const VM = window.Game.Automation;
         if (VM) VM.init();
 
-        document.getElementById("openWorkshopBtn")?.addEventListener("click", () => {
-            if (typeof window.Game.Engine.pause === "function") window.Game.Engine.pause();
-            const overlay = document.getElementById("workshopOverlay");
-            if (overlay) overlay.style.display = "flex";
-            
-            setTimeout(() => {
-                if (!this.currentScriptId && VM && VM.scripts.length > 0) {
-                    this.openScript(VM.scripts[0].id);
-                } else if (this.currentScriptId) {
-                    this.openScript(this.currentScriptId);
-                } else {
-                    this.createNewScript();
-                }
-            }, 50);
-        });
-
         document.getElementById("closeWorkshopBtn")?.addEventListener("click", () => {
             this.saveCurrentScript();
             const overlay = document.getElementById("workshopOverlay");
             if (overlay) overlay.style.display = "none";
-            if (typeof window.Game.UI.buildWorld === "function") window.Game.UI.buildWorld(); 
-            if (typeof window.Game.Engine.resume === "function") window.Game.Engine.resume();
+            
+            const engine = (typeof GameEngine === 'function') ? GameEngine() : (window.Game && window.Game.Engine);
+            const ui = (typeof GameUI === 'function') ? GameUI() : (window.Game && window.UI);
+
+            if (ui && typeof ui.buildWorld === "function") ui.buildWorld(); 
+            if (engine && typeof engine.resume === "function") engine.resume();
         });
 
-        document.getElementById("scriptSelect")?.addEventListener("change", (e) => this.openScript(e.target.value));
+        document.getElementById("scriptSelect")?.addEventListener("change", (e) => {
+            if (this.currentScriptId === e.target.value) return; 
+            this.openScript(e.target.value);
+        });
         
         document.getElementById("saveScriptBtn")?.addEventListener("click", () => {
             this.saveCurrentScript();
             this.updateSidebarUI();
-            if (typeof window.UI.showToast === "function") window.UI.showToast("?? Script Saved");
+            if (typeof window.UI.showToast === "function") window.UI.showToast("💾 Script Saved");
         });
 
         document.getElementById("copyScriptBtn")?.addEventListener("click", () => this.copyCurrentScript());
@@ -102,6 +104,23 @@ const AutomationWorkshop = {
         });
 
         document.getElementById("shareScriptBtn")?.addEventListener("click", () => this.shareCurrentScript());
+    },
+
+    show: function() {
+        this.init();
+        const overlay = document.getElementById("workshopOverlay");
+        if (overlay) overlay.style.display = "flex";
+
+        const VM = this.getVM();
+        setTimeout(() => {
+            if (!this.currentScriptId && VM && VM.scripts.length > 0) {
+                this.openScript(VM.scripts[0].id); // Default to Sweep
+            } else if (this.currentScriptId) {
+                this.openScript(this.currentScriptId);
+            } else {
+                this.createNewScript();
+            }
+        }, 50);
     },
 
     getVM: function() {
@@ -201,7 +220,9 @@ const AutomationWorkshop = {
         const VM = this.getVM();
         if (!VM) return;
         
-        const scriptObj = VM.scripts.find(s => s.id === id);
+        // Strip prefix if present from UI select values
+        const cleanId = id.replace('custom_', '');
+        const scriptObj = VM.scripts.find(s => s.id === cleanId);
         if (!scriptObj) return;
 
         this.currentScriptId = scriptObj.id; 
@@ -241,13 +262,30 @@ const AutomationWorkshop = {
         if (this.workspace) {
             this.workspace.clear();
             if (scriptObj.blocklyData) {
-                Blockly.serialization.workspaces.load(scriptObj.blocklyData, this.workspace);
+                try {
+                    // Try modern serialization first
+                    Blockly.serialization.workspaces.load(scriptObj.blocklyData, this.workspace);
+                } catch (e) {
+                    console.warn("Modern serialization failed, trying XML fallback", e);
+                    try {
+                        // Fallback: If it's an object with a 'blocks' key that isn't modern JSON, 
+                        // or if we have an older format.
+                        const xml = Blockly.utils.xml.textToDom(scriptObj.blocklyXml || scriptObj.blocklyData);
+                        Blockly.Xml.domToWorkspace(xml, this.workspace);
+                    } catch (e2) {
+                        console.error("Blockly Load Error:", e2);
+                    }
+                }
             }
+            
+            this.workspace.render();
+
             setTimeout(() => { 
-                Blockly.svgResize(this.workspace); 
-                // Track execution for Hacker Awards
-                if (window.Registry && !window.Registry.customScriptTicks) window.Registry.customScriptTicks = 0;
-            }, 10);
+                if (this.workspace) {
+                    Blockly.svgResize(this.workspace); 
+                    this.workspace.scrollCenter();
+                }
+            }, 50);
         }
         
         this.updateSidebarUI(); 
@@ -303,16 +341,31 @@ const AutomationWorkshop = {
             }
         };
 
-        const encoded = window.Game.encodePayload(payload);
+        const encoded = (typeof GameShared === 'function' ? GameShared().encodePayload(payload) : null) || (window.Game.encodePayload ? window.Game.encodePayload(payload) : null);
+
         if (encoded) {
             const url = new URL(window.location.href);
             url.searchParams.set('Data', encoded);
             
-            navigator.clipboard.writeText(url.toString()).then(() => {
-                if (typeof window.UI.showToast === 'function') {
-                    window.UI.showToast("🔗 Blueprint link copied to clipboard!");
-                }
-            });
+            const shareData = {
+                title: 'Lift Operator Blueprint',
+                text: `Check out my automation script: ${script.name}`,
+                url: url.toString()
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {
+                    navigator.clipboard.writeText(url.toString()).then(() => {
+                        const ui = (typeof GameUI === 'function') ? GameUI() : window.UI;
+                        if (ui && typeof ui.showToast === 'function') ui.showToast("🔗 Blueprint link copied to clipboard!");
+                    });
+                });
+            } else {
+                navigator.clipboard.writeText(url.toString()).then(() => {
+                    const ui = (typeof GameUI === 'function') ? GameUI() : window.UI;
+                    if (ui && typeof ui.showToast === 'function') ui.showToast("🔗 Blueprint link copied to clipboard!");
+                });
+            }
         }
     },
 
@@ -345,4 +398,13 @@ const AutomationWorkshop = {
         if (descInput) descInput.disabled = isReadOnly;
     }
 };
+
+window.AutomationWorkshop = AutomationWorkshop;
+
+// Bridge VM scripts to the Workshop UI
+Object.defineProperty(AutomationWorkshop, 'scripts', {
+    get: function() {
+        return (window.Game && window.Game.Automation && window.Game.Automation.scripts) || [];
+    }
+});
 

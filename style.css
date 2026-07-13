@@ -176,7 +176,7 @@ body {
     position: absolute; 
     width: var(--lift-width, 100px); 
     background: #ecf0f1; 
-    border: 3px solid #34495e; 
+    border: 3px solid #000; 
     border-radius: 6px; 
     margin-left: 5px;
     display: flex; 

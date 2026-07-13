@@ -2,9 +2,6 @@
 // UI-CORE.JS : GRID GENERATION, ACTIVE LIFT RENDERING, & CANVAS MUTATIONS
 // ============================================================================
 
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-
 window.buildWorld = function() {
     const ui = GameUI();
     const world = document.getElementById('world');
@@ -95,16 +92,18 @@ window.buildWorld = function() {
     const sharedScripts = [];
     let currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
 
-    if (typeof AutomationWorkshop !== 'undefined' && AutomationWorkshop.scripts) {
-        AutomationWorkshop.scripts.forEach(script => {
+    const VM = window.Game.Automation || (typeof AutomationVM !== 'undefined' ? AutomationVM : (typeof AutomationWorkshop !== 'undefined' ? AutomationWorkshop : null));
+
+    if (VM && VM.scripts) {
+        VM.scripts.forEach(script => {
             if (script.author === "System") {
                 let engineVal = 'manual';
                 let isUnlocked = false;
                 
-                if (script.id === 'script_sys_sweep') { engineVal = 'sweep'; isUnlocked = isAutoUnlocked; }
-                if (script.id === 'script_sys_priority') { engineVal = 'priority-sweep'; isUnlocked = isPriorityUnlocked; }
-                if (script.id === 'script_sys_voting') { engineVal = 'voting'; isUnlocked = isVotingUnlocked; }
-                if (script.id === 'script_sys_weighted') { engineVal = 'weighted-voting'; isUnlocked = isVotingUnlocked; }
+                if (script.id === 'sys_sweep') { engineVal = 'sweep'; isUnlocked = isAutoUnlocked; }
+                else if (script.id === 'sys_priority') { engineVal = 'priority-sweep'; isUnlocked = isPriorityUnlocked; }
+                else if (script.id === 'sys_voting') { engineVal = 'voting'; isUnlocked = isVotingUnlocked; }
+                else if (script.id === 'sys_weighted') { engineVal = 'weighted-voting'; isUnlocked = isVotingUnlocked; }
                 
                 if (isUnlocked) {
                     builtIns.push({ value: engineVal, name: script.name });

@@ -2,9 +2,6 @@
 // UI-SHOP.JS : SUPPLY CLOSET, INVENTORY, & PILOT RANKINGS
 // ============================================================================
 
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-
 /**
  * Get the pilot rank title based on lift count.
  */
@@ -113,13 +110,17 @@ window.renderShop = function() {
     let shopDiv = document.getElementById('shopContainer');
     if (!shopDiv || typeof PowerUps === 'undefined') return;
 
+    // Capture scroll positions to prevent jumping
+    const modalContent = shopDiv.closest('.modal-content');
+    const modalScroll = modalContent ? modalContent.scrollTop : 0;
+    
     let listContainer = shopDiv.querySelector('.shop-items-grid');
-    let scrollPos = listContainer ? listContainer.scrollTop : 0;
+    let gridScroll = listContainer ? listContainer.scrollTop : 0;
 
     let currentCartTotal = PowerUps.cart.reduce((sum, item) => sum + PowerUps.catalog[item.id].tiers[item.tier].cost, 0);
     let remainingPoints = Registry.points - currentCartTotal;
     let pointsClass = remainingPoints > 0 ? 'text-green' : 'text-red';
-
+    
     shopDiv.replaceChildren();
 
     const header = document.createElement('h3');
@@ -218,9 +219,25 @@ window.renderShop = function() {
         });
 
         cartContainer.appendChild(cartItemsGrid);
+
+        const checkoutBtn = document.createElement('button');
+        checkoutBtn.className = 'btn btn-green btn-full-width checkout-btn';
+        checkoutBtn.style.display = 'none'; // USER: Redundant, removing in favor of Round Start button
+        checkoutBtn.textContent = 'Purchase Power-Ups';
+        checkoutBtn.onclick = () => {
+            const ui = GameUI();
+            if (typeof ui.checkoutCart === 'function') ui.checkoutCart(false); 
+            else window.checkoutCart();
+            window.renderShop();
+        };
+        cartContainer.appendChild(checkoutBtn);
+
         shopContainer.appendChild(cartContainer);
     }
 
-    if (listContainer) listContainer.scrollTop = scrollPos;
     shopDiv.appendChild(shopContainer);
+
+    // Restore scroll positions
+    itemsGrid.scrollTop = gridScroll;
+    if (modalContent) modalContent.scrollTop = modalScroll;
 };

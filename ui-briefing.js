@@ -2,9 +2,6 @@
 // UI-BRIEFING.JS : ROUND MODALS, REVIEWS, & PERFORMANCE EVALUATION
 // ============================================================================
 
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-
 /**
  * Open the round briefing modal with contextually relevant instructions.
  */
@@ -42,7 +39,7 @@ window.showRoundModal = function(round) {
         instructions.innerText = "Click on a lift shaft to send the car to that floor. Don't leave guests waiting too long!";
         const savedPlayer = window.Game.Storage.get(window.Game.Keys.PLAYER, Registry.fallbackName || "Pilot 1");
         if (document.getElementById('playerName')) document.getElementById('playerName').value = savedPlayer;
-        btn.innerText = "Start Round 1";
+        btn.innerText = `Start Round ${round}`;
         btn.className = 'btn btn-green btn-large btn-full-width';
     } 
     else if (round === 2) { title.innerText = `Round 2: Automations Unlocked (${rank})`; instructions.innerText = "Manual control is tough! Activate 'Sweep' to let the lift manage itself."; }
@@ -66,13 +63,21 @@ window.showRoundModal = function(round) {
     if (round > 1 && typeof PowerUps !== 'undefined') {
         if (shopDiv) shopDiv.style.display = 'block';
         if (typeof ui.renderShop === 'function') ui.renderShop();
+        if (btn) {
+            btn.innerText = `Purchase Power-ups and Start Round ${round}`;
+            btn.className = 'btn btn-green btn-large btn-full-width';
+            
+            // Ensure clicking this button also checks out the cart
+            const originalClick = btn.onclick;
+            btn.onclick = (e) => {
+                if (typeof ui.checkoutCart === 'function') ui.checkoutCart(false);
+                if (originalClick) originalClick(e);
+            };
+        }
     } else {
         if (shopDiv) shopDiv.style.display = 'none';
-        if (btn && round === 1) {
-            btn.innerText = `Start Round 1`;
-            btn.className = 'btn btn-green btn-large btn-full-width';
-        } else if (btn) {
-            btn.innerText = `Start Round`;
+        if (btn) {
+            btn.innerText = `Start Round ${round}`;
             btn.className = 'btn btn-green btn-large btn-full-width';
         }
     }

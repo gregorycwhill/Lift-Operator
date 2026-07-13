@@ -7,11 +7,14 @@ window.Game = window.Game || {};
 (function() {
     // Hidden storage for system scripts
     const DEFAULT_SWEEP_JSON = {"blocks":{"languageVersion":0,"blocks":[{"type":"controls_if","x":20,"y":20,"extraState":{"hasElse":true},"inputs":{"IF0":{"block":{"type":"is_empty"}},"DO0":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"any_waiting"}}}}}},"ELSE":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"destination"}}}}}}}}]}};
-    const DEFAULT_PRIORITY_JSON = {"blocks":{"languageVersion":0,"blocks":[{"type":"controls_if","x":20,"y":20,"extraState":{"hasElse":true},"inputs":{"IF0":{"block":{"type":"logic_compare","fields":{"OP":"NEQ"},"inputs":{"A":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"critical"}}},"B":{"block":{"type":"constant_none"}}}}},"DO0":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"critical"}}}}}},"ELSE":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"any_waiting"}}}}}}}}]}};
-    
+    const DEFAULT_PRIORITY_JSON = {"blocks":{"languageVersion":0,"blocks":[{"type":"controls_if","x":20,"y":20,"extraState":{"hasElse":true},"inputs":{"IF0":{"block":{"type":"logic_compare","fields":{"OP":"NEQ"},"inputs":{"A":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"critical"}}},"B":{"block":{"type":"constant_none"}}}}},"DO0":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"critical"}}}}}},"ELSE":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"any_waiting"}}}}}}}}]}};
+    const DEFAULT_INTERNAL_JSON = {"blocks":{"languageVersion":0,"blocks":[{"type":"set_target_floor","x":20,"y":20,"inputs":{"FLOOR":{"block":{"type":"math_number","fields":{"NUM":0}}}}}]}};
+
     const SYSTEM_SCRIPTS = [
-        { id: 'sys_sweep', name: "Sweep", description: "Simple pickup and dropoff routing.", author: "System", version: "1.0", blocklyData: DEFAULT_SWEEP_JSON, compiledJS: "" },
-        { id: 'sys_priority', name: "Priority Sweep", description: "Saves critical guests first.", author: "System", version: "1.0", blocklyData: DEFAULT_PRIORITY_JSON, compiledJS: "" }
+        { id: 'sys_sweep', name: "Sweep", description: "Simple pickup and dropoff routing.", author: "System", version: "1.0", blocklyData: DEFAULT_SWEEP_JSON, compiledJS: "if (!lift.sweepDirection) lift.sweepDirection = 1; let target = Building.findSweepTarget(lift.sweepDirection, false); if (target === -1) { lift.sweepDirection *= -1; target = Building.findSweepTarget(lift.sweepDirection, false); } if (target !== -1) Building.setTarget(target);" },
+        { id: 'sys_priority', name: "Priority Sweep", description: "Prioritizes angry guests along the route.", author: "System", version: "1.0", blocklyData: DEFAULT_PRIORITY_JSON, compiledJS: "if (!lift.sweepDirection) lift.sweepDirection = 1; let target = Building.findSweepTarget(lift.sweepDirection, true); if (target === -1) { target = Building.findSweepTarget(lift.sweepDirection, false); } if (target === -1) { lift.sweepDirection *= -1; target = Building.findSweepTarget(lift.sweepDirection, true); if (target === -1) target = Building.findSweepTarget(lift.sweepDirection, false); } if (target !== -1) Building.setTarget(target);" },
+        { id: 'sys_voting', name: "Voting", description: "Guests vote on the next stop.", author: "System", version: "1.0", blocklyData: DEFAULT_INTERNAL_JSON, compiledJS: "let best = Building.getBestFloor(false); if (best !== -1) Building.setTarget(best);" },
+        { id: 'sys_weighted', name: "Weighted Voting", description: "Weight based on patience levels.", author: "System", version: "1.0", blocklyData: DEFAULT_INTERNAL_JSON, compiledJS: "let best = Building.getBestFloor(true); if (best !== -1) Building.setTarget(best);" }
     ];
 
     const AutomationVM = {
@@ -116,6 +119,8 @@ window.Game = window.Game || {};
                 getNearestTarget: (type) => R.getNearestTarget(lift, type),
                 getWaitingCount: (floor) => R.getWaitingCount(floor),
                 isFloorClaimed: (floor) => R.isFloorClaimedByOther(floor, lift.id),
+                findSweepTarget: (dir, prio) => R.findSweepTarget(lift, dir, prio),
+                getBestFloor: (weighted) => R.getBestFloor(lift, weighted),
                 randomFloor: () => R.prng.randomFloor(),
                 
                 // Control Methods

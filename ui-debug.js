@@ -2,9 +2,6 @@
 // UI-DEBUG.JS : GAME ENGINE CONFIGURATION & SANDBOX CONTROLS
 // ============================================================================
 
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-
 /**
  * Render the dynamic debug menu with configuration sliders.
  */

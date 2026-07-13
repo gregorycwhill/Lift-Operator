@@ -2,8 +2,6 @@
 // ENGINE-SPAWNER.JS : PASSENGER SPAWNING MECHANICS & ENVIRONMENT EVENTS
 // ============================================================================
 
-const GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
-
 window.forceFirstSpawn = function(now) {
     let start = window.getRandomFloor();
     let dest;
@@ -23,7 +21,9 @@ window.forceFirstSpawn = function(now) {
         isFarter: false, 
         isSunset: false, 
         isPartying: false, 
-        isGymBro: isGym
+        isGymBro: isGym,
+        isBulky: isGym, // Gym Bros are bulky
+        boardingWeight: isGym ? 2.0 : 1.0
     });
     Registry.lastSpawnTime = now;
 };
@@ -58,7 +58,9 @@ window.runSpawnerTick = function(now) {
             isFarter: false, 
             isSunset: false, 
             isPartying: false, 
-            isGymBro: isGym
+            isGymBro: isGym,
+            isBulky: isGym,
+            boardingWeight: isGym ? 2.0 : 1.0
         });
         Registry.vipSpawned = true;
     }
@@ -121,7 +123,9 @@ window.runSpawnerTick = function(now) {
                 isFarter: false, 
                 isSunset: false, 
                 isPartying: false, 
-                isGymBro: isGym
+                isGymBro: isGym,
+                isBulky: isGym,
+                boardingWeight: isGym ? 2.0 : 1.0
             };
             
             if (Registry.sunsetActive && !newGuest.isVip && seededRandom() < Config.sunsetGuestRatio) {

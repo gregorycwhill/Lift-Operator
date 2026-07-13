@@ -2,10 +2,6 @@
 // ENGINE-PHYSICS.JS : CORE PHYSICS LOOP, BOARDING PROTOCOLS, & PASSENGER DECAY
 // ============================================================================
 
-const GameUI = () => (window.Game && window.Game.UI) || window.UI || {};
-const GameEngine = () => (window.Game && window.Game.Engine) || window;
-const GameSpawner = () => (window.Game && window.Game.Spawner) || window.Spawner || {};
-
 window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
@@ -53,11 +49,21 @@ window.gameTick = function(timestamp) {
     }
 
     // Process Lift Timers & Hazards
-    Registry.lifts.forEach(lift => {
-        if (lift.isJammed === false) { lift.jamTimer = 0; }
+    Registry.lifts.forEach((lift, i) => {
+        // Fix for "ghost" jammed border: Ensure isJammed is initialized
+        if (typeof lift.isJammed === 'undefined') lift.isJammed = false;
+        
         if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) lift.jamTimer = 0;
 
-        if (lift.jamTimer > 0) lift.jamTimer--;
+        // Skip movement if jammed
+        if (lift.jamTimer > 0 || lift.isJammed) {
+            if (lift.jamTimer > 0) lift.jamTimer--;
+            // Only decrement stink if not jammed? No, let stink fade.
+            if (lift.stinkTimer > 0) lift.stinkTimer--;
+            updateLiftVisualState(lift, i);
+            return; // Skip rest of movement logic for this lift
+        }
+
         if (lift.stinkTimer > 0) lift.stinkTimer--;
         if (lift.tardisTimer > 0) lift.tardisTimer--;
         if (lift.turboTimer > 0) lift.turboTimer--; 
@@ -66,14 +72,14 @@ window.gameTick = function(timestamp) {
         
         if (Registry.stats.round >= 6) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
-            if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
-                lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec);
+            if (lift.jamTimer <= 0 && seededRandom() < (Config.jamChancePerSec / 60) && !jamImmune) {
+                lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec) * 60; // Convert sec to roughly 60fps ticks
             }
             
             if (Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
-                if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
-                    lift.stinkTimer = Config.fartStinkSec;
+                if (seededRandom() < (Config.fartChancePerSec / 60) && !stinkImmune) {
+                    lift.stinkTimer = Config.fartStinkSec * 60; // Convert sec to ticks
                     const farterIndex = window.getRandomInt(0, lift.passengers.length - 1);
                     lift.passengers[farterIndex].isFarter = true;
                 }
@@ -181,13 +187,10 @@ window.animationTick = function(timestamp) {
         console.error("Render Crash", e);
     }
 
-    let stateChanged = false;
-
     const pixelsPerSecond = Registry.floorHeight / Config.liftSpeedSec;
     const basePixelsPerTick = pixelsPerSecond * (16 / 1000);
 
     Registry.lifts.forEach((lift, index) => {
-        const ui = GameUI();
         if (typeof ui.updateLiftVisualState === 'function') {
             ui.updateLiftVisualState(lift, index);
         }
@@ -205,229 +208,163 @@ window.animationTick = function(timestamp) {
             }
         }
 
+        let isStinky = lift.stinkTimer > 0;
+        let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
+
         if (Math.abs(lift.pos - targetPos) > actualPixelsPerTick) {
             lift.pos += (targetPos > lift.pos) ? actualPixelsPerTick : -actualPixelsPerTick;
+            
+            // Re-evaluate automation while moving if we are at a floor boundary
+            const atFloor = (lift.pos / Registry.floorHeight);
+            if (Math.abs(atFloor - Math.round(atFloor)) < (actualPixelsPerTick / Registry.floorHeight)) {
+                const currentF = Math.round(atFloor);
+                if (currentF !== lift.targetFloor) {
+                   window.runAutomationLogic(lift, index, currentF, isStinky, hasStinkImmunity, now);
+                }
+            }
+            
+            lift.state = 'IDLE';
+            lift.stateProgress = 0;
         } else {
             lift.pos = targetPos; 
-            
-            const effectiveBoardSpeed = Config.boardSpeedSec * (Config.boardingSpeedMultiplier || 1.0);
-            if (now - lift.lastActionTime > (effectiveBoardSpeed * 1000)) {
-                const f = lift.targetFloor;
-                let performedAction = false;
-                
+            const f = lift.targetFloor;
+
+            // SAFETEY: Prevent crashes from invalid target floors
+            if (!Registry.floors[f]) {
+                lift.targetFloor = Math.round(lift.pos / Registry.floorHeight);
+                lift.state = 'IDLE';
+                return;
+            }
+
+            // --- STATE MACHINE ---
+            if (lift.state === 'IDLE' || lift.state === 'DONE') {
                 let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
-                const indexToDrop = lift.passengers.findIndex(p => p.dest === f || (forceExodus && !p.isGymBro));
+                const hasDropoffs = lift.passengers.some(p => p.dest === f || (forceExodus && !p.isGymBro));
                 
-                if (indexToDrop !== -1) {
-                    if (Registry.getLiftWeight(lift) >= Config.liftCapacity && !lift.sardineScored) {
-                        Registry.roundStats.fullyLoadedLifts++;
-                        lift.sardineScored = true;
-                    }
-                    
-                    const p = lift.passengers.splice(indexToDrop, 1)[0];
-                    if (p.dest === f) {
-                        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('ding');
-                        if (p.isSunset && f === Config.numFloors - 1) {
-                            p.isPartying = true;
-                            Registry.floors[f].waitingGuests.push(p);
-                        } else {
-                            Registry.stats.served++;
-                            Registry.roundStats.servedThisRound++; 
-                            
-                            let waitSeconds = (now - p.spawnTime) / 1000;
-                            Registry.roundStats.totalWaitTimeServed += Math.max(0, waitSeconds);
-                            
-                            if (p.isVip) Registry.roundStats.vipServed++;
-                            if (p.status === GuestStatus.HAPPY) Registry.roundStats.happyServed++;
-                            else if (p.status === GuestStatus.ANNOYED) Registry.roundStats.annoyedServed++;
-                            else if (p.status === GuestStatus.CRITICAL) Registry.roundStats.criticalServed++;
-                        }
-                    } else {
-                        p.isFarter = false; 
-                        Registry.floors[f].waitingGuests.push(p);
-                    }
-                    
-                    if (lift.passengers.length === 0) {
-                        lift.sardineScored = false; 
-                    }
-                    
-                    performedAction = true;
-                } 
-                else {
-                    let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-                    if (Registry.getLiftWeight(lift) < maxCap && Registry.floors[f].waitingGuests.length > 0) {
-                        let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g => {
-                            let gWeight = g.isGymBro ? 2 : 1;
-                            if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
-                            if (g.status === GuestStatus.RAGE) return false;
-                            if (isStinky && !g.isGymBro) return false;
-                            if (lift.passengers.some(p => p.isVip)) return false; 
-                            if (g.isVip && lift.passengers.length > 0) return false; 
-
-                            if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
-                            const guestDir = g.dest > f ? 1 : -1;
-                            return (f === 0 || f === Config.numFloors - 1 || guestDir === lift.sweepDirection || lift.passengers.length === 0);
-                        });
-
-                        if (boardableGuestIndex !== -1) {
-                            let parkedLifts = Registry.lifts.filter(l => l.targetFloor === f && Math.abs(l.pos - f * Registry.floorHeight) < 1 && Registry.getLiftWeight(l) < (typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity) && l.jamTimer <= 0 && l.stinkTimer <= 0);
-                            parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
-                            
-                            if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
-                                const guestToBoard = Registry.floors[f].waitingGuests.splice(boardableGuestIndex, 1)[0];
-                                lift.passengers.push(guestToBoard);
-                                performedAction = true;
-                                
-                                if (lift.passengers.length === 1 && (lift.automation === 'sweep' || lift.automation === 'priority-sweep')) {
-                                    lift.sweepDirection = guestToBoard.dest > f ? 1 : -1;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (performedAction) {
+                let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+                const canPickUp = (Registry.getLiftWeight(lift) < maxCap && Registry.floors[f].waitingGuests.length > 0);
+                
+                if (hasDropoffs || canPickUp) {
+                    lift.state = 'BOARDING';
+                    lift.stateProgress = 1.0; 
                     lift.lastActionTime = now;
-                    stateChanged = true;
                 } else {
                     if (lift.manualOverride) lift.manualOverride = false;
-
-                    if (lift.automation.startsWith('custom_') && !lift.manualOverride) {
-                        if (window.Game.Automation) {
-                            window.Game.Automation.execute(lift, lift.automation);
-                        }
-                    }
-                    else if (lift.automation === 'sweep' && !lift.manualOverride) {
-                        let nextTarget = -1;
-                        let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-                        
-                        const findValidStop = (dir) => {
-                            for (let checkF = currentFloor + dir; checkF >= 0 && checkF < Config.numFloors; checkF += dir) {
-                                if (lift.passengers.some(p => p.dest === checkF)) return checkF;
-                                if (Registry.getLiftWeight(lift) < maxCap && lift.stinkTimer <= 0 && (!isStinky || (hasStinkImmunity))) {
-                                    const hasValidWaiter = Registry.floors[checkF].waitingGuests.some(g => {
-                                        const guestDir = g.dest > checkF ? 1 : -1;
-                                        if (isStinky && !g.isGymBro) return false;
-                                        return checkF === 0 || checkF === Config.numFloors - 1 || guestDir === dir || lift.passengers.length === 0;
-                                    });
-                                    if (hasValidWaiter) return checkF;
-                                }
-                            }
-                            return -1;
-                        };
-
-                        nextTarget = findValidStop(lift.sweepDirection);
-                        if (nextTarget === -1) {
-                            lift.sweepDirection *= -1;
-                            nextTarget = findValidStop(lift.sweepDirection);
-                        }
-                        if (nextTarget !== -1) lift.targetFloor = nextTarget;
-                    }
-                    else if (lift.automation === 'priority-sweep' && !lift.manualOverride) {
-                        let nextTarget = -1;
-                        let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-                        
-                        const getTargets = (status) => {
-                            let targets = new Set();
-                            lift.passengers.forEach(p => { if (p.status === status) targets.add(p.dest); });
-                            if (Registry.getLiftWeight(lift) < maxCap && lift.stinkTimer <= 0 && (!isStinky || (hasStinkImmunity))) {
-                                Registry.floors.forEach((floor, checkF) => {
-                                    if (floor.waitingGuests.some(g => g.status === status && (!isStinky || g.isGymBro))) targets.add(checkF);
-                                });
-                            }
-                            return Array.from(targets);
-                        };
-
-                        const criticalTargets = getTargets(GuestStatus.CRITICAL);
-                        const annoyedTargets = getTargets(GuestStatus.ANNOYED);
-                        const happyTargets = getTargets(GuestStatus.HAPPY);
-
-                        let activeTargets = [];
-                        if (criticalTargets.length > 0) activeTargets = criticalTargets;
-                        else if (annoyedTargets.length > 0) activeTargets = annoyedTargets;
-                        else if (happyTargets.length > 0) activeTargets = happyTargets;
-
-                        if (activeTargets.length > 0) {
-                            const targetsAhead = activeTargets.filter(t => lift.sweepDirection === 1 ? t > currentFloor : t < currentFloor);
-
-                            if (targetsAhead.length > 0) {
-                                nextTarget = targetsAhead.reduce((a, b) => Math.abs(a - currentFloor) < Math.abs(b - currentFloor) ? a : b);
+                    window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                }
+            }
+            
+            if (lift.state === 'BOARDING') {
+                if (lift.stateProgress >= 1) {
+                    let performedAction = false;
+                    let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
+                    const indexToDrop = lift.passengers.findIndex(p => p.dest === f || (forceExodus && !p.isGymBro));
+                    
+                    if (indexToDrop !== -1) {
+                        const p = lift.passengers.splice(indexToDrop, 1)[0];
+                        if (p.dest === f) {
+                            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('ding');
+                            if (p.isSunset && f === Config.numFloors - 1) {
+                                p.isPartying = true;
+                                Registry.floors[f].waitingGuests.push(p);
                             } else {
-                                lift.sweepDirection *= -1;
-                                const targetsNewAhead = activeTargets.filter(t => lift.sweepDirection === 1 ? t > currentFloor : t < currentFloor);
-                                if (targetsNewAhead.length > 0) {
-                                    nextTarget = targetsNewAhead.reduce((a, b) => Math.abs(a - currentFloor) < Math.abs(b - currentFloor) ? a : b);
-                                } else if (activeTargets.includes(currentFloor)) {
-                                    nextTarget = currentFloor;
-                                }
+                                Registry.stats.served++;
+                                Registry.roundStats.servedThisRound++; 
+                                let waitSeconds = (now - p.spawnTime) / 1000;
+                                Registry.roundStats.totalWaitTimeServed += Math.max(0, waitSeconds);
+                                if (p.isVip) Registry.roundStats.vipServed++;
+                                if (p.status === GuestStatus.HAPPY) Registry.roundStats.happyServed++;
+                                else if (p.status === GuestStatus.ANNOYED) Registry.roundStats.annoyedServed++;
+                                else if (p.status === GuestStatus.CRITICAL) Registry.roundStats.criticalServed++;
                             }
+                        } else {
+                            p.isFarter = false; 
+                            Registry.floors[f].waitingGuests.push(p);
                         }
-                        if (nextTarget !== -1) lift.targetFloor = nextTarget;
-                    }
-                    else if ((lift.automation === 'voting' || lift.automation === 'weighted-voting') && !lift.manualOverride) {
-                        let bestFloors = [];
-                        let maxScore = -1;
+                        if (lift.passengers.length === 0) lift.sardineScored = false;
+                        
+                        performedAction = true;
+                        lift.stateProgress = 0;
+                        lift.lastBoardingWeight = p.boardingWeight || 1.0;
+                    } 
+                    else {
                         let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+                        if (Registry.getLiftWeight(lift) < maxCap && Registry.floors[f].waitingGuests.length > 0) {
+                            let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g => {
+                                let gWeight = g.isGymBro ? 2 : 1;
+                                if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
+                                if (g.status === GuestStatus.RAGE) return false;
+                                if (isStinky && !g.isGymBro) return false;
+                                if (lift.passengers.some(p => p.isVip)) return false; 
+                                if (g.isVip && lift.passengers.length > 0) return false; 
 
-                        const getGuestWeight = (guest) => {
-                            if (guest.status === GuestStatus.RAGE) return 0;
-                            if (lift.automation === 'weighted-voting') {
-                                if (guest.status === GuestStatus.CRITICAL) return 4;
-                                if (guest.status === GuestStatus.ANNOYED) return 2;
-                                return 1; 
-                            }
-                            return 1; 
-                        };
-
-                        for (let checkF = 0; checkF < Config.numFloors; checkF++) {
-                            let score = 0;
-                            lift.passengers.forEach(p => { if (p.dest === checkF) score += getGuestWeight(p); });
-                            
-                            if (Registry.getLiftWeight(lift) < maxCap && lift.stinkTimer <= 0 && (!isStinky || (hasStinkImmunity))) {
-                                Registry.floors[checkF].waitingGuests.forEach(g => { 
-                                    if (!isStinky || g.isGymBro) score += getGuestWeight(g); 
-                                });
-                            }
-
-                            if (score > maxScore && score > 0) {
-                                maxScore = score;
-                                bestFloors = [checkF];
-                            } else if (score === maxScore && score > 0) {
-                                bestFloors.push(checkF);
-                            }
-                        }
-
-                        if (bestFloors.length > 0) {
-                            let minDistance = Infinity;
-                            let closestFloors = [];
-                            bestFloors.forEach(f => {
-                                let dist = Math.abs(f - currentFloor);
-                                if (dist < minDistance) {
-                                    minDistance = dist;
-                                    closestFloors = [f];
-                                } else if (dist === minDistance) {
-                                    closestFloors.push(f);
-                                }
+                                if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
+                                
+                                const guestDir = g.dest > f ? 1 : -1;
+                                if (lift.passengers.length > 0) return guestDir === lift.sweepDirection;
+                                return true;
                             });
-                            lift.targetFloor = closestFloors[window.getRandomInt(0, closestFloors.length - 1)];
+
+                            if (boardableGuestIndex !== -1) {
+                                let parkedLifts = Registry.lifts.filter(l => l.targetFloor === f && Math.abs(l.pos - f * Registry.floorHeight) < 1 && Registry.getLiftWeight(l) < (typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity) && l.jamTimer <= 0 && l.stinkTimer <= 0);
+                                parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
+                                
+                                if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
+                                    const guestToBoard = Registry.floors[f].waitingGuests.splice(boardableGuestIndex, 1)[0];
+                                    if (lift.passengers.length === 0 && (lift.automation === 'sweep' || lift.automation === 'priority-sweep')) {
+                                        lift.sweepDirection = guestToBoard.dest > f ? 1 : -1;
+                                    }
+                                    lift.passengers.push(guestToBoard);
+                                    performedAction = true;
+                                    lift.stateProgress = 0;
+                                    lift.lastBoardingWeight = guestToBoard.boardingWeight || 1.0;
+                                }
+                            }
                         }
                     }
-                    else if (lift.automation.startsWith('custom_') && !lift.manualOverride) {
-                        const scriptId = lift.automation.replace('custom_', '');
-                        if (typeof AutomationVM !== 'undefined' && typeof AutomationVM.execute === 'function') {
-                            AutomationVM.execute(lift, scriptId);
-                        }
+
+                    if (!performedAction) {
+                        lift.state = 'DOORS_MOVING';
+                        lift.stateProgress = 0;
                     }
+                } else {
+                    const weight = lift.lastBoardingWeight || 1.0;
+                    const effectiveBoardSpeed = Config.boardSpeedSec * (Config.boardingSpeedMultiplier || 1.0) * weight;
+                    lift.stateProgress += 16 / (effectiveBoardSpeed * 1000);
+                }
+            }
+            else if (lift.state === 'DOORS_MOVING') {
+                lift.stateProgress += 16 / (Config.doorSpeedSec * 1000); 
+                if (lift.stateProgress >= 1) {
+                    lift.state = 'DONE';
+                    lift.stateProgress = 0;
+                    if (lift.manualOverride) lift.manualOverride = false;
+                    window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
                 }
             }
         }
-        
     });
+};
+
+window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasStinkImmunity, now) {
+    const VM = window.Game.Automation;
+    if (!VM || !lift.automation || lift.automation === 'manual') return;
+
+    // Dispatch to VM for all modes
+    if (lift.automation === 'sweep') {
+        VM.execute(lift, 'sys_sweep');
+    } else if (lift.automation === 'priority-sweep') {
+        VM.execute(lift, 'sys_priority');
+    } else if (lift.automation === 'voting') {
+        VM.execute(lift, 'sys_voting');
+    } else if (lift.automation === 'weighted-voting') {
+        VM.execute(lift, 'sys_weighted');
+    } else if (lift.automation.startsWith('custom_')) {
+        VM.execute(lift, lift.automation);
+    }
 };
 
 window.Game = window.Game || {};
 window.Game.Engine = window.Game.Engine || {};
 window.Game.Engine.gameTick = window.gameTick;
 window.Game.Engine.animationTick = window.animationTick;
-window.gameTick = window.Game.Engine.gameTick;
-window.animationTick = window.Game.Engine.animationTick;
