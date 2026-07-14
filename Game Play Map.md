@@ -5,7 +5,7 @@ The definitions of the mechanics exists in other documents. This document is to 
 
 | Type | Name | Parameters | Round 1 | Round 2 | Round 3 | Round 4 | Round 5 | Round 6 | Round 7 | Round 8 | Round 9 | Round 10 | Round 11 | Round 12 | Round 13 | Round 14 | Round 15 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| Content | Round Title | | Welcome | Auto 101 | Rush Hour | Triage | Democracy | Mechanical Issues | Check-out Crush | VIP Visit | Rooftop Party | Sandbox | Gym | Endurance | Pedal Power | Multi-Dimensional | The Grand Opening |
+| Content | Round Title | | Welcome | Automations Unlocked | Rush Hour | Triage | Democracy | The Wild Card | Check-out Rush | VIP Arrival | Happy Hour & Hazards | Sandbox Unlocked | The Gym Challenge | Endurance Mode | Pedal Power | Multi-Dimensional | The Grand Opening |
 | Content | Round Description | | Basic controls | Intro Sweep | Weight Intro | Urgency focus | Voting intro | Hazards begin | G-Floor funnel | Single-rider VIPs | Environmental | Scripting | Stink hazard | No Timer | Gravity active | Double-Decker intro | Final Challenge |
 | Content | Player Rank | | Operator | Operator | Manager | Manager | Director | Director | Captain | Captain | Marshal | Marshal | Marshal | Marshal | Marshal | Marshal | Supremo |
 | Structure | Number of Floors | | 10 | 10 | 10 | 10 | 10 | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 15 | 20 | 25 |
@@ -38,3 +38,7 @@ The definitions of the mechanics exists in other documents. This document is to 
 | Automations | Voting | | - | - | - | - | Intro | - | - | - | - | - | - | - | - | - | - |
 | Automations | Weighted Voting | | - | - | - | - | Intro | - | - | - | - | - | - | - | - | - | - |
 | Automations | Custom | | - | - | - | - | - | - | - | - | - | Intro | - | - | - | - | - |
+| Workshop | Control | Logic blocks | - | - | - | - | - | - | - | - | - | Intro | - | - | - | - | - |
+| Workshop | Sensors | Observability | - | - | - | - | - | - | - | - | - | Intro | - | - | - | - | - |
+| Workshop | Connectivity | Memory/API | - | - | - | - | - | - | - | - | - | Intro | - | - | - | - | - |
+
