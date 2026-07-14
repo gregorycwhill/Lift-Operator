@@ -6,57 +6,27 @@ const Achievements = {
     // Dynamic asset definitions mapping specific feats to themes
     definitions: {
         service: {
-            id: 'service',
-            name: 'Service Award',
-            desc: 'Safely deliver heavy passenger guest volumes inside a single round.',
-            bronze: { label: 'Bronze Fish', req: 10, icon: '🟫🐟' },
-            silver: { label: 'Silver Fish', req: 30, icon: '⬜🐟' },
-            gold: { label: 'Gold Fish', req: 50, icon: '🟨🐟' },
+            ...window.Config.GAME_DATA.achievements.service,
             check: (stats) => stats.servedThisRound
         },
         handsfree: {
-            id: 'handsfree',
-            name: 'Hands-Free Inventor',
-            desc: 'Operate automated transit routines without manual click adjustments.',
-            bronze: { label: 'Bronze Automation', req: 2, icon: '🟫🤖' },
-            silver: { label: 'Silver Automation', req: 6, icon: '⬜🤖' },
-            gold: { label: 'Gold Automation', req: 9, icon: '🟨🤖' },
+            ...window.Config.GAME_DATA.achievements.handsfree,
             check: (stats) => (stats.manualClicks === 0 && Registry.stats.round >= 2) ? Registry.stats.round : 0
         },
         sardine: {
-            id: 'sardine',
-            name: 'Sardine Packer',
-            desc: 'Deliver fully loaded lifts packed perfectly to maximum capacity weight.',
-            bronze: { label: 'Bronze Packer', req: 1, icon: '🟫📦' },
-            silver: { label: 'Silver Packer', req: 3, icon: '⬜📦' },
-            gold: { label: 'Gold Packer', req: 5, icon: '🟨📦' },
+            ...window.Config.GAME_DATA.achievements.sardine,
             check: (stats) => stats.fullyLoadedLifts
         },
         hacker: {
-            id: 'hacker',
-            name: 'Hacker Award',
-            desc: 'Optimise custom logic to run for thousands of simulation cycles.',
-            bronze: { label: 'Bronze Logic', req: 500, icon: '🟫⌨️' },
-            silver: { label: 'Silver Logic', req: 5000, icon: '⬜⌨️' },
-            gold: { label: 'Master Coder', req: 20000, icon: '🟨⌨️' },
+            ...window.Config.GAME_DATA.achievements.hacker,
             check: (stats) => Registry.customScriptTicks || 0
         },
         parallel: {
-            id: 'parallel',
-            name: 'Parallel Universe',
-            desc: 'Successfully bridge gaps between shafts using lateral transfer logic.',
-            bronze: { label: 'Bronze Bridge', req: 1, icon: '🟫↔️' },
-            silver: { label: 'Silver Bridge', req: 10, icon: '⬜↔️' },
-            gold: { label: 'Quantum Leap', req: 25, icon: '🟨↔️' },
+            ...window.Config.GAME_DATA.achievements.parallel,
             check: (stats) => stats.lateralTransfers || 0
         },
         doubleup: {
-            id: 'doubleup',
-            name: 'Double Trouble',
-            desc: 'Utilise double-decker infrastructure to move large volumes of people.',
-            bronze: { label: 'Bronze Deck', req: 5, icon: '🟫🚡' },
-            silver: { label: 'Silver Deck', req: 15, icon: '⬜🚡' },
-            gold: { label: 'Ocean Liner', req: 40, icon: '🟨🚡' },
+            ...window.Config.GAME_DATA.achievements.doubleup,
             check: (stats) => stats.doubleDeckerServed || 0
         }
     },
@@ -85,9 +55,9 @@ const Achievements = {
             let earnedTier = null;
             let pointVal = 0;
 
-            if (currentVal >= feat.gold.req) { earnedTier = 'gold'; pointVal = 10; }
-            else if (currentVal >= feat.silver.req) { earnedTier = 'silver'; pointVal = 5; }
-            else if (currentVal >= feat.bronze.req) { earnedTier = 'bronze'; pointVal = 2; }
+            if (currentVal >= feat.gold.req) { earnedTier = 'gold'; pointVal = feat.gold.reward; }
+            else if (currentVal >= feat.silver.req) { earnedTier = 'silver'; pointVal = feat.silver.reward; }
+            else if (currentVal >= feat.bronze.req) { earnedTier = 'bronze'; pointVal = feat.bronze.reward; }
 
             if (earnedTier) {
                 const priorHighest = careerLog[feat.id]; // 'gold', 'silver', 'bronze' or undefined

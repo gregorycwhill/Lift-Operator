@@ -41,26 +41,12 @@ window.gameTick = function(timestamp) {
 
     if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick();
     
-    // Round 12 Endurance: No timer, just ragers
-    if (Registry.stats.round === 12) {
-        // In Round 12, the clock stays at 1:00 (or whatever it started at)
-        // and we check for "Victory" based on a score or just let it transition?
-        // User wants to ensure progress to Round 13.
-        // Let's make Round 12 end successfully after a certain amount of guests served 
-        // to move to 13, OR let the user "end" it through a specific condition.
-        // However, if we just stop timeLeft depletion, it never ends.
-        
-        // MODIFICATION: Round 12 depletion is slowed/controlled?
-        // Actually, user said: "ensure the player doesn't 'die' (stop the game) and progresses through to round 13."
-        // This implies Round 12 should be survivable or have a progression trigger.
-        
-        if (Registry.stats.lives <= 0) {
-            // Instead of death in R12, we force the transition to R13 to see the challenge?
-            // Or maybe just let them finish R12 normally but without the timer.
-            // Let's use a "Served" goal for R12 to trigger Round Complete.
-            if (Registry.roundStats.servedThisRound >= 50) {
-                 Registry.stats.timeLeft = 0; 
-            }
+    // Round Logic Orchestrator
+    const roundConfig = Config.GAME_DATA.rounds[Registry.stats.round] || { objective: 'SURVIVAL', gravityScalar: 0 };
+
+    if (roundConfig.objective === 'QUOTA') {
+        if (Registry.roundStats.servedThisRound >= roundConfig.quota) {
+            Registry.stats.timeLeft = 0; // Trigger completion
         }
     } else {
         Registry.stats.timeLeft--;
@@ -113,7 +99,7 @@ window.gameTick = function(timestamp) {
                 // Let's say one lift having it allows it to push/pull guests if BOTH are aligned.
                 
                 const posDiff = Math.abs(lift.pos - other.pos);
-                if (posDiff < 0.2 * Registry.floorHeight) {
+                if (posDiff < Config.GAME_DATA.system.lateralTolerance * Registry.floorHeight) {
                     // Lifts are aligned. Check for guest utility.
                     for (let pIdx = lift.passengers.length - 1; pIdx >= 0; pIdx--) {
                         const p = lift.passengers[pIdx];
@@ -161,9 +147,10 @@ window.gameTick = function(timestamp) {
 
     const checkStatus = (g) => {
         const wait = now - g.spawnTime;
-        if (wait > Config.criticalSec * 1000) return GuestStatus.RAGE;       
-        if (wait > Config.annoyedSec * 1000) return GuestStatus.CRITICAL;   
-        if (wait > Config.happySec * 1000) return GuestStatus.ANNOYED;    
+        const p = Config.GAME_DATA.system.patience;
+        if (wait > p.critical * 1000) return GuestStatus.RAGE;       
+        if (wait > p.annoyed * 1000) return GuestStatus.CRITICAL;   
+        if (wait > p.happy * 1000) return GuestStatus.ANNOYED;    
         return GuestStatus.HAPPY;                        
     };
     
@@ -246,10 +233,59 @@ window.gameTick = function(timestamp) {
 };
 
 window.animationTick = function(timestamp) {
-    if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
-
     const ui = GameUI();
+    const engine = GameEngine();
+
+    // ========================================================================
+    // UNIT_01 AUTO-PILOT PROTOCOL (MODAL & UI TRANSITIONS)
+    // ========================================================================
+    if (Registry.autoPilotActive && !Registry.manualIntervention) {
+        // We run UI-decision checks every frame while autopilot is active
+        // to handle modals even when gameActive is false.
+        
+        // HEARTBEAT SYNC: Ensure Heartbeat is shown if autopilot is active
+        const hb = document.getElementById('heartbeatMonitor');
+        if (hb && hb.classList.contains('hidden')) {
+            hb.classList.remove('hidden');
+        }
+
+        // 1. Manifest / Blueprint Gateway Interaction
+        const manifestAcceptBtn = document.getElementById('manifestAcceptBtn');
+        if (manifestAcceptBtn && manifestAcceptBtn.getBoundingClientRect().width > 0) {
+            console.log("🤖 [UNIT_01] Accepting Manifest Gateway...");
+            manifestAcceptBtn.click();
+            return;
+        }
+
+        // 2. Round Briefing / Start Button Interaction
+        const startRoundBtn = document.getElementById('startRoundBtn');
+        if (startRoundBtn && startRoundBtn.getBoundingClientRect().width > 0) {
+            console.log("🤖 [UNIT_01] Starting Round (Visible button found)");
+            startRoundBtn.click();
+            return;
+        }
+
+        // 3. Round Review / Continue Interaction
+        const continueBtn = document.getElementById('continueToBriefingBtn');
+        if (continueBtn && continueBtn.getBoundingClientRect().width > 0) {
+            console.log("🤖 [UNIT_01] Continuing to Briefing (Review complete)");
+            continueBtn.click();
+            return;
+        }
+
+        // 4. Shopping Logic (Greedy during Briefing)
+        if (!Registry.gameActive) {
+            const shopButtons = document.querySelectorAll('#shopContainer .btn-purchase:not([disabled])');
+            if (shopButtons.length > 0) {
+                shopButtons[0].click();
+            }
+        }
+    }
+
+    if (!Registry.gameActive) return;
+    
+    const roundConfig = Config.GAME_DATA.rounds[Registry.stats.round] || { objective: 'SURVIVAL', gravityScalar: 0 };
     try {
         if (typeof ui.draw === 'function') ui.draw();
     } catch (e) {
@@ -257,6 +293,65 @@ window.animationTick = function(timestamp) {
             Telemetry.add('RENDER', `Draw crash: ${e.message}`, 'error');
         }
         console.error("Render Crash", e);
+    }
+    
+    // ========================================================================
+    // UNIT_01 AUTO-PILOT PROTOCOL
+    // ========================================================================
+    if (Registry.autoPilotActive && !Registry.manualIntervention) {
+        const decisionInterval = 2250; // 50% slower than base 1500ms
+        if (now - (Registry.lastAutoDecisionTime || 0) > decisionInterval) {
+            Registry.lastAutoDecisionTime = now;
+            
+            // 1. Seeded Random Generator for Autopilot Brain
+            const agentRandom = () => {
+                Registry.agentSeed = (Registry.agentSeed * 16807) % 2147483647;
+                return (Registry.agentSeed - 1) / 2147483646;
+            };
+
+            // 2. Control Logic
+            const engine = GameEngine();
+            
+            // Shaft 0: Pseudo-Manual (Seeded Random Clicks)
+            if (Registry.lifts[0]) {
+                const target = Math.floor(agentRandom() * Config.numFloors);
+                if (typeof engine.setLiftTarget === 'function') {
+                    engine.setLiftTarget(0, target);
+                }
+            }
+            
+            // Other Shafts: Random Automations
+            for (let i = 1; i < Registry.lifts.length; i++) {
+                const modes = ['sweep', 'priority_sweep', 'voting'];
+                if (Registry.stats.round >= 10) modes.push('custom'); // Only if custom scripts exist
+                const randomMode = modes[Math.floor(agentRandom() * modes.length)];
+                if (typeof engine.setLiftAutomation === 'function') {
+                    engine.setLiftAutomation(i, randomMode);
+                }
+            }
+            
+            // 3. Power-Up Deployment
+            if (Registry.inventory && Registry.inventory.length > 0) {
+                // Staggered usage: 10% chance per decision tick to use a random item
+                if (agentRandom() < 0.1) {
+                    const idx = Math.floor(agentRandom() * Registry.inventory.length);
+                    const item = Registry.inventory[idx];
+                    const liftIdx = Math.floor(agentRandom() * Registry.lifts.length);
+                    if (typeof PowerUps !== 'undefined' && typeof PowerUps.activatePowerUp === 'function') {
+                        PowerUps.activatePowerUp(item.id, liftIdx);
+                    }
+                }
+            }
+
+            // 4. Stall Detection Heartbeat
+            if (now - (Registry.lastProgressTime || now) > 15000) {
+                console.error("⛔ [UNIT_01] STALL DETECTED: No served progress for 15s. Registry:", Registry);
+            }
+            if (Registry.stats.served > (Registry.lastServedCount || 0)) {
+                Registry.lastServedCount = Registry.stats.served;
+                Registry.lastProgressTime = now;
+            }
+        }
     }
 
     const pixelsPerSecond = Registry.floorHeight / Config.liftSpeedSec;
@@ -284,10 +379,10 @@ window.animationTick = function(timestamp) {
         if (targetPos > lift.pos) {
             const currentWeight = Registry.getLiftWeight(lift);
             const maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-            // Gravity is ONLY active in Round 13 (Pedal Power)
-            // Double-Decker doubles weight sensitivity (gravity penalty)
-            let gravityMultiplier = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0) ? 2.0 : 1.0;
-            const liftGravity = (Registry.stats.round === 13) ? (Config.gravityConstant * 2 * gravityMultiplier) : 0;
+            
+            // Gravity and weight sensitivity from Config.GAME_DATA
+            let ddMultiplier = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0) ? 2.0 : 1.0;
+            const liftGravity = (roundConfig.gravityScalar || 0) * ddMultiplier;
             const gravityEffect = 1 - ((currentWeight / maxCap) * liftGravity);
             actualPixelsPerTick *= Math.max(0.1, gravityEffect); 
         }
@@ -310,7 +405,11 @@ window.animationTick = function(timestamp) {
             lift.state = 'IDLE';
             lift.stateProgress = 0;
         } else {
-            lift.pos = targetPos; 
+            // SNAP TO FLOOR logic
+            if (Math.abs(lift.pos - targetPos) < (Config.GAME_DATA.system.lateralTolerance * Registry.floorHeight)) {
+                lift.pos = targetPos; 
+            }
+            
             const f = lift.targetFloor;
 
             // SAFETEY: Prevent crashes from invalid target floors

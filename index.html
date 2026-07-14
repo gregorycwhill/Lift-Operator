@@ -15,6 +15,10 @@
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
             <h2><span id="pilotNameDisplay">Pilot</span></h2>
+            <div id="heartbeatMonitor" class="heartbeat-container hidden">
+                <span class="heartbeat-dot"></span>
+                <span class="heartbeat-text">AUTO-PILOT ACTIVE</span>
+            </div>
             <div class="seed-text">Seed: <span id="seedDisplay">----</span></div>
         </div>
         
@@ -56,7 +60,7 @@
             <button id="openWorkshopBtn" class="btn btn-purple">Workshop</button>
             <button id="leaderboardBtn" class="btn btn-yellow">Leaderboard</button>
             <button id="restartBtn" class="btn btn-red">Restart Game</button>
-            <button id="openDebugBtn" class="btn btn-gray btn-margin-top">Debug Menu</button>
+            <button id="openDebugBtn" class="btn btn-gray btn-margin-top hidden">Debug Menu</button>
         </div>
     </div>
 
@@ -85,7 +89,7 @@
         <!-- NEW: IMMIGRATION & CUSTOMS GATEWAY MODAL FOR SHARED DATA PAYLOADS -->
         <div class="overlay" id="manifestOverlay">
             <div class="modal-content">
-                <h2>⚠️ Inbound Transmission</h2>
+                <h2 id="manifestTitle">⚠️ System Message</h2>
                 <p id="manifestInstructions" style="font-size: 14px; margin: 15px 0; line-height: 1.4; color: #2c3e50;"></p>
                 
                 <div style="display: flex; gap: 10px; margin-top: 25px;">
@@ -255,6 +259,7 @@
     <script src="ui-overlay.js"></script>
 
     <!-- Testing Suite -->
+    <script src="tests/config_test.js"></script>
     <script src="tests/simulation-tests.js"></script>
     <script src="tests/regression-suite.js"></script>
 </body>

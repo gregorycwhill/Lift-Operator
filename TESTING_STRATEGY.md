@@ -67,3 +67,22 @@ When adding a new Power-up, the test suite must be updated with:
 1.  **Effect Test:** Does the timer decrement in `PowerUps.tick()`?
 2.  **Physics Test:** Does the physics engine (e.g., `boardingSpeedMultiplier`) actually use the power-up's config?
 3.  **Visual Cleanup:** Does the power-up icon UI cleanup after the timer hits 0?
+
+## 7. Autonomous Regression Pilot (The "Monkey Pilot")
+**Focus:** Full-loop E2E experience validation, UI overlap detection, and state transition stability.
+**Implementation:** Playwright-driven autonomous agent (`tests/auto-pilot.spec.js`).
+
+*   **Execution Logic:**
+    *   **Seeded Reproducibility:** The agent uses two seeds: a **Game Seed** (environment) and an **Agent Seed** (decision matrix). This ensures identical runs across identical test cycles.
+    *   **Time Compression:** Rounds are artificially shortened to 30 seconds to reach late-game hazards quickly.
+    *   **The "Tourism" Protocol:** Once per round, the agent opens and closes the Workshop and Leaderboard to verify no UI soft-locks occur.
+*   **Gameplay Modes:**
+    *   **Hybrid Control:** One lift shaft is operated by random seeded floor clicks; others are set to random automation algorithms.
+    *   **Greedy Shopping:** During the Shop phase, the agent buys the most expensive available power-ups until points are depleted.
+    *   **Inventory Utilization:** Power-ups are deployed at staggered intervals throughout the 30-second round.
+*   **Validation & Safety:**
+    *   **Stall detection:** If `servedThisRound` or `animationTick` stops for 15s while `gameActive`, a "Logic Lock" error is logged.
+    *   **Input Leakage:** Agent attempts to click shafts through the Leaderboard overlay; movement indicates a Z-index bug.
+    *   **User Handoff (Kill Switch):** Any non-agent mouse/keyboard interaction sets `Registry.manualIntervention` to true, stopping the agent immediately.
+    *   **Lifecycle:** On death, the agent logs terminal stats and restarts, verifying state persistence and clean engine resets.
+    *   **Telemetry:** All decisions, badges earned, and performance metrics are logged to the console for automated analysis.

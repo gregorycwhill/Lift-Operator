@@ -8,5 +8,5 @@ Round 2
 When I exited the shop, it returned the old game board, decided the round had finished and gave me a new Round Review.
 No further testing possible.
 ***  Using Warp Mode (debug) to access Round 2
-Too many
+
 

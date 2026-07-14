@@ -69,24 +69,35 @@
 | :--- | :--- | :--- | :--- |
 | **Boundary Guard** | Scripts cannot target floor -1 or floors >= Config.numFloors. | `setTarget(-1)` rejected by bridge; `randomFloor` clamped to [0, N-1]. | ✅ Implemented |
 | **Seed Stability** | Negative or float seeds do not cause PRNG to return negative values. | Simulation with seed `0.0001` proves floor counts stay >= 0. | ✅ Implemented |
-| **ID Sanitization** | Script IDs are sanitized to prevent `custom_` prefix duplication. | Import script with `custom_` prefix, verify mapping in `AutomationVM`. | ✅ Implemented |
-
-
----
-
-## 4. Achievements
-
-| Achievement | Success Criteria | Test Method |
-| :--- | :--- | :--- |
-| **Sardine Packer** | Serve a lift at 100% weight capacity. | Manual load of 10 guests, deliver to floor, check `stats.fullyLoadedLifts`. |
-| **Hands-Free Inventor** | Complete a round without manual clicks using automation. | Run Round 2, keep `manualClicks: 0`, verify badge unlock. |
-| **Service Award** | Deliver X guests in one round. | Run high-intensity round, check `servedThisRound` vs badge reqs. |
-| **Hacker Award** | Accumulate custom script ticks. | Use Workshop, verify tick accumulation in `Registry.customScriptTicks`. |
+| **Blueprint: ID Sanitization** | Script IDs are sanitized to prevent `custom_` prefix duplication. | Import script with `custom_` prefix, verify mapping in `AutomationVM`. | ✅ Implemented |
 
 ---
 
-## 5. Execution Strategy
+## 6. Phase 3: Centralization & Debug Verification
+
+| Requirement | Success Criteria | Test Scenario | Status |
+| :--- | :--- | :--- | :--- |
+| **Config: Solo Object** | `achievements.js` and `powerups.js` reference `Config.GAME_DATA` instead of local variables. | Delete local arrays in modules; verify no "undefined" errors on game start. | ⚪ Planned |
+| **Config: Override** | Values in `config_test.js` successfully overwrite defaults in `Config.GAME_DATA`. | Create `config_test.js` with 1-second round time; check `Registry.stats.timeLeft` equals 1. | ⚪ Planned |
+| **Debug: URI Lock** | Loading the game *without* a data param results in `debugMode === false`. | Refresh `index.html`; verify "Debug Menu" button is hidden. | ⚪ Planned |
+| **Debug: Secure Auth** | Passing valid encoded "system:debug" data unlocks all rounds. | Generate XOR-encoded debug link; verify "Warp" menu shows Rounds 1-15 unlocked. | ⚪ Planned |
+| **Debug: Modal Consent** | User is prompted before entering Sandbox Mode. | Click "Accept" on manifest modal; verify `Registry.points === 99999`. | ⚪ Planned |
+
+---
+
+## 8. Autonomous Regression (E2E Monkey Testing)
+
+| Logic | Success Criteria | Deployment | Status |
+| :--- | :--- | :--- | :--- |
+| **Seeded Pilot** | Decisions are deterministic based on `AgentSeed`. | `tests/auto-pilot.spec.js` | ⚪ Planned |
+| **Modal Stress** | "Ghost clicks" fail to reach game layer through overlays. | Validation of Z-index layering. | ⚪ Planned |
+| **Profile Isolation** | Agent clears profile `UNIT_01` before start. | verify `localStorage` wipe. | ⚪ Planned |
+| **Kill Switch** | Human `mousedown` immediately halts autonomous loop. | Manual intervention test. | ⚪ Planned |
+| **Round Loop** | Completion of 10+ rounds in < 10 mins via 30s timers. | End-to-end flow speedrun. | ⚪ Planned |
+
+## 9. Execution Strategy
 
 1. **Deterministic Runner:** The `engine-simulator.js` will be used to run rounds at high speed (60fps simulation, headless).
-2. **State Assertions:** After each simulated round, a `TestReport` object will be generated comparing actual `Registry` state against expected values.
-3. **UI Dashboard:** A simple overlay in `index.html` (triggered by the "Run Regression Suite" button) will display a checklist of these tests with Pass/Fail status.
+2. **Autonomous Pilot:** Non-headless Playwright runs for UI/Interaction validation.
+3. **State Assertions:** After each simulated round, a `TestReport` object will be generated comparing actual `Registry` state against expected values.
+4. **UI Dashboard:** A simple overlay in `index.html` (triggered by the "Run Regression Suite" button) will display a checklist of these tests with Pass/Fail status.

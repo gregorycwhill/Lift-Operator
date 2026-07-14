@@ -1,13 +1,13 @@
 # Game Design Document: Lift Operator
-**Current Version:** Prototype Phase 1 (Pre-Refactor)
+**Current Version:** Prototype Phase 2 (Refactored)
 
 ## 1. Core Overview
 *Lift Operator* is an educational, time-management/automation game. The player manages a multi-floor elevator system to clear queues of waiting guests. As the game escalates in difficulty, human reaction time becomes insufficient, forcing the player to rely on built-in logic algorithms (and eventually, their own coded automations) to survive.
 
 ## 2. Core Mechanics
 * **The Grid:** 15 Floors (G, 1-14). 
-* **The Lift:** Capacity of 10. Travels at 0.5s per floor. Uses a state-driven physics model (`TRANSIT`, `DOORS_OPENING`, `BOARDING`, `DOORS_CLOSING`, `IDLE`).
-* **Progression Tracking:** Game runs on timed 3-minute rounds. Difficulty scales via an increasing "Spawn Rate" percentage.
+* **The Lift:** Capacity of 10. Travels at 1.0s per floor (optimized for speed). Uses a state-driven physics model (`TRANSIT`, `DOORS_OPENING`, `BOARDING`, `DOORS_CLOSING`, `IDLE`).
+* **Progression Tracking:** Game runs on timed rounds. Standard rounds are 180 seconds, while Autopilot/Testing rounds are condensed to 30 seconds.
 * **PRNG System:** Spawns are handled by a custom Park-Miller seeded random number generator. Players can input a "Game ID" (seed) to replay the exact same traffic patterns to test different algorithms.
 
 ### 2.1 Guest Lifecycle & Rage State
@@ -63,3 +63,21 @@ Upward travel speed is penalized by lift load weight. Max load at default gravit
 * **Priority Sweep:** Targets floors with Critical > Annoyed > Happy guests. Abandons the strict sweep direction to hunt high-priority targets.
 * **Voting:** Calculates the floor with the highest volume of requests (inside lift + waiting on floor). Distance breaks ties.
 * **Weighted Voting:** Happy = 1 vote, Annoyed = 2 votes, Critical = 4 votes. Calculates destination based on maximum urgency mass.
+
+## 5. Development & Testing
+* **Secure Debug Mode:** Accessible via encrypted URI manifest.
+* **Unlock URI:** `index.html?manifest=JTNFbiUyNCUyMzUlM0NtaCU3RCUwMiUwMyUxQSUxNCUxMyUwNiUxRCUwRG13JTdEaSUwNyUxRSUxNyUwNCUxRWYlN0YlNjBpZWMlN0QtJTI0NyUyMC0lNUJUV0VndiUzRSUyQiUzQw%3D%3D`
+* **XOR Secret:** `ELEVATOR_GO_BRRR_2026`
+* **Codec Version:** 2.0.1 (Resilient Base64 & URI handling)
+
+## 6. Diagnostics & Quality Assurance
+The platform includes high-fidelity regression tools to ensure physics stability across new environmental hazards.
+
+### 6.1 Autonomous Regression Pilot
+A dedicated Playwright-driven E2E agent (**"UNIT_01"**) facilitates autonomous testing:
+* **Seeded Logic:** The agent uses an independent `AgentSeed` (default: 9999) for deterministic decision-making, ensuring test runs are 100% reproducible.
+* **Action Pacing:** The agent's decision interval is throttled to 2250ms (50% slower than base human latency) to prevent physics desyncs during high-traffic rounds.
+* **Hybrid Operations:** Operates one lift via randomized floor clicks while managing others through automation toggles.
+* **Flow Validation:** Speed-runs 30-second rounds, performs "greed-based" power-up purchasing, and validates UI layering (Z-index) to prevent interaction bleed-through.
+* **Fail-Safe Compliance:** Implements a physical "Kill Switch" constrained to world/sidebar interactions that yields control back to a human user upon any unauthorized mouse interaction. Keyboard events (such as Alt-Tab or F12) are ignored to prevent accidental interruptions during multitasking.
+* **Persistence Testing:** Validates that game cycles (Death -> Reset) correctly clear cached state while retaining historical telemetry.

@@ -1,5 +1,6 @@
 // ============================================================================
 // ENGINE-CORE.JS : LIFECYCLE MANAGEMENT, WORKSHOP MODALS, & PAYLOAD CODECS
+// VERSION: 2.0.1 (Resilient Decoding)
 // ============================================================================
 
 window.SHARE_SECRET = "ELEVATOR_GO_BRRR_2026";
@@ -11,6 +12,7 @@ window.encodePayload = function(payloadObj) {
         for (let i = 0; i < str.length; i++) {
             xorStr += String.fromCharCode(str.charCodeAt(i) ^ window.SHARE_SECRET.charCodeAt(i % window.SHARE_SECRET.length));
         }
+        // Triple-wrap for ultimate safety: XOR -> URI -> Base64 -> URI
         return encodeURIComponent(btoa(encodeURIComponent(xorStr)));
     } catch (e) {
         console.error("Failed to encode payload.", e);
@@ -19,15 +21,61 @@ window.encodePayload = function(payloadObj) {
 };
 
 window.decodePayload = function(encodedStr) {
-    try {
-        const xorStr = decodeURIComponent(atob(decodeURIComponent(encodedStr)));
-        let str = '';
-        for (let i = 0; i < xorStr.length; i++) {
-            str += String.fromCharCode(xorStr.charCodeAt(i) ^ window.SHARE_SECRET.charCodeAt(i % window.SHARE_SECRET.length));
+    if (!encodedStr) return null;
+    const secret = window.SHARE_SECRET;
+
+    const doXor = (bin) => {
+        let res = '';
+        for (let i = 0; i < bin.length; i++) {
+            res += String.fromCharCode(bin.charCodeAt(i) ^ secret.charCodeAt(i % secret.length));
         }
-        return JSON.parse(str);
+        return res;
+    };
+
+    try {
+        // 1. Initial cleanup
+        let input = String(encodedStr).trim().replace(/ /g, '+');
+        
+        // 2. Decode outer URI layer
+        let decoded = input;
+        try { decoded = decodeURIComponent(input); } catch(e) {}
+
+        // ATTEMPT A: Raw XOR (Old Format Compatibility)
+        try {
+            let xorA = doXor(decoded);
+            if (xorA.trim().startsWith('{')) return JSON.parse(xorA);
+        } catch(e) {}
+
+        // ATTEMPT B: Base64 Path (Resilient)
+        try {
+            // Remove non-base64 characters BEFORE calling atob to prevent InvalidCharacterError
+            let b64 = decoded.replace(/[^A-Za-z0-9+/=]/g, "");
+            if (b64.length >= 4) {
+                while (b64.length % 4 !== 0) b64 += '=';
+                let binary = atob(b64);
+                
+                // Binary might be URI encoded
+                let xorTarget = binary;
+                try { xorTarget = decodeURIComponent(binary); } catch(e) {}
+                
+                let xorB = doXor(xorTarget);
+                try { return JSON.parse(xorB); } catch(e) {
+                    // Try one more unquote in case of double-nested encoding
+                    return JSON.parse(decodeURIComponent(xorB));
+                }
+            }
+        } catch(e) {}
+        
+        // ATTEMPT C: Deep URI Unwrapping
+        try {
+            let deep = decodeURIComponent(decodeURIComponent(decoded));
+            let xorC = doXor(deep);
+            if (xorC.trim().startsWith('{')) return JSON.parse(xorC);
+        } catch(e) {}
+
+        return null;
     } catch (e) {
-        console.warn("Invalid or tampered share link detected. Ignoring.");
+        console.warn("Invalid or tampered share link detected. Ignoring.", e);
         return null;
     }
 };
@@ -107,7 +155,7 @@ window.openWorkshopModal = function() {
 
 window.resetGame = function() {
     Registry.stats.round = 1;
-    Registry.stats.timeLeft = Config.roundTime;
+    Registry.stats.timeLeft = Registry.autoPilotActive ? (Config.autoPilotSettings.shortRoundDuration || 30) : Config.roundTime;
     Registry.stats.lives = Config.startingLives;
     Registry.stats.served = 0;
     Registry.stats.currentSpawnChance = Config.spawnR1Start;
@@ -164,7 +212,7 @@ window.resetGame = function() {
 
 window.skipToRound = function(targetRound) {
     Registry.stats.round = targetRound;
-    Registry.stats.timeLeft = Config.roundTime;
+    Registry.stats.timeLeft = Registry.autoPilotActive ? (Config.autoPilotSettings.shortRoundDuration || 30) : Config.roundTime;
     Registry.stats.lives = Config.startingLives;
     Registry.vipSpawned = false; Registry.vipTargetTime = 0;
     Registry.sunsetHasHappened = false; Registry.sunsetTargetTime = 0; Registry.sunsetActive = false; Registry.sunsetEndTime = 0;
@@ -262,36 +310,68 @@ window.initializeEngine = function() {
         Registry.pendingManifest.push({ type: 'seed', value: parseInt(gameIdParam) });
     }
 
+    const debugParam = urlParams.get('debug') || urlParams.get('manifest');
+    if (debugParam) {
+        const decodedDebug = window.decodePayload(debugParam);
+        // ENFORCED SECRET: ELEVATOR_GO_BRRR_2026
+        if (decodedDebug && decodedDebug.auth === "ELEVATOR_GO_BRRR_2026") {
+            console.log("🔒 Secure Debug Payload Decoded. Queuing manifest Gateway...");
+            Registry.pendingManifest.push({
+                type: 'debug_override',
+                overrides: decodedDebug.overrides
+            });
+        }
+    }
+
+    // Autopilot URI trigger removed for security hardening. 
+    // Use Debug Modal to launch UNIT_01.
+
     const savedTrophies = window.Game.Storage.get(window.Game.Keys.TROPHIES, '[]');
     Registry.trophyCase = JSON.parse(savedTrophies);
 
+    // Kill Switch: Global listener for human intervention
+    // Modified to ignore keyboard/window events to allow Alt-Tab and Console usage
+    const haltAutoPilot = (e) => {
+        if (!Registry.autoPilotActive) return;
+
+        // Only halt if the click was inside the game world or on a controls element
+        const worldContainer = document.getElementById('world');
+        const sidebar = document.getElementById('sidebar');
+        
+        const isGameInteraction = (worldContainer && worldContainer.contains(e.target)) || 
+                                (sidebar && sidebar.contains(e.target));
+
+        if (isGameInteraction) {
+            Registry.autoPilotActive = false;
+            Registry.manualIntervention = true;
+            console.warn("⚠️ AUTO-PILOT HALTED: Manual gameplay detected.");
+            const hb = document.getElementById('heartbeatMonitor');
+            if (hb) hb.classList.add('hidden');
+        }
+    };
+    window.addEventListener('mousedown', haltAutoPilot);
+
+
+    // Hardened safety: debugMode must be explicitly true in config AND no clean URL override
+    const isCleanUrl = !window.location.search.includes('manifest=') && !window.location.search.includes('debug=true');
+    if (isCleanUrl) {
+        Config.debugMode = false; 
+    }
+
     if (Config.debugMode) {
-        Registry.points = 99999;
         Registry.highestUnlockedRound = 11;
+        Registry.points = 99999;
+    } else {
+        Registry.points = 0;
+        Registry.highestUnlockedRound = 1;
     }
 
-    Config.numFloors = 10;
-    Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
-    Registry.lifts = []; 
-    
-    for (let i = 0; i < Config.liftsR1; i++) {
-        Registry.lifts.push({ 
-            id: i, targetFloor: 0, pos: 0, passengers: [], lastActionTime: 0, 
-            automation: 'manual', sweepDirection: 1, manualOverride: false, 
-            isJammed: false, jamTimer: 0, stinkTimer: 0, 
-            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
-            musakTimer: 0, sardineScored: false,
-            state: 'IDLE', stateProgress: 0,
-            effects: []
-        });
+    if (typeof window.refreshDebugVisibility === 'function') {
+        window.refreshDebugVisibility();
     }
-    Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
-    
-    Registry.seed = Registry.seed || Math.floor(Math.random() * 9000) + 1000;
-    setSeed(Registry.seed);
 
-    // Ensure First Guest spawns
-    window.forceFirstSpawn(window.Game.virtualTime || Date.now());
+    // Trigger full reset to build world and update UI
+    window.resetGame();
 };
 
 window.Game = window.Game || {};

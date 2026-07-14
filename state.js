@@ -32,6 +32,13 @@ const Registry = {
     highestUnlockedRound: 1, 
     gameActive: false, pauseStartTime: 0, lastSpawnTime: 0, floorHeight: 60, 
     fallbackName: "Pilot 1", seed: 1234,
+    
+    // Auto-Pilot & Regression Telemetry
+    autoPilotActive: false,
+    agentSeed: 0,
+    manualIntervention: false,
+    lastAutoDecisionTime: 0,
+    
     vipSpawned: false, vipTargetTime: 0,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,
     gymFloor: -1,

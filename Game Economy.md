@@ -33,35 +33,35 @@ Achievements are permanent feats tracked across all rounds. Unlocking a tier gra
 ## ⚡ Power-Up Catalog
 Purchased from the Shop using Points.
 
-| Power-Up | Tier | Cost | Effect / Logic |
-| :--- | :--- | :--- | :--- |
-| **🔧 The Wrench** | Bronze | 1 | Fix 1 jammed lift instantly. |
-| | Silver | 3 | Fix ALL jammed lifts instantly. |
-| | Gold | 5 | Fix ALL + 30s Global Jam Immunity. |
-| **🌲 Air Freshener** | Bronze | 1 | Clear stink + 15s Immunity (1 lift). |
-| | Silver | 3 | Clear stink + 15s Immunity (ALL lifts). |
-| | Gold | 5 | Clear ALL + 30s Global Stink Immunity. |
-| **🎵 Calming Musak** | Bronze | 1 | Pause anger timers for 15s (1 lift). |
-| | Silver | 3 | Pause anger timers for 15s (ALL). |
-| | Gold | 5 | Global 15s Pause + Soothe Anger Level (Rage -1). |
-| **🚀 Turbo Module** | Bronze | 1 | Travel at 0.1s/floor for 10s (1 lift). |
-| | Silver | 3 | Travel at 0.05s/floor for 15s (1 lift). |
-| | Gold | 5 | ALL lifts travel at 0.05s/floor for 20s. |
-| **🌌 TARDIS Mode** | Bronze | 1 | Infinite capacity for 15s (1 lift). |
-| | Silver | 3 | Infinite capacity for 15s (ALL). |
-| | Gold | 5 | Infinite capacity for 30s (ALL). |
-| **🚪 Wide Doors** | Bronze | 1 | 2x Boarding Speed for 20s (Global). |
-| | Silver | 3 | 3x Boarding Speed for 30s (Global). |
-| | Gold | 5 | Instant Boarding for 30s (Global). |
-| **✨ Group Think** | Bronze | 2 | Target Floor: Waiting guests sync to majority dest. |
-| | Silver | 4 | Target Lift: Passengers sync to majority dest. |
-| | Gold | 6 | Global Consensus: ALL guests sync to majorities. |
-| **🚡 Double-Decker** | Bronze | 3 | Enable Double-Decker (2x Cap) for 30s (1 lift). |
-| | Silver | 5 | Enable Double-Decker (2x Cap) for 60s (1 lift). |
-| | Gold | 8 | Enable Double-Decker (2x Cap) for 45s (ALL). |
-| **↔️ Open Plan** | Bronze | 4 | Enable Lateral Transfer for 20s (1 lift). |
-| | Silver | 6 | Enable Lateral Transfer for 45s (1 lift). |
-| | Gold | 10 | Enable Lateral Transfer for 30s (ALL). |
+| Power-Up | Tier | Cost | Magnitude / Effect | Effect / Logic |
+| :--- | :--- | :--- | :--- | :--- |
+| **🔧 The Wrench** | Bronze | 1 | Fix 1 lift | Fix 1 jammed lift instantly. |
+| | Silver | 3 | Fix ALL | Fix ALL jammed lifts instantly. |
+| | Gold | 5 | ALL + 30s | Fix ALL + 30s Global Jam Immunity. |
+| **🌲 Air Freshener** | Bronze | 1 | 15s (1 lift) | Clear stink + 15s Immunity (1 lift). |
+| | Silver | 3 | 15s (ALL) | Clear stink + 15s Immunity (ALL lifts). |
+| | Gold | 5 | 30s (Global) | Clear ALL + 30s Global Stink Immunity. |
+| **🎵 Calming Musak** | Bronze | 1 | 15s (1 lift) | Pause anger timers for 15s (1 lift). |
+| | Silver | 3 | 15s (ALL) | Pause anger timers for 15s (ALL). |
+| | Gold | 5 | 15s + Rage -1 | Global 15s Pause + Soothe Anger Level (Rage -1). |
+| **🚀 Turbo Module** | Bronze | 1 | 0.1x speed (10s) | Travel at 0.1s/floor for 10s (1 lift). |
+| | Silver | 3 | 0.05x speed (15s) | Travel at 0.05s/floor for 15s (1 lift). |
+| | Gold | 5 | 0.05x (20s, ALL) | ALL lifts travel at 0.05s/floor for 20s. |
+| **🌌 TARDIS Mode** | Bronze | 1 | 999 cap (15s) | Infinite capacity for 15s (1 lift). |
+| | Silver | 3 | 999 cap (ALL) | Infinite capacity for 15s (ALL). |
+| | Gold | 5 | 999 cap (30s) | Infinite capacity for 30s (ALL). |
+| **🚪 Wide Doors** | Bronze | 1 | 0.5x duration | 2x Boarding Speed for 20s (Global). |
+| | Silver | 3 | 0.33x duration | 3x Boarding Speed for 30s (Global). |
+| | Gold | 5 | Instant (0.05x) | Instant Boarding for 30s (Global). |
+| **✨ Group Think** | Bronze | 2 | Target Floor | Target Floor: Waiting guests sync to majority dest. |
+| | Silver | 4 | Target Lift | Target Lift: Passengers sync to majority dest. |
+| | Gold | 6 | Global | Global Consensus: ALL guests sync to majorities. |
+| **🚡 Double-Decker** | Bronze | 3 | 2x Cap (30s) | Enable Double-Decker (2x Cap) for 30s (1 lift). |
+| | Silver | 5 | 2x Cap (60s) | Enable Double-Decker (2x Cap) for 60s (1 lift). |
+| | Gold | 8 | 2x Cap (45s, ALL) | Enable Double-Decker (2x Cap) for 45s (ALL). |
+| **↔️ Open Plan** | Bronze | 4 | 20s (1 lift) | Enable Lateral Transfer for 20s (1 lift). |
+| | Silver | 6 | 45s (1 lift) | Enable Lateral Transfer for 45s (1 lift). |
+| | Gold | 10 | 30s (ALL) | Enable Lateral Transfer for 30s (ALL). |
 
 ---
 
@@ -91,4 +91,18 @@ Purchased from the Shop using Points.
 *   **Status: Annoyed** | 20s - 40s | Spawns with yellow icon.
 *   **Status: Critical** | 40s - 60s | Red flashing icon; speed-boarding encouraged.
 *   **Status: Rage** | 60s+ | Guest leaves (Defenestration). Loss of 1 Life (Standard) or 10 Lives (VIP).
+
+---
+
+## ⚙️ System Constants
+These core parameters drive the default behavior of the engine.
+
+| Parameter | Value | Description |
+| :--- | :--- | :--- |
+| **Showcase Limit** | 6 slots | Maximum scripts displayable in the workshop. |
+| **Lateral Transfer Tolerance** | 0.2 (20%) | Max height difference for side-loading between shafts. |
+| **VIP Headstart** | 20s | Time deducted from VIP patience immediately upon spawn. |
+| **Annoyed Threshold** | 40s | Time until Status changes to Annoyed (Yellow). |
+| **Critical Threshold** | 60s | Time until Status changes to Critical (Red). |
+| **Rage Limit** | 80s | Total time until Guest is removed (Defenestration). |
 

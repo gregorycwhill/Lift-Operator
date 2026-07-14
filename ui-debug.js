@@ -7,6 +7,7 @@
  */
 window.renderDebugMenu = function() {
     const ui = GameUI();
+    const engine = GameEngine();
     const container = document.getElementById('debugControls');
     if (!container) return;
     container.innerHTML = '';
@@ -44,6 +45,38 @@ window.renderDebugMenu = function() {
         }
     };
     quickGroup.appendChild(runTestsBtn);
+
+    const autoBtn = document.createElement('button');
+    autoBtn.className = Registry.autoPilotActive ? "btn btn-red btn-small" : "btn btn-green btn-small";
+    autoBtn.innerText = Registry.autoPilotActive ? "🤖 Hault UNIT_01" : "🚀 Launch UNIT_01";
+    autoBtn.onclick = () => {
+        console.log("UNIT_01 Button Clicked. Active:", Registry.autoPilotActive);
+        Registry.autoPilotActive = !Registry.autoPilotActive;
+        Config.autoPilot = Registry.autoPilotActive;
+        if (Registry.autoPilotActive) {
+            console.log("Engaging UNIT_01 and closing modal...");
+            Registry.manualIntervention = false;
+            Registry.agentSeed = Config.autoPilotSettings.agentSeed;
+            Config.roundTime = Config.autoPilotSettings.shortRoundDuration;
+            Registry.stats.timeLeft = Config.autoPilotSettings.shortRoundDuration || 30;
+            const hb = document.getElementById('heartbeatMonitor');
+            if (hb) hb.classList.remove('hidden');
+            if (typeof ui.showToast === 'function') ui.showToast("UNIT_01 Autonomous Agent Engaged.");
+            
+            // Close the debug modal so the user can watch the agent
+            const debugOverlay = document.getElementById("debugOverlay");
+            if (debugOverlay) debugOverlay.style.display = "none";
+            if (typeof engine.resume === "function") engine.resume();
+            return; // Modal closed, stop execution
+
+        } else {
+            const hb = document.getElementById('heartbeatMonitor');
+            if (hb) hb.classList.add('hidden');
+            if (typeof ui.showToast === 'function') ui.showToast("UNIT_01 Disengaged.");
+        }
+        window.renderDebugMenu();
+    };
+    quickGroup.appendChild(autoBtn);
 
     container.appendChild(quickGroup);
     
@@ -93,7 +126,8 @@ window.renderDebugMenu = function() {
             
             const minus = document.createElement('button'); minus.innerText = '-';
             const valDisplay = document.createElement('div'); 
-            valDisplay.innerText = def.dispFormat(Config[def.key]);
+            const currentVal = Config[def.key] !== undefined ? Config[def.key] : (def.default || 0);
+            valDisplay.innerText = def.dispFormat(currentVal);
             const plus = document.createElement('button'); plus.innerText = '+';
             
             minus.onclick = () => { 
@@ -113,4 +147,19 @@ window.renderDebugMenu = function() {
             container.appendChild(row);
         });
     }
+};
+
+window.refreshDebugVisibility = function() {
+    const btn = document.getElementById('openDebugBtn');
+    if (btn) {
+        if (Config.debugMode) btn.classList.remove('hidden');
+        else btn.classList.add('hidden');
+    }
+};
+
+window.openDebugModal = function() {
+    if (!Config.debugMode) return;
+    window.renderDebugMenu();
+    const overlay = document.getElementById('debugOverlay');
+    if (overlay) overlay.style.display = 'flex';
 };

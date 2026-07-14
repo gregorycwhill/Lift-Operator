@@ -6,7 +6,9 @@
  * Process the next pending manifest item (shared data like seeds or blueprints).
  */
 window.processNextManifestItem = function() {
+    const engine = GameEngine();
     const ui = GameUI();
+    
     if (!Registry.pendingManifest || Registry.pendingManifest.length === 0) {
         const overlay = document.getElementById('manifestOverlay');
         if (overlay) overlay.style.display = 'none';
@@ -18,13 +20,25 @@ window.processNextManifestItem = function() {
         return;
     }
 
+    // Pause physics/spawning while the gateway is active
+    if (typeof engine.pauseGame === 'function') {
+        engine.pauseGame();
+    } else if (typeof engine.pause === 'function') {
+        engine.pause();
+    }
+
     const item = Registry.pendingManifest.shift();
     const manifestOverlay = document.getElementById('manifestOverlay');
+    const manifestTitle = document.getElementById('manifestTitle');
     const instructionsEl = document.getElementById('manifestInstructions');
     const acceptBtn = document.getElementById('manifestAcceptBtn');
     const rejectBtn = document.getElementById('manifestRejectBtn');
 
     if (!manifestOverlay || !instructionsEl || !acceptBtn || !rejectBtn) return;
+
+    // Reset UI state for next item
+    if (manifestTitle) manifestTitle.innerText = "⚠️ System Message";
+    instructionsEl.style.fontSize = "14px";
 
     let descText = "Foreign configuration telemetry package detected.";
     let acceptCallback = () => {};
@@ -70,6 +84,36 @@ window.processNextManifestItem = function() {
                     if (typeof ui.showToast === 'function') ui.showToast("🛠️ Sandbox Mode Deployed!");
                 };
             }
+            break;
+
+        case 'debug_override':
+            descText = "Enable Debug mode for testing?";
+            instructionsEl.style.fontSize = "22px";
+            instructionsEl.style.fontWeight = "bold";
+            instructionsEl.style.textAlign = "center";
+            
+            acceptCallback = () => {
+                Config.debugMode = true;
+                Registry.points = 99999;
+                Registry.highestUnlockedRound = 13;
+                
+                if (item.overrides) {
+                    console.log("Applying Overrides:", item.overrides);
+                    if (item.overrides.system) Object.assign(Config, item.overrides.system);
+                    if (item.overrides.rounds) {
+                        Object.keys(item.overrides.rounds).forEach(r => {
+                            if (Config.GAME_DATA.rounds[r]) {
+                                Object.assign(Config.GAME_DATA.rounds[r], item.overrides.rounds[r]);
+                            }
+                        });
+                    }
+                }
+                
+                if (typeof ui.buildWorld === 'function') ui.buildWorld();
+                if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
+                if (typeof window.refreshDebugVisibility === 'function') window.refreshDebugVisibility();
+                if (typeof ui.showToast === 'function') ui.showToast("🔓 Root Overrides Applied!");
+            };
             break;
 
         case 'leaderboard':

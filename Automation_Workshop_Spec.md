@@ -55,4 +55,5 @@ Because traditional stepping debuggers are too complex, debugging will be entire
 1.  When the player saves a script, Blockly generates a native JS string (e.g., `let target = 0; if (myFloor > 5)...`).
 2.  The script is wrapped in a `new Function('lift', 'registry', generatedString)` to securely scope it.
 3.  During `animationTick`, if a lift's automation is set to a custom script, the function is called.
-4.  **Fallback Safety:** If the generated script throws an error, loops infinitely (timeout catch), or fails to assign a valid `targetFloor`, the engine will catch it and default the lift to `targetFloor = 0` (Ground), preventing the main game thread from crashing.
+4.  **Resilient Blueprint Sharing:** Blueprints are shared via an XOR-encrypted URI scheme (Codec v2.0.1). This version includes regex-based character sanitization and manual padding repair to ensure compatibility across local `file:///` environments and different browser clipboard behaviors.
+5.  **Fallback Safety:** If the generated script throws an error, loops infinitely (timeout catch), or fails to assign a valid `targetFloor`, the engine will catch it and default the lift to `targetFloor = 0` (Ground), preventing the main game thread from crashing.

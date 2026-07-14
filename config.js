@@ -69,7 +69,14 @@ window.getRandomFloor = function() {
 };
 
 window.Config = {
-    debugMode: true, 
+    debugMode: false, 
+    autoPilot: false,
+    autoPilotSettings: {
+        shortRoundDuration: 30,
+        agentSeed: 9999,
+        profilePrefix: "AUTO_PILOT",
+        indicatorId: "autoPilotIndicator"
+    },
     numFloors: 10, 
     roundTime: 180, startingLives: 20, maxSpawnDelaySec: 3, 
     jamChancePerSec: 0.005, jamMinSec: 10, jamMaxSec: 25,
@@ -87,7 +94,11 @@ window.Config = {
     spawnR13Start: 1.50, spawnR13End: 1.75,
     
     happySec: 20, annoyedSec: 40, criticalSec: 60,
-    liftCapacity: 10, liftSpeedSec: 0.5, doorSpeedSec: 0.2, boardSpeedSec: 1.0, boardingSpeedMultiplier: 1.0,
+    liftCapacity: 10, 
+    liftSpeedSec: 1.0, // 50% faster than base 1.5
+    doorSpeedSec: 0.5,
+    boardSpeedSec: 0.1,
+    boardingSpeedMultiplier: 1.0,
     
     vipSpawnMinSec: 30, vipSpawnMaxSec: 120, vipPenalty: 10,
     fartChancePerSec: 0.005, fartStinkSec: 20,
@@ -111,6 +122,151 @@ window.Config = {
         11: "Heavy Lifting",
         12: "Endurance Test",
         13: "Pedal Power"
+    },
+
+    // GAME_DATA: The single source of truth for all game balancing
+    GAME_DATA: {
+        achievements: {
+            service: {
+                id: 'service',
+                name: 'Service Award',
+                desc: 'Safely deliver heavy passenger guest volumes inside a single round.',
+                bronze: { label: 'Bronze Fish', req: 10, icon: '🟫🐟', reward: 2 },
+                silver: { label: 'Silver Fish', req: 30, icon: '⬜🐟', reward: 5 },
+                gold: { label: 'Gold Fish', req: 50, icon: '🟨🐟', reward: 10 }
+            },
+            handsfree: {
+                id: 'handsfree',
+                name: 'Hands-Free Inventor',
+                desc: 'Operate automated transit routines without manual click adjustments.',
+                bronze: { label: 'Bronze Automation', req: 2, icon: '🟫🤖', reward: 2 },
+                silver: { label: 'Silver Automation', req: 6, icon: '⬜🤖', reward: 5 },
+                gold: { label: 'Gold Automation', req: 9, icon: '🟨🤖', reward: 10 }
+            },
+            sardine: {
+                id: 'sardine',
+                name: 'Sardine Packer',
+                desc: 'Deliver fully loaded lifts packed perfectly to maximum capacity weight.',
+                bronze: { label: 'Bronze Packer', req: 1, icon: '🟫📦', reward: 2 },
+                silver: { label: 'Silver Packer', req: 3, icon: '⬜📦', reward: 5 },
+                gold: { label: 'Gold Packer', req: 5, icon: '🟨📦', reward: 10 }
+            },
+            hacker: {
+                id: 'hacker',
+                name: 'Hacker Award',
+                desc: 'Optimise custom logic to run for thousands of simulation cycles.',
+                bronze: { label: 'Bronze Logic', req: 500, icon: '🟫⌨️', reward: 2 },
+                silver: { label: 'Silver Logic', req: 5000, icon: '⬜⌨️', reward: 5 },
+                gold: { label: 'Master Coder', req: 20000, icon: '🟨⌨️', reward: 10 }
+            },
+            parallel: {
+                id: 'parallel',
+                name: 'Parallel Universe',
+                desc: 'Successfully bridge gaps between shafts using lateral transfer logic.',
+                bronze: { label: 'Bronze Bridge', req: 1, icon: '🟫↔️', reward: 2 },
+                silver: { label: 'Silver Bridge', req: 10, icon: '⬜↔️', reward: 5 },
+                gold: { label: 'Quantum Leap', req: 25, icon: '🟨↔️', reward: 10 }
+            },
+            doubleup: {
+                id: 'doubleup',
+                name: 'Double Trouble',
+                desc: 'Utilise double-decker infrastructure to move large volumes of people.',
+                bronze: { label: 'Bronze Deck', req: 5, icon: '🟫🚡', reward: 2 },
+                silver: { label: 'Silver Deck', req: 15, icon: '⬜🚡', reward: 5 },
+                gold: { label: 'Ocean Liner', req: 40, icon: '🟨🚡', reward: 10 }
+            }
+        },
+        powerups: {
+            wrench: {
+                tiers: [
+                    { cost: 1, duration: 0 },
+                    { cost: 3, duration: 0 },
+                    { cost: 5, duration: 30 }
+                ]
+            },
+            freshener: {
+                tiers: [
+                    { cost: 1, duration: 15 },
+                    { cost: 3, duration: 15 },
+                    { cost: 5, duration: 30 }
+                ]
+            },
+            musak: {
+                tiers: [
+                    { cost: 1, duration: 15 },
+                    { cost: 3, duration: 15 },
+                    { cost: 5, duration: 15 }
+                ]
+            },
+            turbo: {
+                tiers: [
+                    { cost: 1, duration: 10, scalar: 0.1 },
+                    { cost: 3, duration: 15, scalar: 0.05 },
+                    { cost: 5, duration: 20, scalar: 0.05 }
+                ]
+            },
+            tardis: {
+                tiers: [
+                    { cost: 1, duration: 15, scalar: 999 },
+                    { cost: 3, duration: 15, scalar: 999 },
+                    { cost: 5, duration: 30, scalar: 999 }
+                ]
+            },
+            doors: {
+                tiers: [
+                    { cost: 2, duration: 20, scalar: 0.5 },
+                    { cost: 4, duration: 30, scalar: 0.33 },
+                    { cost: 6, duration: 30, scalar: 0.05 }
+                ]
+            },
+            groupThink: {
+                tiers: [
+                    { cost: 2, duration: 0 },
+                    { cost: 4, duration: 0 },
+                    { cost: 6, duration: 0 }
+                ]
+            },
+            doubleDecker: {
+                tiers: [
+                    { cost: 3, duration: 30 },
+                    { cost: 5, duration: 60 },
+                    { cost: 8, duration: 45 }
+                ]
+            },
+            openPlan: {
+                tiers: [
+                    { cost: 4, duration: 20 },
+                    { cost: 6, duration: 45 },
+                    { cost: 10, duration: 30 }
+                ]
+            }
+        },
+        system: {
+            showcaseLimit: 6,
+            lateralTolerance: 0.2, // 20% floor height
+            vipHeadstartSec: 20,
+            patience: {
+                happy: 20,
+                annoyed: 40,
+                critical: 60,
+                rage: 80
+            }
+        },
+        rounds: {
+            1: { objective: 'SURVIVAL', gravityScalar: 0 },
+            2: { objective: 'SURVIVAL', gravityScalar: 0 },
+            3: { objective: 'SURVIVAL', gravityScalar: 0 },
+            4: { objective: 'SURVIVAL', gravityScalar: 0 },
+            5: { objective: 'SURVIVAL', gravityScalar: 0 },
+            6: { objective: 'SURVIVAL', gravityScalar: 0 },
+            7: { objective: 'SURVIVAL', gravityScalar: 0 },
+            8: { objective: 'SURVIVAL', gravityScalar: 0 },
+            9: { objective: 'SURVIVAL', gravityScalar: 0 },
+            10: { objective: 'SURVIVAL', gravityScalar: 0 },
+            11: { objective: 'SURVIVAL', gravityScalar: 0 },
+            12: { objective: 'QUOTA', quota: 50, gravityScalar: 0 },
+            13: { objective: 'PEDAL_SURVIVAL', gravityScalar: 2.0 }
+        }
     }
 };
 

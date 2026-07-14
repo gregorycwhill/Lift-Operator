@@ -28,17 +28,23 @@ window.updateLocksUI = function() {
 
     const jumpSelect = document.getElementById("jumpRoundSelect");
     if (jumpSelect) {
-        Array.from(jumpSelect.options).forEach(opt => {
-            const roundNum = parseInt(opt.value);
-            if (roundNum > maxRoundAllowed) {
-                opt.disabled = true;
-                opt.text = `Round ${roundNum} ??`;
-            } else {
-                opt.disabled = false;
-                opt.text = `Round ${roundNum}`;
-            }
-        });
-        jumpSelect.value = Registry.stats.round; 
+        // Clear existing options
+        jumpSelect.innerHTML = '';
+        
+        // Only append unlocked rounds
+        for (let i = 1; i <= maxRoundAllowed; i++) {
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.text = `Round ${i}`;
+            jumpSelect.appendChild(opt);
+        }
+        
+        // Handle value selection
+        if (Registry.stats.round <= maxRoundAllowed) {
+            jumpSelect.value = Registry.stats.round; 
+        } else {
+            jumpSelect.value = maxRoundAllowed;
+        }
     }
 
     const workshopBtn = document.getElementById("openWorkshopBtn");
@@ -222,6 +228,11 @@ window.initializeUI = function() {
         const debugOverlay = document.getElementById("debugOverlay");
         if (debugOverlay) debugOverlay.style.display = "none";
         
+        // AUTOPILOT TIMER RULE: When launching from debug, default to 30s
+        if (Registry.autoPilotActive) {
+            Registry.stats.timeLeft = Config.autoPilotSettings.shortRoundDuration || 30;
+        }
+
         // If floor count changed, we must rebuild
         if (Registry.floors.length !== Config.numFloors && typeof engine.reset === "function") {
             engine.reset();
