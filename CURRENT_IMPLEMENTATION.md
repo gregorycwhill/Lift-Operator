@@ -228,6 +228,7 @@ Custom scripts still execute using `new Function`, but generated source is now s
 6. Production excludes developer test scripts and uses pinned local runtime assets; Debug loads diagnostics only after explicit opt-in.
 7. UTF-8 text is inconsistently represented in source files.
 8. Workshop capacity sensors use passenger count rather than weight/effective capacity.
+9. Unattended all-Sweep is currently too effective and can complete rounds without the active supervision required by the target design.
 
 These are addressed in `STABILIZATION_PLAN.md`.
 

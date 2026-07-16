@@ -63,6 +63,9 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Boarding duration invokes production weight and Wide Doors rules.
 - [x] Gravity invokes the production loaded-lift multiplier.
 - [x] Onboarding Sweep strategy beats a deliberately idle policy on its named golden seed.
+- [ ] Unattended all-Sweep fails accepted seeds for every campaign round from Round 2 onward.
+- [ ] Round 2 unattended Sweep fails late while the approved minimal-intervention policy survives.
+- [ ] Each later intended strategy materially outperforms all-Sweep on its representative seeds.
 - [x] Deterministic baseline returns finite state and the full Monkey campaign completes without deadlock.
 - [x] Queue rendering remains bounded under a 250-guest backlog.
 - [x] Queue is physically anchored at the right-hand lift edge with the oldest guest nearest the door.

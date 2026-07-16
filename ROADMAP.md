@@ -71,6 +71,8 @@ Each act is frozen before tuning the next.
 
 **Gate:** Human failure diagnosis matches round intent and economy targets remain viable across player profiles.
 
+Every accepted campaign balance must also preserve the engagement floor: unattended all-Sweep fails from Round 2 onward, while the intended active strategy materially improves survival and pressure metrics.
+
 ## Stage 6 — Experience polish
 
 Only after balance:

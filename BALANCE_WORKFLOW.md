@@ -175,6 +175,10 @@ Runs fixed seeds using defined strategy profiles:
 
 Simulation should identify impossibility, dominance, and sensitivity. It should not declare a round fun.
 
+All-Sweep is the principal behavioural floor: every lift uses Sweep with no manual targeting, policy changes, or power-ups. It must fail every campaign round from Round 2 onward. For Round 2 it should fail late and be recoverable with minimal high-leverage intervention; later rounds should show increasingly clear separation between all-Sweep and the intended strategy. Round 12 compares survival duration rather than completion.
+
+For each intended strategy, report improvement over all-Sweep in survival time, first peril crossing, time below Survival Index 1, delivery deficit, P90 journey time, critical exposure, and manual decisions required.
+
 ### Campaign economy simulation
 
 Models struggling, typical, and expert spending paths across all rounds.

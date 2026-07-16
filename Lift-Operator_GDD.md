@@ -25,6 +25,12 @@ The game teaches systems thinking through play:
 
 The game already has enough mechanics. Development should deepen interaction between existing mechanics rather than adding more.
 
+### Automation engagement invariant
+
+Automation reduces repetitive workload but never replaces the operator. From Round 2 onward, setting every lift to Sweep and then making no manual decisions, policy changes, or power-up interventions must not complete a campaign round.
+
+The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. An automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
+
 ## 3. Player experience arc
 
 ### 3.1 Early game: arcade operations
@@ -54,6 +60,7 @@ The player:
 - Buys one strong answer or several narrower answers.
 - Learns that power-up timing matters as much as purchase choice.
 - Uses manual control as intervention rather than the default strategy.
+- Remains actively engaged while automation handles routine movement.
 
 ### 3.3 Late game: operational puzzle
 
@@ -189,7 +196,7 @@ Built-in automations are not simple upgrades. They represent different operation
 - **Weighted Voting:** Urgency-aware demand response.
 - **Custom:** Player-designed routing for a known traffic problem.
 
-No automation should dominate every round. A round should reward selecting or combining policies based on traffic structure.
+No automation should complete a campaign round unattended. A round should reward active supervision, selecting or combining policies, and intervening according to traffic structure.
 
 Custom automation is the long-term strategic progression. A better script should reduce emergency spending and manual intervention rather than merely increase a score counter.
 

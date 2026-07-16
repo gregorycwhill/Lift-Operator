@@ -39,6 +39,24 @@ The approved structured version of this map should eventually generate the round
 8. Avoid simultaneous random hazards that create unavoidable losses.
 9. Every mastery wall must support multiple solution classes.
 10. A new lift increases coordination complexity and should not coincide with too many other introductions.
+11. Automation is a force multiplier, never an autoplay button.
+12. From Round 2 onward, unattended all-Sweep play with no manual intervention or power-ups must fail every campaign round.
+13. Intended strategies must materially outperform all-Sweep through timely intervention, specialization, policy changes, or resource use.
+
+### All-Sweep behavioural floor
+
+The minimum competent automated behaviour is:
+
+```text
+Every available lift uses Sweep
+No manual targeting
+No automation changes
+No power-ups
+```
+
+This baseline must not complete any round from Round 2 onward. It proves that the player must remain engaged rather than select Automation once and watch the round complete.
+
+Failure timing still matters. Round 2 all-Sweep should fail late enough for Sweep's workload benefit to be obvious and should be recoverable through a small number of perceptive manual interventions. Later rounds should defeat all-Sweep through their specific, diagnosable bottleneck. Round 12 measures materially shorter Endurance survival rather than binary completion.
 
 ## 4. Mechanic introduction sequence
 
@@ -135,9 +153,9 @@ These figures are a candidate baseline. The current implementation uses 180-seco
 
 **Role in arc:** Introduce automation as relief, not replacement.  
 **New problem:** Traffic exceeds comfortable single-lift manual attention.  
-**Likely failure:** Player continues clicking every destination and creates inefficient reversals.  
-**Evidence:** Manual lift changes direction repeatedly while queues grow behind it.  
-**Insight:** A simple policy can outperform reactive micromanagement.
+**Likely failure:** Player enables Sweep, stops paying attention, and allows one neglected queue to trigger a late collapse.
+**Evidence:** Sweep improves general flow but does not recognize the exceptional queue requiring intervention.
+**Insight:** Automation handles routine work; the operator remains responsible for exceptions.
 
 **Solution space**
 
@@ -147,13 +165,15 @@ These figures are a candidate baseline. The current implementation uses 180-seco
 
 **Mastery**
 
-- Complete with Sweep.
-- Optional hands-free objective begins tracking.
+- Complete using Sweep plus timely manual rescue.
+- Recognize when to override automation and when to return control to it.
 
 **Target feel**
 
 - Clearly harder manually than Round 1.
-- Clearly manageable with Sweep.
+- Pure unattended Sweep dies during the final 20–30% of the round across the accepted seed set.
+- Hybrid Sweep survives with a small number of high-leverage manual interventions.
+- The player must remain attentive without fighting the automation constantly.
 - Completion rate roughly 75–90% on first attempt.
 
 ### Round 3 — Rush Delivery

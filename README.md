@@ -15,6 +15,8 @@ Each major round presents a diagnosable operational problem:
 5. The player retries the same seeded traffic pattern.
 6. The round is overcome through understanding and execution.
 
+Automation is a force multiplier, never autoplay. From Round 2 onward, unattended all-Sweep play must fail; progression comes from supervision, timely intervention, specialized policies, power-up timing, and later custom logic.
+
 The game should be frenetic and novel early, tactical in the middle, and increasingly strategic and puzzle-like late. It does not need more mechanics. It needs the existing mechanics to create clear problems, multiple viable solutions, meaningful scarcity, and satisfying mastery.
 
 ## Documentation map
