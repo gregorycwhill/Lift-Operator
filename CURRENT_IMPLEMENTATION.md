@@ -229,6 +229,7 @@ Custom scripts still execute using `new Function`, but generated source is now s
 7. UTF-8 text is inconsistently represented in source files.
 8. Workshop capacity sensors use passenger count rather than weight/effective capacity.
 9. Unattended all-Sweep is currently too effective and can complete rounds without the active supervision required by the target design.
+10. Hands-Free currently checks only for zero manual clicks; it does not require player-authored custom automation and can therefore reward built-in policies incorrectly.
 
 These are addressed in `STABILIZATION_PLAN.md`.
 

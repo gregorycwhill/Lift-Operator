@@ -39,9 +39,10 @@ The approved structured version of this map should eventually generate the round
 8. Avoid simultaneous random hazards that create unavoidable losses.
 9. Every mastery wall must support multiple solution classes.
 10. A new lift increases coordination complexity and should not coincide with too many other introductions.
-11. Automation is a force multiplier, never an autoplay button.
+11. Built-in automation is a force multiplier, never an autoplay button.
 12. From Round 2 onward, unattended all-Sweep play with no manual intervention or power-ups must fail every campaign round.
 13. Intended strategies must materially outperform all-Sweep through timely intervention, specialization, policy changes, or resource use.
+14. Hands-Free completion is an advanced custom-automation mastery outcome; built-in automations never qualify.
 
 ### All-Sweep behavioural floor
 
@@ -55,6 +56,8 @@ No power-ups
 ```
 
 This baseline must not complete any round from Round 2 onward. It proves that the player must remain engaged rather than select Automation once and watch the round complete.
+
+This rule applies to built-in policies. From the custom-automation phase onward, a player-authored policy may complete an eligible round unattended and earn Hands-Free recognition because designing that policy is itself the player intervention and mastery challenge.
 
 Failure timing still matters. Round 2 all-Sweep should fail late enough for Sweep's workload benefit to be obvious and should be recoverable through a small number of perceptive manual interventions. Later rounds should defeat all-Sweep through their specific, diagnosable bottleneck. Round 12 measures materially shorter Endurance survival rather than binary completion.
 

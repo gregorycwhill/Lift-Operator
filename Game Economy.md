@@ -279,7 +279,8 @@ The constraint should be playtested before adoption. If prices alone create stro
 | Achievement | Bronze | Silver | Gold | Economic reward |
 | --- | --- | --- | --- | ---: |
 | Service Award | Campaign delivery milestone | Higher milestone | Major milestone | 1 / 2 / 3 |
-| Active Supervisor | Recover one automated round through timely manual intervention | 3 rounds | 6 rounds | 1 / 2 / 3 |
+| Active Supervisor | Recover one built-in-automation round through timely manual intervention | 3 rounds | 6 rounds | 1 / 2 / 3 |
+| Hands-Free Inventor | Complete an eligible round hands-free using player-authored custom automation | 3 eligible rounds | Late mastery round | 1 / 2 / 3 |
 | Flawless Shift | No lives lost once | 3 times | 6 times | 1 / 2 / 3 |
 | Sardine Packer | One exact full load | 3 | 8 | 1 / 2 / 3 |
 | Hacker | Custom-script completion | 3 completions | Complete mastery round | 1 / 2 / 4 |
@@ -290,7 +291,9 @@ Achievement bonuses are intentionally small relative to item prices. Their prima
 
 Achievements based only on raw script tick counts should be reconsidered because inefficient scripts can generate more ticks without demonstrating mastery.
 
-The implemented Hands-Free achievement is not aligned with the campaign engagement invariant and is a redesign candidate. Campaign rewards should celebrate effective supervision and high-leverage intervention, not unattended completion. A hands-free achievement may remain appropriate for a future sandbox or post-campaign optimization challenge.
+Hands-Free remains a campaign achievement only for player-authored custom automation. Unattended completion with Sweep, Priority Sweep, Voting, or Weighted Voting does not qualify. The achievement rewards the player for encoding their own diagnosis and strategy rather than selecting a built-in autoplay solution.
+
+The current implementation checks only for the absence of manual clicks and does not yet verify that a custom automation was responsible. That eligibility defect must be corrected before the achievement is used as balance evidence.
 
 ## 10. Anti-inflation rules
 

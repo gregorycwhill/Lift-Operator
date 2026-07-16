@@ -100,6 +100,7 @@ Assertions should include:
 - Intended specialist strategy materially outperforms poor strategy.
 - Unattended all-Sweep fails every campaign round from Round 2 onward.
 - Round 2 hybrid Sweep survives with minimal, high-leverage manual intervention while unattended Sweep fails late.
+- Built-in automations cannot earn Hands-Free; only an eligible player-authored custom policy can.
 - Round is neither impossible nor trivial across the seed set.
 - Outcome differences are caused by strategy rather than random-stream consumption.
 

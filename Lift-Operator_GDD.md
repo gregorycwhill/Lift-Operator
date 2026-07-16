@@ -29,7 +29,9 @@ The game already has enough mechanics. Development should deepen interaction bet
 
 Automation reduces repetitive workload but never replaces the operator. From Round 2 onward, setting every lift to Sweep and then making no manual decisions, policy changes, or power-up interventions must not complete a campaign round.
 
-The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. An automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
+The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. A built-in automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
+
+Player-authored custom automation is the deliberate exception. A custom policy may earn a Hands-Free achievement when it completes an eligible advanced round without manual intervention. This rewards the player for translating operational insight into working logic; built-in automations never qualify for Hands-Free.
 
 ## 3. Player experience arc
 
@@ -196,7 +198,7 @@ Built-in automations are not simple upgrades. They represent different operation
 - **Weighted Voting:** Urgency-aware demand response.
 - **Custom:** Player-designed routing for a known traffic problem.
 
-No automation should complete a campaign round unattended. A round should reward active supervision, selecting or combining policies, and intervening according to traffic structure.
+No built-in automation should complete a campaign round unattended. A round should reward active supervision, selecting or combining policies, and intervening according to traffic structure. Player-authored custom automation may eventually achieve unattended mastery and qualify for Hands-Free recognition.
 
 Custom automation is the long-term strategic progression. A better script should reduce emergency spending and manual intervention rather than merely increase a score counter.
 
