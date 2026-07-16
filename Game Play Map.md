@@ -75,6 +75,12 @@ The approved structured version of this map should eventually generate the round
 
 Open Plan is technically and cognitively complex, partially implemented, and not required to complete the intended arcade-to-automation arc. It should remain an experimental post-campaign or sandbox mechanic until lateral transfer is reliable, observable, and testable.
 
+### Deferred advanced telemetry automation
+
+Round 20+ content may expose underlying operational sensors such as arrival rate, delivery rate, queue growth, critical exposure, recent life-loss rate, and lift utilisation. Advanced players should initially construct their own survival forecast from those inputs rather than receive a ready-made Survival Index block.
+
+This is not part of the current campaign. The Projected Survival Index used to tune Rounds 1–13 remains design-only and invisible to both players and automation policies.
+
 ## 5. Round summary
 
 Initial numerical candidates are deliberately conservative. Spawn values use the current interpretation of expected spawn attempts per one-second spawner tick.

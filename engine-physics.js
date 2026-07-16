@@ -64,6 +64,7 @@ window.gameTick = function(timestamp) {
             if (Registry.enduranceSeconds % lossInterval === 0) {
                 Registry.stats.lives--;
                 Registry.roundStats.defenestrationsThisRound++;
+                window.Game.BalanceTelemetry?.recordLifeLoss(now, 1, 'monkey-endurance');
             }
         }
     } else {
@@ -177,8 +178,10 @@ window.gameTick = function(timestamp) {
             
             if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('error');
-                Registry.stats.lives -= (g.isVip ? Config.vipPenalty : 1);
+                const livesLost = g.isVip ? Config.vipPenalty : 1;
+                Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
+                window.Game.BalanceTelemetry?.recordLifeLoss(now, livesLost, g.isVip ? 'vip' : 'guest');
                 const ui = GameUI();
                 if (typeof ui.triggerDefenestration === 'function') {
                     ui.triggerDefenestration(null, floorIdx, i);
@@ -204,8 +207,10 @@ window.gameTick = function(timestamp) {
             const oldStatus = p.status;
             p.status = window.getGuestStatusForWait(now - p.spawnTime);
             if (p.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
-                Registry.stats.lives -= (p.isVip ? Config.vipPenalty : 1);
+                const livesLost = p.isVip ? Config.vipPenalty : 1;
+                Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
+                window.Game.BalanceTelemetry?.recordLifeLoss(now, livesLost, p.isVip ? 'vip' : 'guest');
                 const ui = GameUI();
                 if (typeof ui.triggerDefenestration === 'function') {
                     const currentFloor = Math.round(lift.pos / Registry.floorHeight);
@@ -219,6 +224,8 @@ window.gameTick = function(timestamp) {
         }
     });
     
+    window.Game.BalanceTelemetry?.sample(now);
+
     if (Registry.stats.lives <= 0) {
         Registry.stats.lives = 0;
         const ui = GameUI();
@@ -475,6 +482,7 @@ window.animationTick = function(timestamp) {
                                 }
                                 let waitSeconds = (now - p.spawnTime) / 1000;
                                 Registry.roundStats.totalWaitTimeServed += Math.max(0, waitSeconds);
+                                Registry.roundStats.journeyTimes.push(Math.max(0, waitSeconds));
                                 if (p.isVip) Registry.roundStats.vipServed++;
                                 if (p.status === GuestStatus.HAPPY) Registry.roundStats.happyServed++;
                                 else if (p.status === GuestStatus.ANNOYED) Registry.roundStats.annoyedServed++;

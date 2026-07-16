@@ -93,5 +93,6 @@ These are not commitments:
 - Online leaderboards.
 - Modding/plugin systems.
 - New power-ups, hazards, or guest types.
+- Round 20+ advanced automation sensors and player-constructed survival forecasting.
 
 They should be reconsidered only after the 13-round campaign is stable and balanced.

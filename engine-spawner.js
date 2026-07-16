@@ -28,6 +28,7 @@ window.forceFirstSpawn = function(now) {
         isRoomService: isRoomService,
         boardingWeight: isRoomService ? 3.0 : (isGym ? 2.0 : 1.0)
     });
+    window.Game.BalanceTelemetry?.recordSpawn();
     Registry.lastSpawnTime = now;
 };
 
@@ -60,6 +61,7 @@ window.runSpawnerTick = function(now) {
             isBulky: isGym,
             boardingWeight: isGym ? 2.0 : 1.0
         });
+        window.Game.BalanceTelemetry?.recordSpawn();
         Registry.vipSpawned = true;
     }
 
@@ -135,6 +137,7 @@ window.runSpawnerTick = function(now) {
                 newGuest.dest = Config.numFloors - 1;
             }
             Registry.floors[start].waitingGuests.push(newGuest);
+            window.Game.BalanceTelemetry?.recordSpawn();
             spawnedThisTick = true;
         }
         tempChance -= 1.0;

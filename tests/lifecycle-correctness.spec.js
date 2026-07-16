@@ -251,6 +251,7 @@ test('pause and resume preserve guest and scheduled-event ages', async ({ page }
             Registry.vipTargetTime = 110000;
             Registry.sunsetTargetTime = 120000;
             Registry.sunsetEndTime = 130000;
+            Game.BalanceTelemetry.reset(80000);
 
             pauseGame();
             now += 5000;
@@ -264,7 +265,8 @@ test('pause and resume preserve guest and scheduled-event ages', async ({ page }
                 lastSpawnTime: Registry.lastSpawnTime,
                 vipTargetTime: Registry.vipTargetTime,
                 sunsetTargetTime: Registry.sunsetTargetTime,
-                sunsetEndTime: Registry.sunsetEndTime
+                sunsetEndTime: Registry.sunsetEndTime,
+                telemetryStartTime: Game.BalanceTelemetry.startTime
             };
         } finally {
             Date.now = originalNow;
@@ -279,7 +281,8 @@ test('pause and resume preserve guest and scheduled-event ages', async ({ page }
         lastSpawnTime: 99000,
         vipTargetTime: 115000,
         sunsetTargetTime: 125000,
-        sunsetEndTime: 135000
+        sunsetEndTime: 135000,
+        telemetryStartTime: 85000
     });
 });
 
@@ -622,6 +625,83 @@ test('production gravity multiplier slows loaded upward travel with a safety flo
         halfLoad: 0.8,
         clamped: 0.1
     });
+});
+
+test('projected survival index combines observed and imminent weighted life loss', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const telemetry = Game.BalanceTelemetry;
+        telemetry.reset(40000);
+        Registry.stats.round = 2;
+        Registry.stats.timeLeft = 100;
+        Registry.stats.lives = 10;
+        Registry.roundStats = createRoundStats();
+        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
+        Registry.lifts.forEach(lift => { lift.passengers = []; });
+        Registry.floors[0].waitingGuests.push({
+            status: GuestStatus.CRITICAL,
+            spawnTime: 45000,
+            isVip: false
+        });
+        telemetry.recordLifeLoss(100000, 1, 'guest');
+        return telemetry.sample(100000);
+    });
+
+    expect(result.observedLossRate).toBeCloseTo(0.04667, 4);
+    expect(result.imminentLives).toBe(1);
+    expect(result.projectedLossRate).toBeCloseTo(0.11333, 4);
+    expect(result.projectedSurvivalIndex).toBeCloseTo(0.88235, 4);
+});
+
+test('design telemetry records Little’s Law inputs and weighted VIP exposure', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const telemetry = Game.BalanceTelemetry;
+        telemetry.reset(100000);
+        Registry.stats.round = 8;
+        Registry.stats.timeLeft = 120;
+        Registry.stats.lives = 20;
+        Registry.roundStats = createRoundStats();
+        Registry.roundStats.guestsSpawned = 12;
+        Registry.roundStats.servedThisRound = 6;
+        Registry.roundStats.totalWaitTimeServed = 180;
+        Registry.roundStats.journeyTimes = [10, 20, 30, 30, 40, 50];
+        Registry.roundStats.manualClicks = 3;
+        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
+        Registry.lifts.forEach(lift => { lift.passengers = []; });
+        Registry.floors[0].waitingGuests.push({
+            status: GuestStatus.CRITICAL,
+            spawnTime: 105000,
+            isVip: true
+        });
+        const sample = telemetry.sample(160000);
+        return { sample, exported: telemetry.export() };
+    });
+
+    expect(result.sample.arrivalRate).toBeCloseTo(0.2, 6);
+    expect(result.sample.deliveryRate).toBeCloseTo(0.1, 6);
+    expect(result.sample.averageJourneyTime).toBe(30);
+    expect(result.sample.medianJourneyTime).toBe(30);
+    expect(result.sample.p90JourneyTime).toBe(50);
+    expect(result.sample.maximumJourneyTime).toBe(50);
+    expect(result.sample.littlesLawEstimate).toBe(6);
+    expect(result.sample.imminentLives).toBe(10);
+    expect(result.sample.manualDecisionsPerMinute).toBe(3);
+    expect(result.exported.balanceVersion).toBe('0.1.0-stabilized');
+    expect(result.exported.samples).toHaveLength(1);
+});
+
+test('design telemetry is absent from player UI and automation sensors', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const bridge = Game.Automation.getBuildingBridge(Registry.lifts[0]);
+        return {
+            visibleText: document.body.innerText,
+            bridgeKeys: Object.keys(bridge)
+        };
+    });
+
+    expect(result.visibleText).not.toContain('Survival Index');
+    expect(result.visibleText).not.toContain('Projected Survival');
+    expect(result.bridgeKeys).not.toContain('getSurvivalIndex');
+    expect(result.bridgeKeys).not.toContain('getBalanceTelemetry');
 });
 
 test('disengaging Monkey restores a 180-second standard timer', async ({ page }) => {

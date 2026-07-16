@@ -263,3 +263,11 @@ Top-level `Config` fields retained for debug controls and older consumers are in
 Canonical data now also defines the implemented payout formula, shop tier visibility, and automation introduction rounds. Normal play reveals power-ups and automation progressively; Debug mode can still expose the complete catalog for testing.
 
 The current payout magnitudes and power-up prices have deliberately not been rebalanced yet. Deterministic economy scenarios show that the existing low prices leave large unspent balances, especially for expert play. This is evidence for the candidate economy redesign, not a reason to change several economic variables without playtest baselines.
+
+## Design-only balance telemetry
+
+`balance-telemetry.js` samples operational state once per game second. It records arrivals, deliveries, queue and onboard work in progress, journey time, Little's Law diagnostics, productive lift utilisation, manual decision rate, critical exposure, weighted life loss, and the Projected Survival Index.
+
+The forecast combines recent weighted life-loss windows with guests expected to rage within 15 seconds. VIP exposure uses its actual life penalty. Ordinary rounds record projected time to death relative to remaining round time; Endurance records time to death without a pass/fail index.
+
+Telemetry is included in isolated simulator results and can be exported through `Game.BalanceTelemetry.export()` for developer analysis. It has no player-facing rendering and is absent from the automation bridge.

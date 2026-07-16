@@ -122,6 +122,7 @@ window.resumeGame = function() {
         if (Registry.vipTargetTime > 0) Registry.vipTargetTime += duration;
         if (Registry.sunsetTargetTime > 0) Registry.sunsetTargetTime += duration;
         if (Registry.sunsetEndTime > 0) Registry.sunsetEndTime += duration;
+        window.Game.BalanceTelemetry?.shiftTime(duration);
         Registry.pauseStartTime = 0;
     }
     Registry.gameActive = true;
@@ -169,7 +170,8 @@ window.createRoundStats = function() {
         manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
         happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
         defenestrationsThisRound: 0, totalWaitTimeServed: 0,
-        lateralTransfers: 0, doubleDeckerServed: 0
+        lateralTransfers: 0, doubleDeckerServed: 0, guestsSpawned: 0, livesLost: 0,
+        journeyTimes: []
     };
 };
 
@@ -189,6 +191,9 @@ window.resetAttemptTelemetry = function() {
     Registry.enduranceSeconds = 0;
     Registry.customScriptTicks = 0;
     Registry.lastLobbyRenderTime = 0;
+    if (window.Game.BalanceTelemetry) {
+        window.Game.BalanceTelemetry.reset(window.Game.virtualTime || Date.now());
+    }
 };
 
 window.getRoundDefinition = function(round) {

@@ -69,6 +69,10 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Stable lift passenger DOM is not rebuilt across repeated animation frames.
 - [x] Idle automation evaluation is bounded under repeated animation calls.
 - [x] Round Review column labels precede their statistics.
+- [x] Projected Survival Index combines observed and imminent weighted life loss.
+- [x] VIP pressure uses the actual life penalty.
+- [x] Little's Law inputs and residual are exported deterministically.
+- [x] Design telemetry is absent from player UI and automation sensors.
 - [ ] Quota rounds terminate correctly.
 - [x] Endurance has no timer or quota and terminates only at zero lives.
 - [x] Endurance score records survival time and guests served.

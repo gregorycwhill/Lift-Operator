@@ -103,7 +103,8 @@ window.Game.Simulator = {
             livesRemaining: Registry.stats.lives,
             timeLeft: Registry.stats.timeLeft,
             roundStats: JSON.parse(JSON.stringify(Registry.roundStats)),
-            success: Registry.stats.lives > 0
+            success: Registry.stats.lives > 0,
+            designTelemetry: window.Game.BalanceTelemetry.export()
         };
 
         console.log(`[Simulator] Completed. Served: ${result.served}, Lives: ${result.livesRemaining}`);

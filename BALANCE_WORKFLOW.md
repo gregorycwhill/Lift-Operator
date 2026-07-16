@@ -224,6 +224,9 @@ For Round 12, the terminal outcome is always Endurance completion at zero lives.
 - Defenestrations
 - Average, median, 90th percentile, and maximum wait
 - Queue size over time and peak by floor
+- Average guests in queue and in the complete system
+- Arrival and delivery rates
+- Little's Law estimate (`arrival rate × average journey time`) and residual against observed average work in progress
 
 ### Lift operations
 
@@ -235,6 +238,7 @@ For Round 12, the terminal outcome is always Endurance completion at zero lives.
 - Average and peak load
 - Boarding throughput
 - Jam/stink downtime
+- Productive lift utilisation sampled over time
 
 ### Economy
 
@@ -245,6 +249,20 @@ For Round 12, the terminal outcome is always Endurance completion at zero lives.
 - Payout components
 
 For Endurance, separately record points earned from survival time, service volume, quality, and achievements. Preserve uncapped personal-best score even if Operational Points are capped.
+
+### Design-only pressure forecast
+
+These values are recorded for simulation and developer analysis only. They are not displayed to players and are not exposed to current campaign automation:
+
+- Weighted recent life-loss rate over 15, 30, and 60-second windows
+- Lives represented by guests forecast to reach rage within 15 seconds
+- Projected life-loss rate
+- Projected time to death
+- Projected Survival Index: projected time to death divided by round time remaining
+- Minimum index, first crossing below 1.0, seconds below 1.0, and recoveries above 1.0
+- Manual decisions per minute
+
+VIP losses are weighted by lives lost rather than counted as one defenestration. Round 12 records projected time to death but has no Survival Index because it has no remaining-time success boundary.
 
 ### Automation
 

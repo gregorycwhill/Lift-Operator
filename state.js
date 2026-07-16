@@ -22,7 +22,10 @@ const Registry = {
         defenestrationsThisRound: 0,
         totalWaitTimeServed: 0,
         lateralTransfers: 0,
-        doubleDeckerServed: 0
+        doubleDeckerServed: 0,
+        guestsSpawned: 0,
+        livesLost: 0,
+        journeyTimes: []
     },
     
     // Social Sharing, Manifest & Trophy States
