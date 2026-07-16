@@ -91,6 +91,8 @@ npm.cmd test
 
 This performs JavaScript syntax checking, canonical balance/config validation, generated-artifact verification, and the Playwright suites. The same command runs in GitHub Actions.
 
+It also runs deterministic struggling, typical, and expert economy scenarios. These enforce transaction and affordability invariants while reporting bank accumulation as balance evidence.
+
 After changing `design/game-balance.v1.json`, regenerate the browser artifact:
 
 ```powershell

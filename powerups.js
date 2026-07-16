@@ -39,15 +39,18 @@ const PowerUps = {
     },
 
     calculateRoundPoints: function() {
+        const payouts = Config.GAME_DATA.payouts;
         if (Registry.stats.round === 12) {
-            const survivalPoints = Math.floor((Registry.enduranceSeconds || 0) / 30);
-            const servicePoints = Math.floor((Registry.roundStats.servedThisRound || 0) / 10);
-            return Math.min(50, survivalPoints + servicePoints);
+            const endurance = payouts.endurance;
+            const survivalPoints = Math.floor((Registry.enduranceSeconds || 0) / endurance.survivalIntervalSec);
+            const servicePoints = Math.floor((Registry.roundStats.servedThisRound || 0) / endurance.serviceIntervalGuests);
+            return Math.min(endurance.cap, survivalPoints + servicePoints);
         }
         // Tally points earned this round + time bonus
-        let points = Registry.roundStats.servedThisRound || 0;
+        const standard = payouts.standard;
+        let points = (Registry.roundStats.servedThisRound || 0) * standard.pointsPerGuest;
         if (Registry.stats.timeLeft > 0) {
-            points += Math.floor(Registry.stats.timeLeft / 10);
+            points += Math.floor(Registry.stats.timeLeft / standard.remainingTimeIntervalSec);
         }
         return points;
     },

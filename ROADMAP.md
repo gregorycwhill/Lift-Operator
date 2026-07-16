@@ -41,7 +41,7 @@ The critical gate is passing. Remaining work is secondary overlay hardening and 
 
 **Gate:** Round and economy tuning requires data changes only, not engine edits.
 
-Canonical JSON, validation, generation, runtime loading, and stale-artifact CI checks are implemented. Unlock/payout schema expansion and removal of remaining compatibility consumers are next.
+Canonical JSON, validation, generation, runtime loading, payout/unlock data, and stale-artifact CI checks are implemented. Remaining compatibility consumers can be removed incrementally without competing numerical sources.
 
 ## Stage 4 — Testing, access gating, and containment
 
@@ -55,7 +55,7 @@ Canonical JSON, validation, generation, runtime loading, and stale-artifact CI c
 
 **Gate:** Tests provide independent evidence; malformed inputs and accidental automation errors cannot freeze or corrupt the game; curious source inspection remains possible.
 
-Production behaviour, deterministic simulation, lifecycle, Monkey, manifest validation, and several pure mechanic rules are covered. Worker isolation, golden strategy comparisons, and economy simulation remain open.
+Production behaviour, deterministic simulation, lifecycle, Monkey, manifest validation, pure mechanic rules, an onboarding golden comparison, and campaign economy scenarios are covered. Worker isolation, broader golden strategy comparisons, and richer economy telemetry remain open.
 
 ## Stage 5 — Campaign balance
 

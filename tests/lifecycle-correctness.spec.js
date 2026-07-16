@@ -440,6 +440,78 @@ test('canonical balance data drives runtime compatibility values', async ({ page
     expect(result.roundThirteenSpawn).toEqual(result.canonicalRoundThirteenSpawn);
 });
 
+test('shop visibility follows canonical round and tier unlocks', async ({ page }) => {
+    const visibleButtons = async round => page.evaluate(value => {
+        Registry.stats.round = value;
+        Registry.points = 999;
+        Config.debugMode = false;
+        renderShop();
+        return document.querySelectorAll('#shopContainer .shop-btn').length;
+    }, round);
+
+    expect(await visibleButtons(2)).toBe(0);
+    expect(await visibleButtons(3)).toBe(1);
+    expect(await visibleButtons(6)).toBe(4);
+    expect(await visibleButtons(12)).toBe(24);
+    expect(await visibleButtons(13)).toBe(24);
+
+    const debugCount = await page.evaluate(() => {
+        Registry.stats.round = 1;
+        Config.debugMode = true;
+        renderShop();
+        return document.querySelectorAll('#shopContainer .shop-btn').length;
+    });
+    expect(debugCount).toBe(27);
+});
+
+test('canonical payout parameters drive standard and Endurance awards', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.stats.round = 4;
+        Registry.stats.timeLeft = 25;
+        Registry.roundStats.servedThisRound = 7;
+        const standard = PowerUps.calculateRoundPoints();
+
+        Registry.stats.round = 12;
+        Registry.enduranceSeconds = 125;
+        Registry.roundStats.servedThisRound = 27;
+        const endurance = PowerUps.calculateRoundPoints();
+        Registry.enduranceSeconds = 99999;
+        Registry.roundStats.servedThisRound = 99999;
+        const capped = PowerUps.calculateRoundPoints();
+        return { standard, endurance, capped };
+    });
+
+    expect(result).toEqual({ standard: 9, endurance: 6, capped: 50 });
+});
+
+test('golden onboarding seed rewards Sweep over an idle manual lift', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+        const seeds = await fetch('/tests/golden-seeds.json').then(response => response.json());
+        const seed = seeds.onboarding;
+        const idle = await Game.Simulator.runRound(seed, { 0: 'manual' }, 1);
+        const sweep = await Game.Simulator.runRound(seed, { 0: 'sweep' }, 1);
+        return { idle, sweep };
+    });
+
+    expect(result.sweep.served).toBeGreaterThan(result.idle.served);
+    expect(result.sweep.livesRemaining).toBeGreaterThanOrEqual(result.idle.livesRemaining);
+});
+
+test('automation menus follow canonical progression unlocks', async ({ page }) => {
+    const optionsAtRound = round => page.evaluate(value => {
+        Registry.stats.round = value;
+        Registry.highestUnlockedRound = value;
+        Config.debugMode = false;
+        buildWorld();
+        return [...document.querySelectorAll('.shaft select option')].map(option => option.value);
+    }, round);
+
+    expect(await optionsAtRound(1)).toEqual(['manual']);
+    expect(await optionsAtRound(2)).toEqual(['manual', 'sweep']);
+    expect(await optionsAtRound(4)).toEqual(['manual', 'sweep', 'priority-sweep']);
+    expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
+});
+
 test('production patience thresholds map wait time to guest status', async ({ page }) => {
     const statuses = await page.evaluate(() => ({
         happy: Game.Engine.getGuestStatusForWait(20000),

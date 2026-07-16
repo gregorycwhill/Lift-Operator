@@ -172,7 +172,7 @@ Add a validator and generated config artifact as described in `BALANCE_WORKFLOW.
 
 A static scan finds no round-specific balance constants outside generated configuration, except clearly documented engine safety limits.
 
-**Current status:** The canonical versioned source is `design/game-balance.v1.json`. `scripts/generate-balance.js` produces `generated/game-balance.js`, CI rejects stale artifacts, and runtime `GAME_DATA` comes from the generated file. Legacy top-level fields are derived compatibility controls rather than independent numerical sources. Unlock and payout data still need fuller schema coverage before campaign tuning.
+**Current status:** Passed for the balance values currently consumed by production. The canonical source includes systems, rounds, hazards, power-ups, achievements, payout formulas, shop tier unlocks, and automation unlocks. `scripts/generate-balance.js` produces `generated/game-balance.js`, CI rejects stale artifacts, and runtime `GAME_DATA` comes from the generated file. Legacy top-level fields are derived compatibility controls rather than independent numerical sources.
 
 ## 7. Phase 4 — Trustworthy testing
 
@@ -209,7 +209,7 @@ Add a reproducible command and continuous integration for:
 
 “Pass” means production behaviour was invoked and independently asserted.
 
-**Current status:** Syntax, canonical-data validation, generated-artifact verification, lifecycle Playwright tests, production mechanic checks, deterministic isolated simulation, and the Monkey campaign are available through npm and GitHub Actions. Golden-seed strategy comparisons and campaign-economy simulation remain incomplete.
+**Current status:** Syntax, canonical-data validation, generated-artifact verification, lifecycle Playwright tests, production mechanic checks, deterministic isolated simulation, named golden-seed comparison, campaign-economy scenarios, and the Monkey campaign are available through npm and GitHub Actions. Broader golden strategy coverage and telemetry-rich economy modelling remain incomplete.
 
 ## 8. Phase 5 — Debug access and automation containment
 

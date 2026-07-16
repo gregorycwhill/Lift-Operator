@@ -62,14 +62,16 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Patience thresholds invoke production status rules.
 - [x] Boarding duration invokes production weight and Wide Doors rules.
 - [x] Gravity invokes the production loaded-lift multiplier.
-- [ ] Intended specialist strategy beats a deliberately poor strategy.
+- [x] Onboarding Sweep strategy beats a deliberately idle policy on its named golden seed.
 - [x] Deterministic baseline returns finite state and the full Monkey campaign completes without deadlock.
 - [x] Queue rendering remains bounded under a 250-guest backlog.
 - [ ] Quota rounds terminate correctly.
 - [x] Endurance has no timer or quota and terminates only at zero lives.
 - [x] Endurance score records survival time and guests served.
 - [x] Accelerated Monkey Endurance reaches death and continues to Round 13.
-- [ ] Economy paths remain viable for struggling, typical, and expert models.
+- [x] Economy paths remain non-negative for struggling, typical, and expert models; accumulated-bank inflation remains a tuning finding.
+- [x] Shop tiers and automation choices follow canonical progression unlocks.
+- [x] Standard and Endurance payouts consume canonical parameters and Endurance respects its cap.
 
 ## Milestone F — Automation containment and manifest resilience
 

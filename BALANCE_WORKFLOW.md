@@ -41,6 +41,7 @@ The first three stages of this pipeline are implemented:
 - Generator: `npm.cmd run balance:generate`
 - Generated runtime artifact: `generated/game-balance.js`
 - Validation and stale-artifact gate: `npm.cmd run test:config` and `npm.cmd run balance:check`
+- Economy scenarios: `npm.cmd run test:economy`
 
 Markdown remains the readable design explanation; approved numerical changes must be copied into canonical JSON before generation.
 

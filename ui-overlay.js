@@ -49,7 +49,7 @@ window.updateLocksUI = function() {
 
     const workshopBtn = document.getElementById("openWorkshopBtn");
     if (workshopBtn) {
-        if (maxRoundAllowed >= 10) {
+        if (maxRoundAllowed >= Config.GAME_DATA.automationUnlocks.custom) {
             workshopBtn.disabled = false;
             workshopBtn.classList.remove("locked");
         } else {

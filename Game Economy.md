@@ -349,3 +349,15 @@ The economy is functioning when:
 - Better automation measurably reduces expected consumable cost.
 - No player is permanently trapped by earlier purchases.
 - Gold effects feel exceptional and remain scarce.
+
+## 13. Current deterministic baseline
+
+The initial automated campaign projection uses the candidate minimum, typical, and excellent payout bands above while applying the currently implemented 1/3/5-style prices and canonical unlock schedule.
+
+| Profile | Purchases selected | Ending bank | Interpretation |
+| --- | ---: | ---: | --- |
+| Struggling | 12 Bronze | 81 | Recovery remains affordable, but currency accumulates too easily. |
+| Typical | 11 Silver | 99 | A meaningful purchase nearly every round still leaves excessive reserves. |
+| Expert | 3 Gold | 174 | Gold availability is delayed correctly, but low prices cannot absorb expert earnings. |
+
+This baseline confirms the predicted inflation problem. It does not approve the candidate prices or payout bands yet. The next balance version should test coordinated price and payout changes against these same profiles and human Rounds 1–3 playtests.

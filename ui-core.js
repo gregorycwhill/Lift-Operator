@@ -83,9 +83,12 @@ window.buildWorld = function() {
     autoLobby.style.border = 'none';
     controlRow.appendChild(autoLobby);
     
-    const isAutoUnlocked = Config.debugMode || Registry.highestUnlockedRound >= 2 || Registry.stats.round >= 2;
-    const isPriorityUnlocked = Config.debugMode || Registry.highestUnlockedRound >= 4 || Registry.stats.round >= 4;
-    const isVotingUnlocked = Config.debugMode || Registry.highestUnlockedRound >= 5 || Registry.stats.round >= 5;
+    const automationUnlocks = Config.GAME_DATA.automationUnlocks;
+    const reachedRound = Math.max(Registry.highestUnlockedRound || 1, Registry.stats.round || 1);
+    const isAutoUnlocked = Config.debugMode || reachedRound >= automationUnlocks.sweep;
+    const isPriorityUnlocked = Config.debugMode || reachedRound >= automationUnlocks.priority;
+    const isVotingUnlocked = Config.debugMode || reachedRound >= automationUnlocks.voting;
+    const areCustomScriptsUnlocked = Config.debugMode || reachedRound >= automationUnlocks.custom;
     
     const builtIns = [];
     const myScripts = [];
@@ -108,9 +111,9 @@ window.buildWorld = function() {
                 if (isUnlocked) {
                     builtIns.push({ value: engineVal, name: script.name });
                 }
-            } else if (script.author === currentPlayer) {
+            } else if (script.author === currentPlayer && areCustomScriptsUnlocked) {
                 myScripts.push({ value: `custom_${script.id}`, name: script.name });
-            } else {
+            } else if (areCustomScriptsUnlocked) {
                 sharedScripts.push({ value: `custom_${script.id}`, name: `${script.name} (by ${script.author})` });
             }
         });

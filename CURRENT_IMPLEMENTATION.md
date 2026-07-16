@@ -255,3 +255,7 @@ Lobby rendering is throttled to 10 updates per second and bounded to 18 visible 
 `design/game-balance.v1.json` is the canonical machine-readable numerical source. `scripts/generate-balance.js` produces `generated/game-balance.js`, which loads before `config.js`. Runtime `Config.GAME_DATA` references that generated object.
 
 Top-level `Config` fields retained for debug controls and older consumers are initialized from canonical data rather than repeating independent values. Validation checks canonical/runtime parity, probabilities, round coverage, achievement tiers, power-up tiers, and generated-artifact freshness.
+
+Canonical data now also defines the implemented payout formula, shop tier visibility, and automation introduction rounds. Normal play reveals power-ups and automation progressively; Debug mode can still expose the complete catalog for testing.
+
+The current payout magnitudes and power-up prices have deliberately not been rebalanced yet. Deterministic economy scenarios show that the existing low prices leave large unspent balances, especially for expert play. This is evidence for the candidate economy redesign, not a reason to change several economic variables without playtest baselines.

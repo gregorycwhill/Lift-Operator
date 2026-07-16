@@ -61,6 +61,27 @@ Object.entries(design.powerups).forEach(([id, powerup]) => {
     });
 });
 
+Object.keys(design.powerups).forEach(id => {
+    const unlocks = design.shopUnlocks[id];
+    assert(Array.isArray(unlocks) && unlocks.length === 3, `${id}: expected three shop unlock rounds.`);
+    unlocks?.forEach((round, index) => {
+        assert(Number.isInteger(round) && round >= 1 && round <= 14, `${id} tier ${index + 1}: invalid unlock round.`);
+    });
+});
+
+const standardPayout = design.payouts.standard;
+const endurancePayout = design.payouts.endurance;
+assert(standardPayout.pointsPerGuest >= 0, 'Standard payout pointsPerGuest must be non-negative.');
+assert(standardPayout.remainingTimeIntervalSec > 0, 'Standard payout time interval must be positive.');
+assert(endurancePayout.survivalIntervalSec > 0, 'Endurance survival interval must be positive.');
+assert(endurancePayout.serviceIntervalGuests > 0, 'Endurance service interval must be positive.');
+assert(endurancePayout.cap > 0, 'Endurance payout cap must be positive.');
+
+['manual', 'sweep', 'priority', 'voting', 'weighted-voting', 'custom'].forEach(id => {
+    const round = design.automationUnlocks[id];
+    assert(Number.isInteger(round) && round >= 1 && round <= 13, `${id}: invalid automation unlock round.`);
+});
+
 Object.entries(design.achievements).forEach(([id, achievement]) => {
     assert(achievement.id === id, `${id}: achievement id mismatch.`);
     let priorRequirement = -1;

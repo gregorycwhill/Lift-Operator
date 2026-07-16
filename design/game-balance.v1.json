@@ -1,5 +1,35 @@
 {
   "balanceVersion": "0.1.0-stabilized",
+  "payouts": {
+    "standard": {
+      "pointsPerGuest": 1,
+      "remainingTimeIntervalSec": 10
+    },
+    "endurance": {
+      "survivalIntervalSec": 30,
+      "serviceIntervalGuests": 10,
+      "cap": 50
+    }
+  },
+  "shopUnlocks": {
+    "wrench": [6, 6, 12],
+    "freshener": [9, 9, 12],
+    "musak": [8, 8, 12],
+    "turbo": [7, 7, 12],
+    "tardis": [10, 10, 12],
+    "doors": [3, 4, 12],
+    "groupThink": [10, 10, 12],
+    "doubleDecker": [11, 11, 12],
+    "openPlan": [14, 14, 14]
+  },
+  "automationUnlocks": {
+    "manual": 1,
+    "sweep": 2,
+    "priority": 4,
+    "voting": 5,
+    "weighted-voting": 5,
+    "custom": 10
+  },
   "achievements": {
     "service": {
       "id": "service",

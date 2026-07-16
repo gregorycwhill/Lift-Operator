@@ -139,8 +139,12 @@ window.renderShop = function() {
     const itemsGrid = document.createElement('div');
     itemsGrid.className = 'shop-items-grid';
 
+    const unlocks = Config.GAME_DATA.shopUnlocks || {};
+    const currentRound = Registry.stats.round;
     Object.values(PowerUps.catalog).forEach(pu => {
         pu.tiers.forEach((tier, index) => {
+            const unlockRound = unlocks[pu.id]?.[index] || 1;
+            if (!Config.debugMode && currentRound < unlockRound) return;
             let canAfford = remainingPoints >= tier.cost;
             const button = document.createElement('button');
             button.className = `shop-btn shop-btn-t${index + 1}`;
