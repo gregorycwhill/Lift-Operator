@@ -345,21 +345,42 @@ window.Game.RegressionSuite = {
         {
             id: "ROUND_12_ENDURANCE",
             name: "Physics: Endurance Mode",
-            desc: "Verifies timer is bypassed in Round 12.",
+            desc: "Verifies Round 12 has no quota/timer and death is its completion condition.",
             run: async function() {
                 window.initializeEngine();
                 Registry.stats.round = 12;
-                Registry.stats.timeLeft = 10;
-                
-                // Mock lift physics context
-                const isSurvival = (Registry.stats.round === 12);
-                const timerDepleted = (Registry.stats.timeLeft <= 0);
-                const roundShouldEnd = timerDepleted && !isSurvival;
-                
-                if (!roundShouldEnd) {
-                    return { pass: true, detail: "Timer depletion correctly ignored in R12." };
+                const config = Config.GAME_DATA.rounds[12];
+                if (config.objective === 'ENDURANCE' && config.quota === undefined) {
+                    return { pass: true, detail: "Round 12 is configured as untimed Endurance." };
                 }
-                return { pass: false, detail: "Timer would have ended Round 12." };
+                return { pass: false, detail: `Objective: ${config.objective}, quota: ${config.quota}` };
+            }
+        },
+        {
+            id: "DEATH_ROLLBACK",
+            name: "Lifecycle: Ordinary Death Rollback",
+            desc: "Restores previous-round points and clears inventory/cart for the same round and seed.",
+            run: async function() {
+                window.initializeEngine();
+                window.skipToRound(3);
+                Registry.seed = 7777;
+                Registry.points = 21;
+                window.captureRoundCheckpoint(3);
+                Registry.points = 9;
+                PowerUps.inventory = [{ id: 'wrench', tier: 0 }];
+                PowerUps.cart = [{ id: 'turbo', tier: 0 }];
+
+                window.handleOrdinaryDeath();
+
+                const pass = Registry.points === 21 &&
+                    Registry.stats.round === 3 &&
+                    Registry.seed === 7777 &&
+                    PowerUps.inventory.length === 0 &&
+                    PowerUps.cart.length === 0;
+                return {
+                    pass,
+                    detail: `points=${Registry.points}, round=${Registry.stats.round}, seed=${Registry.seed}, inventory=${PowerUps.inventory.length}, cart=${PowerUps.cart.length}`
+                };
             }
         }
     ],

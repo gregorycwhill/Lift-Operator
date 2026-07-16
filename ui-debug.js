@@ -56,9 +56,11 @@ window.renderDebugMenu = function() {
         if (Registry.autoPilotActive) {
             console.log("Engaging UNIT_01 and closing modal...");
             Registry.manualIntervention = false;
-            Registry.agentSeed = Config.autoPilotSettings.agentSeed;
-            Config.roundTime = Config.autoPilotSettings.shortRoundDuration;
-            Registry.stats.timeLeft = Config.autoPilotSettings.shortRoundDuration || 30;
+            const monkey = Registry.monkeySettings || {};
+            Registry.agentSeed = monkey.agentSeed || Config.autoPilotSettings.agentSeed;
+            const shortDuration = monkey.roundDurationSeconds || Config.autoPilotSettings.shortRoundDuration || 30;
+            Config.roundTime = shortDuration;
+            if (Registry.stats.round !== 12) Registry.stats.timeLeft = shortDuration;
             const hb = document.getElementById('heartbeatMonitor');
             if (hb) hb.classList.remove('hidden');
             if (typeof ui.showToast === 'function') ui.showToast("UNIT_01 Autonomous Agent Engaged.");

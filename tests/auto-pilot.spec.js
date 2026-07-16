@@ -1,4 +1,42 @@
 const { test, expect } = require('@playwright/test');
+const { startTestServer } = require('./test-server');
+
+const GAME_URL = 'http://127.0.0.1:5500/index.html';
+let testServer;
+
+test.beforeAll(async () => {
+    testServer = await startTestServer();
+});
+
+test.afterAll(async () => {
+    if (testServer) {
+        await new Promise(resolve => testServer.close(resolve));
+    }
+});
+
+async function launchUnit01(page, extraQuery = '') {
+    await page.goto(GAME_URL);
+    const manifest = await page.evaluate(() => window.encodePayload({
+        auth: window.SHARE_SECRET,
+        overrides: {},
+        monkey: {
+            agentSeed: 9999,
+            roundDurationSeconds: 30,
+            enduranceLifeLossIntervalSec: 1
+        }
+    }));
+    await page.goto(`${GAME_URL}?manifest=${manifest}${extraQuery}`);
+    for (let item = 0; item < 3; item++) {
+        await expect(page.locator('#manifestOverlay')).toBeVisible({ timeout: 10000 });
+        await page.click('#manifestAcceptBtn');
+        if (await page.evaluate(() => window.Config.debugMode)) break;
+    }
+    await expect.poll(() => page.evaluate(() => window.Config.debugMode)).toBe(true);
+    await expect(page.locator('#openDebugBtn')).toBeVisible();
+    await page.click('#openDebugBtn');
+    await page.getByRole('button', { name: /Launch UNIT_01/i }).click();
+    await expect.poll(() => page.evaluate(() => window.Registry.autoPilotActive)).toBe(true);
+}
 
 /**
  * UNIT_01: Autonomous Regression Pilot
@@ -7,65 +45,29 @@ const { test, expect } = require('@playwright/test');
  */
 test.describe('UNIT_01 Auto-Pilot Regression', () => {
     
-    test('Protocol Alpha: Full Loop 3-Round Speedrun', async ({ page }) => {
-        // 1. Launch with Auto-Pilot URI Protocol
-        // We use a fixed seed for the simulation to ensure traffic is identical.
-        await page.goto('http://localhost:5500/index.html?autopilot=true&GameID=7777');
-        
-        // 2. Wait for Manifest Gateway (if any) or Welcome Screen
-        const manifestOverlay = page.locator('#manifestOverlay');
-        if (await manifestOverlay.isVisible()) {
-            console.log('Accepting Manifest payload...');
-            await page.click('#manifestAcceptBtn');
-        }
+    test('Protocol Alpha: Full 13-Round Workflow', async ({ page }) => {
+        test.setTimeout(600000);
+        // 1. Launch through the manifest-gated Debug workflow.
+        await launchUnit01(page, '&GameID=7777');
 
-        // 3. Round 1 Briefing
-        await expect(page.locator('#roundModalOverlay')).toBeVisible({ timeout: 10000 });
-        console.log('Starting Round 1...');
-        await page.click('#startRoundBtn');
-        
-        // 4. Autonomous Gameplay Loop
-        // We run for enough time to complete multiple 30s rounds.
-        // Round 1 (30s) -> Review -> Briefing -> Round 2 (30s) -> Review -> Briefing -> Round 3 (30s)
-        
-        for (let r = 1; r <= 3; r++) {
-            console.log(`Watching Round ${r} progression...`);
-            
-            // Wait for the round to finish (30s duration + buffer)
-            await expect(page.locator('#roundReviewOverlay')).toBeVisible({ timeout: 45000 });
-            
-            const served = await page.innerText('#reviewServedText');
-            console.log(`[UNIT_01] Round ${r} Complete. Served: ${served}`);
-            
-            // Navigate to Review -> Briefing
-            await page.click('#continueToBriefingBtn');
-            
-            // Shop Phase / Briefing Phase
-            await expect(page.locator('#roundModalOverlay')).toBeVisible();
-            
-            // Random Shopping Logic (Greedy)
-            const shopButtons = page.locator('#shopContainer .btn-purchase:not([disabled])');
-            const count = await shopButtons.count();
-            if (count > 0) {
-                console.log(`Buying ${count} power-ups...`);
-                for (let i = 0; i < count; i++) {
-                    await shopButtons.nth(0).click().catch(() => {});
-                }
-            }
+        // UNIT_01 owns modal navigation. Verify the complete campaign,
+        // including accelerated Endurance death and the Round 13 finish.
+        await expect(page.locator('#leaderboardOverlay')).toBeVisible({ timeout: 540000 });
+        await expect(page.locator('#lbTitle')).toHaveText('You Won!');
 
-            console.log(`Starting Round ${r + 1}...`);
-            await page.click('#startRoundBtn');
-        }
-
-        // 5. Final Heartbeat Check
-        const lives = await page.evaluate(() => window.Registry.stats.lives);
-        expect(lives).toBeGreaterThan(0);
+        const state = await page.evaluate(() => ({
+            active: window.Registry.autoPilotActive,
+            round: window.Registry.stats.round,
+            terminalHandled: window.Registry.roundTerminalHandled
+        }));
+        expect(state.active).toBe(true);
+        expect(state.round).toBe(13);
         console.log('Protocol Alpha Success.');
     });
 
     test('Protocol Beta: Kill Switch Verification', async ({ page }) => {
-        await page.goto('http://localhost:5500/index.html?autopilot=true');
-        await page.click('#startRoundBtn');
+        await launchUnit01(page);
+        await expect.poll(() => page.evaluate(() => window.Registry.gameActive)).toBe(true);
         
         // Verify autopilot is active
         const isActive = await page.evaluate(() => window.Registry.autoPilotActive);
@@ -85,29 +87,27 @@ test.describe('UNIT_01 Auto-Pilot Regression', () => {
     });
 
     test('Protocol Gamma: Death & Rebirth Cycle', async ({ page }) => {
-        await page.goto('http://localhost:5500/index.html?autopilot=true&manifest=JTNFbiUyNCUyMzUlM0NtaCU3RCUwNSUxRCUwRCUxMCUwRCUwMCUxRCUxMGZvJTAwJTA2d3pnemMlM0I5Ny01JTI2JTNCJyFwaCUyNE9N');
-        
-        // Accept Debug mode
-        await page.click('#manifestAcceptBtn');
-        await page.click('#startRoundBtn');
+        await launchUnit01(page);
+        await expect.poll(() => page.evaluate(() => window.Registry.gameActive)).toBe(true);
 
         // Artificially kill player
         await page.evaluate(() => {
+            window.Registry.autoPilotActive = false;
             window.Registry.stats.lives = 0;
             window.Registry.gameActive = true; 
         });
 
-        // Wait for Game Over / Review
-        await expect(page.locator('#roundReviewOverlay')).toBeVisible();
-        console.log('Death detected. Attempting rebirth...');
-        
-        // Restart (The agent should handle the restart click if we bind it, or we do it here)
-        // In our plan, we verify the Restart button works.
-        const restartBtn = page.locator('#restartBtn');
-        if (await restartBtn.isVisible()) {
-            await restartBtn.click();
-            await expect(page.locator('#roundModalOverlay')).toBeVisible();
-            console.log('Cycle complete.');
-        }
+        // Ordinary death rolls back and returns to the same round's shop.
+        await expect(page.locator('#roundModalOverlay')).toBeVisible({ timeout: 5000 });
+        const rollback = await page.evaluate(() => ({
+            inventory: PowerUps.inventory.length,
+            cart: PowerUps.cart.length,
+            round: window.Registry.stats.round,
+            points: window.Registry.points,
+            checkpointPoints: window.Registry.roundCheckpoint.points
+        }));
+        expect(rollback.inventory).toBe(0);
+        expect(rollback.cart).toBe(0);
+        expect(rollback.points).toBe(rollback.checkpointPoints);
     });
 });

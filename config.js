@@ -74,6 +74,7 @@ window.Config = {
     autoPilotSettings: {
         shortRoundDuration: 30,
         agentSeed: 9999,
+        enduranceLifeLossIntervalSec: 1,
         profilePrefix: "AUTO_PILOT",
         indicatorId: "autoPilotIndicator"
     },
@@ -264,7 +265,7 @@ window.Config = {
             9: { objective: 'SURVIVAL', gravityScalar: 0 },
             10: { objective: 'SURVIVAL', gravityScalar: 0 },
             11: { objective: 'SURVIVAL', gravityScalar: 0 },
-            12: { objective: 'QUOTA', quota: 50, gravityScalar: 0 },
+            12: { objective: 'ENDURANCE', gravityScalar: 0 },
             13: { objective: 'PEDAL_SURVIVAL', gravityScalar: 2.0 }
         }
     }

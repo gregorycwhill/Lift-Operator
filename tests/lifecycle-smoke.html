@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lift Operator Lifecycle Smoke Test</title>
+</head>
+<body>
+    <pre id="result">RUNNING</pre>
+    <iframe id="game" src="../index.html" style="display:none"></iframe>
+    <script>
+        const result = document.getElementById('result');
+        const fail = (message) => { result.textContent = `FAIL: ${message}`; };
+
+        document.getElementById('game').addEventListener('load', () => {
+            setTimeout(() => {
+                try {
+                    const w = document.getElementById('game').contentWindow;
+                    const powerUps = w.eval('PowerUps');
+
+                    // Ordinary death: restore the previous-round checkpoint and
+                    // return to the same seeded round with an empty loadout.
+                    w.skipToRound(3);
+                    w.Registry.seed = 7777;
+                    w.Registry.points = 21;
+                    w.captureRoundCheckpoint(3);
+                    w.Registry.points = 4;
+                    powerUps.inventory = [{ id: 'wrench', tier: 0 }];
+                    powerUps.cart = [{ id: 'turbo', tier: 0 }];
+                    w.Registry.stats.lives = 0;
+                    w.Registry.gameActive = true;
+                    w.gameTick(Date.now());
+
+                    if (w.Registry.points !== 21) return fail(`rollback points ${w.Registry.points}`);
+                    if (w.Registry.stats.round !== 3) return fail(`rollback round ${w.Registry.stats.round}`);
+                    if (w.Registry.seed !== 7777) return fail(`rollback seed ${w.Registry.seed}`);
+                    if (powerUps.inventory.length || powerUps.cart.length) return fail('rollback loadout not empty');
+                    if (w.document.getElementById('roundModalOverlay').style.display !== 'flex') return fail('shop not shown after death');
+
+                    // Endurance death: commit completion, show review, then
+                    // advance to Round 13 rather than retrying Round 12.
+                    w.Registry.points = 30;
+                    w.skipToRound(12);
+                    w.Registry.enduranceSeconds = 90;
+                    w.Registry.roundStats.servedThisRound = 20;
+                    w.Registry.stats.lives = 0;
+                    w.Registry.gameActive = true;
+                    w.gameTick(Date.now());
+
+                    if (w.document.getElementById('roundReviewOverlay').style.display !== 'flex') return fail('Endurance review not shown');
+                    if (w.Registry.points <= 30) return fail(`Endurance payout missing: ${w.Registry.points}`);
+
+                    w.document.getElementById('continueToBriefingBtn').click();
+                    if (w.Registry.stats.round !== 13) return fail(`Endurance advanced to ${w.Registry.stats.round}`);
+
+                    result.textContent = 'PASS';
+                } catch (error) {
+                    fail(error.stack || error.message);
+                }
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

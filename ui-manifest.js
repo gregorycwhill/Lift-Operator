@@ -87,7 +87,9 @@ window.processNextManifestItem = function() {
             break;
 
         case 'debug_override':
-            descText = "Enable Debug mode for testing?";
+            descText = item.monkey
+                ? "Enable Debug mode and make the UNIT_01 Monkey Agent available?"
+                : "Enable Debug mode for testing?";
             instructionsEl.style.fontSize = "22px";
             instructionsEl.style.fontWeight = "bold";
             instructionsEl.style.textAlign = "center";
@@ -96,6 +98,15 @@ window.processNextManifestItem = function() {
                 Config.debugMode = true;
                 Registry.points = 99999;
                 Registry.highestUnlockedRound = 13;
+
+                if (item.monkey) {
+                    Registry.monkeyCapability = true;
+                    Registry.monkeySettings = {
+                        agentSeed: parseInt(item.monkey.agentSeed) || Config.autoPilotSettings.agentSeed,
+                        roundDurationSeconds: Math.max(5, Math.min(120, parseInt(item.monkey.roundDurationSeconds) || Config.autoPilotSettings.shortRoundDuration)),
+                        enduranceLifeLossIntervalSec: Math.max(1, Math.min(10, parseInt(item.monkey.enduranceLifeLossIntervalSec) || Config.autoPilotSettings.enduranceLifeLossIntervalSec))
+                    };
+                }
                 
                 if (item.overrides) {
                     console.log("Applying Overrides:", item.overrides);
@@ -112,6 +123,9 @@ window.processNextManifestItem = function() {
                 if (typeof ui.buildWorld === 'function') ui.buildWorld();
                 if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
                 if (typeof window.refreshDebugVisibility === 'function') window.refreshDebugVisibility();
+                if (typeof window.captureRoundCheckpoint === 'function') {
+                    window.captureRoundCheckpoint(Registry.stats.round);
+                }
                 if (typeof ui.showToast === 'function') ui.showToast("🔓 Root Overrides Applied!");
             };
             break;

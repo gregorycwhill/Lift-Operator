@@ -5,31 +5,12 @@
 window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
+    const roundConfig = Config.GAME_DATA.rounds[Registry.stats.round] || { objective: 'SURVIVAL', gravityScalar: 0 };
     
     try {
-        if (Registry.stats.timeLeft <= 0) {
+        if (roundConfig.objective !== 'ENDURANCE' && Registry.stats.timeLeft <= 0) {
             const engine = GameEngine();
-            const ui = GameUI();
-            if (typeof engine.pause === 'function') engine.pause();
-            
-            Registry.highestUnlockedRound = Math.max(Registry.highestUnlockedRound, Registry.stats.round + 1);
-            if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
-            
-            if (Registry.stats.round >= 11) {
-                const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));
-                records.push({ 
-                    name: Registry.playerName, 
-                    score: parseInt(Registry.stats.served),
-                    trophies: Registry.trophyCase 
-                });
-                records.sort((a, b) => b.score - a.score); 
-                window.Game.Storage.set(window.Game.Keys.LEADERBOARD, JSON.stringify(records));
-                const ui = GameUI();
-                if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("You Won!");
-            } else {
-                const ui = GameUI();
-                if (typeof ui.showRoundReview === 'function') ui.showRoundReview(Registry.stats.round);
-            }
+            if (typeof engine.completeRound === 'function') engine.completeRound('timer');
             return;
         }
     } catch (e) {
@@ -42,11 +23,27 @@ window.gameTick = function(timestamp) {
     if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick();
     
     // Round Logic Orchestrator
-    const roundConfig = Config.GAME_DATA.rounds[Registry.stats.round] || { objective: 'SURVIVAL', gravityScalar: 0 };
-
     if (roundConfig.objective === 'QUOTA') {
         if (Registry.roundStats.servedThisRound >= roundConfig.quota) {
-            Registry.stats.timeLeft = 0; // Trigger completion
+            const engine = GameEngine();
+            if (typeof engine.completeRound === 'function') engine.completeRound('quota');
+            return;
+        }
+    } else if (roundConfig.objective === 'ENDURANCE') {
+        Registry.enduranceSeconds = (Registry.enduranceSeconds || 0) + 1;
+        if (Registry.autoPilotActive) {
+            const lossInterval = Math.max(
+                1,
+                parseInt(
+                    (Registry.monkeySettings && Registry.monkeySettings.enduranceLifeLossIntervalSec) ||
+                    Config.autoPilotSettings.enduranceLifeLossIntervalSec ||
+                    1
+                )
+            );
+            if (Registry.enduranceSeconds % lossInterval === 0) {
+                Registry.stats.lives--;
+                Registry.roundStats.defenestrationsThisRound++;
+            }
         }
     } else {
         Registry.stats.timeLeft--;
@@ -215,16 +212,11 @@ window.gameTick = function(timestamp) {
         const ui = GameUI();
         if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
         const engine = GameEngine();
-        if (typeof engine.pause === 'function') engine.pause();
-        const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));
-        records.push({
-            name: Registry.playerName,
-            score: parseInt(Registry.stats.served),
-            trophies: Registry.trophyCase
-        });
-        records.sort((a, b) => b.score - a.score);
-        window.Game.Storage.set(window.Game.Keys.LEADERBOARD, JSON.stringify(records));
-        if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("Game Over!");
+        if (roundConfig.objective === 'ENDURANCE') {
+            if (typeof engine.completeRound === 'function') engine.completeRound('endurance-death');
+        } else if (typeof engine.handleOrdinaryDeath === 'function') {
+            engine.handleOrdinaryDeath();
+        }
         return;
     }
 

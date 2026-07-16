@@ -153,6 +153,83 @@ window.openWorkshopModal = function() {
     }
 };
 
+window.createRoundStats = function() {
+    return {
+        manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
+        happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
+        defenestrationsThisRound: 0, totalWaitTimeServed: 0,
+        lateralTransfers: 0, doubleDeckerServed: 0
+    };
+};
+
+window.captureRoundCheckpoint = function(round = Registry.stats.round) {
+    Registry.roundCheckpoint = {
+        round,
+        seed: Registry.seed,
+        points: Registry.points
+    };
+};
+
+window.resetAttemptTelemetry = function() {
+    Registry.roundStats = window.createRoundStats();
+    Registry.roundEvaluation = null;
+    Registry.roundTerminalHandled = false;
+    Registry.enduranceSeconds = 0;
+    Registry.customScriptTicks = 0;
+};
+
+window.clearAttemptInventory = function() {
+    if (typeof PowerUps === 'undefined') return;
+    PowerUps.cart = [];
+    PowerUps.inventory = [];
+    PowerUps.activeTargeting = null;
+    Object.keys(PowerUps.timers).forEach(k => PowerUps.timers[k] = 0);
+    Config.boardingSpeedMultiplier = 1.0;
+};
+
+window.handleOrdinaryDeath = function() {
+    if (Registry.roundTerminalHandled) return;
+    Registry.roundTerminalHandled = true;
+    Registry.gameActive = false;
+    Registry.pauseStartTime = 0;
+
+    const checkpoint = Registry.roundCheckpoint || {
+        round: Registry.stats.round,
+        seed: Registry.seed,
+        points: Registry.points
+    };
+
+    Registry.points = checkpoint.points;
+    Registry.seed = checkpoint.seed;
+    window.clearAttemptInventory();
+    window.skipToRound(checkpoint.round, { preserveCheckpoint: true });
+};
+
+window.completeRound = function(reason = 'completed') {
+    if (Registry.roundTerminalHandled) return;
+    Registry.roundTerminalHandled = true;
+    Registry.gameActive = false;
+    Registry.pauseStartTime = 0;
+
+    Registry.highestUnlockedRound = Math.max(
+        Registry.highestUnlockedRound,
+        Math.min(13, Registry.stats.round + 1)
+    );
+
+    const ui = GameUI();
+    if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
+    if (typeof ui.showRoundReview === 'function') ui.showRoundReview(Registry.stats.round, reason);
+};
+
+window.advanceToRound = function(targetRound) {
+    if (targetRound > 13) {
+        const ui = GameUI();
+        if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("You Won!");
+        return;
+    }
+    window.skipToRound(targetRound);
+};
+
 window.resetGame = function() {
     Registry.stats.round = 1;
     Registry.stats.timeLeft = Registry.autoPilotActive ? (Config.autoPilotSettings.shortRoundDuration || 30) : Config.roundTime;
@@ -170,19 +247,9 @@ window.resetGame = function() {
         Registry.points = 0;
     }
     
-    if (typeof PowerUps !== 'undefined') {
-        PowerUps.cart = [];
-        PowerUps.inventory = [];
-        PowerUps.activeTargeting = null;
-        Object.keys(PowerUps.timers).forEach(k => PowerUps.timers[k] = 0);
-    }
+    window.clearAttemptInventory();
     
-    Registry.roundStats = { 
-        manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
-        happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
-        defenestrationsThisRound: 0, totalWaitTimeServed: 0,
-        lateralTransfers: 0, doubleDeckerServed: 0
-    };
+    window.resetAttemptTelemetry();
     
     Config.numFloors = 10;
     
@@ -202,6 +269,7 @@ window.resetGame = function() {
         });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
+    window.captureRoundCheckpoint(1);
     
     const ui = GameUI();
     if (typeof ui.buildWorld === 'function') ui.buildWorld();
@@ -210,7 +278,9 @@ window.resetGame = function() {
     if (typeof ui.showRoundModal === 'function') ui.showRoundModal(1);
 };
 
-window.skipToRound = function(targetRound) {
+window.skipToRound = function(targetRound, options = {}) {
+    const seedTool = (window.Game && window.Game.Seed) ? window.Game.Seed : { set: setSeed };
+    seedTool.set(Registry.seed);
     Registry.stats.round = targetRound;
     Registry.stats.timeLeft = Registry.autoPilotActive ? (Config.autoPilotSettings.shortRoundDuration || 30) : Config.roundTime;
     Registry.stats.lives = Config.startingLives;
@@ -218,18 +288,9 @@ window.skipToRound = function(targetRound) {
     Registry.sunsetHasHappened = false; Registry.sunsetTargetTime = 0; Registry.sunsetActive = false; Registry.sunsetEndTime = 0;
     Registry.gymFloor = -1;
     
-    if (typeof PowerUps !== 'undefined') {
-        PowerUps.cart = [];
-        PowerUps.inventory = [];
-        PowerUps.activeTargeting = null;
-        Object.keys(PowerUps.timers).forEach(k => PowerUps.timers[k] = 0);
-    }
+    window.clearAttemptInventory();
     
-    Registry.roundStats = { 
-        manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
-        happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
-        defenestrationsThisRound: 0, totalWaitTimeServed: 0
-    };
+    window.resetAttemptTelemetry();
     
     Config.numFloors = targetRound >= 6 ? 15 : 10;
     
@@ -277,6 +338,10 @@ window.skipToRound = function(targetRound) {
         });
     }
     Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
+
+    if (!options.preserveCheckpoint) {
+        window.captureRoundCheckpoint(targetRound);
+    }
     
     const ui = GameUI();
     if (typeof ui.buildWorld === 'function') ui.buildWorld();
@@ -318,7 +383,8 @@ window.initializeEngine = function() {
             console.log("🔒 Secure Debug Payload Decoded. Queuing manifest Gateway...");
             Registry.pendingManifest.push({
                 type: 'debug_override',
-                overrides: decodedDebug.overrides
+                overrides: decodedDebug.overrides,
+                monkey: decodedDebug.monkey || null
             });
         }
     }
@@ -401,6 +467,11 @@ window.Game.Engine.setLiftAutomation = window.setLiftAutomation;
 window.Game.Engine.openWorkshopModal = window.openWorkshopModal;
 window.Game.Engine.reset = window.resetGame;
 window.Game.Engine.skipToRound = window.skipToRound;
+window.Game.Engine.completeRound = window.completeRound;
+window.Game.Engine.handleOrdinaryDeath = window.handleOrdinaryDeath;
+window.Game.Engine.advanceToRound = window.advanceToRound;
+window.Game.Engine.captureRoundCheckpoint = window.captureRoundCheckpoint;
+window.Game.Engine.resetAttemptTelemetry = window.resetAttemptTelemetry;
 
 window.Game.UI = window.Game.UI || {};
 window.Game.UI.initializeUI = window.initializeUI;

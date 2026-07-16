@@ -1,12 +1,59 @@
-Game play notes
-Round 1
-It's too slow. Doors need to open quicker, guests board faster, lift move quicker
-Round Complete modal shows "avg wait: 0.0s". Calc error.
-Awarded 38 points - this is too much for the shop. Can buy gold-level everything. Too much.
-Item costs should be 10x greater.
-Round 2
-When I exited the shop, it returned the old game board, decided the round had finished and gave me a new Round Review.
-No further testing possible.
-***  Using Warp Mode (debug) to access Round 2
+# Playtest Notes
+
+This is a working observation log. Do not convert observations directly into configuration changes without recording a hypothesis and expected evidence in the format defined by `BALANCE_WORKFLOW.md`.
+
+## Baseline session — before documentation true-up
+
+### Round 1
+
+Observations:
+
+- Pacing felt too slow. Door, boarding, and travel timing all contributed.
+- Round Review showed average wait as `0.0s`, indicating an accounting defect.
+- The round awarded 38 points, enough to buy high-tier versions of most items.
+- Current prices therefore did not create meaningful scarcity.
+
+Classification:
+
+- Average wait: **Defect**
+- Pacing: **Balance**
+- Payout/price relationship: **Balance and economy-model issue**
+
+Do not assume that multiplying all prices by ten is the final solution. Payout and prices must be redesigned together.
+
+### Round 2
+
+Observation:
+
+- Exiting the shop restored the old game board, triggered round completion again, and produced another Round Review.
+- Normal progression testing could not continue.
+- Debug Warp was used to reach Round 2.
+
+Classification:
+
+- **Critical lifecycle defect**
+
+This issue must be fixed before balance conclusions from later rounds are considered reliable.
+
+## Future entry template
+
+```text
+Date:
+Commit:
+Balance version:
+Player:
+Round:
+Seed:
+Attempt:
+Loadout:
+Automations:
+
+Observation:
+Perceived failure cause:
+Measured failure cause:
+Strategy change on retry:
+Outcome:
+Suggested hypothesis:
+```
 
 

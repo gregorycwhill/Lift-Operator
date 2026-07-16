@@ -23,4 +23,21 @@ if (typeof window !== 'undefined') {
             rounds: { 1: { gravityScalar: 5.0 } }
         });
     };
+
+    window.generateMonkeyPayload = function(options = {}) {
+        const payload = {
+            auth: "ELEVATOR_GO_BRRR_2026",
+            overrides: options.overrides || {},
+            monkey: {
+                agentSeed: options.agentSeed || 9999,
+                roundDurationSeconds: options.roundDurationSeconds || 30,
+                enduranceLifeLossIntervalSec: options.enduranceLifeLossIntervalSec || 1
+            }
+        };
+        const encoded = window.encodePayload(payload);
+        const url = window.location.origin + window.location.pathname + "?manifest=" + encoded;
+        console.log("UNIT_01 Manifest URL:");
+        console.log(url);
+        return url;
+    };
 }

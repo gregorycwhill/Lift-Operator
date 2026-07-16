@@ -33,6 +33,7 @@ const Achievements = {
 
     // Evaluates shift data, calculates points bank and returns career achievements checklist
     evaluateRound: function() {
+        if (Registry.roundEvaluation) return Registry.roundEvaluation;
         const stats = Registry.roundStats;
         
         // Sanitize Stats: Ensure every key exists to prevent NaN crashes
@@ -107,7 +108,7 @@ const Achievements = {
             window.Game.Storage.set(window.Game.Keys.TROPHIES, JSON.stringify(Registry.trophyCase));
         }
 
-        return {
+        Registry.roundEvaluation = {
             pointsEarned: netRoundPayout,
             totalPoints: Registry.points,
             guestsServed: stats.servedThisRound,
@@ -115,6 +116,7 @@ const Achievements = {
             defenestrations: stats.defenestrationsThisRound,
             log: logMessages
         };
+        return Registry.roundEvaluation;
     },
 
     // Renders the visual configuration modal grid window for managing the public Trophy Case entries

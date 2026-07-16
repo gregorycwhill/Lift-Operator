@@ -1,0 +1,16 @@
+{
+  "name": "lift-operator",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local development and automated testing tools for Lift Operator.",
+  "scripts": {
+    "serve": "node tests/test-server.js",
+    "test": "playwright test",
+    "test:e2e": "playwright test tests/auto-pilot.spec.js",
+    "test:e2e:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.1",
+    "lz-string": "1.5.0"
+  }
+}

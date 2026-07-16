@@ -52,7 +52,7 @@ window.showRoundModal = function(round) {
     else if (round === 9) { title.innerText = `Round 9: Happy Hour & Hazards (${rank})`; instructions.innerText = "The Rooftop bar opens! Watch out for Farts. Stinky lifts force evacuations and block boarding. Adapt!"; }
     else if (round === 10) { title.innerText = `Round 10: Sandbox Unlocked (${rank})`; instructions.innerText = "You can now write Custom Scripts in the Automation Workshop to handle the intense passenger loads!"; }
     else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
-    else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. The shift doesn't end until you run out of lives. Survive the increasing chaos as long as you can!"; }
+    else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. You have the usual 20 lives. Keep operating until the 20th defenestration, earn as many points as you can, then advance to the final round."; }
     else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity is DOUBLED. Every passenger makes the climb significantly slower."; }
     else if (round >= 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "High-density traffic detected. Use every automation and script at your disposal!"; }
 
@@ -70,12 +70,7 @@ window.showRoundModal = function(round) {
             btn.innerText = `Purchase Power-ups and Start Round ${round}`;
             btn.className = 'btn btn-green btn-large btn-full-width';
             
-            // Ensure clicking this button also checks out the cart
-            const originalClick = btn.onclick;
-            btn.onclick = (e) => {
-                if (typeof ui.checkoutCart === 'function') ui.checkoutCart(false);
-                if (originalClick) originalClick(e);
-            };
+            btn.onclick = null;
         }
     } else {
         if (shopDiv) shopDiv.style.display = 'none';
@@ -95,7 +90,7 @@ window.showRoundModal = function(round) {
 /**
  * Open the round review modal and display performance metrics/medals.
  */
-window.showRoundReview = function(completedRound) {
+window.showRoundReview = function(completedRound, reason) {
     if (typeof Achievements === 'undefined') return;
     const evaluation = Achievements.evaluateRound();
     
@@ -112,12 +107,6 @@ window.showRoundReview = function(completedRound) {
     
     const listEl = document.getElementById('reviewAchievementsList');
     listEl.innerHTML = evaluation.log.map(msg => `<li>${msg}</li>`).join('');
-    
-    Registry.roundStats = { 
-        manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
-        happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
-        defenestrationsThisRound: 0, totalWaitTimeServed: 0
-    };
     
     document.getElementById('roundReviewOverlay').style.display = 'flex';
 };

@@ -1,83 +1,321 @@
-# Game Design Document: Lift Operator
-**Current Version:** Prototype Phase 2 (Refactored)
+# Lift Operator — Game Design Document
 
-## 1. Core Overview
-*Lift Operator* is an educational, time-management/automation game. The player manages a multi-floor elevator system to clear queues of waiting guests. As the game escalates in difficulty, human reaction time becomes insufficient, forcing the player to rely on built-in logic algorithms (and eventually, their own coded automations) to survive.
+**Document role:** Product vision and design intent  
+**Current phase:** Playable advanced prototype entering stabilization  
+**Campaign scope:** 13 rounds  
 
-## 2. Core Mechanics
-* **The Grid:** 15 Floors (G, 1-14). 
-* **The Lift:** Capacity of 10. Travels at 1.0s per floor (optimized for speed). Uses a state-driven physics model (`TRANSIT`, `DOORS_OPENING`, `BOARDING`, `DOORS_CLOSING`, `IDLE`).
-* **Progression Tracking:** Game runs on timed rounds. Standard rounds are 180 seconds, while Autopilot/Testing rounds are condensed to 30 seconds.
-* **PRNG System:** Spawns are handled by a custom Park-Miller seeded random number generator. Players can input a "Game ID" (seed) to replay the exact same traffic patterns to test different algorithms.
+## 1. High concept
 
-### 2.1 Guest Lifecycle & Rage State
-Guests spawn on random floors with random destinations. They have a strict patience timer:
-* **Happy (Green):** 0–20 seconds.
-* **Annoyed (Orange):** 20–40 seconds.
-* **Critical (Red/Blinking):** 40–60 seconds.
-* **Rage (Black/Skull):** 60+ seconds. The guest defenestrates (flies out the window) and the player loses 1 Life. The player starts with 20 Lives.
+Lift Operator is an arcade management game that gradually becomes an automation and resource-planning puzzle.
 
-### 2.2 Advanced Guest Types
-* **Gym Bros (💪):** Found primarily on the Gym Floor (spawns in Round 11). They occupy **2.0 capacity units**. If 3 or more are in a lift, they cause a permanent "Stink" hazard.
-* **Room Service (🍽️):** Bulky carts introduced in Round 3. They occupy **3.0 capacity units** and take 3x longer to board/unboard ($3.0$s base). Rendering uses the plate indicator.
+The player operates a hotel lift system under escalating traffic pressure. Early play is direct and physical: click floors, react quickly, rescue angry guests, and enjoy the increasing chaos. As the building grows and exceptions accumulate, manual reactions become insufficient. The player must assign lift roles, select automations, buy a constrained loadout, time emergency power-ups, and eventually create custom routing logic.
 
-### 2.3 Physics Extension: The State Machine
-Lifts use a discrete state machine for all cycle interactions: `IDLE`, `DOORS_OPENING`, `BOARDING`, `DOORS_CLOSING`, `TRANSIT`. Power-ups and cart types modify the speed of these state transitions.
+The game teaches systems thinking through play:
 
-### 2.4 Physics: Gravity & Weight (Round 13 Only)
-Upward travel speed is penalized by lift load weight. Max load at default gravity slows the lift significantly. This mechanic is strictly gated to **Round 13: Pedal Power** to represent a power failure scenario.
+- Identify the real bottleneck.
+- Distinguish travel, capacity, boarding, routing, and patience problems.
+- Allocate specialized lifts.
+- Compare algorithms using repeatable seeded traffic.
+- Improve a strategy after a visible failure.
+- Trade immediate consumable power against long-term automation quality.
 
-### 2.5 Planned Power-up Expansions
-* **Double-Decker (Lift Upgrade):** Splits the lift into two stacked compartments. Doubles capacity and doubles weight sensitivity in Round 13. *Footprint Constraint:* Occupies two shaft slots. `targetFloor` is engine-clamped to `Max - 1` to prevent overflow.
-* **Open Plan (Lateral Transfer):** A temporary lift-based state that removes shaft barriers. Allows passengers to move horizontally to adjacent lifts (shafts $n-1$ or $n+1$) when they are vertically aligned (at the same floor or passing through).
-    * **Bronze:** Applies to one lift. Short duration.
-    * **Silver:** Applies to one lift. Long duration.
-    * **Gold:** Applies to all lifts for a moderate duration.
+## 2. Design north star
 
-## 3. The Progression Arc (Rounds 1–13)
-* **Round 1 (Welcome):** 1 Lift. Manual click-to-route control.
-* **Round 2 (Auto):** Introduces **Sweep** automation.
-* **Round 3 (Rush Hour):** 2 Lifts. Higher spawn rate.
-* **Round 4 (Triage):** Introduces **Priority Sweep** automation.
-* **Round 5 (Democracy):** 3 Lifts. Introduces **Voting** & **Weighted Voting**.
-* **Round 6 (Wild Card):** Introduces **Lift Jams**. Elevators have a 0.5% chance per second to jam for 5–15 seconds, trapping passengers and halting operations.
-* **Round 7 (Check-out):** 4 Lifts. 50% of all spawns are forced to the Ground (G) floor, creating massive traffic funnels.
-* **Round 8 (VIP):** Introduces **VIPs (⭐)**. VIPs demand a 100% empty lift, refuse to ride with others, and cost 10 Lives if they Rage. *Design Trap:* VIPs broadcast high priority to AI lifts, causing the AI to arrive empty, get "stolen" by normal queueing guests, and soft-lock while trying to pick up the VIP. Forces manual intervention.
-* **Round 9 (Happy Hour):** 5 Lifts. Introduces **Farts** and **Rooftop Sunset**.
-* **Round 10 (Sandbox):** Unlocks the **Automation Workshop**. Custom JavaScript/Blockly scripts can now be assigned to lifts.
-* **Round 11 (Gym Challenge):** Introduces **Gym Bros (💪)**. Weight management becomes critical.
-* **Round 12 (Endurance):** **NO TIMER.** The shift does not end until the player delivers 50 guests or loses all lives. Difficulty scales indefinitely via spawn pressure.
-* **Round 13 (Pedal Power):** The Power Outage round. **Gravity is active** (and doubled). Lift speed is determined by weight. Heavier loads move slower upward.
+> Lift Operator begins as a frenetic arcade management game and becomes an operational strategy puzzle. Each round introduces or recombines a diagnosable bottleneck. Players are expected to fail difficult rounds, learn their traffic and hazard patterns, revise their automation and power-up loadout, and overcome them through planning, timing, and system mastery—not grinding or one mandatory solution.
 
-### 3.1 Environmental Hazards (Round 9+)
-* **The Fart:** 0.5% chance per second for a passenger to fart. The lift turns green/stinky for 10 seconds.
-    * *Quarantine:* No new guests will board a stinky lift.
-    * *Damage:* Non-farting passengers age 2x as fast while trapped in the gas.
-    * *Exodus:* At the next stop, groups will abandon the lift out of disgust (and re-queue). Single occupants (including VIPs) will stay on board.
-* **Rooftop Sunset:** Guaranteed once per round (between 30-90s). The top floor turns into a disco.
-    * *Infection:* 50% of active non-VIP guests change their destination to the Top Floor (rendered as 'R').
-    * *Party Mode:* Once they arrive, they bounce and their patience timer *pauses* for 30 seconds. Once Happy Hour ends, they revert to their original destinations and their patience timers resume, creating a massive top-floor bottleneck.
+The game already has enough mechanics. Development should deepen interaction between existing mechanics rather than adding more.
 
-## 4. Built-In Automations
-* **Sweep (SCAN):** Lift travels continuously in one direction until no requests remain ahead, then reverses. Boarding is strictly limited to guests traveling in the sweep direction.
-* **Priority Sweep:** Targets floors with Critical > Annoyed > Happy guests. Abandons the strict sweep direction to hunt high-priority targets.
-* **Voting:** Calculates the floor with the highest volume of requests (inside lift + waiting on floor). Distance breaks ties.
-* **Weighted Voting:** Happy = 1 vote, Annoyed = 2 votes, Critical = 4 votes. Calculates destination based on maximum urgency mass.
+## 3. Player experience arc
 
-## 5. Development & Testing
-* **Secure Debug Mode:** Accessible via encrypted URI manifest.
-* **Unlock URI:** `index.html?manifest=JTNFbiUyNCUyMzUlM0NtaCU3RCUwMiUwMyUxQSUxNCUxMyUwNiUxRCUwRG13JTdEaSUwNyUxRSUxNyUwNCUxRWYlN0YlNjBpZWMlN0QtJTI0NyUyMC0lNUJUV0VndiUzRSUyQiUzQw%3D%3D`
-* **XOR Secret:** `ELEVATOR_GO_BRRR_2026`
-* **Codec Version:** 2.0.1 (Resilient Base64 & URI handling)
+### 3.1 Early game: arcade operations
 
-## 6. Diagnostics & Quality Assurance
-The platform includes high-fidelity regression tools to ensure physics stability across new environmental hazards.
+The early game should feel lively, readable, and forgiving.
 
-### 6.1 Autonomous Regression Pilot
-A dedicated Playwright-driven E2E agent (**"UNIT_01"**) facilitates autonomous testing:
-* **Seeded Logic:** The agent uses an independent `AgentSeed` (default: 9999) for deterministic decision-making, ensuring test runs are 100% reproducible.
-* **Action Pacing:** The agent's decision interval is throttled to 2250ms (50% slower than base human latency) to prevent physics desyncs during high-traffic rounds.
-* **Hybrid Operations:** Operates one lift via randomized floor clicks while managing others through automation toggles.
-* **Flow Validation:** Speed-runs 30-second rounds, performs "greed-based" power-up purchasing, and validates UI layering (Z-index) to prevent interaction bleed-through.
-* **Fail-Safe Compliance:** Implements a physical "Kill Switch" constrained to world/sidebar interactions that yields control back to a human user upon any unauthorized mouse interaction. Keyboard events (such as Alt-Tab or F12) are ignored to prevent accidental interruptions during multitasking.
-* **Persistence Testing:** Validates that game cycles (Death -> Reset) correctly clear cached state while retaining historical telemetry.
+The player:
+
+- Learns direct lift control.
+- Receives frequent visual feedback.
+- Encounters one major idea at a time.
+- Can recover from small mistakes.
+- Feels increasing speed and competence.
+- Learns that automation and power-ups are tactical tools.
+
+Failure should be uncommon in the first two rounds and plausible from round three onward.
+
+### 3.2 Middle game: tactical coordination
+
+The middle game asks the player to diagnose traffic and assign roles.
+
+The player:
+
+- Chooses between built-in automations.
+- Creates dedicated lift roles.
+- Responds to jams, traffic funnels, and VIP exclusivity.
+- Buys one strong answer or several narrower answers.
+- Learns that power-up timing matters as much as purchase choice.
+- Uses manual control as intervention rather than the default strategy.
+
+### 3.3 Late game: operational puzzle
+
+The late game emphasizes planning, scarcity, automation, and mastery.
+
+The player:
+
+- Studies the round briefing and prior failure.
+- Selects a loadout with meaningful opportunity cost.
+- Uses custom automation to reduce reliance on consumables.
+- Accepts that not every threat can be neutralized.
+- Chooses which queues, lifts, or guests deserve priority.
+- Replays seeded rounds to refine strategy.
+
+Late-game novelty should come from combinations, topology, objectives, timing, and resource constraints—not additional systems.
+
+## 4. The problem–solution–mastery loop
+
+Every major round must define:
+
+1. **Problem:** The operational bottleneck introduced or emphasized.
+2. **Likely first failure:** The understandable mistake a player may make.
+3. **Evidence:** What the player can observe that explains the failure.
+4. **Insight:** The strategic conclusion the round is teaching.
+5. **Solution space:** At least three viable approaches where practical.
+6. **Mastery:** The behaviour proving that the lesson has been learned.
+7. **Recombination:** How a later round tests the lesson again.
+
+Example:
+
+| Element | Room Service example |
+| --- | --- |
+| Problem | Boarding throughput collapses when bulky carts enter mixed queues |
+| Likely failure | Player buys extra capacity and still loses guests |
+| Evidence | Lift has spare space but remains at the floor boarding |
+| Insight | The bottleneck is service time, not capacity |
+| Solutions | Wide Doors; isolate carts; route urgent guests elsewhere |
+| Mastery | Player keeps bulky service from blocking critical traffic |
+
+## 5. Failure and retry
+
+Failure is part of the intended learning loop, particularly from the middle campaign onward.
+
+A good failure must be:
+
+- **Short enough to retry.**
+- **Diagnosable.**
+- **Repeatable through the same seed.**
+- **Actionable through a different plan.**
+- **Free from irreversible grind.**
+
+Default retry should preserve the round seed. The player may later be offered a deliberate “new traffic pattern” option, but retrying the learned pattern is the primary puzzle experience.
+
+Ordinary failure performs a complete attempt rollback:
+
+- Return to the shop for the same round.
+- Restore the point balance earned at the end of the previous round.
+- Clear the inventory and shopping cart.
+- Remove every runtime consequence of the failed attempt.
+- Preserve the round and seed so the player can apply what they learned.
+
+Purchases are therefore provisional until the round is completed. The only carryover from a failed attempt is player knowledge.
+
+Round 12 is the deliberate exception: death is its completion condition. The attempt, spending, score, and payout commit when the last of the normal 20 lives is lost, and the campaign automatically advances.
+
+## 6. Core rules
+
+### 6.1 Building and lifts
+
+- Floors are indexed from Ground (`G`, floor 0) upward.
+- Lifts have limited weight capacity.
+- Players can route manually or assign automation.
+- Lifts transition through explicit movement and door states.
+- Different guest types change weight and boarding time.
+- Later hazards temporarily disrupt availability or throughput.
+
+### 6.2 Guest patience
+
+Guests progress through readable urgency states:
+
+- Happy
+- Annoyed
+- Critical
+- Rage
+
+Rage removes the guest and costs lives. Exact thresholds are balance parameters governed by the target configuration, not repeated throughout narrative documentation.
+
+### 6.3 Seeded traffic
+
+Each round uses a seeded random sequence. A Game ID should reproduce:
+
+- Guest origins and destinations.
+- Guest types.
+- Hazard timing.
+- Scheduled events.
+
+Automation decisions should not consume the same random stream as environment generation. Separate streams are required for deterministic comparison.
+
+### 6.4 Round completion
+
+Rounds may use:
+
+- Timed survival.
+- Delivery quota.
+- Endurance until all 20 lives are lost.
+- A special operating constraint such as gravity.
+
+Every round must state its win condition and failure reason clearly before play.
+
+### 6.5 Endurance completion
+
+Round 12 has no conventional victory state. It asks:
+
+> How many minutes can you operate before the 20th guest defenestrates?
+
+The player:
+
+- Starts with the normal 20 lives.
+- Continues until lives reach zero.
+- Earns score and Operational Points from survival duration, guests served, and service quality.
+- Does not retry the round after death.
+- Automatically progresses to Round 13.
+
+This is an earned-loss round: eventual death is expected, but better planning produces a longer run and a larger economic reward for the final challenge.
+
+## 7. Automation
+
+Built-in automations are not simple upgrades. They represent different operational policies:
+
+- **Sweep:** Efficient directional throughput.
+- **Priority Sweep:** Emergency triage.
+- **Voting:** Concentrated demand response.
+- **Weighted Voting:** Urgency-aware demand response.
+- **Custom:** Player-designed routing for a known traffic problem.
+
+No automation should dominate every round. A round should reward selecting or combining policies based on traffic structure.
+
+Custom automation is the long-term strategic progression. A better script should reduce emergency spending and manual intervention rather than merely increase a score counter.
+
+## 8. Power-ups
+
+Power-ups are consumable operational interventions. They should:
+
+- Solve a particular class of bottleneck.
+- Be dramatic and legible.
+- Have meaningful timing.
+- Carry opportunity cost.
+- Avoid completely invalidating a hazard.
+- Support multiple solution combinations.
+
+The current catalog is sufficient:
+
+| Power-up | Primary bottleneck |
+| --- | --- |
+| Wrench | Lift availability after jams |
+| Air Freshener | Stink quarantine and evacuation |
+| Calming Musak | Patience pressure |
+| Turbo Module | Travel time and recovery distance |
+| TARDIS Mode | Capacity |
+| Wide Doors | Boarding and unloading throughput |
+| Group Think | Destination fragmentation |
+| Double-Decker | Sustained high-capacity movement |
+| Open Plan | Multi-lift coordination and lateral transfer |
+
+## 9. Hazards and special traffic
+
+Hazards exist to change decisions, not just subtract performance.
+
+| Mechanic | Decision it should create |
+| --- | --- |
+| Room Service | Separate bulky traffic or accelerate boarding |
+| Lift jam | Preserve redundancy, repair, or tolerate local failure |
+| Checkout rush | Dedicate capacity to a directional funnel |
+| VIP | Reserve exclusivity without starving normal traffic |
+| Stink | Quarantine, cleanse, or reroute |
+| Rooftop event | Prepare for a synchronized destination spike and release |
+| Gym Bros | Manage weight and crowd composition |
+| Gravity | Trade fuller loads against upward speed |
+
+Randomness must remain bounded. A hazard should create pressure without producing an unavoidable loss before the player can respond.
+
+## 10. Economy principles
+
+The economy exists to create loadout decisions.
+
+For most shop visits:
+
+- A typical player can buy one meaningful item or save.
+- A strong player can buy one premium item or several small items.
+- A struggling player retains access to a recovery option.
+- The player cannot buy every relevant answer.
+- Gold tiers require saving, excellent performance, or achievement milestones.
+
+Points should reward the behaviour a round teaches. Remaining-time bonuses should only be used where time remaining is a meaningful performance measure.
+
+Career achievements should primarily represent mastery and long-term status. They should not overwhelm repeatable operational income.
+
+Detailed targets are defined in `Game Economy.md`.
+
+## 11. Difficulty and fairness
+
+The target campaign is not a smooth linear ramp. It alternates:
+
+- Introduction
+- Practice
+- Pressure test
+- Combination
+- Mastery wall
+- Recovery or expression round
+
+Difficulty walls are desirable when failure is instructive. Difficulty spikes caused only by higher spawn rates are not.
+
+A difficult round should support at least three solution classes where practical:
+
+- Power-up/loadout solution
+- Automation/routing solution
+- High-skill manual or hybrid solution
+
+## 12. Feedback requirements
+
+The game must help the player diagnose:
+
+- Queue growth by floor.
+- Guest urgency.
+- Lift utilization and load.
+- Boarding versus travel delay.
+- Hazard state and remaining duration.
+- Why a guest refused to board.
+- Why the round ended.
+- What consumed lives.
+
+Round review should report actionable information, not just totals.
+
+## 13. Scope boundaries
+
+Current stabilization excludes:
+
+- New power-ups or hazards.
+- Additional campaign rounds.
+- Global online leaderboards.
+- Multiple save profiles.
+- Theme systems.
+- Mod/plugin APIs.
+- Major visual redesign.
+
+These may return after the core progression, economy, configuration, testing, and execution-containment model are stable.
+
+## 14. Security and curiosity
+
+Lift Operator is designed for children and friends learning programming. It is not intended to resist a determined attacker.
+
+The design rule is:
+
+> Protect the experience from accidents, not the source from curious players.
+
+XOR-obfuscated debug manifests are appropriate because they prevent accidental access while remaining discoverable to anyone motivated to inspect and understand the code. A player who finds the secret and constructs a debug payload has achieved a valuable learning outcome.
+
+Containment work should focus on:
+
+- Preventing accidental script lockups.
+- Recovering cleanly from malformed data.
+- Making Debug and Monkey sessions visible.
+- Avoiding accidental corruption of ordinary saves.
+
+Anti-cheat, strong authentication, and hiding implementation details are not product goals.

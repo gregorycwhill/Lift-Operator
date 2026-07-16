@@ -39,6 +39,11 @@ const PowerUps = {
     },
 
     calculateRoundPoints: function() {
+        if (Registry.stats.round === 12) {
+            const survivalPoints = Math.floor((Registry.enduranceSeconds || 0) / 30);
+            const servicePoints = Math.floor((Registry.roundStats.servedThisRound || 0) / 10);
+            return Math.min(50, survivalPoints + servicePoints);
+        }
         // Tally points earned this round + time bonus
         let points = Registry.roundStats.servedThisRound || 0;
         if (Registry.stats.timeLeft > 0) {

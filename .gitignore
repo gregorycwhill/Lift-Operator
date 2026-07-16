@@ -6,6 +6,11 @@ Archive*/
 # Ignore editor settings
 .vscode/
 
+# Node and browser-test artifacts
+node_modules/
+test-results/
+playwright-report/
+
 # Ignore OS files
 .DS_Store
 Thumbs.db

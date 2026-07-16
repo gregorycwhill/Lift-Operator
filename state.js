@@ -35,9 +35,16 @@ const Registry = {
     
     // Auto-Pilot & Regression Telemetry
     autoPilotActive: false,
+    monkeyCapability: false,
+    monkeySettings: null,
     agentSeed: 0,
     manualIntervention: false,
     lastAutoDecisionTime: 0,
+    roundTerminalHandled: false,
+    roundEvaluation: null,
+    roundCheckpoint: null,
+    enduranceSeconds: 0,
+    customScriptTicks: 0,
     
     vipSpawned: false, vipTargetTime: 0,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,

@@ -185,7 +185,9 @@ window.initializeUI = function() {
         const briefingOverlay = document.getElementById("roundModalOverlay");
         if (briefingOverlay) briefingOverlay.style.display = "none";
 
-        if (typeof ui.showRoundModal === "function") ui.showRoundModal(Registry.stats.round + 1);
+        if (typeof engine.advanceToRound === "function") {
+            engine.advanceToRound(Registry.stats.round + 1);
+        }
     });
 
     // LEADERBOARD CONTROLS
@@ -230,7 +232,10 @@ window.initializeUI = function() {
         
         // AUTOPILOT TIMER RULE: When launching from debug, default to 30s
         if (Registry.autoPilotActive) {
-            Registry.stats.timeLeft = Config.autoPilotSettings.shortRoundDuration || 30;
+            const monkey = Registry.monkeySettings || {};
+            if (Registry.stats.round !== 12) {
+                Registry.stats.timeLeft = monkey.roundDurationSeconds || Config.autoPilotSettings.shortRoundDuration || 30;
+            }
         }
 
         // If floor count changed, we must rebuild
@@ -266,9 +271,6 @@ window.initializeUI = function() {
         runVisualRegressionSuite();
     });
 
-    if (typeof window.processNextManifestItem === 'function') {
-        window.processNextManifestItem();
-    }
 };
 
 /**
@@ -361,4 +363,3 @@ window.UI = window.UI || {};
 
 window.Game = window.Game || {};
 window.Game.UI = window.UI;
-

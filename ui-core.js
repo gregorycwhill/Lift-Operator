@@ -530,8 +530,10 @@ window.triggerDefenestration = function(guestEl, floorIndex, guestIndex) {
 };
 
 window.updateScoreboardUI = function() {
-    const m = Math.floor(Registry.stats.timeLeft / 60);
-    const s = (Registry.stats.timeLeft % 60).toString().padStart(2, '0');
+    const isEndurance = Registry.stats.round === 12;
+    const displaySeconds = isEndurance ? (Registry.enduranceSeconds || 0) : Registry.stats.timeLeft;
+    const m = Math.floor(displaySeconds / 60);
+    const s = (displaySeconds % 60).toString().padStart(2, '0');
     if (document.getElementById('clock-display')) document.getElementById('clock-display').innerText = `${m}:${s}`;
     if (document.getElementById('round-display')) document.getElementById('round-display').innerText = Registry.stats.round;
     
