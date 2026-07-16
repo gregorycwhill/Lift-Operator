@@ -42,9 +42,11 @@ const Registry = {
     lastAutoDecisionTime: 0,
     roundTerminalHandled: false,
     roundEvaluation: null,
+    pendingFailedRetry: null,
     roundCheckpoint: null,
     enduranceSeconds: 0,
     customScriptTicks: 0,
+    lastLobbyRenderTime: 0,
     
     vipSpawned: false, vipTargetTime: 0,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,

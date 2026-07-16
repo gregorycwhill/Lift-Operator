@@ -428,18 +428,23 @@ window.draw = function() {
         }
     });
     
+    const renderNow = performance.now();
+    if (renderNow - (Registry.lastLobbyRenderTime || 0) < 100) return;
+    Registry.lastLobbyRenderTime = renderNow;
+
     const lobbies = document.querySelectorAll('.lobby');
     lobbies.forEach((lobby, idx) => {
         let actualFloorId = Config.numFloors - 1 - idx;
         if (lobby && Registry.floors[actualFloorId]) {
             const guests = Registry.floors[actualFloorId].waitingGuests;
-            const guestStateKey = guests.map(g => `${g.dest}-${g.status}`).join('|');
+            const visibleGuests = guests.slice(0, 18);
+            const guestStateKey = `${guests.length}:` + visibleGuests.map(g => `${g.dest}-${g.status}-${g.isVip ? 1 : 0}-${g.isGymBro ? 1 : 0}-${g.isRoomService ? 1 : 0}`).join('|');
             
             if (lobby.dataset.guestState !== guestStateKey) {
                 lobby.dataset.guestState = guestStateKey;
                 while (lobby.firstChild) lobby.removeChild(lobby.firstChild);
 
-                guests.forEach(g => {
+                visibleGuests.forEach(g => {
                     const guest = document.createElement('div');
                     let classList = `guest ${g.status}`;
                     if (g.isVip) classList += ' vip';
@@ -450,6 +455,12 @@ window.draw = function() {
                     guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(g) : window.getGuestText(g);
                     lobby.appendChild(guest);
                 });
+                if (guests.length > visibleGuests.length) {
+                    const overflow = document.createElement('div');
+                    overflow.className = 'queue-overflow';
+                    overflow.innerText = `+${guests.length - visibleGuests.length}`;
+                    lobby.appendChild(overflow);
+                }
             }
 
             // Power-up indicators in lobby

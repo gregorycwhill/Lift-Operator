@@ -185,7 +185,9 @@ window.initializeUI = function() {
         const briefingOverlay = document.getElementById("roundModalOverlay");
         if (briefingOverlay) briefingOverlay.style.display = "none";
 
-        if (typeof engine.advanceToRound === "function") {
+        if (Registry.pendingFailedRetry && typeof engine.retryFailedRound === "function") {
+            engine.retryFailedRound();
+        } else if (typeof engine.advanceToRound === "function") {
             engine.advanceToRound(Registry.stats.round + 1);
         }
     });

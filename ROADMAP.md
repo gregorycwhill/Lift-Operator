@@ -17,7 +17,7 @@ The roadmap is organized by gates, not by feature quantity. The game already has
 
 ## Stage 2 — Stabilization
 
-**Status:** Next
+**Status:** Substantially complete
 
 - Fix review, shop, pause, resume, retry, and reset defects.
 - Correct average-wait and payout accounting.
@@ -27,7 +27,11 @@ The roadmap is organized by gates, not by feature quantity. The game already has
 
 **Gate:** Critical campaign flow completes deterministically without duplicate state transitions or currency mutations.
 
+The critical gate is passing. Remaining work is secondary overlay hardening and an explicit lifecycle-state model.
+
 ## Stage 3 — Data-driven balance foundation
+
+**Status:** In progress
 
 - Create versioned machine-readable design data.
 - Validate and generate executable configuration.
@@ -37,7 +41,11 @@ The roadmap is organized by gates, not by feature quantity. The game already has
 
 **Gate:** Round and economy tuning requires data changes only, not engine edits.
 
+Canonical JSON, validation, generation, runtime loading, and stale-artifact CI checks are implemented. Unlock/payout schema expansion and removal of remaining compatibility consumers are next.
+
 ## Stage 4 — Testing, access gating, and containment
+
+**Status:** In progress
 
 - Replace self-confirming regression checks.
 - Add reproducible unit, state-machine, simulation, economy, and E2E suites.
@@ -46,6 +54,8 @@ The roadmap is organized by gates, not by feature quantity. The game already has
 - Separate production and development entry points.
 
 **Gate:** Tests provide independent evidence; malformed inputs and accidental automation errors cannot freeze or corrupt the game; curious source inspection remains possible.
+
+Production behaviour, deterministic simulation, lifecycle, Monkey, manifest validation, and several pure mechanic rules are covered. Worker isolation, golden strategy comparisons, and economy simulation remain open.
 
 ## Stage 5 — Campaign balance
 

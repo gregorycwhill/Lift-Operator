@@ -185,8 +185,10 @@ window.resetAttemptTelemetry = function() {
     Registry.roundStats = window.createRoundStats();
     Registry.roundEvaluation = null;
     Registry.roundTerminalHandled = false;
+    Registry.pendingFailedRetry = null;
     Registry.enduranceSeconds = 0;
     Registry.customScriptTicks = 0;
+    Registry.lastLobbyRenderTime = 0;
 };
 
 window.getRoundDefinition = function(round) {
@@ -323,7 +325,37 @@ window.handleOrdinaryDeath = function() {
     Registry.points = checkpoint.points;
     Registry.seed = checkpoint.seed;
     window.clearAttemptInventory();
-    window.skipToRound(checkpoint.round, { preserveCheckpoint: true });
+    Registry.pendingFailedRetry = {
+        round: checkpoint.round,
+        seed: checkpoint.seed
+    };
+
+    const stats = Registry.roundStats;
+    const failedEvaluation = {
+        pointsEarned: 0,
+        totalPoints: Registry.points,
+        guestsServed: stats.servedThisRound || 0,
+        averageWaitTime: stats.servedThisRound > 0
+            ? (stats.totalWaitTimeServed / stats.servedThisRound).toFixed(1)
+            : '0.0',
+        defenestrations: stats.defenestrationsThisRound || 0,
+        log: ['Attempt failed. Points and inventory have been restored for a complete retry.']
+    };
+
+    const ui = GameUI();
+    const briefingOverlay = document.getElementById('roundModalOverlay');
+    if (briefingOverlay) briefingOverlay.style.display = 'none';
+    if (typeof ui.showRoundReview === 'function') {
+        ui.showRoundReview(checkpoint.round, 'failed', failedEvaluation);
+    }
+};
+
+window.retryFailedRound = function() {
+    const pending = Registry.pendingFailedRetry;
+    if (!pending) return;
+    Registry.pendingFailedRetry = null;
+    Registry.seed = pending.seed;
+    window.skipToRound(pending.round, { preserveCheckpoint: true });
 };
 
 window.completeRound = function(reason = 'completed') {
@@ -488,6 +520,7 @@ window.Game.Engine.reset = window.resetGame;
 window.Game.Engine.skipToRound = window.skipToRound;
 window.Game.Engine.completeRound = window.completeRound;
 window.Game.Engine.handleOrdinaryDeath = window.handleOrdinaryDeath;
+window.Game.Engine.retryFailedRound = window.retryFailedRound;
 window.Game.Engine.advanceToRound = window.advanceToRound;
 window.Game.Engine.captureRoundCheckpoint = window.captureRoundCheckpoint;
 window.Game.Engine.resetAttemptTelemetry = window.resetAttemptTelemetry;

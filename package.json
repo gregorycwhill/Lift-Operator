@@ -5,9 +5,11 @@
   "description": "Local development and automated testing tools for Lift Operator.",
   "scripts": {
     "serve": "node tests/test-server.js",
-    "test": "npm run test:syntax && npm run test:config && playwright test",
+    "test": "npm run test:syntax && npm run test:config && npm run balance:check && playwright test",
     "test:syntax": "node scripts/check-syntax.js",
     "test:config": "node scripts/validate-config.js",
+    "balance:generate": "node scripts/generate-balance.js",
+    "balance:check": "node scripts/generate-balance.js --check",
     "test:lifecycle": "playwright test tests/lifecycle-correctness.spec.js",
     "test:e2e": "playwright test tests/auto-pilot.spec.js",
     "test:e2e:report": "playwright show-report"

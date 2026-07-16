@@ -32,6 +32,8 @@ Stabilization is complete when:
 
 ## 3. Phase 0 — Preserve and observe
 
+**Current status:** Substantially complete. Current behaviour, representative seeds, testing commands, security intent, and the balance workflow are documented. Rich telemetry export and repository-wide encoding cleanup remain open.
+
 ### Deliverables
 
 - Keep `CURRENT_IMPLEMENTATION.md` synchronized with material discoveries.
@@ -101,9 +103,11 @@ inventory = []
 cart = []
 round = failed round
 seed = failed attempt seed
-screen = shop/briefing
+screen = failed-attempt review, then shop/briefing
 runtime attempt state = fresh
 ```
+
+**Current status:** Passed for the critical deterministic lifecycle. Ordinary failure now shows a non-paying review, restores the checkpoint, clears inventory/cart, and retries the same round and seed. Explicit lifecycle-state enums and several secondary overlay-composition cases remain desirable hardening work.
 
 ## 5. Phase 2 — One round factory
 
@@ -168,7 +172,7 @@ Add a validator and generated config artifact as described in `BALANCE_WORKFLOW.
 
 A static scan finds no round-specific balance constants outside generated configuration, except clearly documented engine safety limits.
 
-**Current status:** Round structure and spawn curves are canonical and versioned. Remaining system, hazard, power-up, unlock, payout, and achievement compatibility fields still require removal during the balance-data generation pass.
+**Current status:** The canonical versioned source is `design/game-balance.v1.json`. `scripts/generate-balance.js` produces `generated/game-balance.js`, CI rejects stale artifacts, and runtime `GAME_DATA` comes from the generated file. Legacy top-level fields are derived compatibility controls rather than independent numerical sources. Unlock and payout data still need fuller schema coverage before campaign tuning.
 
 ## 7. Phase 4 — Trustworthy testing
 
@@ -205,7 +209,7 @@ Add a reproducible command and continuous integration for:
 
 “Pass” means production behaviour was invoked and independently asserted.
 
-**Current status:** Syntax, config validation, lifecycle Playwright tests, and the Monkey campaign are available through npm and GitHub Actions. Mechanic and golden-seed coverage remains incomplete.
+**Current status:** Syntax, canonical-data validation, generated-artifact verification, lifecycle Playwright tests, production mechanic checks, deterministic isolated simulation, and the Monkey campaign are available through npm and GitHub Actions. Golden-seed strategy comparisons and campaign-economy simulation remain incomplete.
 
 ## 8. Phase 5 — Debug access and automation containment
 
@@ -287,6 +291,8 @@ Only after earlier gates:
 8. Record every accepted balance version.
 
 Balance one intended bottleneck at a time.
+
+**Current status:** Ready to begin with Rounds 1–3 once initial golden-seed and economy baselines are recorded. No broad balance redesign has been silently applied during stabilization.
 
 ## 11. Suggested issue groups
 

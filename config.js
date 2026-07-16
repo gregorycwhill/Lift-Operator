@@ -86,8 +86,13 @@ window.getAutomationRandomFloor = function() {
     return Math.max(0, Math.min(window.Config.numFloors - 1, value));
 };
 
+const BalanceData = window.GameBalanceData;
+if (!BalanceData) throw new Error('Generated balance data failed to load.');
+const BalanceSystem = BalanceData.system;
+const BalanceRounds = BalanceData.rounds;
+
 window.Config = {
-    balanceVersion: '0.1.0-stabilized',
+    balanceVersion: BalanceData.balanceVersion,
     debugMode: false, 
     autoPilot: false,
     autoPilotSettings: {
@@ -97,35 +102,41 @@ window.Config = {
         profilePrefix: "AUTO_PILOT",
         indicatorId: "autoPilotIndicator"
     },
-    numFloors: 10, 
-    roundTime: 180, startingLives: 20, maxSpawnDelaySec: 3, 
-    jamChancePerSec: 0.005, jamMinSec: 10, jamMaxSec: 25,
-    checkoutChance: 0.50, 
+    numFloors: BalanceRounds[1].floors,
+    roundTime: BalanceSystem.roundTime,
+    startingLives: BalanceSystem.startingLives,
+    maxSpawnDelaySec: 3,
+    jamChancePerSec: BalanceSystem.jam.chancePerSec,
+    jamMinSec: BalanceSystem.jam.minSec,
+    jamMaxSec: BalanceSystem.jam.maxSec,
+    checkoutChance: BalanceSystem.checkoutChance,
     
-    liftsR1: 1, liftsR2: 1, liftsR3: 2, liftsR4: 2, liftsR5: 3, liftsR6: 3, liftsR7: 4, liftsR8: 4, liftsR9: 5, liftsR10: 5, liftsR11: 5, liftsR12: 4, liftsR13: 4,
+    liftsR1: BalanceRounds[1].lifts, liftsR2: BalanceRounds[2].lifts, liftsR3: BalanceRounds[3].lifts, liftsR4: BalanceRounds[4].lifts, liftsR5: BalanceRounds[5].lifts, liftsR6: BalanceRounds[6].lifts, liftsR7: BalanceRounds[7].lifts, liftsR8: BalanceRounds[8].lifts, liftsR9: BalanceRounds[9].lifts, liftsR10: BalanceRounds[10].lifts, liftsR11: BalanceRounds[11].lifts, liftsR12: BalanceRounds[12].lifts, liftsR13: BalanceRounds[13].lifts,
     
-    spawnR1Start: 0.25, spawnR1End: 0.50, spawnR2Start: 0.50, spawnR2End: 0.65,
-    spawnR3Start: 0.65, spawnR3End: 0.80, spawnR4Start: 0.80, spawnR4End: 0.95,
-    spawnR5Start: 0.95, spawnR5End: 1.10, spawnR6Start: 1.10, spawnR6End: 1.25,
-    spawnR7Start: 1.25, spawnR7End: 1.40, spawnR8Start: 1.00, spawnR8End: 1.25, 
-    spawnR9Start: 1.25, spawnR9End: 1.50, spawnR10Start: 1.50, spawnR10End: 1.75,
-    spawnR11Start: 1.75, spawnR11End: 2.00,
-    spawnR12Start: 2.00, spawnR12End: 2.50,
-    spawnR13Start: 1.50, spawnR13End: 1.75,
+    spawnR1Start: BalanceRounds[1].spawnStart, spawnR1End: BalanceRounds[1].spawnEnd, spawnR2Start: BalanceRounds[2].spawnStart, spawnR2End: BalanceRounds[2].spawnEnd,
+    spawnR3Start: BalanceRounds[3].spawnStart, spawnR3End: BalanceRounds[3].spawnEnd, spawnR4Start: BalanceRounds[4].spawnStart, spawnR4End: BalanceRounds[4].spawnEnd,
+    spawnR5Start: BalanceRounds[5].spawnStart, spawnR5End: BalanceRounds[5].spawnEnd, spawnR6Start: BalanceRounds[6].spawnStart, spawnR6End: BalanceRounds[6].spawnEnd,
+    spawnR7Start: BalanceRounds[7].spawnStart, spawnR7End: BalanceRounds[7].spawnEnd, spawnR8Start: BalanceRounds[8].spawnStart, spawnR8End: BalanceRounds[8].spawnEnd,
+    spawnR9Start: BalanceRounds[9].spawnStart, spawnR9End: BalanceRounds[9].spawnEnd, spawnR10Start: BalanceRounds[10].spawnStart, spawnR10End: BalanceRounds[10].spawnEnd,
+    spawnR11Start: BalanceRounds[11].spawnStart, spawnR11End: BalanceRounds[11].spawnEnd,
+    spawnR12Start: BalanceRounds[12].spawnStart, spawnR12End: BalanceRounds[12].spawnEnd,
+    spawnR13Start: BalanceRounds[13].spawnStart, spawnR13End: BalanceRounds[13].spawnEnd,
     
-    happySec: 20, annoyedSec: 40, criticalSec: 60,
-    liftCapacity: 10, 
-    liftSpeedSec: 0.5,
-    doorSpeedSec: 0.5,
-    boardSpeedSec: 0.5,
+    happySec: BalanceSystem.patience.happy,
+    annoyedSec: BalanceSystem.patience.annoyed,
+    criticalSec: BalanceSystem.patience.critical,
+    liftCapacity: BalanceSystem.liftCapacity,
+    liftSpeedSec: BalanceSystem.liftSpeedSec,
+    doorSpeedSec: BalanceSystem.doorSpeedSec,
+    boardSpeedSec: BalanceSystem.boardSpeedSec,
     boardingSpeedMultiplier: 1.0,
     
-    vipSpawnMinSec: 30, vipSpawnMaxSec: 120, vipPenalty: 10,
-    fartChancePerSec: 0.005, fartStinkSec: 20,
-    sunsetMinSec: 30, sunsetMaxSec: 90, sunsetDurationSec: 30, sunsetGuestRatio: 0.50,
+    vipSpawnMinSec: 30, vipSpawnMaxSec: 120, vipPenalty: BalanceSystem.vipPenalty,
+    fartChancePerSec: BalanceSystem.stink.chancePerSec, fartStinkSec: BalanceSystem.stink.durationSec,
+    sunsetMinSec: BalanceSystem.sunset.minSec, sunsetMaxSec: BalanceSystem.sunset.maxSec, sunsetDurationSec: BalanceSystem.sunset.durationSec, sunsetGuestRatio: BalanceSystem.sunset.guestRatio,
     
-    gymBroStinkThreshold: 3,
-    roomServiceChance: 0.05,
+    gymBroStinkThreshold: BalanceSystem.stink.gymBroThreshold,
+    roomServiceChance: BalanceSystem.roomServiceChance,
     gravityConstant: 0.4,
     
     roundTitles: {
@@ -145,161 +156,7 @@ window.Config = {
     },
 
     // GAME_DATA: The single source of truth for all game balancing
-    GAME_DATA: {
-        achievements: {
-            service: {
-                id: 'service',
-                name: 'Service Award',
-                desc: 'Safely deliver heavy passenger guest volumes inside a single round.',
-                bronze: { label: 'Bronze Fish', req: 10, icon: '🟫🐟', reward: 2 },
-                silver: { label: 'Silver Fish', req: 30, icon: '⬜🐟', reward: 5 },
-                gold: { label: 'Gold Fish', req: 50, icon: '🟨🐟', reward: 10 }
-            },
-            handsfree: {
-                id: 'handsfree',
-                name: 'Hands-Free Inventor',
-                desc: 'Operate automated transit routines without manual click adjustments.',
-                bronze: { label: 'Bronze Automation', req: 2, icon: '🟫🤖', reward: 2 },
-                silver: { label: 'Silver Automation', req: 6, icon: '⬜🤖', reward: 5 },
-                gold: { label: 'Gold Automation', req: 9, icon: '🟨🤖', reward: 10 }
-            },
-            sardine: {
-                id: 'sardine',
-                name: 'Sardine Packer',
-                desc: 'Deliver fully loaded lifts packed perfectly to maximum capacity weight.',
-                bronze: { label: 'Bronze Packer', req: 1, icon: '🟫📦', reward: 2 },
-                silver: { label: 'Silver Packer', req: 3, icon: '⬜📦', reward: 5 },
-                gold: { label: 'Gold Packer', req: 5, icon: '🟨📦', reward: 10 }
-            },
-            hacker: {
-                id: 'hacker',
-                name: 'Hacker Award',
-                desc: 'Optimise custom logic to run for thousands of simulation cycles.',
-                bronze: { label: 'Bronze Logic', req: 500, icon: '🟫⌨️', reward: 2 },
-                silver: { label: 'Silver Logic', req: 5000, icon: '⬜⌨️', reward: 5 },
-                gold: { label: 'Master Coder', req: 20000, icon: '🟨⌨️', reward: 10 }
-            },
-            parallel: {
-                id: 'parallel',
-                name: 'Parallel Universe',
-                desc: 'Successfully bridge gaps between shafts using lateral transfer logic.',
-                bronze: { label: 'Bronze Bridge', req: 1, icon: '🟫↔️', reward: 2 },
-                silver: { label: 'Silver Bridge', req: 10, icon: '⬜↔️', reward: 5 },
-                gold: { label: 'Quantum Leap', req: 25, icon: '🟨↔️', reward: 10 }
-            },
-            doubleup: {
-                id: 'doubleup',
-                name: 'Double Trouble',
-                desc: 'Utilise double-decker infrastructure to move large volumes of people.',
-                bronze: { label: 'Bronze Deck', req: 5, icon: '🟫🚡', reward: 2 },
-                silver: { label: 'Silver Deck', req: 15, icon: '⬜🚡', reward: 5 },
-                gold: { label: 'Ocean Liner', req: 40, icon: '🟨🚡', reward: 10 }
-            }
-        },
-        powerups: {
-            wrench: {
-                tiers: [
-                    { cost: 1, duration: 0 },
-                    { cost: 3, duration: 0 },
-                    { cost: 5, duration: 30 }
-                ]
-            },
-            freshener: {
-                tiers: [
-                    { cost: 1, duration: 15 },
-                    { cost: 3, duration: 15 },
-                    { cost: 5, duration: 30 }
-                ]
-            },
-            musak: {
-                tiers: [
-                    { cost: 1, duration: 15 },
-                    { cost: 3, duration: 15 },
-                    { cost: 5, duration: 15 }
-                ]
-            },
-            turbo: {
-                tiers: [
-                    { cost: 1, duration: 10, scalar: 0.1 },
-                    { cost: 3, duration: 15, scalar: 0.05 },
-                    { cost: 5, duration: 20, scalar: 0.05 }
-                ]
-            },
-            tardis: {
-                tiers: [
-                    { cost: 1, duration: 15, scalar: 999 },
-                    { cost: 3, duration: 15, scalar: 999 },
-                    { cost: 5, duration: 30, scalar: 999 }
-                ]
-            },
-            doors: {
-                tiers: [
-                    { cost: 2, duration: 20, scalar: 0.5 },
-                    { cost: 4, duration: 30, scalar: 0.33 },
-                    { cost: 6, duration: 30, scalar: 0.05 }
-                ]
-            },
-            groupThink: {
-                tiers: [
-                    { cost: 2, duration: 0 },
-                    { cost: 4, duration: 0 },
-                    { cost: 6, duration: 0 }
-                ]
-            },
-            doubleDecker: {
-                tiers: [
-                    { cost: 3, duration: 30 },
-                    { cost: 5, duration: 60 },
-                    { cost: 8, duration: 45 }
-                ]
-            },
-            openPlan: {
-                tiers: [
-                    { cost: 4, duration: 20 },
-                    { cost: 6, duration: 45 },
-                    { cost: 10, duration: 30 }
-                ]
-            }
-        },
-        system: {
-            showcaseLimit: 6,
-            lateralTolerance: 0.2, // 20% floor height
-            vipHeadstartSec: 20,
-            roundTime: 180,
-            startingLives: 20,
-            liftCapacity: 10,
-            liftSpeedSec: 0.5,
-            doorSpeedSec: 0.5,
-            boardSpeedSec: 0.5,
-            roomServiceChance: 0.05,
-            vipPenalty: 10,
-            jam: { chancePerSec: 0.005, minSec: 10, maxSec: 25 },
-            stink: { chancePerSec: 0.005, durationSec: 20, gymBroThreshold: 3 },
-            checkoutChance: 0.50,
-            sunset: { minSec: 30, maxSec: 90, durationSec: 30, guestRatio: 0.50 },
-            patience: {
-                happy: 20,
-                annoyed: 40,
-                critical: 60,
-                rage: 80
-            }
-        },
-        rounds: {
-            1: { floors: 10, lifts: 1, spawnStart: 0.25, spawnEnd: 0.50, objective: 'SURVIVAL', gravityScalar: 0 },
-            2: { floors: 10, lifts: 1, spawnStart: 0.50, spawnEnd: 0.65, objective: 'SURVIVAL', gravityScalar: 0 },
-            3: { floors: 10, lifts: 2, spawnStart: 0.65, spawnEnd: 0.80, objective: 'SURVIVAL', gravityScalar: 0 },
-            4: { floors: 10, lifts: 2, spawnStart: 0.80, spawnEnd: 0.95, objective: 'SURVIVAL', gravityScalar: 0 },
-            5: { floors: 10, lifts: 3, spawnStart: 0.95, spawnEnd: 1.10, objective: 'SURVIVAL', gravityScalar: 0 },
-            6: { floors: 15, lifts: 3, spawnStart: 1.10, spawnEnd: 1.25, objective: 'SURVIVAL', gravityScalar: 0 },
-            7: { floors: 15, lifts: 4, spawnStart: 1.25, spawnEnd: 1.40, objective: 'SURVIVAL', gravityScalar: 0 },
-            8: { floors: 15, lifts: 4, spawnStart: 1.00, spawnEnd: 1.25, objective: 'SURVIVAL', gravityScalar: 0 },
-            9: { floors: 15, lifts: 5, spawnStart: 1.25, spawnEnd: 1.50, objective: 'SURVIVAL', gravityScalar: 0 },
-            10: { floors: 15, lifts: 5, spawnStart: 1.50, spawnEnd: 1.75, objective: 'SURVIVAL', gravityScalar: 0 },
-            11: { floors: 15, lifts: 5, spawnStart: 1.75, spawnEnd: 2.00, objective: 'SURVIVAL', gravityScalar: 0 },
-            12: { floors: 15, lifts: 4, spawnStart: 2.00, spawnEnd: 2.50, objective: 'ENDURANCE', gravityScalar: 0 },
-            13: { floors: 15, lifts: 4, spawnStart: 1.50, spawnEnd: 1.75, objective: 'PEDAL_SURVIVAL', gravityScalar: 2.0 }
-        }
-    }
+    GAME_DATA: BalanceData
 };
 
 const Config = window.Config;

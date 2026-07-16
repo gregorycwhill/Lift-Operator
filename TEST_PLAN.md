@@ -13,6 +13,7 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Ordinary failure clears inventory and cart.
 - [x] Ordinary failure preserves round and seed and returns to the shop.
 - [x] Ordinary failure clears all runtime and achievement effects from the attempt.
+- [x] Ordinary failure shows a non-paying failed-attempt review before returning to the shop.
 - [x] Successful retry/evaluation can commit only one payout.
 - [x] Round 12 death commits one Endurance payout and progresses to Round 13 through review.
 - [ ] Reset clears runtime state and retains intended career state.
@@ -57,8 +58,13 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 
 - [x] Representative golden seeds recorded.
 - [x] Same seed/config/strategy produces the same result.
+- [x] Canonical balance data matches the generated runtime artifact.
+- [x] Patience thresholds invoke production status rules.
+- [x] Boarding duration invokes production weight and Wide Doors rules.
+- [x] Gravity invokes the production loaded-lift multiplier.
 - [ ] Intended specialist strategy beats a deliberately poor strategy.
 - [x] Deterministic baseline returns finite state and the full Monkey campaign completes without deadlock.
+- [x] Queue rendering remains bounded under a 250-guest backlog.
 - [ ] Quota rounds terminate correctly.
 - [x] Endurance has no timer or quota and terminates only at zero lives.
 - [x] Endurance score records survival time and guests served.

@@ -35,6 +35,15 @@ Markdown should explain and review the design. The machine-readable file should 
 
 ## 3. Proposed data pipeline
 
+The first three stages of this pipeline are implemented:
+
+- Canonical source: `design/game-balance.v1.json`
+- Generator: `npm.cmd run balance:generate`
+- Generated runtime artifact: `generated/game-balance.js`
+- Validation and stale-artifact gate: `npm.cmd run test:config` and `npm.cmd run balance:check`
+
+Markdown remains the readable design explanation; approved numerical changes must be copied into canonical JSON before generation.
+
 ### Stage 1 — Canonical design data
 
 Create a versioned file such as:

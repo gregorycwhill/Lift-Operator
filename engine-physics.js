@@ -2,6 +2,27 @@
 // ENGINE-PHYSICS.JS : CORE PHYSICS LOOP, BOARDING PROTOCOLS, & PASSENGER DECAY
 // ============================================================================
 
+window.getGuestStatusForWait = function(waitMs) {
+    const p = Config.GAME_DATA.system.patience;
+    if (waitMs > p.critical * 1000) return GuestStatus.RAGE;
+    if (waitMs > p.annoyed * 1000) return GuestStatus.CRITICAL;
+    if (waitMs > p.happy * 1000) return GuestStatus.ANNOYED;
+    return GuestStatus.HAPPY;
+};
+
+window.getBoardingDurationMs = function(weight = 1, speedMultiplier = 1) {
+    return Config.boardSpeedSec *
+        (Config.boardingSpeedMultiplier || 1.0) *
+        weight /
+        Math.max(0.01, speedMultiplier) *
+        1000;
+};
+
+window.getGravitySpeedMultiplier = function(currentWeight, maxCapacity, gravityScalar) {
+    if (!maxCapacity || gravityScalar <= 0) return 1;
+    return Math.max(0.1, 1 - ((currentWeight / maxCapacity) * gravityScalar));
+};
+
 window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
@@ -142,15 +163,6 @@ window.gameTick = function(timestamp) {
         }
     });
 
-    const checkStatus = (g) => {
-        const wait = now - g.spawnTime;
-        const p = Config.GAME_DATA.system.patience;
-        if (wait > p.critical * 1000) return GuestStatus.RAGE;       
-        if (wait > p.annoyed * 1000) return GuestStatus.CRITICAL;   
-        if (wait > p.happy * 1000) return GuestStatus.ANNOYED;    
-        return GuestStatus.HAPPY;                        
-    };
-    
     // Process Floor Aging Logic
     Registry.floors.forEach((floor, floorIdx) => {
         let isAngerPaused = typeof PowerUps !== 'undefined' && PowerUps.isAngerPaused(floorIdx);
@@ -161,7 +173,7 @@ window.gameTick = function(timestamp) {
             if (isAngerPaused) g.spawnTime += 1000; 
             
             const oldStatus = g.status;
-            g.status = checkStatus(g);
+            g.status = window.getGuestStatusForWait(now - g.spawnTime);
             
             if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('error');
@@ -190,7 +202,7 @@ window.gameTick = function(timestamp) {
             if (isAngerPaused) p.spawnTime += 1000; 
             
             const oldStatus = p.status;
-            p.status = checkStatus(p);
+            p.status = window.getGuestStatusForWait(now - p.spawnTime);
             if (p.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 Registry.stats.lives -= (p.isVip ? Config.vipPenalty : 1);
                 Registry.roundStats.defenestrationsThisRound++;
@@ -375,8 +387,7 @@ window.animationTick = function(timestamp) {
             // Gravity and weight sensitivity from Config.GAME_DATA
             let ddMultiplier = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0) ? 2.0 : 1.0;
             const liftGravity = (roundConfig.gravityScalar || 0) * ddMultiplier;
-            const gravityEffect = 1 - ((currentWeight / maxCap) * liftGravity);
-            actualPixelsPerTick *= Math.max(0.1, gravityEffect); 
+            actualPixelsPerTick *= window.getGravitySpeedMultiplier(currentWeight, maxCap, liftGravity);
         }
 
         let isStinky = lift.stinkTimer > 0;
@@ -535,8 +546,8 @@ window.animationTick = function(timestamp) {
                     let multiplier = 1.0;
                     if (typeof PowerUps !== 'undefined' && PowerUps.activePowers && PowerUps.activePowers.includes('wideDoors')) multiplier *= 2.0;
                     const weight = lift.lastBoardingWeight || 1.0;
-                    const effectiveBoardSpeed = Config.boardSpeedSec * (Config.boardingSpeedMultiplier || 1.0) * weight / multiplier;
-                    lift.stateProgress += 16 / (effectiveBoardSpeed * 1000);
+                    const boardDurationMs = window.getBoardingDurationMs(weight, multiplier);
+                    lift.stateProgress += 16 / boardDurationMs;
                 }
             }
             else if (lift.state === 'DOORS_CLOSING') {
@@ -576,3 +587,6 @@ window.Game = window.Game || {};
 window.Game.Engine = window.Game.Engine || {};
 window.Game.Engine.gameTick = window.gameTick;
 window.Game.Engine.animationTick = window.animationTick;
+window.Game.Engine.getGuestStatusForWait = window.getGuestStatusForWait;
+window.Game.Engine.getBoardingDurationMs = window.getBoardingDurationMs;
+window.Game.Engine.getGravitySpeedMultiplier = window.getGravitySpeedMultiplier;

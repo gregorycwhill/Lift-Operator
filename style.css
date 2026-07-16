@@ -193,8 +193,10 @@ body {
 .lobby { 
     width: var(--lobby-width); 
     display: flex; 
+    flex-direction: row-reverse;
     align-items: center; 
     justify-content: flex-end; /* Queue next to the lift on the right */
+    overflow: hidden;
     padding: 5px; 
     gap: 5px; 
     border-right: 2px solid #7f8c8d; 
@@ -252,6 +254,15 @@ body {
     color: white; 
     transition: transform 0.3s, background-color 0.3s; 
     flex-shrink: 0;
+}
+.queue-overflow {
+    flex: 0 0 auto;
+    padding: 2px 5px;
+    border-radius: 8px;
+    background: #34495e;
+    color: #fff;
+    font-size: 10px;
+    font-weight: bold;
 }
 
 /* Status Colors & Guest Modifiers */

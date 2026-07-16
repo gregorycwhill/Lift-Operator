@@ -48,16 +48,15 @@ All specifications use the following terms:
 
 ## Current project phase
 
-The game is an entirely playable advanced prototype entering stabilization and balance redesign.
+The game is an entirely playable advanced prototype completing stabilization infrastructure and entering data-driven balance work.
 
 The immediate priorities are:
 
-1. Truthfully document the current implementation.
-2. Remove competing parameter sources.
-3. Stabilize round, pause, review, shop, and retry lifecycles.
-4. Make tests assert production behaviour.
-5. Redesign progression and economy around problem, solution, and mastery.
-6. Establish a short, versioned balance feedback loop.
+1. Complete golden-seed and campaign-economy baselines.
+2. Expand canonical data to unlock and payout rules.
+3. Tune Rounds 1–3 around problem, solution, and mastery.
+4. Record human playtest evidence against deterministic seeds.
+5. Continue balance tuning act by act.
 
 New power-ups, hazards, themes, profiles, and online services are outside the current focus.
 
@@ -90,7 +89,13 @@ Run the complete validation command with:
 npm.cmd test
 ```
 
-This performs JavaScript syntax checking, balance/config validation, and the Playwright suites. The same command runs in GitHub Actions.
+This performs JavaScript syntax checking, canonical balance/config validation, generated-artifact verification, and the Playwright suites. The same command runs in GitHub Actions.
+
+After changing `design/game-balance.v1.json`, regenerate the browser artifact:
+
+```powershell
+npm.cmd run balance:generate
+```
 
 The suite verifies the complete accelerated 13-round campaign, the human-intervention kill switch, ordinary-death rollback, single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. Its first complete local campaign run passed in approximately 6.6 minutes.
 

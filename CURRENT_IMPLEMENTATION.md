@@ -239,6 +239,19 @@ Ordinary death now:
 - Clear inventory and cart completely.
 - Discard all state and progress from the failed attempt.
 - Keep the same round and Game ID/seed.
-- Return to the shop for a complete loadout do-over.
+- Show a failed-attempt Round Review with service, journey-time, and defenestration statistics but no payout or achievement commit.
+- Continue from the review to the same round's shop for a complete loadout do-over.
 
 Round 12 is excluded because its final death is the intended completion event.
+
+## Queue rendering and performance
+
+Waiting guests remain FIFO in runtime state. Visually, the oldest guest is placed nearest the lift doors on the right and new arrivals join on the left.
+
+Lobby rendering is throttled to 10 updates per second and bounded to 18 visible guests per floor. Larger queues display an overflow count while retaining every guest in simulation state. This prevents late-round backlogs from creating hundreds of DOM nodes or being rehashed every animation frame.
+
+## Balance data pipeline
+
+`design/game-balance.v1.json` is the canonical machine-readable numerical source. `scripts/generate-balance.js` produces `generated/game-balance.js`, which loads before `config.js`. Runtime `Config.GAME_DATA` references that generated object.
+
+Top-level `Config` fields retained for debug controls and older consumers are initialized from canonical data rather than repeating independent values. Validation checks canonical/runtime parity, probabilities, round coverage, achievement tiers, power-up tiers, and generated-artifact freshness.

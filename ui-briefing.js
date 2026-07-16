@@ -90,9 +90,11 @@ window.showRoundModal = function(round) {
 /**
  * Open the round review modal and display performance metrics/medals.
  */
-window.showRoundReview = function(completedRound, reason) {
+window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     if (typeof Achievements === 'undefined') return;
-    const evaluation = Achievements.evaluateRound();
+    const evaluation = suppliedEvaluation || Achievements.evaluateRound();
+    const heading = document.querySelector('#roundReviewOverlay h2');
+    if (heading) heading.innerText = reason === 'failed' ? `Round ${completedRound} Attempt Failed` : 'Round Complete!';
     
     document.getElementById('reviewServedText').innerText = evaluation.guestsServed;
     document.getElementById('breakdownHappy').innerText = Registry.roundStats.happyServed || 0;
@@ -100,7 +102,9 @@ window.showRoundReview = function(completedRound, reason) {
     document.getElementById('breakdownCritical').innerText = Registry.roundStats.criticalServed || 0;
     document.getElementById('breakdownDefenestrations').innerText = evaluation.defenestrations;
     
-    document.getElementById('reviewPointsEarned').innerText = `+${evaluation.pointsEarned}`;
+    document.getElementById('reviewPointsEarned').innerText = evaluation.pointsEarned > 0
+        ? `+${evaluation.pointsEarned}`
+        : '0';
     document.getElementById('reviewAvgWait').innerText = `${evaluation.averageWaitTime}s`;
     
     document.getElementById('reviewTotalPoints').innerText = evaluation.totalPoints;

@@ -99,17 +99,24 @@ test.describe('UNIT_01 Auto-Pilot Regression', () => {
             window.Registry.gameActive = true; 
         });
 
-        // Ordinary death rolls back and returns to the same round's shop.
-        await expect(page.locator('#roundModalOverlay')).toBeVisible({ timeout: 5000 });
-        const rollback = await page.evaluate(() => ({
+        // Ordinary death shows a failed-attempt review before returning to the shop.
+        await expect(page.locator('#roundReviewOverlay')).toBeVisible({ timeout: 5000 });
+        await expect(page.locator('#roundReviewOverlay h2')).toContainText('Attempt Failed');
+        const reviewState = await page.evaluate(() => ({
             inventory: PowerUps.inventory.length,
             cart: PowerUps.cart.length,
             round: window.Registry.stats.round,
             points: window.Registry.points,
-            checkpointPoints: window.Registry.roundCheckpoint.points
+            checkpointPoints: window.Registry.roundCheckpoint.points,
+            pendingRetry: Boolean(window.Registry.pendingFailedRetry)
         }));
-        expect(rollback.inventory).toBe(0);
-        expect(rollback.cart).toBe(0);
-        expect(rollback.points).toBe(rollback.checkpointPoints);
+        expect(reviewState.inventory).toBe(0);
+        expect(reviewState.cart).toBe(0);
+        expect(reviewState.points).toBe(reviewState.checkpointPoints);
+        expect(reviewState.pendingRetry).toBe(true);
+
+        await page.click('#continueToBriefingBtn');
+        await expect(page.locator('#roundModalOverlay')).toBeVisible();
+        expect(await page.evaluate(() => window.Registry.pendingFailedRetry)).toBeNull();
     });
 });

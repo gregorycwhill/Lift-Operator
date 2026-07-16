@@ -1,0 +1,440 @@
+{
+  "balanceVersion": "0.1.0-stabilized",
+  "achievements": {
+    "service": {
+      "id": "service",
+      "name": "Service Award",
+      "desc": "Safely deliver heavy passenger guest volumes inside a single round.",
+      "bronze": {
+        "label": "Bronze Fish",
+        "req": 10,
+        "icon": "🟫🐟",
+        "reward": 2
+      },
+      "silver": {
+        "label": "Silver Fish",
+        "req": 30,
+        "icon": "⬜🐟",
+        "reward": 5
+      },
+      "gold": {
+        "label": "Gold Fish",
+        "req": 50,
+        "icon": "🟨🐟",
+        "reward": 10
+      }
+    },
+    "handsfree": {
+      "id": "handsfree",
+      "name": "Hands-Free Inventor",
+      "desc": "Operate automated transit routines without manual click adjustments.",
+      "bronze": {
+        "label": "Bronze Automation",
+        "req": 2,
+        "icon": "🟫🤖",
+        "reward": 2
+      },
+      "silver": {
+        "label": "Silver Automation",
+        "req": 6,
+        "icon": "⬜🤖",
+        "reward": 5
+      },
+      "gold": {
+        "label": "Gold Automation",
+        "req": 9,
+        "icon": "🟨🤖",
+        "reward": 10
+      }
+    },
+    "sardine": {
+      "id": "sardine",
+      "name": "Sardine Packer",
+      "desc": "Deliver fully loaded lifts packed perfectly to maximum capacity weight.",
+      "bronze": {
+        "label": "Bronze Packer",
+        "req": 1,
+        "icon": "🟫📦",
+        "reward": 2
+      },
+      "silver": {
+        "label": "Silver Packer",
+        "req": 3,
+        "icon": "⬜📦",
+        "reward": 5
+      },
+      "gold": {
+        "label": "Gold Packer",
+        "req": 5,
+        "icon": "🟨📦",
+        "reward": 10
+      }
+    },
+    "hacker": {
+      "id": "hacker",
+      "name": "Hacker Award",
+      "desc": "Optimise custom logic to run for thousands of simulation cycles.",
+      "bronze": {
+        "label": "Bronze Logic",
+        "req": 500,
+        "icon": "🟫⌨️",
+        "reward": 2
+      },
+      "silver": {
+        "label": "Silver Logic",
+        "req": 5000,
+        "icon": "⬜⌨️",
+        "reward": 5
+      },
+      "gold": {
+        "label": "Master Coder",
+        "req": 20000,
+        "icon": "🟨⌨️",
+        "reward": 10
+      }
+    },
+    "parallel": {
+      "id": "parallel",
+      "name": "Parallel Universe",
+      "desc": "Successfully bridge gaps between shafts using lateral transfer logic.",
+      "bronze": {
+        "label": "Bronze Bridge",
+        "req": 1,
+        "icon": "🟫↔️",
+        "reward": 2
+      },
+      "silver": {
+        "label": "Silver Bridge",
+        "req": 10,
+        "icon": "⬜↔️",
+        "reward": 5
+      },
+      "gold": {
+        "label": "Quantum Leap",
+        "req": 25,
+        "icon": "🟨↔️",
+        "reward": 10
+      }
+    },
+    "doubleup": {
+      "id": "doubleup",
+      "name": "Double Trouble",
+      "desc": "Utilise double-decker infrastructure to move large volumes of people.",
+      "bronze": {
+        "label": "Bronze Deck",
+        "req": 5,
+        "icon": "🟫🚡",
+        "reward": 2
+      },
+      "silver": {
+        "label": "Silver Deck",
+        "req": 15,
+        "icon": "⬜🚡",
+        "reward": 5
+      },
+      "gold": {
+        "label": "Ocean Liner",
+        "req": 40,
+        "icon": "🟨🚡",
+        "reward": 10
+      }
+    }
+  },
+  "powerups": {
+    "wrench": {
+      "tiers": [
+        {
+          "cost": 1,
+          "duration": 0
+        },
+        {
+          "cost": 3,
+          "duration": 0
+        },
+        {
+          "cost": 5,
+          "duration": 30
+        }
+      ]
+    },
+    "freshener": {
+      "tiers": [
+        {
+          "cost": 1,
+          "duration": 15
+        },
+        {
+          "cost": 3,
+          "duration": 15
+        },
+        {
+          "cost": 5,
+          "duration": 30
+        }
+      ]
+    },
+    "musak": {
+      "tiers": [
+        {
+          "cost": 1,
+          "duration": 15
+        },
+        {
+          "cost": 3,
+          "duration": 15
+        },
+        {
+          "cost": 5,
+          "duration": 15
+        }
+      ]
+    },
+    "turbo": {
+      "tiers": [
+        {
+          "cost": 1,
+          "duration": 10,
+          "scalar": 0.1
+        },
+        {
+          "cost": 3,
+          "duration": 15,
+          "scalar": 0.05
+        },
+        {
+          "cost": 5,
+          "duration": 20,
+          "scalar": 0.05
+        }
+      ]
+    },
+    "tardis": {
+      "tiers": [
+        {
+          "cost": 1,
+          "duration": 15,
+          "scalar": 999
+        },
+        {
+          "cost": 3,
+          "duration": 15,
+          "scalar": 999
+        },
+        {
+          "cost": 5,
+          "duration": 30,
+          "scalar": 999
+        }
+      ]
+    },
+    "doors": {
+      "tiers": [
+        {
+          "cost": 2,
+          "duration": 20,
+          "scalar": 0.5
+        },
+        {
+          "cost": 4,
+          "duration": 30,
+          "scalar": 0.33
+        },
+        {
+          "cost": 6,
+          "duration": 30,
+          "scalar": 0.05
+        }
+      ]
+    },
+    "groupThink": {
+      "tiers": [
+        {
+          "cost": 2,
+          "duration": 0
+        },
+        {
+          "cost": 4,
+          "duration": 0
+        },
+        {
+          "cost": 6,
+          "duration": 0
+        }
+      ]
+    },
+    "doubleDecker": {
+      "tiers": [
+        {
+          "cost": 3,
+          "duration": 30
+        },
+        {
+          "cost": 5,
+          "duration": 60
+        },
+        {
+          "cost": 8,
+          "duration": 45
+        }
+      ]
+    },
+    "openPlan": {
+      "tiers": [
+        {
+          "cost": 4,
+          "duration": 20
+        },
+        {
+          "cost": 6,
+          "duration": 45
+        },
+        {
+          "cost": 10,
+          "duration": 30
+        }
+      ]
+    }
+  },
+  "system": {
+    "showcaseLimit": 6,
+    "lateralTolerance": 0.2,
+    "vipHeadstartSec": 20,
+    "roundTime": 180,
+    "startingLives": 20,
+    "liftCapacity": 10,
+    "liftSpeedSec": 0.5,
+    "doorSpeedSec": 0.5,
+    "boardSpeedSec": 0.5,
+    "roomServiceChance": 0.05,
+    "vipPenalty": 10,
+    "jam": {
+      "chancePerSec": 0.005,
+      "minSec": 10,
+      "maxSec": 25
+    },
+    "stink": {
+      "chancePerSec": 0.005,
+      "durationSec": 20,
+      "gymBroThreshold": 3
+    },
+    "checkoutChance": 0.5,
+    "sunset": {
+      "minSec": 30,
+      "maxSec": 90,
+      "durationSec": 30,
+      "guestRatio": 0.5
+    },
+    "patience": {
+      "happy": 20,
+      "annoyed": 40,
+      "critical": 60,
+      "rage": 80
+    }
+  },
+  "rounds": {
+    "1": {
+      "floors": 10,
+      "lifts": 1,
+      "spawnStart": 0.25,
+      "spawnEnd": 0.5,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "2": {
+      "floors": 10,
+      "lifts": 1,
+      "spawnStart": 0.5,
+      "spawnEnd": 0.65,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "3": {
+      "floors": 10,
+      "lifts": 2,
+      "spawnStart": 0.65,
+      "spawnEnd": 0.8,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "4": {
+      "floors": 10,
+      "lifts": 2,
+      "spawnStart": 0.8,
+      "spawnEnd": 0.95,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "5": {
+      "floors": 10,
+      "lifts": 3,
+      "spawnStart": 0.95,
+      "spawnEnd": 1.1,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "6": {
+      "floors": 15,
+      "lifts": 3,
+      "spawnStart": 1.1,
+      "spawnEnd": 1.25,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "7": {
+      "floors": 15,
+      "lifts": 4,
+      "spawnStart": 1.25,
+      "spawnEnd": 1.4,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "8": {
+      "floors": 15,
+      "lifts": 4,
+      "spawnStart": 1,
+      "spawnEnd": 1.25,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "9": {
+      "floors": 15,
+      "lifts": 5,
+      "spawnStart": 1.25,
+      "spawnEnd": 1.5,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "10": {
+      "floors": 15,
+      "lifts": 5,
+      "spawnStart": 1.5,
+      "spawnEnd": 1.75,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "11": {
+      "floors": 15,
+      "lifts": 5,
+      "spawnStart": 1.75,
+      "spawnEnd": 2,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0
+    },
+    "12": {
+      "floors": 15,
+      "lifts": 4,
+      "spawnStart": 2,
+      "spawnEnd": 2.5,
+      "objective": "ENDURANCE",
+      "gravityScalar": 0
+    },
+    "13": {
+      "floors": 15,
+      "lifts": 4,
+      "spawnStart": 1.5,
+      "spawnEnd": 1.75,
+      "objective": "PEDAL_SURVIVAL",
+      "gravityScalar": 2
+    }
+  }
+}

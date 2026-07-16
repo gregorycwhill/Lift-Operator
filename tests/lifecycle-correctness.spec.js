@@ -68,6 +68,7 @@ test('retry resets attempt-scoped achievement telemetry', async ({ page }) => {
         Registry.roundCheckpoint = { round: 3, seed: Registry.seed, points: Registry.points };
         Registry.roundTerminalHandled = false;
         handleOrdinaryDeath();
+        retryFailedRound();
         return {
             customScriptTicks: Registry.customScriptTicks,
             roundEvaluation: Registry.roundEvaluation
@@ -76,6 +77,80 @@ test('retry resets attempt-scoped achievement telemetry', async ({ page }) => {
 
     expect(result.customScriptTicks).toBe(0);
     expect(result.roundEvaluation).toBeNull();
+});
+
+test('queue renders oldest guest at the right-hand lift side', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.floors[0].waitingGuests = [
+            { dest: 1, status: GuestStatus.HAPPY, spawnTime: 1000 },
+            { dest: 2, status: GuestStatus.HAPPY, spawnTime: 2000 },
+            { dest: 3, status: GuestStatus.HAPPY, spawnTime: 3000 }
+        ];
+        Registry.lastLobbyRenderTime = 0;
+        draw();
+        const lobby = document.getElementById('lobby-0');
+        const guests = [...lobby.querySelectorAll('.guest')];
+        return {
+            flexDirection: getComputedStyle(lobby).flexDirection,
+            destinationsInDomOrder: guests.map(guest => guest.textContent),
+            firstLeft: guests[0].getBoundingClientRect().left,
+            lastLeft: guests[guests.length - 1].getBoundingClientRect().left
+        };
+    });
+
+    expect(result.flexDirection).toBe('row-reverse');
+    expect(result.firstLeft).toBeGreaterThan(result.lastLeft);
+});
+
+test('failed attempt review awards nothing and continues to same-round shop', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(2, { showBriefing: false });
+        Registry.points = 8;
+        captureRoundCheckpoint(2);
+        Registry.roundStats.servedThisRound = 4;
+        Registry.roundStats.totalWaitTimeServed = 40;
+        Registry.roundStats.defenestrationsThisRound = 20;
+        Registry.stats.lives = 0;
+        Registry.roundTerminalHandled = false;
+        handleOrdinaryDeath();
+        return {
+            reviewVisible: getComputedStyle(document.getElementById('roundReviewOverlay')).display,
+            briefingVisible: getComputedStyle(document.getElementById('roundModalOverlay')).display,
+            points: Registry.points,
+            evaluation: Registry.roundEvaluation,
+            pending: Registry.pendingFailedRetry
+        };
+    });
+
+    expect(result.reviewVisible).toBe('flex');
+    expect(result.briefingVisible).not.toBe('flex');
+    expect(result.points).toBe(8);
+    expect(result.evaluation).toBeNull();
+    expect(result.pending.round).toBe(2);
+
+    await page.click('#continueToBriefingBtn');
+    await expect(page.locator('#roundModalOverlay')).toBeVisible();
+    expect(await page.evaluate(() => Registry.stats.round)).toBe(2);
+});
+
+test('queue rendering is bounded under heavy late-round backlog', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.floors[0].waitingGuests = Array.from({ length: 250 }, (_, index) => ({
+            dest: (index % (Config.numFloors - 1)) + 1,
+            status: GuestStatus.HAPPY,
+            spawnTime: index
+        }));
+        Registry.lastLobbyRenderTime = 0;
+        draw();
+        const lobby = document.getElementById('lobby-0');
+        return {
+            renderedGuests: lobby.querySelectorAll('.guest').length,
+            overflowText: lobby.querySelector('.queue-overflow')?.textContent
+        };
+    });
+
+    expect(result.renderedGuests).toBe(18);
+    expect(result.overflowText).toBe('+232');
 });
 
 test('checkout commits a cart only once', async ({ page }) => {
@@ -182,6 +257,7 @@ test('factory produces equivalent structures for normal, retry, and simulation s
         Registry.roundCheckpoint = { round: 11, seed: 7777, points: Registry.points };
         Registry.roundTerminalHandled = false;
         handleOrdinaryDeath();
+        retryFailedRound();
         const retry = summarize();
 
         initializeRound(11, { now: 100000, showBriefing: false });
@@ -340,6 +416,75 @@ test('base lift and boarding speeds are both 0.5 seconds', async ({ page }) => {
         boarding: 0.5,
         canonicalLift: 0.5,
         canonicalBoarding: 0.5
+    });
+});
+
+test('canonical balance data drives runtime compatibility values', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        version: Config.balanceVersion,
+        canonicalVersion: window.GameBalanceData.balanceVersion,
+        roundTime: Config.roundTime,
+        canonicalRoundTime: Config.GAME_DATA.system.roundTime,
+        roundElevenLifts: Config.liftsR11,
+        canonicalRoundElevenLifts: Config.GAME_DATA.rounds[11].lifts,
+        roundThirteenSpawn: [Config.spawnR13Start, Config.spawnR13End],
+        canonicalRoundThirteenSpawn: [
+            Config.GAME_DATA.rounds[13].spawnStart,
+            Config.GAME_DATA.rounds[13].spawnEnd
+        ]
+    }));
+
+    expect(result.version).toBe(result.canonicalVersion);
+    expect(result.roundTime).toBe(result.canonicalRoundTime);
+    expect(result.roundElevenLifts).toBe(result.canonicalRoundElevenLifts);
+    expect(result.roundThirteenSpawn).toEqual(result.canonicalRoundThirteenSpawn);
+});
+
+test('production patience thresholds map wait time to guest status', async ({ page }) => {
+    const statuses = await page.evaluate(() => ({
+        happy: Game.Engine.getGuestStatusForWait(20000),
+        annoyed: Game.Engine.getGuestStatusForWait(20001),
+        critical: Game.Engine.getGuestStatusForWait(40001),
+        rage: Game.Engine.getGuestStatusForWait(60001)
+    }));
+
+    expect(statuses).toEqual({
+        happy: 'happy',
+        annoyed: 'annoyed',
+        critical: 'critical',
+        rage: 'rage'
+    });
+});
+
+test('production boarding duration accounts for guest weight and Wide Doors', async ({ page }) => {
+    const durations = await page.evaluate(() => {
+        Config.boardingSpeedMultiplier = 1;
+        const standard = Game.Engine.getBoardingDurationMs(1, 1);
+        const roomService = Game.Engine.getBoardingDurationMs(3, 1);
+        Config.boardingSpeedMultiplier = 0.5;
+        const wideDoors = Game.Engine.getBoardingDurationMs(1, 1);
+        Config.boardingSpeedMultiplier = 1;
+        return { standard, roomService, wideDoors };
+    });
+
+    expect(durations).toEqual({
+        standard: 500,
+        roomService: 1500,
+        wideDoors: 250
+    });
+});
+
+test('production gravity multiplier slows loaded upward travel with a safety floor', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        noGravity: Game.Engine.getGravitySpeedMultiplier(10, 10, 0),
+        halfLoad: Game.Engine.getGravitySpeedMultiplier(5, 10, 0.4),
+        clamped: Game.Engine.getGravitySpeedMultiplier(20, 10, 2)
+    }));
+
+    expect(result).toEqual({
+        noGravity: 1,
+        halfLoad: 0.8,
+        clamped: 0.1
     });
 });
 
