@@ -143,6 +143,12 @@ window.processNextManifestItem = function() {
         case 'blueprint':
             const bData = item.data || {};
             const bpName = bData.name || "Imported Automation";
+            const encodedBlueprint = typeof bData.xml === 'string' ? bData.xml : '';
+            if (!encodedBlueprint || encodedBlueprint.length > 75000) {
+                descText = "Blueprint rejected: missing data or payload exceeds the safe import limit.";
+                acceptCallback = () => {};
+                break;
+            }
             
             // Conflict Detection
             const VM = window.Game.Automation;
@@ -169,7 +175,8 @@ window.processNextManifestItem = function() {
                             description: bData.desc || "Shared script blueprint link.",
                             blocklyData: decompressedBlockly,
                             compiledJS: "",
-                            version: bData.v || "1.0"
+                            version: bData.v || "1.0",
+                            origin: "external"
                         };
 
                         if (VM) {

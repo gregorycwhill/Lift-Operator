@@ -22,6 +22,10 @@ window.encodePayload = function(payloadObj) {
 
 window.decodePayload = function(encodedStr) {
     if (!encodedStr) return null;
+    if (String(encodedStr).length > 100000) {
+        console.warn("Share payload exceeds the 100 KB encoded limit.");
+        return null;
+    }
     const secret = window.SHARE_SECRET;
 
     const doXor = (bin) => {
@@ -82,13 +86,20 @@ window.decodePayload = function(encodedStr) {
 
 window.handleSharedData = function(encodedStr) {
     const decoded = window.decodePayload(encodedStr);
-    if (!decoded) return;
+    if (!decoded || typeof decoded !== 'object') return;
     
     // Support singular structures or native array manifestations safely
     const incomingItems = Array.isArray(decoded.manifest) ? decoded.manifest : [decoded];
+    const allowedTypes = new Set(['seed', 'invite', 'challenge', 'system', 'debug_override', 'leaderboard', 'blueprint']);
+    const validItems = incomingItems.filter(item =>
+        item &&
+        typeof item === 'object' &&
+        typeof item.type === 'string' &&
+        allowedTypes.has(item.type)
+    );
     
     // Stage inside pending queue array for user reconciliation gateway loop
-    Registry.pendingManifest = [...Registry.pendingManifest, ...incomingItems];
+    Registry.pendingManifest = [...Registry.pendingManifest, ...validItems];
 };
 
 window.pauseGame = function() {
@@ -178,6 +189,104 @@ window.resetAttemptTelemetry = function() {
     Registry.customScriptTicks = 0;
 };
 
+window.getRoundDefinition = function(round) {
+    const supportedRound = Math.max(1, Math.min(13, parseInt(round) || 1));
+    const configured = Config.GAME_DATA.rounds[supportedRound];
+    return {
+        round: supportedRound,
+        ...configured
+    };
+};
+
+window.createLiftState = function(id) {
+    return {
+        id, targetFloor: 0, pos: 0, passengers: [],
+        lastActionTime: 0, automation: 'manual', sweepDirection: 1,
+        manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0,
+        tardisTimer: 0, turboTimer: 0, freshenerTimer: 0,
+        musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
+        sardineScored: false, isDoubleDecker: false,
+        state: 'IDLE', stateProgress: 0, effects: []
+    };
+};
+
+window.createRoundState = function(round, seed, options = {}) {
+    const definition = window.getRoundDefinition(round);
+    const seedTool = window.Game.Seed;
+    seedTool.set(seed);
+    window.Game.AutomationSeed.set((parseInt(seed) || 1) ^ 0x5f3759df);
+    const now = options.now === undefined
+        ? (window.Game.virtualTime || Date.now())
+        : options.now;
+
+    const state = {
+        definition,
+        seed,
+        timeLeft: Registry.autoPilotActive
+            ? (Config.autoPilotSettings.shortRoundDuration || 30)
+            : Config.roundTime,
+        lives: Config.startingLives,
+        currentSpawnChance: definition.spawnStart,
+        lifts: Array.from({ length: definition.lifts }, (_, id) => window.createLiftState(id)),
+        floors: Array.from({ length: definition.floors }, () => ({ waitingGuests: [] })),
+        vipSpawned: false,
+        vipTargetTime: 0,
+        sunsetHasHappened: false,
+        sunsetTargetTime: 0,
+        sunsetActive: false,
+        sunsetEndTime: 0,
+        gymFloor: -1
+    };
+
+    if (definition.round === 8) {
+        state.vipTargetTime = now + (window.getRandomInt(Config.vipSpawnMinSec, Config.vipSpawnMaxSec) * 1000);
+    }
+    if (definition.round === 9) {
+        state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
+    }
+    if (definition.round === 11) {
+        state.gymFloor = window.getRandomInt(1, definition.floors - 2);
+    }
+
+    return state;
+};
+
+window.applyRoundState = function(roundState, options = {}) {
+    Config.numFloors = roundState.definition.floors;
+    Registry.seed = roundState.seed;
+    Registry.stats.round = roundState.definition.round;
+    Registry.stats.timeLeft = roundState.timeLeft;
+    Registry.stats.lives = roundState.lives;
+    Registry.stats.currentSpawnChance = roundState.currentSpawnChance;
+    if (options.resetCampaign) Registry.stats.served = 0;
+    Registry.lifts = roundState.lifts;
+    Registry.floors = roundState.floors;
+    Registry.vipSpawned = roundState.vipSpawned;
+    Registry.vipTargetTime = roundState.vipTargetTime;
+    Registry.sunsetHasHappened = roundState.sunsetHasHappened;
+    Registry.sunsetTargetTime = roundState.sunsetTargetTime;
+    Registry.sunsetActive = roundState.sunsetActive;
+    Registry.sunsetEndTime = roundState.sunsetEndTime;
+    Registry.gymFloor = roundState.gymFloor;
+    window.resetAttemptTelemetry();
+};
+
+window.initializeRound = function(round, options = {}) {
+    window.clearAttemptInventory();
+    const state = window.createRoundState(round, Registry.seed, options);
+    window.applyRoundState(state, options);
+    if (!options.preserveCheckpoint) window.captureRoundCheckpoint(state.definition.round);
+
+    const ui = GameUI();
+    if (typeof ui.buildWorld === 'function') ui.buildWorld();
+    if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
+    if (typeof ui.draw === 'function') ui.draw();
+    if (options.showBriefing !== false && typeof ui.showRoundModal === 'function') {
+        ui.showRoundModal(state.definition.round);
+    }
+    return state;
+};
+
 window.clearAttemptInventory = function() {
     if (typeof PowerUps === 'undefined') return;
     PowerUps.cart = [];
@@ -185,6 +294,18 @@ window.clearAttemptInventory = function() {
     PowerUps.activeTargeting = null;
     Object.keys(PowerUps.timers).forEach(k => PowerUps.timers[k] = 0);
     Config.boardingSpeedMultiplier = 1.0;
+};
+
+window.disengageAutoPilot = function(manualIntervention = false) {
+    Registry.autoPilotActive = false;
+    Registry.manualIntervention = manualIntervention;
+    Config.autoPilot = false;
+    Config.roundTime = Config.GAME_DATA.system.roundTime;
+    if (Registry.stats.round !== 12) {
+        Registry.stats.timeLeft = Config.GAME_DATA.system.roundTime;
+    }
+    const heartbeat = document.getElementById('heartbeatMonitor');
+    if (heartbeat) heartbeat.classList.add('hidden');
 };
 
 window.handleOrdinaryDeath = function() {
@@ -231,15 +352,6 @@ window.advanceToRound = function(targetRound) {
 };
 
 window.resetGame = function() {
-    Registry.stats.round = 1;
-    Registry.stats.timeLeft = Registry.autoPilotActive ? (Config.autoPilotSettings.shortRoundDuration || 30) : Config.roundTime;
-    Registry.stats.lives = Config.startingLives;
-    Registry.stats.served = 0;
-    Registry.stats.currentSpawnChance = Config.spawnR1Start;
-    Registry.vipSpawned = false; Registry.vipTargetTime = 0;
-    Registry.sunsetHasHappened = false; Registry.sunsetTargetTime = 0; Registry.sunsetActive = false; Registry.sunsetEndTime = 0;
-    Registry.gymFloor = -1;
-    
     if (Config.debugMode) {
         Registry.points = 99999;
         Registry.highestUnlockedRound = 11;
@@ -247,107 +359,11 @@ window.resetGame = function() {
         Registry.points = 0;
     }
     
-    window.clearAttemptInventory();
-    
-    window.resetAttemptTelemetry();
-    
-    Config.numFloors = 10;
-    
-    const seedTool = (window.Game && window.Game.Seed) ? window.Game.Seed : { set: setSeed };
-    seedTool.set(Registry.seed);
-
-    Registry.lifts = [];
-    for (let i = 0; i < Config.liftsR1; i++) {
-        Registry.lifts.push({ 
-            id: i, targetFloor: 0, pos: 0, passengers: [], 
-            lastActionTime: 0, automation: 'manual', sweepDirection: 1, 
-            manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0, 
-            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
-            musakTimer: 0, sardineScored: false,
-            state: 'IDLE', stateProgress: 0,
-            effects: []
-        });
-    }
-    Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
-    window.captureRoundCheckpoint(1);
-    
-    const ui = GameUI();
-    if (typeof ui.buildWorld === 'function') ui.buildWorld();
-    if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
-    if (typeof ui.draw === 'function') ui.draw();
-    if (typeof ui.showRoundModal === 'function') ui.showRoundModal(1);
+    return window.initializeRound(1, { resetCampaign: true });
 };
 
 window.skipToRound = function(targetRound, options = {}) {
-    const seedTool = (window.Game && window.Game.Seed) ? window.Game.Seed : { set: setSeed };
-    seedTool.set(Registry.seed);
-    Registry.stats.round = targetRound;
-    Registry.stats.timeLeft = Registry.autoPilotActive ? (Config.autoPilotSettings.shortRoundDuration || 30) : Config.roundTime;
-    Registry.stats.lives = Config.startingLives;
-    Registry.vipSpawned = false; Registry.vipTargetTime = 0;
-    Registry.sunsetHasHappened = false; Registry.sunsetTargetTime = 0; Registry.sunsetActive = false; Registry.sunsetEndTime = 0;
-    Registry.gymFloor = -1;
-    
-    window.clearAttemptInventory();
-    
-    window.resetAttemptTelemetry();
-    
-    Config.numFloors = targetRound >= 6 ? 15 : 10;
-    
-    let numLifts = Config.liftsR1;
-    if (targetRound === 2) { numLifts = Config.liftsR2; Registry.stats.currentSpawnChance = Config.spawnR2Start; }
-    else if (targetRound === 3) { numLifts = Config.liftsR3; Registry.stats.currentSpawnChance = Config.spawnR3Start; }
-    else if (targetRound === 4) { numLifts = Config.liftsR4; Registry.stats.currentSpawnChance = Config.spawnR4Start; }
-    else if (targetRound === 5) { numLifts = Config.liftsR5; Registry.stats.currentSpawnChance = Config.spawnR5Start; }
-    else if (targetRound === 6) { numLifts = Config.liftsR6; Registry.stats.currentSpawnChance = Config.spawnR6Start; }
-    else if (targetRound === 7) { numLifts = Config.liftsR7; Registry.stats.currentSpawnChance = Config.spawnR7Start; }
-    else if (targetRound === 8) { 
-        numLifts = Config.liftsR8; Registry.stats.currentSpawnChance = Config.spawnR8Start; 
-        const spawnDelaySec = window.getRandomInt(Config.vipSpawnMinSec, Config.vipSpawnMaxSec);
-        Registry.vipTargetTime = (window.Game.virtualTime || Date.now()) + (spawnDelaySec * 1000);
-    }
-    else if (targetRound === 9) { 
-        numLifts = Config.liftsR9; Registry.stats.currentSpawnChance = Config.spawnR9Start; 
-        const sunsetDelaySec = window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec);
-        Registry.sunsetTargetTime = (window.Game.virtualTime || Date.now()) + (sunsetDelaySec * 1000);
-    }
-    else if (targetRound === 10) { numLifts = Config.liftsR10; Registry.stats.currentSpawnChance = Config.spawnR10Start; }
-    else if (targetRound === 11) { 
-        numLifts = Config.liftsR11; Registry.stats.currentSpawnChance = Config.spawnR11Start; 
-        Registry.gymFloor = window.getRandomInt(1, Config.numFloors - 2);
-    }
-    else if (targetRound === 12) { 
-        numLifts = Config.liftsR12 || 4; 
-        Registry.stats.currentSpawnChance = Config.spawnR12Start || 0.04;
-    }
-    else if (targetRound === 13) { 
-        numLifts = Config.liftsR13 || 4; 
-        Registry.stats.currentSpawnChance = Config.spawnR13Start || 0.05;
-    }
-    
-    Registry.lifts = [];
-    for (let i = 0; i < numLifts; i++) {
-        Registry.lifts.push({ 
-            id: i, targetFloor: 0, pos: 0, passengers: [], 
-            lastActionTime: 0, automation: 'manual', sweepDirection: 1, 
-            manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0, 
-            tardisTimer: 0, turboTimer: 0, freshenerTimer: 0, 
-            musakTimer: 0, sardineScored: false,
-            state: 'IDLE', stateProgress: 0,
-            effects: []
-        });
-    }
-    Registry.floors = Array.from({length: Config.numFloors}, () => ({ waitingGuests: [] }));
-
-    if (!options.preserveCheckpoint) {
-        window.captureRoundCheckpoint(targetRound);
-    }
-    
-    const ui = GameUI();
-    if (typeof ui.buildWorld === 'function') ui.buildWorld();
-    if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
-    if (typeof ui.draw === 'function') ui.draw();
-    if (typeof ui.showRoundModal === 'function') ui.showRoundModal(targetRound);
+    return window.initializeRound(targetRound, options);
 };
 
 window.initializeEngine = function() {
@@ -392,6 +408,7 @@ window.initializeEngine = function() {
     // Autopilot URI trigger removed for security hardening. 
     // Use Debug Modal to launch UNIT_01.
 
+    const isSimulationRealm = new URLSearchParams(window.location.search).get('simulation') === 'true';
     const savedTrophies = window.Game.Storage.get(window.Game.Keys.TROPHIES, '[]');
     Registry.trophyCase = JSON.parse(savedTrophies);
 
@@ -408,11 +425,8 @@ window.initializeEngine = function() {
                                 (sidebar && sidebar.contains(e.target));
 
         if (isGameInteraction) {
-            Registry.autoPilotActive = false;
-            Registry.manualIntervention = true;
+            window.disengageAutoPilot(true);
             console.warn("⚠️ AUTO-PILOT HALTED: Manual gameplay detected.");
-            const hb = document.getElementById('heartbeatMonitor');
-            if (hb) hb.classList.add('hidden');
         }
     };
     window.addEventListener('mousedown', haltAutoPilot);
@@ -438,6 +452,11 @@ window.initializeEngine = function() {
 
     // Trigger full reset to build world and update UI
     window.resetGame();
+    if (isSimulationRealm) {
+        Registry.gameActive = false;
+        const briefing = document.getElementById('roundModalOverlay');
+        if (briefing) briefing.style.display = 'none';
+    }
 };
 
 window.Game = window.Game || {};
@@ -472,12 +491,19 @@ window.Game.Engine.handleOrdinaryDeath = window.handleOrdinaryDeath;
 window.Game.Engine.advanceToRound = window.advanceToRound;
 window.Game.Engine.captureRoundCheckpoint = window.captureRoundCheckpoint;
 window.Game.Engine.resetAttemptTelemetry = window.resetAttemptTelemetry;
+window.Game.Engine.disengageAutoPilot = window.disengageAutoPilot;
+window.Game.Engine.getRoundDefinition = window.getRoundDefinition;
+window.Game.Engine.createLiftState = window.createLiftState;
+window.Game.Engine.createRoundState = window.createRoundState;
+window.Game.Engine.applyRoundState = window.applyRoundState;
+window.Game.Engine.initializeRound = window.initializeRound;
 
 window.Game.UI = window.Game.UI || {};
 window.Game.UI.initializeUI = window.initializeUI;
 
 // STARTUP CALLS
 window.addEventListener('DOMContentLoaded', () => {
+    const isSimulationRealm = new URLSearchParams(window.location.search).get('simulation') === 'true';
     if (typeof window.initializeEngine === 'function') window.initializeEngine();
     if (typeof window.initializeUI === 'function') window.initializeUI();
 
@@ -485,6 +511,8 @@ window.addEventListener('DOMContentLoaded', () => {
     if (Registry.pendingManifest.length > 0 && typeof window.processNextManifestItem === 'function') {
         window.processNextManifestItem();
     }
+
+    if (isSimulationRealm) return;
 
     // Start Loops
     if (typeof gameTick === 'function') {

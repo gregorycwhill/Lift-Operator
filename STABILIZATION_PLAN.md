@@ -136,6 +136,8 @@ disposeAttempt()
 
 Snapshot tests confirm normal, retry, warp, and simulation initialization produce equivalent round structures for the same inputs.
 
+**Current status:** Passed. The shared production factory is used by normal play, retry, warp, and an isolated simulation realm.
+
 ## 6. Phase 3 — Parameter centralization
 
 ### Target schema
@@ -165,6 +167,8 @@ Add a validator and generated config artifact as described in `BALANCE_WORKFLOW.
 ### Gate
 
 A static scan finds no round-specific balance constants outside generated configuration, except clearly documented engine safety limits.
+
+**Current status:** Round structure and spawn curves are canonical and versioned. Remaining system, hazard, power-up, unlock, payout, and achievement compatibility fields still require removal during the balance-data generation pass.
 
 ## 7. Phase 4 — Trustworthy testing
 
@@ -200,6 +204,8 @@ Add a reproducible command and continuous integration for:
 ### Gate
 
 “Pass” means production behaviour was invoked and independently asserted.
+
+**Current status:** Syntax, config validation, lifecycle Playwright tests, and the Monkey campaign are available through npm and GitHub Actions. Mechanic and golden-seed coverage remains incomplete.
 
 ## 8. Phase 5 — Debug access and automation containment
 
@@ -248,6 +254,8 @@ Longer term, consider interpreting a constrained routing language rather than ex
 
 An accidental infinite loop, oversized script, and malformed blueprint cannot freeze or corrupt the main game. Debug manifests either activate the intended capability or fail cleanly.
 
+**Current status:** Interim source and payload validation rejects loops, browser globals, oversized scripts, unsupported manifests, and oversized blueprints. Worker isolation remains required for robust containment.
+
 ## 9. Phase 6 — Production packaging
 
 ### Actions
@@ -262,6 +270,8 @@ An accidental infinite loop, oversized script, and malformed blueprint cannot fr
 ### Gate
 
 The production build runs without external runtime CDN dependency and exposes no test/debug surface without explicit opt-in.
+
+**Current status:** Passed for local dependencies and test-script loading. Debug remains discoverable by design through the obfuscated manifest capability.
 
 ## 10. Phase 7 — Balance implementation
 

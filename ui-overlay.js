@@ -254,11 +254,18 @@ window.initializeUI = function() {
     });
 
     // REGRESSION TEST SCORECARD BINDINGS
-    bind("runTestsBtn", () => {
+    bind("runTestsBtn", async () => {
         if (typeof engine.pause === "function") engine.pause();
         const scOverlay = document.getElementById("testScorecardOverlay");
         if (scOverlay) scOverlay.style.display = "flex";
-        runVisualRegressionSuite();
+        try {
+            if (typeof window.loadDebugTestSuite === "function") await window.loadDebugTestSuite();
+            if (typeof window.runVisualRegressionSuite === "function") {
+                window.runVisualRegressionSuite();
+            }
+        } catch (error) {
+            if (typeof ui.showToast === "function") ui.showToast(`Test suite failed to load: ${error.message}`);
+        }
     });
 
     bind("closeScorecardBtn", () => {

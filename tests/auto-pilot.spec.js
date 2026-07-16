@@ -83,6 +83,8 @@ test.describe('UNIT_01 Auto-Pilot Regression', () => {
         
         const autoActiveNow = await page.evaluate(() => window.Registry.autoPilotActive);
         expect(autoActiveNow).toBe(false);
+        expect(await page.evaluate(() => window.Config.roundTime)).toBe(180);
+        expect(await page.evaluate(() => window.Registry.stats.timeLeft)).toBe(180);
         console.log('Kill switch verified.');
     });
 

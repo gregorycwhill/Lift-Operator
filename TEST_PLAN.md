@@ -5,7 +5,7 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 ## Milestone A — Stabilization safety net
 
 - [x] Round evaluation occurs once.
-- [ ] Review → shop/briefing → next round works.
+- [x] Review → shop/briefing → next round works through the full Monkey campaign.
 - [x] Average wait uses spawn-to-destination delivery time for actually served guests.
 - [x] Purchase checkout commits once.
 - [x] Pause/resume preserves guest, lift, spawn, VIP, and sunset clocks.
@@ -13,24 +13,25 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Ordinary failure clears inventory and cart.
 - [x] Ordinary failure preserves round and seed and returns to the shop.
 - [x] Ordinary failure clears all runtime and achievement effects from the attempt.
-- [ ] Successful retry awards one payout.
+- [x] Successful retry/evaluation can commit only one payout.
 - [x] Round 12 death commits one Endurance payout and progresses to Round 13 through review.
 - [ ] Reset clears runtime state and retains intended career state.
 
 ## Milestone B — Round factory
 
-- [ ] Fresh state for every test.
-- [ ] Normal start, warp, retry, and simulation produce equivalent structures.
-- [ ] All supported rounds have explicit floor/lift/objective configuration.
-- [ ] No supported round relies on fallback values.
-- [ ] Environment and automation random streams are separate.
+- [x] Fresh attempt state is created through the shared round factory.
+- [x] Normal start, warp, retry, and simulation produce equivalent structures.
+- [x] All supported rounds have explicit floor/lift/objective configuration.
+- [x] No supported round relies on fallback lift values.
+- [x] Simulation runs in a disposable browser realm and cannot mutate the live Registry or PRNG state.
+- [x] Environment and automation random streams are separate.
 
 ## Milestone C — Balance data
 
-- [ ] Schema validates all 13 rounds.
+- [x] Schema validator covers all 13 rounds.
 - [ ] Power-up and achievement references resolve.
 - [ ] Tier prices and duration rules validate.
-- [ ] Generated config has a balance version.
+- [x] Canonical config has a balance version.
 - [ ] Legacy duplicate parameters are rejected or removed.
 - [ ] Production engine consumes generated values.
 
@@ -54,10 +55,10 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 
 ## Milestone E — Deterministic campaign tests
 
-- [ ] Golden seeds recorded.
-- [ ] Same seed/config/strategy produces the same result.
+- [x] Representative golden seeds recorded.
+- [x] Same seed/config/strategy produces the same result.
 - [ ] Intended specialist strategy beats a deliberately poor strategy.
-- [ ] No `NaN`, deadlock, or impossible state.
+- [x] Deterministic baseline returns finite state and the full Monkey campaign completes without deadlock.
 - [ ] Quota rounds terminate correctly.
 - [x] Endurance has no timer or quota and terminates only at zero lives.
 - [x] Endurance score records survival time and guests served.
@@ -66,21 +67,21 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 
 ## Milestone F — Automation containment and manifest resilience
 
-- [ ] Infinite loop terminates safely.
-- [ ] Accidental browser-global access cannot corrupt ordinary campaign state.
-- [ ] Invalid actions are rejected.
+- [x] Loop constructs are rejected before interim main-thread execution.
+- [x] Direct browser-global access constructs are rejected before execution.
+- [x] Invalid automation targets are rejected.
 - [ ] Imported blueprint identifies its origin and requires consent.
-- [ ] Malformed or oversized payload fails gracefully.
+- [x] Malformed or oversized payload fails gracefully.
 - [x] Obfuscated Monkey capability can be accepted and launched through the intended Debug workflow.
 - [ ] Main game remains responsive after script failure.
 
 ## Milestone G — Production packaging
 
-- [ ] Test scripts absent from normal production page.
+- [x] Test scripts absent from normal production page and loaded only after Debug opt-in.
 - [x] Local pinned dependencies used.
-- [ ] Dedicated debug/test entry point.
+- [x] Debug/test suite requires explicit manifest-gated Debug opt-in.
 - [ ] UTF-8 validation.
-- [ ] CI command documented and running.
+- [x] CI workflow and reproducible npm commands added.
 
 ## Reporting format
 

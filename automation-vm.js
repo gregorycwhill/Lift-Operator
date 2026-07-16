@@ -20,6 +20,22 @@ window.Game = window.Game || {};
     const AutomationVM = {
         scripts: [],
         cache: new Map(), // scriptId -> compiled Function
+        maxScriptLength: 12000,
+        forbiddenSource: /\b(?:while|for|do|window|document|globalThis|localStorage|sessionStorage|fetch|XMLHttpRequest|WebSocket|eval|Function|constructor|import)\b/,
+
+        validateSource: function(source) {
+            if (typeof source !== 'string' || source.length === 0) {
+                return { valid: false, reason: 'Script is empty.' };
+            }
+            if (source.length > this.maxScriptLength) {
+                return { valid: false, reason: `Script exceeds ${this.maxScriptLength} characters.` };
+            }
+            const forbidden = source.match(this.forbiddenSource);
+            if (forbidden) {
+                return { valid: false, reason: `Unsupported construct: ${forbidden[0]}.` };
+            }
+            return { valid: true };
+        },
         
         /**
          * Initialize the VM by loading scripts from storage.
@@ -72,6 +88,8 @@ window.Game = window.Game || {};
             let fn = this.cache.get(id);
             if (!fn) {
                 try {
+                    const validation = this.validateSource(script.compiledJS);
+                    if (!validation.valid) throw new Error(validation.reason);
                     // Create the execution sandbox
                     fn = new Function('lift', 'Building', 'Config', script.compiledJS);
                     this.cache.set(id, fn);
@@ -121,15 +139,14 @@ window.Game = window.Game || {};
                 isFloorClaimed: (floor) => R.isFloorClaimedByOther(floor, lift.id),
                 findSweepTarget: (dir, prio) => R.findSweepTarget(lift, dir, prio),
                 getBestFloor: (weighted) => R.getBestFloor(lift, weighted),
-                randomFloor: () => (typeof window.getRandomFloor === 'function' ? window.getRandomFloor() : Math.floor(Math.random() * window.Config.numFloors)),
+                randomFloor: () => (typeof window.getAutomationRandomFloor === 'function' ? window.getAutomationRandomFloor() : 0),
                 
                 // Control Methods
                 setTarget: (floor) => {
                     let f = parseInt(floor);
                     const isDouble = lift.isDoubleDecker || (lift.doubleDeckerTimer && lift.doubleDeckerTimer > 0);
                     const maxAllowed = isDouble ? (window.Config.numFloors - 2) : (window.Config.numFloors - 1);
-                    if (!isNaN(f)) {
-                        f = Math.max(0, Math.min(f, maxAllowed));
+                    if (!isNaN(f) && f >= 0 && f <= maxAllowed) {
                         lift.targetFloor = f;
                     }
                 },

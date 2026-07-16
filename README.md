@@ -84,6 +84,14 @@ Run the manifest-gated Monkey lifecycle suite with:
 npm.cmd run test:e2e
 ```
 
+Run the complete validation command with:
+
+```powershell
+npm.cmd test
+```
+
+This performs JavaScript syntax checking, balance/config validation, and the Playwright suites. The same command runs in GitHub Actions.
+
 The suite verifies the complete accelerated 13-round campaign, the human-intervention kill switch, ordinary-death rollback, single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. Its first complete local campaign run passed in approximately 6.6 minutes.
 
 ## Project security philosophy

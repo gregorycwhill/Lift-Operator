@@ -8,7 +8,7 @@ This document prevents target design changes from being confused with current be
 
 ## Product state
 
-Lift Operator is a static browser application deployed through GitHub Pages. It uses traditional script tags and global browser namespaces rather than ES modules or a build system.
+Lift Operator is a static browser application deployed through GitHub Pages. It uses traditional script tags and global browser namespaces rather than ES modules. Node tooling now provides validation, automated browser testing, and CI without changing the static deployment model.
 
 The normal interface exposes rounds 1–13. Some documents previously described rounds 14–15, but those rounds do not have complete playable configuration and are not part of the implemented campaign.
 
@@ -18,10 +18,10 @@ The normal interface exposes rounds 1–13. Some documents previously described 
 | --- | --- | --- |
 | Configuration | `config.js` | Legacy top-level parameters, partial `GAME_DATA`, seeded PRNG, storage keys |
 | Runtime state | `state.js` | `Registry`, lift and floor state, routing queries |
-| Lifecycle | `engine-core.js` | Startup, reset, round warp, pause/resume, manifests |
+| Lifecycle | `engine-core.js` | Startup, shared round factory, reset, retry, round warp, pause/resume, manifests |
 | Spawning | `engine-spawner.js` | Guests, VIP, Room Service, checkout traffic, rooftop event |
 | Physics | `engine-physics.js` | Game tick, patience, hazards, movement, state machine, boarding |
-| Simulation | `engine-simulator.js` | Accelerated runs using mutated global state |
+| Simulation | `engine-simulator.js` | Accelerated runs inside a disposable isolated browser realm |
 | Automation | `automation-vm.js`, `workshop.js` | Built-in scripts, Blockly, generated JavaScript execution |
 | Economy | `powerups.js`, `achievements.js` | Shop catalog, inventory, payout, career badges |
 | Interface | `ui-*.js`, `ui-overlay.js` | World rendering, modals, shop, workshop, debug, leaderboard |
@@ -59,9 +59,9 @@ Base configuration currently includes:
 | Starting lives | 20 |
 | Standard round duration | 180 seconds |
 | Base capacity | 10 weight units |
-| Travel time | 1.0 second per floor |
+| Travel time | 0.5 seconds per floor |
 | Door transition | 0.5 seconds |
-| Standard boarding time | 0.1 seconds per weight unit |
+| Standard boarding time | 0.5 seconds per weight unit |
 | Starting floor count | 10 |
 | Floor count from round 6 | 15 |
 
@@ -69,7 +69,7 @@ These values describe current configuration, not approved target balance.
 
 ## Implemented guest patience
 
-The implementation contains competing patience definitions:
+Some legacy top-level compatibility fields remain, while canonical round structure and the main patience rules now live in versioned `GAME_DATA`:
 
 - Legacy top-level fields: 20 / 40 / 60 seconds.
 - `GAME_DATA.system.patience`: 20 / 40 / 60 / 80 seconds.
@@ -175,10 +175,10 @@ Some counters are per round while others are effectively career totals. Their se
 | 9 | Happy Hour | 15 | 5 | Rooftop event and stink hazard |
 | 10 | Workshop Sandbox | 15 | 5 | Custom automation |
 | 11 | Heavy Lifting | 15 | 5 | Gym floor and Gym Bros |
-| 12 | Endurance | 15 | fallback 4 | Untimed; runs until all 20 lives are lost; death completes the round |
-| 13 | Pedal Power | 15 | fallback 4 | Gravity/load penalty |
+| 12 | Endurance | 15 | 4 | Untimed; runs until all 20 lives are lost; death completes the round |
+| 13 | Pedal Power | 15 | 4 | Gravity/load penalty |
 
-Rounds 12–13 use fallback lift counts because dedicated values are absent from the legacy top-level configuration.
+All 13 supported rounds now have explicit floor, lift, spawn, and objective definitions consumed by the shared round factory.
 
 ### Round 12 Endurance
 
@@ -216,7 +216,7 @@ The older in-browser scorecard remains useful diagnostically but is not yet auth
 
 Blueprint and debug manifests are XOR-obfuscated with a client-visible key. This is intentional lightweight access gating for a hobby learning project. It prevents accidental discovery without trying to resist a curious player inspecting the source. Reverse-engineering it is considered a positive educational outcome.
 
-Custom scripts execute using `new Function`. The concern is reliability rather than anti-cheat: an accidental infinite loop can freeze the browser tab, and malformed shared code can disrupt a session. Future containment should protect the player’s experience while keeping the code inspectable.
+Custom scripts still execute using `new Function`, but generated source is now size-limited and rejects loops and direct browser-global constructs before execution. This is interim accidental-misuse containment, not a security sandbox. A Web Worker or constrained interpreter remains the target.
 
 ## Known high-priority issues
 
@@ -224,8 +224,8 @@ Custom scripts execute using `new Function`. The concern is reliability rather t
 2. Average wait now records total journey time from spawn to successful destination delivery; broader telemetry validation remains pending.
 3. Early round payouts trivialize shop choices.
 4. Current configuration and documentation disagree.
-5. Round initialization is duplicated across reset, warp, and simulation.
-6. Production still loads test scripts; runtime CDN dependencies have been replaced with pinned local assets.
+5. Simulation is isolated from live state; deterministic strategy baselines and separate environment/agent random streams remain pending.
+6. Production excludes developer test scripts and uses pinned local runtime assets; Debug loads diagnostics only after explicit opt-in.
 7. UTF-8 text is inconsistently represented in source files.
 8. Workshop capacity sensors use passenger count rather than weight/effective capacity.
 

@@ -144,7 +144,13 @@ const AutomationWorkshop = {
 
         if (this.workspace) {
             currentObj.blocklyData = Blockly.serialization.workspaces.save(this.workspace);
-            currentObj.compiledJS = jsGen.workspaceToCode(this.workspace);
+            const generatedSource = jsGen.workspaceToCode(this.workspace);
+            const validation = VM.validateSource(generatedSource);
+            if (!validation.valid) {
+                if (typeof showToast === 'function') showToast(`Script not saved: ${validation.reason}`);
+                return;
+            }
+            currentObj.compiledJS = generatedSource;
             VM.invalidate(currentObj.id);
         }
 
@@ -407,4 +413,3 @@ Object.defineProperty(AutomationWorkshop, 'scripts', {
         return (window.Game && window.Game.Automation && window.Game.Automation.scripts) || [];
     }
 });
-

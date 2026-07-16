@@ -72,8 +72,8 @@ window.renderDebugMenu = function() {
             return; // Modal closed, stop execution
 
         } else {
-            const hb = document.getElementById('heartbeatMonitor');
-            if (hb) hb.classList.add('hidden');
+            if (typeof engine.disengageAutoPilot === 'function') engine.disengageAutoPilot(false);
+            else if (typeof window.disengageAutoPilot === 'function') window.disengageAutoPilot(false);
             if (typeof ui.showToast === 'function') ui.showToast("UNIT_01 Disengaged.");
         }
         window.renderDebugMenu();
@@ -149,6 +149,22 @@ window.renderDebugMenu = function() {
             container.appendChild(row);
         });
     }
+};
+
+window.loadDebugTestSuite = function() {
+    if (window.Game && window.Game.RegressionSuite) return Promise.resolve();
+    const sources = [
+        'tests/config_test.js',
+        'tests/simulation-tests.js',
+        'tests/regression-suite.js'
+    ];
+    return sources.reduce((promise, source) => promise.then(() => new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = source;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error(`Unable to load ${source}`));
+        document.head.appendChild(script);
+    })), Promise.resolve());
 };
 
 window.refreshDebugVisibility = function() {

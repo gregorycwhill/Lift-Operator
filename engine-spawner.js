@@ -33,20 +33,13 @@ window.forceFirstSpawn = function(now) {
 
 window.runSpawnerTick = function(now) {
     // 1. Calculate Spawn Rates by interpolation across rounds
-    const progress = (Config.roundTime - Registry.stats.timeLeft) / Config.roundTime;
-    if (Registry.stats.round === 1) Registry.stats.currentSpawnChance = Config.spawnR1Start + ((Config.spawnR1End - Config.spawnR1Start) * progress); 
-    else if (Registry.stats.round === 2) Registry.stats.currentSpawnChance = Config.spawnR2Start + ((Config.spawnR2End - Config.spawnR2Start) * progress); 
-    else if (Registry.stats.round === 3) Registry.stats.currentSpawnChance = Config.spawnR3Start + ((Config.spawnR3End - Config.spawnR3Start) * progress); 
-    else if (Registry.stats.round === 4) Registry.stats.currentSpawnChance = Config.spawnR4Start + ((Config.spawnR4End - Config.spawnR4Start) * progress); 
-    else if (Registry.stats.round === 5) Registry.stats.currentSpawnChance = Config.spawnR5Start + ((Config.spawnR5End - Config.spawnR5Start) * progress); 
-    else if (Registry.stats.round === 6) Registry.stats.currentSpawnChance = Config.spawnR6Start + ((Config.spawnR6End - Config.spawnR6Start) * progress); 
-    else if (Registry.stats.round === 7) Registry.stats.currentSpawnChance = Config.spawnR7Start + ((Config.spawnR7End - Config.spawnR7Start) * progress); 
-    else if (Registry.stats.round === 8) Registry.stats.currentSpawnChance = Config.spawnR8Start + ((Config.spawnR8End - Config.spawnR8Start) * progress); 
-    else if (Registry.stats.round === 9) Registry.stats.currentSpawnChance = Config.spawnR9Start + ((Config.spawnR9End - Config.spawnR9Start) * progress); 
-    else if (Registry.stats.round === 10) Registry.stats.currentSpawnChance = Config.spawnR10Start + ((Config.spawnR10End - Config.spawnR10Start) * progress);
-    else if (Registry.stats.round === 11) Registry.stats.currentSpawnChance = Config.spawnR11Start + ((Config.spawnR11End - Config.spawnR11Start) * progress); 
-    else if (Registry.stats.round === 12) Registry.stats.currentSpawnChance = Config.spawnR12Start + ((Config.spawnR12End - Config.spawnR12Start) * progress);
-    else if (Registry.stats.round >= 13) Registry.stats.currentSpawnChance = Config.spawnR13Start + ((Config.spawnR13End - Config.spawnR13Start) * progress);
+    const roundDefinition = window.getRoundDefinition(Registry.stats.round);
+    const progress = roundDefinition.objective === 'ENDURANCE'
+        ? Math.min(1, (Registry.enduranceSeconds || 0) / Config.roundTime)
+        : (Config.roundTime - Registry.stats.timeLeft) / Config.roundTime;
+    Registry.stats.currentSpawnChance =
+        roundDefinition.spawnStart +
+        ((roundDefinition.spawnEnd - roundDefinition.spawnStart) * Math.max(0, Math.min(1, progress)));
 
     // 2. VIP Event Orchestration
     if (Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {

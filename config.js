@@ -18,6 +18,19 @@ window.Game.Seed = {
     }
 };
 
+window.Game.AutomationSeed = {
+    current: 1,
+    set: function(seed) {
+        let value = parseInt(seed);
+        if (isNaN(value)) value = 9876;
+        this.current = (Math.abs(value) % 2147483647) || 1;
+    },
+    random: function() {
+        this.current = (this.current * 48271) % 2147483647;
+        return Math.max(0, Math.min(0.9999999, (this.current - 1) / 2147483646));
+    }
+};
+
 // Storage Helpers
 window.Game.Storage = {
     get: function(key, fallback) {
@@ -68,7 +81,13 @@ window.getRandomFloor = function() {
     return Math.max(0, Math.min(window.Config.numFloors - 1, f));
 };
 
+window.getAutomationRandomFloor = function() {
+    const value = Math.floor(window.Game.AutomationSeed.random() * window.Config.numFloors);
+    return Math.max(0, Math.min(window.Config.numFloors - 1, value));
+};
+
 window.Config = {
+    balanceVersion: '0.1.0-stabilized',
     debugMode: false, 
     autoPilot: false,
     autoPilotSettings: {
@@ -83,7 +102,7 @@ window.Config = {
     jamChancePerSec: 0.005, jamMinSec: 10, jamMaxSec: 25,
     checkoutChance: 0.50, 
     
-    liftsR1: 1, liftsR2: 1, liftsR3: 2, liftsR4: 2, liftsR5: 3, liftsR6: 3, liftsR7: 4, liftsR8: 4, liftsR9: 5, liftsR10: 5, liftsR11: 5,
+    liftsR1: 1, liftsR2: 1, liftsR3: 2, liftsR4: 2, liftsR5: 3, liftsR6: 3, liftsR7: 4, liftsR8: 4, liftsR9: 5, liftsR10: 5, liftsR11: 5, liftsR12: 4, liftsR13: 4,
     
     spawnR1Start: 0.25, spawnR1End: 0.50, spawnR2Start: 0.50, spawnR2End: 0.65,
     spawnR3Start: 0.65, spawnR3End: 0.80, spawnR4Start: 0.80, spawnR4End: 0.95,
@@ -96,9 +115,9 @@ window.Config = {
     
     happySec: 20, annoyedSec: 40, criticalSec: 60,
     liftCapacity: 10, 
-    liftSpeedSec: 1.0, // 50% faster than base 1.5
+    liftSpeedSec: 0.5,
     doorSpeedSec: 0.5,
-    boardSpeedSec: 0.1,
+    boardSpeedSec: 0.5,
     boardingSpeedMultiplier: 1.0,
     
     vipSpawnMinSec: 30, vipSpawnMaxSec: 120, vipPenalty: 10,
@@ -246,6 +265,18 @@ window.Config = {
             showcaseLimit: 6,
             lateralTolerance: 0.2, // 20% floor height
             vipHeadstartSec: 20,
+            roundTime: 180,
+            startingLives: 20,
+            liftCapacity: 10,
+            liftSpeedSec: 0.5,
+            doorSpeedSec: 0.5,
+            boardSpeedSec: 0.5,
+            roomServiceChance: 0.05,
+            vipPenalty: 10,
+            jam: { chancePerSec: 0.005, minSec: 10, maxSec: 25 },
+            stink: { chancePerSec: 0.005, durationSec: 20, gymBroThreshold: 3 },
+            checkoutChance: 0.50,
+            sunset: { minSec: 30, maxSec: 90, durationSec: 30, guestRatio: 0.50 },
             patience: {
                 happy: 20,
                 annoyed: 40,
@@ -254,19 +285,19 @@ window.Config = {
             }
         },
         rounds: {
-            1: { objective: 'SURVIVAL', gravityScalar: 0 },
-            2: { objective: 'SURVIVAL', gravityScalar: 0 },
-            3: { objective: 'SURVIVAL', gravityScalar: 0 },
-            4: { objective: 'SURVIVAL', gravityScalar: 0 },
-            5: { objective: 'SURVIVAL', gravityScalar: 0 },
-            6: { objective: 'SURVIVAL', gravityScalar: 0 },
-            7: { objective: 'SURVIVAL', gravityScalar: 0 },
-            8: { objective: 'SURVIVAL', gravityScalar: 0 },
-            9: { objective: 'SURVIVAL', gravityScalar: 0 },
-            10: { objective: 'SURVIVAL', gravityScalar: 0 },
-            11: { objective: 'SURVIVAL', gravityScalar: 0 },
-            12: { objective: 'ENDURANCE', gravityScalar: 0 },
-            13: { objective: 'PEDAL_SURVIVAL', gravityScalar: 2.0 }
+            1: { floors: 10, lifts: 1, spawnStart: 0.25, spawnEnd: 0.50, objective: 'SURVIVAL', gravityScalar: 0 },
+            2: { floors: 10, lifts: 1, spawnStart: 0.50, spawnEnd: 0.65, objective: 'SURVIVAL', gravityScalar: 0 },
+            3: { floors: 10, lifts: 2, spawnStart: 0.65, spawnEnd: 0.80, objective: 'SURVIVAL', gravityScalar: 0 },
+            4: { floors: 10, lifts: 2, spawnStart: 0.80, spawnEnd: 0.95, objective: 'SURVIVAL', gravityScalar: 0 },
+            5: { floors: 10, lifts: 3, spawnStart: 0.95, spawnEnd: 1.10, objective: 'SURVIVAL', gravityScalar: 0 },
+            6: { floors: 15, lifts: 3, spawnStart: 1.10, spawnEnd: 1.25, objective: 'SURVIVAL', gravityScalar: 0 },
+            7: { floors: 15, lifts: 4, spawnStart: 1.25, spawnEnd: 1.40, objective: 'SURVIVAL', gravityScalar: 0 },
+            8: { floors: 15, lifts: 4, spawnStart: 1.00, spawnEnd: 1.25, objective: 'SURVIVAL', gravityScalar: 0 },
+            9: { floors: 15, lifts: 5, spawnStart: 1.25, spawnEnd: 1.50, objective: 'SURVIVAL', gravityScalar: 0 },
+            10: { floors: 15, lifts: 5, spawnStart: 1.50, spawnEnd: 1.75, objective: 'SURVIVAL', gravityScalar: 0 },
+            11: { floors: 15, lifts: 5, spawnStart: 1.75, spawnEnd: 2.00, objective: 'SURVIVAL', gravityScalar: 0 },
+            12: { floors: 15, lifts: 4, spawnStart: 2.00, spawnEnd: 2.50, objective: 'ENDURANCE', gravityScalar: 0 },
+            13: { floors: 15, lifts: 4, spawnStart: 1.50, spawnEnd: 1.75, objective: 'PEDAL_SURVIVAL', gravityScalar: 2.0 }
         }
     }
 };
