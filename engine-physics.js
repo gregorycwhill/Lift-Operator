@@ -569,6 +569,12 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
     const VM = window.Game.Automation;
     if (!VM || !lift.automation || lift.automation === 'manual') return;
 
+    // Idle lifts can reach this path every animation frame. Bound policy scans so
+    // large queues do not multiply into hundreds of full-building scans per second.
+    const decisionTime = Number.isFinite(now) ? now : (window.Game.virtualTime || performance.now());
+    if (decisionTime - (lift.lastAutomationTime || 0) < 100) return;
+    lift.lastAutomationTime = decisionTime;
+
     // Dispatch to VM for all modes
     if (lift.automation === 'sweep') {
         VM.execute(lift, 'sys_sweep');

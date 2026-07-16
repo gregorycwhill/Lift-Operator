@@ -208,7 +208,7 @@ window.createLiftState = function(id) {
         tardisTimer: 0, turboTimer: 0, freshenerTimer: 0,
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
         sardineScored: false, isDoubleDecker: false,
-        state: 'IDLE', stateProgress: 0, effects: []
+        state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0
     };
 };
 

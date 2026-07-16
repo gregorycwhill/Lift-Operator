@@ -299,14 +299,6 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     const isTurbo = lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0);
     const animSpeed = isTurbo ? '0.008s' : '0.016s';
 
-    // Update guest state hash if classes changed
-    const guestStateKey = lift.passengers.map(p => `${p.dest}-${p.status}`).join('|');
-    const stateHash = `${guestStateKey}-${isDouble}-${isStinky}-${lift.isJammed}`;
-    if (car.dataset.guestState !== stateHash) {
-        // This will trigger a re-draw in draw() next frame
-        car.dataset.guestState = 'dirty'; 
-    }
-    
     car.style.setProperty('--lift-width', `${110}px`);
     car.style.setProperty('--lift-height', `${liftHeight}px`);
     car.style.setProperty('--lift-pos', `${lift.pos}px`);

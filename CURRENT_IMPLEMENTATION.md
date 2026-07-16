@@ -246,9 +246,13 @@ Round 12 is excluded because its final death is the intended completion event.
 
 ## Queue rendering and performance
 
-Waiting guests remain FIFO in runtime state. Visually, the oldest guest is placed nearest the lift doors on the right and new arrivals join on the left.
+Waiting guests remain FIFO in runtime state. Visually, the queue is anchored against the right-hand lift doors: the oldest guest is nearest the lift and new arrivals extend the queue to the left.
 
 Lobby rendering is throttled to 10 updates per second and bounded to 18 visible guests per floor. Larger queues display an overflow count while retaining every guest in simulation state. This prevents late-round backlogs from creating hundreds of DOM nodes or being rehashed every animation frame.
+
+Lift passenger rendering uses a stable state hash. Visual-state updates no longer overwrite that hash and therefore no longer destroy and recreate unchanged passenger DOM every animation frame. Idle automation policy evaluation is limited to ten decisions per second per lift, bounding full-building queue scans while retaining responsive routing.
+
+The Round Review places its three column labels—Served, Round Performance, and Total Bank—directly below the outcome heading and above their statistics.
 
 ## Balance data pipeline
 

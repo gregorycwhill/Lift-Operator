@@ -92,14 +92,18 @@ test('queue renders oldest guest at the right-hand lift side', async ({ page }) 
         const guests = [...lobby.querySelectorAll('.guest')];
         return {
             flexDirection: getComputedStyle(lobby).flexDirection,
+            justifyContent: getComputedStyle(lobby).justifyContent,
             destinationsInDomOrder: guests.map(guest => guest.textContent),
             firstLeft: guests[0].getBoundingClientRect().left,
-            lastLeft: guests[guests.length - 1].getBoundingClientRect().left
+            lastLeft: guests[guests.length - 1].getBoundingClientRect().left,
+            rightGap: lobby.getBoundingClientRect().right - guests[0].getBoundingClientRect().right
         };
     });
 
     expect(result.flexDirection).toBe('row-reverse');
+    expect(result.justifyContent).toBe('flex-start');
     expect(result.firstLeft).toBeGreaterThan(result.lastLeft);
+    expect(result.rightGap).toBeLessThan(12);
 });
 
 test('failed attempt review awards nothing and continues to same-round shop', async ({ page }) => {
@@ -151,6 +155,66 @@ test('queue rendering is bounded under heavy late-round backlog', async ({ page 
 
     expect(result.renderedGuests).toBe(18);
     expect(result.overflowText).toBe('+232');
+});
+
+test('stable lift contents are not rebuilt on every animation frame', async ({ page }) => {
+    const mutations = await page.evaluate(() => {
+        const lift = Registry.lifts[0];
+        lift.passengers = [{ dest: 3, status: GuestStatus.HAPPY, spawnTime: 0 }];
+        draw();
+        const car = document.getElementById('lift-el-0');
+        let childMutations = 0;
+        const observer = new MutationObserver(records => {
+            childMutations += records.filter(record => record.type === 'childList').length;
+        });
+        observer.observe(car, { childList: true, subtree: true });
+
+        for (let frame = 0; frame < 120; frame++) {
+            updateLiftVisualState(lift, 0);
+            draw();
+        }
+        observer.disconnect();
+        return childMutations;
+    });
+
+    expect(mutations).toBe(0);
+});
+
+test('idle automation decisions are bounded under repeated animation calls', async ({ page }) => {
+    const executions = await page.evaluate(() => {
+        const lift = Registry.lifts[0];
+        lift.automation = 'sweep';
+        lift.lastAutomationTime = 0;
+        const originalExecute = Game.Automation.execute;
+        let count = 0;
+        Game.Automation.execute = () => { count++; };
+        try {
+            for (let now = 1000; now < 1100; now += 5) {
+                runAutomationLogic(lift, 0, 0, false, false, now);
+            }
+            runAutomationLogic(lift, 0, 0, false, false, 1100);
+            return count;
+        } finally {
+            Game.Automation.execute = originalExecute;
+        }
+    });
+
+    expect(executions).toBe(2);
+});
+
+test('round review labels appear above their statistics', async ({ page }) => {
+    const positions = await page.evaluate(() => {
+        const overlay = document.getElementById('roundReviewOverlay');
+        overlay.style.display = 'flex';
+        return [...overlay.querySelectorAll('.review-stat')].map(column => ({
+            label: column.querySelector('.review-stat-label').textContent.trim(),
+            labelTop: column.querySelector('.review-stat-label').getBoundingClientRect().top,
+            valueTop: column.querySelector('.review-stat-value-container').getBoundingClientRect().top
+        }));
+    });
+
+    expect(positions.map(position => position.label)).toEqual(['Served', 'Round Performance', 'Total Bank']);
+    positions.forEach(position => expect(position.labelTop).toBeLessThan(position.valueTop));
 });
 
 test('checkout commits a cart only once', async ({ page }) => {

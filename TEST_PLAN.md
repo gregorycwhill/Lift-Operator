@@ -65,6 +65,10 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Onboarding Sweep strategy beats a deliberately idle policy on its named golden seed.
 - [x] Deterministic baseline returns finite state and the full Monkey campaign completes without deadlock.
 - [x] Queue rendering remains bounded under a 250-guest backlog.
+- [x] Queue is physically anchored at the right-hand lift edge with the oldest guest nearest the door.
+- [x] Stable lift passenger DOM is not rebuilt across repeated animation frames.
+- [x] Idle automation evaluation is bounded under repeated animation calls.
+- [x] Round Review column labels precede their statistics.
 - [ ] Quota rounds terminate correctly.
 - [x] Endurance has no timer or quota and terminates only at zero lives.
 - [x] Endurance score records survival time and guests served.
