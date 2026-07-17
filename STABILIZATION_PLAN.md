@@ -281,18 +281,19 @@ The production build runs without external runtime CDN dependency and exposes no
 
 Only after earlier gates:
 
-1. Implement the retry transaction model.
-2. Implement target unlock visibility.
-3. Adopt the candidate payout model.
-4. Adopt candidate prices.
-5. Tune rounds 1–3 first.
-6. Freeze them before tuning 4–6.
-7. Continue by campaign act.
-8. Record every accepted balance version.
+Follow `E2E_BALANCE_PLAN.md` as the authoritative delivery sequence:
 
-Balance one intended bottleneck at a time.
+1. Classify the complete campaign using Little's Law heuristics and the minimal strategy matrix.
+2. Apply coarse 10–20% pressure changes by campaign band.
+3. Accept the first candidate satisfying unattended-failure and competent-survival gates.
+4. Verify solution affordability across the campaign economy.
+5. Run a short whole-campaign human playtest.
+6. Optimise only rounds identified as material human-play outliers.
+7. Record every accepted balance version.
 
-**Current status:** Ready to begin with Rounds 1–3 once initial golden-seed and economy baselines are recorded. No broad balance redesign has been silently applied during stabilization.
+Round 12 uses a separate survival gate: competent play should last 4–8 minutes, while unattended built-in automation should last materially less than 4 minutes.
+
+**Current status:** Campaign-wide balance infrastructure is ready. Round 3 has provisional simulation separation; Rounds 2, 4, and 5 demonstrate why a coarse end-to-end pass and stronger idealised comparators are preferable to per-round fine search.
 
 ## 11. Suggested issue groups
 

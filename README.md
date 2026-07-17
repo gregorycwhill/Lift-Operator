@@ -30,6 +30,7 @@ The documents have distinct responsibilities:
 | [Game Play Map.md](Game%20Play%20Map.md) | Target round sequence, learning arc, problems, solution spaces, and tuning parameters | Target progression |
 | [Game Economy.md](Game%20Economy.md) | Target earning, spending, affordability, retry, and progression model | Target economy |
 | [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) | Docs-to-config-to-playtest iteration and telemetry | Balance process |
+| [E2E_BALANCE_PLAN.md](E2E_BALANCE_PLAN.md) | Coarse campaign-wide satisficing pass, gates, and stopping rules | Active balance delivery plan |
 | [Automation_Workshop_Spec.md](Automation_Workshop_Spec.md) | Current and target automation experience and execution-containment model | Automation specification |
 | [STABILIZATION_PLAN.md](STABILIZATION_PLAN.md) | Prioritized work needed before systematic balance iteration | Delivery plan |
 | [TESTING_STRATEGY.md](TESTING_STRATEGY.md) | Required evidence and testing layers | Quality strategy |
@@ -54,11 +55,11 @@ The game is an entirely playable advanced prototype completing stabilization inf
 
 The immediate priorities are:
 
-1. Complete golden-seed and campaign-economy baselines.
-2. Expand canonical data to unlock and payout rules.
-3. Tune Rounds 1–3 around problem, solution, and mastery.
-4. Record human playtest evidence against deterministic seeds.
-5. Continue balance tuning act by act.
+1. Classify all rounds with the campaign-wide heuristic and strategy matrix.
+2. Apply coarse pressure changes until unattended automation fails and a strong comparator survives.
+3. Place Round 12 competent survival inside its 4–8-minute window.
+4. Verify campaign-wide solution affordability.
+5. Run a short human campaign pass and refine only material outliers.
 
 New power-ups, hazards, themes, profiles, and online services are outside the current focus.
 

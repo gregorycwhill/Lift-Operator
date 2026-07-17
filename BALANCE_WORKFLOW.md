@@ -4,6 +4,8 @@
 
 Create a short, repeatable loop in which design changes can be proposed in documentation, validated, converted into configuration, exercised by the unchanged engine, and evaluated through simulation and human play.
 
+`E2E_BALANCE_PLAN.md` defines the active campaign-wide delivery sequence. This workflow is the technical process used to execute it. The first pass satisfices across all rounds with coarse changes; fine-grained optimisation is reserved for human-identified outliers.
+
 ```text
 Design hypothesis
       ↓

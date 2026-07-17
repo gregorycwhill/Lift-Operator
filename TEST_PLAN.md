@@ -56,6 +56,8 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 
 ## Milestone E — Deterministic campaign tests
 
+Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds first, accept broad behavioural separation, and reserve fine tuning for human-identified outliers.
+
 - [x] Representative golden seeds recorded.
 - [x] Same seed/config/strategy produces the same result.
 - [x] Canonical balance data matches the generated runtime artifact.
