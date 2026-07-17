@@ -74,6 +74,7 @@ Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds f
 - [x] Built-in-only balance comparators record zero manual decisions and cannot fall through into rescue-controller actions.
 - [x] Campaign envelope classifies all rounds and marks an underperforming candidate comparator as Unproven rather than Overloaded.
 - [x] Round 3 `1.00→1.20` candidate makes all-Sweep fail 3/3 fixed seeds while active Wide Doors comparators survive 3/3.
+- [x] Coarse campaign balance makes Rounds 4–6 all-Sweep fail 3/3 while supported portfolio profiles survive 3/3.
 - [ ] Human playtest confirms Round 3 remains readable and does not require an excessive Wide Doors purchase count.
 - [x] Baseline report freshness is tied to canonical balance and matrix hashes.
 - [x] Baseline policy records zero manual decisions.

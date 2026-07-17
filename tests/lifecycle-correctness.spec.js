@@ -751,7 +751,7 @@ test('design telemetry records Little’s Law inputs and weighted VIP exposure',
     expect(result.sample.littlesLawEstimate).toBe(6);
     expect(result.sample.imminentLives).toBe(10);
     expect(result.sample.manualDecisionsPerMinute).toBe(3);
-    expect(result.exported.balanceVersion).toBe('0.1.1-round-3-pressure');
+    expect(result.exported.balanceVersion).toBe('0.2.0-e2e-coarse');
     expect(result.exported.samples).toHaveLength(1);
 });
 

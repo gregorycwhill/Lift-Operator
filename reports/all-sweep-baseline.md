@@ -1,6 +1,6 @@
 # All-Sweep Balance Baseline
 
-Balance version: `0.1.1-round-3-pressure`  
+Balance version: `0.2.0-e2e-coarse`  
 Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 | Round | Seed | Outcome | Elapsed | Lives | Served | First peril | Min SI | Peak queue | P90 journey | Classification |
@@ -11,15 +11,15 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 | 3 | 1234 | died | 179s | 0 | 124 | 59s | 0.00 | 41 | 47.9s | MEETS_ALL_SWEEP_FLOOR |
 | 3 | 3141 | died | 145s | 0 | 80 | 73s | 0.00 | 43 | 50.0s | MEETS_ALL_SWEEP_FLOOR |
 | 3 | 6060 | died | 136s | 0 | 77 | 69s | 0.00 | 43 | 47.0s | MEETS_ALL_SWEEP_FLOOR |
-| 4 | 1234 | survived | 180s | 18 | 120 | - | - | 26 | 42.0s | VIOLATION_SURVIVED |
-| 4 | 3141 | survived | 180s | 11 | 109 | 110s | 0.58 | 32 | 51.1s | VIOLATION_SURVIVED |
-| 4 | 6060 | survived | 180s | 4 | 109 | 63s | 0.44 | 35 | 53.9s | VIOLATION_SURVIVED |
-| 5 | 1234 | survived | 180s | 20 | 147 | - | - | 28 | 43.9s | VIOLATION_SURVIVED |
-| 5 | 3141 | survived | 180s | 18 | 144 | 114s | 0.92 | 29 | 41.5s | VIOLATION_SURVIVED |
-| 5 | 6060 | survived | 180s | 17 | 149 | 116s | 0.85 | 25 | 40.6s | VIOLATION_SURVIVED |
-| 6 | 1234 | died | 126s | 0 | 63 | 62s | 0.00 | 46 | 53.4s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 3141 | died | 133s | 0 | 78 | 56s | 0.00 | 46 | 51.5s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 6060 | died | 100s | 0 | 29 | 57s | 0.00 | 60 | 55.1s | MEETS_ALL_SWEEP_FLOOR |
+| 4 | 1234 | died | 164s | 0 | 106 | 73s | 0.00 | 47 | 54.0s | MEETS_ALL_SWEEP_FLOOR |
+| 4 | 3141 | died | 167s | 0 | 111 | 88s | 0.00 | 43 | 49.7s | MEETS_ALL_SWEEP_FLOOR |
+| 4 | 6060 | died | 146s | 0 | 88 | 77s | 0.00 | 46 | 53.5s | MEETS_ALL_SWEEP_FLOOR |
+| 5 | 1234 | died | 140s | 0 | 130 | 54s | 0.00 | 57 | 49.5s | MEETS_ALL_SWEEP_FLOOR |
+| 5 | 3141 | died | 152s | 0 | 140 | 66s | 0.00 | 67 | 48.8s | MEETS_ALL_SWEEP_FLOOR |
+| 5 | 6060 | died | 156s | 0 | 151 | 71s | 0.00 | 52 | 48.0s | MEETS_ALL_SWEEP_FLOOR |
+| 6 | 1234 | died | 160s | 0 | 71 | 69s | 0.00 | 39 | 49.6s | MEETS_ALL_SWEEP_FLOOR |
+| 6 | 3141 | died | 169s | 0 | 83 | 57s | 0.00 | 38 | 55.8s | MEETS_ALL_SWEEP_FLOOR |
+| 6 | 6060 | died | 127s | 0 | 38 | 72s | 0.00 | 38 | 49.5s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 1234 | died | 138s | 0 | 98 | 73s | 0.00 | 53 | 43.2s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 3141 | died | 169s | 0 | 136 | 51s | 0.00 | 57 | 49.4s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 6060 | died | 132s | 0 | 86 | 61s | 0.00 | 58 | 50.6s | MEETS_ALL_SWEEP_FLOOR |
@@ -44,8 +44,8 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 ## Current findings
 
-- Hard invariant violations: 9
-- Runs meeting the all-Sweep failure floor: 24
+- Hard invariant violations: 3
+- Runs meeting the all-Sweep failure floor: 30
 - Round 12 runs awaiting a competent-strategy comparator: 3
 
 A violation is a measured balance finding, not a test-runner failure. Parameter tuning should reduce violations without silently regenerating acceptance criteria.

@@ -111,9 +111,9 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | 1 | First Shift | Survive 90s | 8 | 1 | 0.20→0.35 | Manual routing | None |
 | 2 | Let It Sweep | Survive 120s | 8 | 1 | 0.35→0.55 | Sweep | None |
 | 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
-| 4 | Triage Protocol | Survive 150s | 10 | 2 | 0.65→0.90 | Priority Sweep | Wide Doors T2 |
-| 5 | Democracy | Survive 150s | 10 | 3 | 0.80→1.05 | Voting and Weighted Voting | None |
-| 6 | Maintenance Crisis | Survive 150s | 12 | 3 | 0.85→1.10 | Lift jams, redundancy | Wrench |
+| 4 | Triage Protocol | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
+| 5 | Democracy | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
+| 6 | Maintenance Crisis | Survive 180s | 12 | 3 | 0.80→0.92 | Lift jams, redundancy | Wrench |
 | 7 | Checkout Rush | Survive 150s | 12 | 4 | 1.00→1.30 | Ground-floor funnel | Turbo |
 | 8 | VIP Security | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
 | 9 | Happy Hour | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |

@@ -290,4 +290,6 @@ The campaign envelope runner (`npm.cmd run balance:envelope`) now compares the c
 
 The strong side is now a band-level portfolio combining direct dispatch with featured built-in policies and declared resource loadouts. The current envelope classifies Round 3 as Contested; Rounds 2, 4, and 5 as Underloaded; Rounds 6, 7, and 13 as provisionally Overloaded; and Rounds 8–12 as Unproven. No production pressure changed in this measurement phase.
 
+Balance `0.2.0-e2e-coarse` applies the first satisficing batch. Rounds 4–6 are now Contested alongside Round 3: all-Sweep fails every accepted seed and the supported portfolio survives every accepted seed. The all-Sweep matrix has 3 remaining violations, all in Round 2. Rounds 7 and 13 retain their prior production pressure because exploratory reductions did not improve credible separation. Rounds 8–13 remain provisional pending stronger event/strategic comparators, with Round 12 still requiring a 4–8-minute competent profile.
+
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

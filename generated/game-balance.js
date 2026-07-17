@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.1.1-round-3-pressure
+// Balance version: 0.2.0-e2e-coarse
 window.GameBalanceData = {
-  "balanceVersion": "0.1.1-round-3-pressure",
+  "balanceVersion": "0.2.0-e2e-coarse",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -428,24 +428,24 @@ window.GameBalanceData = {
     "4": {
       "floors": 10,
       "lifts": 2,
-      "spawnStart": 0.8,
-      "spawnEnd": 0.95,
+      "spawnStart": 0.99,
+      "spawnEnd": 1.17,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
     "5": {
       "floors": 10,
       "lifts": 3,
-      "spawnStart": 0.95,
-      "spawnEnd": 1.1,
+      "spawnStart": 1.47,
+      "spawnEnd": 1.68,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
     "6": {
       "floors": 15,
       "lifts": 3,
-      "spawnStart": 1.1,
-      "spawnEnd": 1.25,
+      "spawnStart": 0.8,
+      "spawnEnd": 0.92,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
