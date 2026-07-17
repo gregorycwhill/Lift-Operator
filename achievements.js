@@ -80,7 +80,7 @@ const Achievements = {
                 if (isUpgraded) {
                     careerLog[feat.id] = earnedTier;
                     featBonusPoints += pointVal;
-                    logMessages.push(`<span title="${feat.name} - ${feat[earnedTier].label}">${unicodeIcon}</span> UNLOCK: ${feat[earnedTier].label} (+${pointVal} Pts!)`);
+                    logMessages.push(`<span title="${feat.name} - ${feat[earnedTier].label}">${unicodeIcon}</span> UNLOCK: ${feat[earnedTier].label} (+${pointVal} Credits!)`);
                 } else {
                     logMessages.push(`<span title="${feat.name} - ${feat[earnedTier].label}">${unicodeIcon}</span> Cleared: ${feat[earnedTier].label}`);
                 }

@@ -33,6 +33,7 @@ The documents have distinct responsibilities:
 | [E2E_BALANCE_PLAN.md](E2E_BALANCE_PLAN.md) | Coarse campaign-wide satisficing pass, gates, and stopping rules | Active balance delivery plan |
 | [Automation_Workshop_Spec.md](Automation_Workshop_Spec.md) | Current and target automation experience and execution-containment model | Automation specification |
 | [STABILIZATION_PLAN.md](STABILIZATION_PLAN.md) | Prioritized work needed before systematic balance iteration | Delivery plan |
+| [ORIENTATION_IMPLEMENTATION_PLAN.md](ORIENTATION_IMPLEMENTATION_PLAN.md) | Five-second setup, transient teaching cues, capacity effects, credits, and wait-time delivery plan | Active interface implementation plan |
 | [TESTING_STRATEGY.md](TESTING_STRATEGY.md) | Required evidence and testing layers | Quality strategy |
 | [ROADMAP.md](ROADMAP.md) | High-level product stages and gates | Product sequencing |
 

@@ -90,6 +90,11 @@ const PowerUps = {
         }
     },
 
+    announceLiftCapacity: function(liftId) {
+        const ui = GameUI();
+        if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(liftId);
+    },
+
     showEffectOnFloor: function(floorId, icon) {
         const world = document.getElementById('world');
         const row = document.getElementById(`floor-row-${floorId}`);
@@ -188,11 +193,11 @@ const PowerUps = {
             id: 'tardis', name: 'TARDIS Mode', icon: '🌌',
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.tardis.tiers[0].cost, desc: `1 lift gets infinite capacity for ${window.Config.GAME_DATA.powerups.tardis.tiers[0].duration}s.`, target: 'lift', 
-                  execute: (liftId, floorId) => { Registry.lifts[liftId].tardisTimer = window.Config.GAME_DATA.powerups.tardis.tiers[0].duration; PowerUps.showEffectOnLift(liftId, '🌌'); } },
+                  execute: (liftId, floorId) => { Registry.lifts[liftId].tardisTimer = window.Config.GAME_DATA.powerups.tardis.tiers[0].duration; PowerUps.showEffectOnLift(liftId, '🌌'); PowerUps.announceLiftCapacity(liftId); } },
                 { cost: window.Config.GAME_DATA.powerups.tardis.tiers[1].cost, desc: `ALL lifts get infinite capacity for ${window.Config.GAME_DATA.powerups.tardis.tiers[1].duration}s.`, target: 'instant', 
-                  execute: () => { Registry.lifts.forEach(l => { l.tardisTimer = window.Config.GAME_DATA.powerups.tardis.tiers[1].duration; PowerUps.showEffectOnLift(l.id, '🌌'); }); } },
+                  execute: () => { Registry.lifts.forEach(l => { l.tardisTimer = window.Config.GAME_DATA.powerups.tardis.tiers[1].duration; PowerUps.showEffectOnLift(l.id, '🌌'); PowerUps.announceLiftCapacity(l.id); }); } },
                 { cost: window.Config.GAME_DATA.powerups.tardis.tiers[2].cost, desc: `ALL lifts get infinite capacity for ${window.Config.GAME_DATA.powerups.tardis.tiers[2].duration}s.`, target: 'instant', 
-                  execute: () => { PowerUps.timers.globalTardis = window.Config.GAME_DATA.powerups.tardis.tiers[2].duration; Registry.lifts.forEach(l => PowerUps.showEffectOnLift(l.id, '🌌')); } }
+                  execute: () => { PowerUps.timers.globalTardis = window.Config.GAME_DATA.powerups.tardis.tiers[2].duration; Registry.lifts.forEach(l => { PowerUps.showEffectOnLift(l.id, '🌌'); PowerUps.announceLiftCapacity(l.id); }); } }
             ]
         },
         doors: {
@@ -291,6 +296,7 @@ const PowerUps = {
                       Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration * 60; // ticks
                       Registry.lifts[liftId].isDoubleDecker = true;
                       PowerUps.showEffectOnLift(liftId, '🚡'); 
+                      PowerUps.announceLiftCapacity(liftId);
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].cost, desc: `Silver: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration}s.`, target: 'lift', 
@@ -298,6 +304,7 @@ const PowerUps = {
                       Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration * 60; // ticks
                       Registry.lifts[liftId].isDoubleDecker = true;
                       PowerUps.showEffectOnLift(liftId, '🚡'); 
+                      PowerUps.announceLiftCapacity(liftId);
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].cost, desc: `Gold: ALL lifts gain double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration}s.`, target: 'instant', 
@@ -306,6 +313,7 @@ const PowerUps = {
                           l.doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration * 60;
                           l.isDoubleDecker = true;
                           PowerUps.showEffectOnLift(l.id, '🚡');
+                          PowerUps.announceLiftCapacity(l.id);
                       });
                   } 
                 }

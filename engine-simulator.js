@@ -323,6 +323,7 @@ window.Game.Simulator = {
             runStrategyController(elapsedSeconds);
             for (let frame = 0; frame < 60; frame++) {
                 virtualTime += animationStepMs;
+                window.Game.virtualTime = virtualTime;
                 window.animationTick(virtualTime);
             }
 

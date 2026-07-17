@@ -125,7 +125,7 @@ window.renderShop = function() {
 
     const header = document.createElement('h3');
     header.className = 'shop-header';
-    header.textContent = 'Supply Closet (Points: ';
+    header.textContent = 'Supply Closet (Credits: ';
     const pointsSpan = document.createElement('span');
     pointsSpan.className = pointsClass;
     pointsSpan.textContent = remainingPoints;
@@ -165,7 +165,7 @@ window.renderShop = function() {
             
             const costStrong = document.createElement('strong');
             costStrong.className = 'shop-btn-cost';
-            costStrong.textContent = `${tier.cost} Pts`;
+            costStrong.textContent = `${tier.cost} Credits`;
             
             const descSpan = document.createElement('span');
             descSpan.className = 'shop-btn-desc';
@@ -191,7 +191,7 @@ window.renderShop = function() {
         totalSpan.className = 'cart-total';
         totalSpan.textContent = 'Total Cost: ';
         const totalStrong = document.createElement('strong');
-        totalStrong.textContent = `${currentCartTotal} Pts`;
+        totalStrong.textContent = `${currentCartTotal} Credits`;
         totalSpan.appendChild(totalStrong);
         
         cartHeader.append(cartSpan, totalSpan);

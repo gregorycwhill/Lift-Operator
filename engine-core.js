@@ -213,7 +213,8 @@ window.createLiftState = function(id) {
         tardisTimer: 0, turboTimer: 0, freshenerTimer: 0,
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
         sardineScored: false, isDoubleDecker: false,
-        state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0
+        state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,
+        lastEffectiveCapacity: Config.liftCapacity
     };
 };
 
@@ -279,6 +280,10 @@ window.applyRoundState = function(roundState, options = {}) {
 };
 
 window.initializeRound = function(round, options = {}) {
+    if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
+    Registry.roundCountdownTimer = null;
+    Registry.roundCountdownActive = false;
+    document.getElementById('roundCountdown')?.classList.add('hidden');
     window.clearAttemptInventory();
     const state = window.createRoundState(round, Registry.seed, options);
     window.applyRoundState(state, options);
@@ -344,7 +349,7 @@ window.handleOrdinaryDeath = function() {
             ? (stats.totalWaitTimeServed / stats.servedThisRound).toFixed(1)
             : '0.0',
         defenestrations: stats.defenestrationsThisRound || 0,
-        log: ['Attempt failed. Points and inventory have been restored for a complete retry.']
+        log: ['Attempt failed. Credits and inventory have been restored for a complete retry.']
     };
 
     const ui = GameUI();

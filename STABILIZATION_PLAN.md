@@ -48,6 +48,15 @@ No balance redesign is implemented until current defects can be reproduced and d
 
 ## 4. Phase 1 — Lifecycle correctness
 
+### Orientation and review clarity batch
+
+- Freeze spawning and the round clock during a five-second visible countdown.
+- Permit automation selection during the countdown.
+- Provide one-time, extensible discovery cues for built-in, custom, and shared automation.
+- Show capacity transiently at round start and on capacity changes rather than adding permanent HUD load.
+- Standardize the economy label as Credits.
+- Verify live spawn-to-destination average-wait telemetry uses one clock domain.
+
 ### Priority defects
 
 1. Shop close/start must not trigger duplicate round review.

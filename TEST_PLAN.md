@@ -4,6 +4,12 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 
 ## Milestone A — Stabilization safety net
 
+- [x] Five-second countdown freezes guest spawning and the round timer while automation controls remain usable.
+- [x] First automation availability receives a transient, acknowledgeable teaching cue extensible to custom and shared scripts.
+- [x] Capacity appears transiently during countdown and when effective capacity changes.
+- [x] Round review uses Credits terminology consistently.
+- [x] Live delivered-guest wait time uses spawn-to-destination epoch/virtual time and does not clamp to zero.
+
 - [x] Round evaluation occurs once.
 - [x] Review → shop/briefing → next round works through the full Monkey campaign.
 - [x] Average wait uses spawn-to-destination delivery time for actually served guests.

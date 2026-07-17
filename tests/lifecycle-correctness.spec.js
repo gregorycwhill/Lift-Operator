@@ -60,6 +60,34 @@ test('average wait measures spawn-to-destination delivery time', async ({ page }
     expect(averageWait).toBe('15.0');
 });
 
+test('live animation delivery uses the same clock domain as guest spawn time', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        buildWorld();
+        const lift = Registry.lifts[0];
+        lift.pos = 0;
+        lift.targetFloor = 0;
+        lift.state = 'BOARDING';
+        lift.stateProgress = 1;
+        lift.passengers = [{
+            dest: 0,
+            status: GuestStatus.HAPPY,
+            spawnTime: Date.now() - 15000,
+            boardingWeight: 1
+        }];
+        Registry.gameActive = true;
+        animationTick(performance.now());
+        Registry.gameActive = false;
+        return {
+            served: Registry.roundStats.servedThisRound,
+            wait: Registry.roundStats.totalWaitTimeServed
+        };
+    });
+
+    expect(result.served).toBe(1);
+    expect(result.wait).toBeGreaterThanOrEqual(14.5);
+    expect(result.wait).toBeLessThan(17);
+});
+
 test('retry resets attempt-scoped achievement telemetry', async ({ page }) => {
     const result = await page.evaluate(() => {
         skipToRound(3);
@@ -244,7 +272,7 @@ test('round review labels appear above their statistics', async ({ page }) => {
         }));
     });
 
-    expect(positions.map(position => position.label)).toEqual(['Served', 'Round Performance', 'Total Bank']);
+    expect(positions.map(position => position.label)).toEqual(['Served', 'Credits Earned', 'Total Credits']);
     positions.forEach(position => expect(position.labelTop).toBeLessThan(position.valueTop));
 });
 
@@ -674,6 +702,96 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
     expect(await optionsAtRound(2)).toEqual(['manual', 'sweep']);
     expect(await optionsAtRound(4)).toEqual(['manual', 'sweep', 'priority-sweep']);
     expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
+});
+
+test('round countdown freezes play while allowing automation setup and transient capacity cues', async ({ page }) => {
+    await page.evaluate(() => {
+        window.Game.Storage.set('liftOp_teaching_automation_built-in', '0');
+        skipToRound(2, { showBriefing: false });
+        startRoundCountdown(1);
+    });
+
+    await expect(page.locator('#roundCountdown')).toBeVisible();
+    await expect(page.locator('.capacity-float')).toHaveCount(1);
+    const frozen = await page.evaluate(() => ({
+        active: Registry.gameActive,
+        countdown: Registry.roundCountdownActive,
+        timeLeft: Registry.stats.timeLeft,
+        guests: Registry.floors.reduce((sum, floor) => sum + floor.waitingGuests.length, 0)
+    }));
+    expect(frozen).toEqual({ active: false, countdown: true, timeLeft: 180, guests: 0 });
+
+    const select = page.locator('.shaft select').first();
+    await expect(select).toHaveClass(/automation-teaching-cue/);
+    await select.selectOption('sweep');
+    expect(await page.evaluate(() => Registry.lifts[0].automation)).toBe('sweep');
+    await expect(select).not.toHaveClass(/automation-teaching-cue/);
+
+    await expect(page.locator('#roundCountdown')).toBeHidden({ timeout: 2500 });
+    const started = await page.evaluate(() => ({
+        active: Registry.gameActive,
+        countdown: Registry.roundCountdownActive,
+        timeLeft: Registry.stats.timeLeft,
+        guests: Registry.floors.reduce((sum, floor) => sum + floor.waitingGuests.length, 0)
+    }));
+    expect(started.active).toBe(true);
+    expect(started.countdown).toBe(false);
+    expect(started.timeLeft).toBe(180);
+    expect(started.guests).toBeGreaterThan(0);
+});
+
+test('automation teaching cues extend to custom and shared script discovery', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const unlockRound = Config.GAME_DATA.automationUnlocks.custom;
+        window.Game.Storage.set('liftOp_teaching_automation_custom', '0');
+        window.Game.Storage.set('liftOp_teaching_automation_shared', '0');
+        skipToRound(unlockRound, { showBriefing: false });
+        const customCue = applyAutomationTeachingCue();
+        document.querySelectorAll('.automation-teaching-cue').forEach(item => item.classList.remove('automation-teaching-cue'));
+        window.Game.Storage.set('liftOp_teaching_automation_custom', '1');
+        Registry.stats.round = Math.min(13, unlockRound + 1);
+        const currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+        window.Game.Automation.scripts.push({ id: 'mine-cue-test', name: 'My Test', author: currentPlayer });
+        window.Game.Automation.scripts.push({ id: 'shared-cue-test', name: 'Shared Test', author: 'Another Pilot' });
+        buildWorld();
+        const sharedCue = applyAutomationTeachingCue();
+        return {
+            customCue,
+            sharedCue,
+            groups: [...document.querySelectorAll('.shaft select optgroup')].map(group => group.label)
+        };
+    });
+
+    expect(result.customCue).toBe('custom');
+    expect(result.sharedCue).toBe('shared');
+    expect(result.groups).toContain('My Automations');
+    expect(result.groups).toContain('Shared with Me');
+});
+
+test('capacity modifiers announce activation and expiry without a permanent HUD label', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        buildWorld();
+        const lift = Registry.lifts[0];
+        lift.tardisTimer = 1;
+        PowerUps.announceLiftCapacity(0);
+        const activated = document.querySelector('[data-capacity-lift="0"]')?.textContent;
+        lift.lastEffectiveCapacity = 999;
+        Registry.gameActive = true;
+        gameTick(Date.now());
+        Registry.gameActive = false;
+        const expired = document.querySelector('[data-capacity-lift="0"]')?.textContent;
+        return {
+            activated,
+            expired,
+            permanentCapacityLabels: document.querySelectorAll('.lift .capacity-float').length
+        };
+    });
+
+    expect(result).toEqual({
+        activated: 'Capacity ∞',
+        expired: `Capacity ${await page.evaluate(() => Config.liftCapacity)}`,
+        permanentCapacityLabels: 0
+    });
 });
 
 test('production patience thresholds map wait time to guest status', async ({ page }) => {

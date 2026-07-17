@@ -19,6 +19,47 @@ window.showToast = function(message) {
     setTimeout(() => { toast.classList.remove("show"); }, 3500);
 };
 
+window.startRoundCountdown = function(seconds = 5) {
+    if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
+    Registry.gameActive = false;
+    Registry.roundCountdownActive = true;
+    const countdown = document.getElementById('roundCountdown');
+    const value = document.getElementById('roundCountdownValue');
+    let remaining = Math.max(0, seconds);
+    if (countdown) countdown.classList.remove('hidden');
+    if (value) value.textContent = String(remaining);
+
+    const ui = GameUI();
+    Registry.lifts.forEach((lift, index) => {
+        if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(index, Math.max(1800, remaining * 1000 - 150));
+    });
+    if (typeof ui.applyAutomationTeachingCue === 'function') ui.applyAutomationTeachingCue();
+
+    const begin = () => {
+        if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
+        Registry.roundCountdownTimer = null;
+        Registry.roundCountdownActive = false;
+        if (countdown) countdown.classList.add('hidden');
+        const now = window.Game.virtualTime || Date.now();
+        if (typeof GameSpawner === 'function' && typeof GameSpawner().forceFirstSpawn === 'function') {
+            GameSpawner().forceFirstSpawn(now);
+        }
+        const engine = GameEngine();
+        if (typeof engine.resume === 'function') engine.resume();
+        if (typeof ui.draw === 'function') ui.draw();
+    };
+
+    if (remaining === 0) {
+        begin();
+        return;
+    }
+    Registry.roundCountdownTimer = setInterval(() => {
+        remaining--;
+        if (remaining <= 0) begin();
+        else if (value) value.textContent = String(remaining);
+    }, 1000);
+};
+
 /**
  * Update the locking status of UI buttons and selectors based on progression.
  */
@@ -169,12 +210,7 @@ window.initializeUI = function() {
         const roundOverlay = document.getElementById("roundModalOverlay");
         if (roundOverlay) roundOverlay.style.display = "none";
         
-        if (Registry.pauseStartTime === 0 && typeof GameSpawner === "function" && typeof GameSpawner().forceFirstSpawn === "function") {
-            GameSpawner().forceFirstSpawn(window.Game.virtualTime || Date.now());
-        }
-        
-        if (typeof engine.resume === "function") engine.resume();
-        if (typeof ui.draw === "function") ui.draw();
+        window.startRoundCountdown(5);
     });
 
     bind("continueToBriefingBtn", () => {
@@ -365,7 +401,8 @@ window.UI = window.UI || {};
     "showRoundReview", "showToast", "shareLeaderboard", "shareGame",
     "showLeaderboard", "renderDebugMenu", "processNextManifestItem", "initializeUI",
     "buildWorld", "draw", "updateLiftAutomationUI", "updateLiftVisualState",
-    "triggerDefenestration", "updateScoreboardUI", "getGuestText"
+    "triggerDefenestration", "updateScoreboardUI", "getGuestText",
+    "startRoundCountdown"
 ].forEach(key => {
     window.UI[key] = window[key];
 });

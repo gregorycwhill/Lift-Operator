@@ -44,6 +44,8 @@ const Registry = {
     manualIntervention: false,
     lastAutoDecisionTime: 0,
     roundTerminalHandled: false,
+    roundCountdownActive: false,
+    roundCountdownTimer: null,
     roundEvaluation: null,
     pendingFailedRetry: null,
     roundCheckpoint: null,

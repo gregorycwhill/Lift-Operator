@@ -307,6 +307,51 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     car.style.setProperty('--lift-anim-speed', animSpeed);
 };
 
+window.showLiftCapacity = function(liftId, durationMs = 1800) {
+    const lift = Registry.lifts[liftId];
+    const car = document.getElementById(`lift-el-${liftId}`);
+    const world = document.getElementById('world');
+    if (!lift || !car || !world) return;
+    const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(liftId) : Config.liftCapacity;
+    lift.lastEffectiveCapacity = capacity;
+    world.querySelector(`[data-capacity-lift="${liftId}"]`)?.remove();
+
+    const indicator = document.createElement('div');
+    indicator.className = 'capacity-float';
+    indicator.dataset.capacityLift = String(liftId);
+    indicator.textContent = `Capacity ${capacity >= 999 ? '∞' : capacity}`;
+    indicator.style.left = `${415 + liftId * 120}px`;
+    indicator.style.bottom = `${lift.pos + 96}px`;
+    world.appendChild(indicator);
+    setTimeout(() => indicator.remove(), durationMs);
+};
+
+window.applyAutomationTeachingCue = function() {
+    const round = Registry.stats.round;
+    const unlocks = Config.GAME_DATA.automationUnlocks;
+    const currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+    const scripts = window.Game.Automation?.scripts || [];
+    const hasShared = scripts.some(script => script.author !== 'System' && script.author !== currentPlayer);
+    let cueId = null;
+    if (round === unlocks.sweep) cueId = 'built-in';
+    else if (round === unlocks.custom) cueId = 'custom';
+    else if (round >= unlocks.custom && hasShared) cueId = 'shared';
+    if (!cueId) return null;
+
+    const storageKey = `liftOp_teaching_automation_${cueId}`;
+    if (window.Game.Storage.get(storageKey, '0') === '1') return null;
+    const selects = [...document.querySelectorAll('.shaft select:not(:disabled)')];
+    selects.forEach(select => {
+        select.classList.add('automation-teaching-cue');
+        select.dataset.teachingCue = cueId;
+        select.addEventListener('change', () => {
+            window.Game.Storage.set(storageKey, '1');
+            selects.forEach(item => item.classList.remove('automation-teaching-cue'));
+        }, { once: true });
+    });
+    return cueId;
+};
+
 
 
 window.draw = function() {
@@ -576,6 +621,8 @@ window.UI.updateScoreboardUI = window.updateScoreboardUI;
 window.UI.getGuestText = window.getGuestText;
 window.UI.updateLiftAutomationUI = window.updateLiftAutomationUI;
 window.UI.updateLiftVisualState = window.updateLiftVisualState;
+window.UI.showLiftCapacity = window.showLiftCapacity;
+window.UI.applyAutomationTeachingCue = window.applyAutomationTeachingCue;
 
 window.Game = window.Game || {};
 window.Game.UI = window.Game.UI || {};

@@ -40,6 +40,8 @@ The split into files is useful, but modules remain coupled through globals such 
 7. Performance and achievements award points.
 8. The player buys power-ups before the next round.
 
+Round entry includes a five-second orientation countdown. Automation controls remain active while the game clock and spawner are frozen. Capacity is communicated through temporary lift effects during this countdown and whenever effective capacity changes. First-use automation discovery uses the same transient cue approach and is structured to extend to custom and shared automation.
+
 The loop is playable, but transitions between review, shop, briefing, pause, and resume require stabilization.
 
 ## Implemented lift model
@@ -303,3 +305,5 @@ Repeated human playtesting still found Round 2 inaccessible, so balance `0.2.2-r
 The resource-supported campaign comparator now combines featured automation, condition-driven power-up use, and bounded manual rescue of the most urgent queue. This confirms Rounds 4–6 as Contested and Round 12 within its Endurance window. Rounds 7–11 and 13 remain Overloaded. A fresh 20% coarse pressure reduction was rejected and fully rolled back because it allowed unattended Sweep to survive Rounds 7 and 8 without establishing competent survival later. The next balance work must strengthen mechanic-specific solutions rather than reduce generic traffic.
 
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.
+
+Player-facing economy language uses **Credits**: reviews distinguish Credits Earned from Total Credits. Average wait is the complete spawn-to-destination journey. A browser timestamp-domain defect previously clamped live journey durations to zero; runtime animation and guest telemetry now share the epoch/virtual-time clock.

@@ -44,6 +44,14 @@ The approved structured version of this map should eventually generate the round
 13. Intended strategies must materially outperform all-Sweep through timely intervention, specialization, policy changes, or resource use.
 14. Hands-Free completion is an advanced custom-automation mastery outcome; built-in automations never qualify.
 
+### Round-start orientation contract
+
+Every attempt begins with a visible five-second countdown after the briefing closes. The round timer and guest spawning remain frozen, while lift automation controls are usable. This preserves arcade pressure while giving the player a short orientation and role-assignment window.
+
+Teaching cues are transient rather than permanent HUD elements. When built-in automation first becomes available, its controls pulse in a friendly, colourful way. The same cue system must support first-use discovery of player-authored custom automation and automations shared with the player. Interaction acknowledges a cue so it does not repeatedly nag an established player.
+
+Lift capacity appears as a floating effect above each lift during the countdown, then disappears. It reappears whenever effective capacity changes, including modifier activation and expiry. Normal play does not carry a permanent capacity label.
+
 ### All-Sweep behavioural floor
 
 The minimum competent automated behaviour is:

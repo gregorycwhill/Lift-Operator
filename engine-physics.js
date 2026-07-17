@@ -127,6 +127,17 @@ window.gameTick = function(timestamp) {
         if (lift.musakTimer > 0) lift.musakTimer--;
         if (lift.doubleDeckerTimer > 0) lift.doubleDeckerTimer--;
         else lift.isDoubleDecker = false;
+
+        if (typeof PowerUps !== 'undefined') {
+            const effectiveCapacity = PowerUps.getLiftCapacity(i);
+            if (lift.lastEffectiveCapacity === undefined) {
+                lift.lastEffectiveCapacity = effectiveCapacity;
+            } else if (lift.lastEffectiveCapacity !== effectiveCapacity) {
+                const ui = GameUI();
+                if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(i);
+                lift.lastEffectiveCapacity = effectiveCapacity;
+            }
+        }
         
         if (lift.openPlanTimer > 0) {
             lift.openPlanTimer--;
@@ -264,7 +275,9 @@ window.gameTick = function(timestamp) {
 };
 
 window.animationTick = function(timestamp) {
-    const now = timestamp || Date.now();
+    // Browser frame timestamps are page-relative; guest spawn times are epoch
+    // based. Simulations provide an epoch-like virtual clock.
+    const now = window.Game.virtualTime || Date.now();
     const ui = GameUI();
     const engine = GameEngine();
 

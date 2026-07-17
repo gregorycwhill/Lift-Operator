@@ -125,7 +125,9 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     document.getElementById('reviewPointsEarned').innerText = evaluation.pointsEarned > 0
         ? `+${evaluation.pointsEarned}`
         : '0';
-    document.getElementById('reviewAvgWait').innerText = `${evaluation.averageWaitTime}s`;
+    document.getElementById('reviewAvgWait').innerText = evaluation.guestsServed > 0
+        ? `${evaluation.averageWaitTime}s`
+        : 'No deliveries';
     
     document.getElementById('reviewTotalPoints').innerText = evaluation.totalPoints;
     
