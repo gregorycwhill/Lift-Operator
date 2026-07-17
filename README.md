@@ -101,6 +101,14 @@ After changing `design/game-balance.v1.json`, regenerate the browser artifact:
 npm.cmd run balance:generate
 ```
 
+Run the unattended all-Sweep balance matrix and regenerate its reports with:
+
+```powershell
+npm.cmd run balance:matrix
+```
+
+Balance violations are reported as tuning evidence; `npm.cmd test` verifies report integrity without pretending that currently unmet balance goals are correctness failures.
+
 The suite verifies the complete accelerated 13-round campaign, the human-intervention kill switch, ordinary-death rollback, single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. Its first complete local campaign run passed in approximately 6.6 minutes.
 
 ## Project security philosophy

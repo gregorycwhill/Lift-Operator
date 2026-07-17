@@ -273,3 +273,11 @@ The current payout magnitudes and power-up prices have deliberately not been reb
 The forecast combines recent weighted life-loss windows with guests expected to rage within 15 seconds. VIP exposure uses its actual life penalty. Ordinary rounds record projected time to death relative to remaining round time; Endurance records time to death without a pass/fail index.
 
 Telemetry is included in isolated simulator results and can be exported through `Game.BalanceTelemetry.export()` for developer analysis. It has no player-facing rendering and is absent from the automation bridge.
+
+## All-Sweep balance matrix
+
+`scripts/run-balance-matrix.js` runs three fixed seeds for each round from 2–13 with every lift on Sweep and no manual decisions, policy changes, or power-ups. Reports are committed under `reports/` and tied to hashes of the canonical balance data and matrix definition.
+
+The initial `0.1.0-stabilized` baseline contains 36 runs and 12 hard violations. All-Sweep survives every tested seed in Rounds 3–5 and one Round 2 seed. The other Round 2 runs die at 167 and 176 seconds, too late to provide the intended intervention window. Rounds 6–11 and 13 fail consistently. Round 12 all-Sweep survives 89–101 seconds and still needs comparison against an approved competent strategy.
+
+The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

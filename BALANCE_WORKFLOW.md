@@ -179,6 +179,14 @@ All-Sweep is the principal behavioural floor: every lift uses Sweep with no manu
 
 For each intended strategy, report improvement over all-Sweep in survival time, first peril crossing, time below Survival Index 1, delivery deficit, P90 journey time, critical exposure, and manual decisions required.
 
+Run the committed all-Sweep matrix with:
+
+```powershell
+npm.cmd run balance:matrix
+```
+
+The command executes three fixed seeds for Rounds 2–13 and regenerates `reports/all-sweep-baseline.json` plus its readable Markdown summary. `npm.cmd run balance:report:check` verifies that the committed report matches both canonical balance data and the matrix definition. Known balance violations remain report findings rather than making the general correctness suite fail.
+
 ### Campaign economy simulation
 
 Models struggling, typical, and expert spending paths across all rounds.

@@ -1,0 +1,6 @@
+{
+  "policy": "all-sweep-unattended",
+  "description": "Every lift uses Sweep; no manual targets, policy changes, or power-ups.",
+  "seeds": [1234, 3141, 6060],
+  "rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+}

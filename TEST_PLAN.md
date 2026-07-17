@@ -67,6 +67,9 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [ ] Round 2 unattended Sweep fails late while the approved minimal-intervention policy survives.
 - [ ] Each later intended strategy materially outperforms all-Sweep on its representative seeds.
 - [ ] Hands-Free rejects every built-in automation and accepts eligible player-authored custom automation only.
+- [x] All-Sweep baseline report covers three fixed seeds across Rounds 2–13.
+- [x] Baseline report freshness is tied to canonical balance and matrix hashes.
+- [x] Baseline policy records zero manual decisions.
 - [x] Deterministic baseline returns finite state and the full Monkey campaign completes without deadlock.
 - [x] Queue rendering remains bounded under a 250-guest backlog.
 - [x] Queue is physically anchored at the right-hand lift edge with the oldest guest nearest the door.

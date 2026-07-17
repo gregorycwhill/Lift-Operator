@@ -82,14 +82,17 @@ window.Game.Simulator = {
 
         Registry.gameActive = true;
         let virtualTime = virtualStart;
-        const totalSeconds = Config.roundTime;
-        const animationStepMs = 16;
+        const objective = Config.GAME_DATA.rounds[round].objective;
+        const totalSeconds = objective === 'ENDURANCE' ? 1800 : Config.roundTime;
+        const animationStepMs = 1000 / 60;
+        let elapsedSeconds = 0;
 
         for (let second = 0; second < totalSeconds; second++) {
             await new Promise(resolve => setTimeout(resolve, 0));
             if (!Registry.gameActive) break;
 
             window.gameTick(virtualTime);
+            elapsedSeconds = second + 1;
             for (let frame = 0; frame < 60; frame++) {
                 virtualTime += animationStepMs;
                 window.animationTick(virtualTime);
@@ -102,6 +105,7 @@ window.Game.Simulator = {
             served: Registry.stats.served,
             livesRemaining: Registry.stats.lives,
             timeLeft: Registry.stats.timeLeft,
+            elapsedSeconds,
             roundStats: JSON.parse(JSON.stringify(Registry.roundStats)),
             success: Registry.stats.lives > 0,
             designTelemetry: window.Game.BalanceTelemetry.export()
