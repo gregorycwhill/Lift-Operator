@@ -288,4 +288,6 @@ The candidate runner now covers Rounds 4 and 5 with pure featured-policy and hyb
 
 The campaign envelope runner (`npm.cmd run balance:envelope`) now compares the committed all-Sweep floor with a candidate idealized dispatcher and reports Little's Law pressure summaries across Rounds 2–13. Its first run confirms Rounds 4 and 5 are Underloaded. The direct dispatcher underperforms Sweep elsewhere because it sacrifices en-route pickups, so those rounds are correctly classified Unproven rather than being tuned around an invalid comparator. Round-specific strong profiles remain the next evidence task.
 
+The strong side is now a band-level portfolio combining direct dispatch with featured built-in policies and declared resource loadouts. The current envelope classifies Round 3 as Contested; Rounds 2, 4, and 5 as Underloaded; Rounds 6, 7, and 13 as provisionally Overloaded; and Rounds 8–12 as Unproven. No production pressure changed in this measurement phase.
+
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

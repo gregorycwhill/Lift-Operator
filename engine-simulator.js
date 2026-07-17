@@ -145,6 +145,31 @@ window.Game.Simulator = {
                 return;
             }
 
+            if (options.strategy === 'resource-supported') {
+                if (second - lastInterventionSecond < (options.interventionIntervalSec || 15)) return;
+                const criticalCount = Registry.floors.reduce(
+                    (sum, floor) => sum + floor.waitingGuests.filter(guest => guest.status === GuestStatus.CRITICAL).length,
+                    0
+                );
+                const peakQueue = Math.max(...Registry.floors.map(floor => floor.waitingGuests.length));
+                const impairedLift = Registry.lifts.find(lift => lift.jamTimer > 0 || lift.stinkTimer > 0);
+                if (criticalCount === 0 && peakQueue < 8 && !impairedLift) return;
+
+                const item = PowerUps.inventory[0];
+                if (!item) return;
+                const ability = PowerUps.catalog[item.id] && PowerUps.catalog[item.id].tiers[item.tier];
+                if (!ability) return;
+                if (ability.target === 'instant') {
+                    PowerUps.primeAbility(item.id, item.tier);
+                } else {
+                    const targetLift = impairedLift || [...Registry.lifts].sort((a, b) => b.passengers.length - a.passengers.length)[0];
+                    ability.execute(targetLift.id, Math.round(targetLift.pos / Registry.floorHeight));
+                    PowerUps.consumeFromInventory(item.id, item.tier);
+                }
+                lastInterventionSecond = second;
+                return;
+            }
+
             if (options.strategy.startsWith('hybrid-manual-')) {
                 const manualLift = Registry.lifts.find(lift => lift.automation === 'manual');
                 const hasCritical = Registry.floors.some(floor =>

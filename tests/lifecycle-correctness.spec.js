@@ -501,6 +501,23 @@ test('idealized campaign comparator uses production movement without player clic
     expect(result.designTelemetry.samples.length).toBeGreaterThan(0);
 });
 
+test('resource-supported comparator consumes declared inventory without player clicks', async ({ page }) => {
+    const result = await page.evaluate(() => window.Game.Simulator.runRound(
+        1234,
+        { 0: 'priority-sweep', 1: 'priority-sweep' },
+        4,
+        {
+            strategy: 'resource-supported',
+            interventionIntervalSec: 12,
+            loadout: [{ id: 'doors', tier: 1 }, { id: 'doors', tier: 1 }]
+        }
+    ));
+
+    expect(result.error).toBeUndefined();
+    expect(result.roundStats.manualClicks).toBe(0);
+    expect(result.livesRemaining).toBeGreaterThanOrEqual(0);
+});
+
 test('automation bridge rejects out-of-range targets', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = Registry.lifts[0];

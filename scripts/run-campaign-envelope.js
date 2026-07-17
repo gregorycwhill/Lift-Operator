@@ -9,6 +9,23 @@ const baseline = JSON.parse(fs.readFileSync(path.join(root, 'reports', 'all-swee
 const earlyExperiments = JSON.parse(fs.readFileSync(path.join(root, 'reports', 'early-balance-experiments.json'), 'utf8'));
 const seeds = [1234, 3141, 6060];
 const rounds = Array.from({ length: 12 }, (_, index) => index + 2);
+const repeat = (id, tier, count) => Array.from({ length: count }, () => ({ id, tier }));
+const profileForRound = round => {
+    const automation = round >= 5 ? 'weighted-voting' : round >= 4 ? 'priority-sweep' : 'sweep';
+    const loadouts = {
+        4: repeat('doors', 1, 2),
+        5: repeat('doors', 1, 2),
+        6: [...repeat('wrench', 1, 2), { id: 'doors', tier: 1 }],
+        7: [...repeat('turbo', 1, 2), { id: 'wrench', tier: 1 }],
+        8: [...repeat('musak', 1, 2), { id: 'turbo', tier: 1 }],
+        9: [...repeat('freshener', 1, 2), { id: 'musak', tier: 1 }],
+        10: [...repeat('tardis', 1, 2), { id: 'freshener', tier: 1 }],
+        11: [...repeat('doubleDecker', 1, 2), { id: 'tardis', tier: 1 }],
+        12: ['wrench', 'freshener', 'musak', 'turbo', 'tardis', 'doors'].flatMap(id => repeat(id, 2, 3)),
+        13: ['wrench', 'freshener', 'musak', 'turbo', 'tardis', 'doors'].flatMap(id => repeat(id, 2, 2))
+    };
+    return { automation, loadout: loadouts[round] || [] };
+};
 
 const mean = values => values.reduce((sum, value) => sum + value, 0) / values.length;
 const lastSample = result => result.designTelemetry.samples[result.designTelemetry.samples.length - 1] || {};
@@ -81,7 +98,7 @@ const markdown = report => {
         `${entry.unattended.averageArrivalRate.toFixed(2)} | ${entry.unattended.averageDeliveryRate.toFixed(2)} | ` +
         `${entry.unattended.averageUtilisationProxy.toFixed(2)} | ${entry.unattended.averageQueueTrend.toFixed(2)} |`
     ));
-    lines.push('', 'The candidate strong comparator is an omniscient direct dispatcher. Where it fails to outperform Sweep, the round is Unproven rather than Overloaded; direct dispatch loses en-route pickup efficiency and is not yet a credible feasibility bound.');
+    lines.push('', 'The strong result is the best per-seed outcome from an auditable portfolio: an omniscient direct dispatcher and a featured-policy profile with a declared round-appropriate loadout. Where the portfolio does not outperform Sweep, the round remains Unproven rather than being tuned around weak comparator evidence.');
     return `${lines.join('\n')}\n`;
 };
 
@@ -96,7 +113,7 @@ const markdown = report => {
         browser = await chromium.launch({ headless: true });
         const page = await browser.newPage();
         await page.goto('http://127.0.0.1:5500/index.html');
-        const strongRuns = [];
+        const comparatorRuns = [];
 
         for (const round of rounds) {
             const liftCount = balance.rounds[round].lifts;
@@ -106,8 +123,30 @@ const markdown = report => {
                     args => Game.Simulator.runRound(args.seed, args.scripts, args.round, { strategy: 'idealized-dispatch' }),
                     { seed, scripts, round }
                 );
-                strongRuns.push({ round, seed, metrics: metricsFor(result) });
-                console.log(`R${round} seed ${seed}: ${result.success ? 'survived' : 'died'} (${result.elapsedSeconds}s)`);
+                comparatorRuns.push({ round, seed, profile: 'idealized-dispatch', loadout: [], metrics: metricsFor(result) });
+
+                if (round !== 3) {
+                    const profile = profileForRound(round);
+                    const policyScripts = Object.fromEntries(Array.from({ length: liftCount }, (_, index) => [index, profile.automation]));
+                    const supported = await page.evaluate(
+                        args => Game.Simulator.runRound(args.seed, args.scripts, args.round, {
+                            strategy: 'resource-supported',
+                            loadout: args.loadout,
+                            interventionIntervalSec: 12
+                        }),
+                        { seed, scripts: policyScripts, round, loadout: profile.loadout }
+                    );
+                    comparatorRuns.push({
+                        round,
+                        seed,
+                        profile: `resource-supported-${profile.automation}`,
+                        loadout: profile.loadout,
+                        metrics: metricsFor(supported)
+                    });
+                    console.log(`R${round} seed ${seed}: ideal ${result.elapsedSeconds}s, supported ${supported.elapsedSeconds}s`);
+                } else {
+                    console.log(`R${round} seed ${seed}: ideal ${result.elapsedSeconds}s; accepted Wide Doors evidence used`);
+                }
             }
         }
 
@@ -122,7 +161,14 @@ const markdown = report => {
             },
             rounds: rounds.map(round => {
                 const unattendedRuns = baseline.runs.filter(run => run.round === round);
-                const roundStrongRuns = strongRuns.filter(run => run.round === round);
+                const roundComparatorRuns = comparatorRuns.filter(run => run.round === round);
+                const roundStrongRuns = seeds.map(seed => roundComparatorRuns
+                    .filter(run => run.seed === seed)
+                    .sort((a, b) =>
+                        Number(b.metrics.survived) - Number(a.metrics.survived) ||
+                        b.metrics.elapsedSeconds - a.metrics.elapsedSeconds ||
+                        b.metrics.livesRemaining - a.metrics.livesRemaining
+                    )[0]);
                 const unattended = aggregate(unattendedRuns);
                 const strong = aggregate(roundStrongRuns);
                 if (round === 3) {
@@ -139,7 +185,7 @@ const markdown = report => {
                 }
                 return { round, classification: classify(round, unattended, strong), unattended, strong };
             }),
-            strongRuns
+            comparatorRuns
         };
 
         fs.writeFileSync(path.join(root, 'reports', 'campaign-envelope.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');

@@ -219,6 +219,8 @@ npm.cmd run balance:envelope
 
 This writes `reports/campaign-envelope.json` and a readable Markdown summary. A candidate strong comparator that does not outperform all-Sweep causes an `UNPROVEN` classification; it must never be used to justify raising or lowering production pressure.
 
+The strong result is selected per seed from a small, auditable portfolio rather than one controller. Portfolio rows retain their policy, loadout, and telemetry in the JSON report. This permits broad feasibility classification while keeping affordability and dominant-resource assumptions reviewable.
+
 ## 7. Human playtest protocol
 
 For each candidate balance version:
