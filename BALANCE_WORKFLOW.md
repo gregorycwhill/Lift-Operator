@@ -221,6 +221,8 @@ This writes `reports/campaign-envelope.json` and a readable Markdown summary. A 
 
 The strong result is selected per seed from a small, auditable portfolio rather than one controller. Portfolio rows retain their policy, loadout, and telemetry in the JSON report. This permits broad feasibility classification while keeping affordability and dominant-resource assumptions reviewable.
 
+Resource-supported profiles select items from observed conditions rather than inventory order: Wrench for jams, Freshener for stink, Musak for critical exposure, and throughput items for large queues. Where available, the portfolio compares Sweep, Priority Sweep, and Weighted Voting. A band-wide pressure change is rejected wholesale if it creates unattended survivors without establishing competent survival.
+
 ## 7. Human playtest protocol
 
 For each candidate balance version:

@@ -11,7 +11,9 @@ const seeds = [1234, 3141, 6060];
 const rounds = Array.from({ length: 12 }, (_, index) => index + 2);
 const repeat = (id, tier, count) => Array.from({ length: count }, () => ({ id, tier }));
 const profileForRound = round => {
-    const automation = round >= 5 ? 'weighted-voting' : round >= 4 ? 'priority-sweep' : 'sweep';
+    const automations = round >= 5
+        ? ['sweep', 'priority-sweep', 'weighted-voting']
+        : round >= 4 ? ['sweep', 'priority-sweep'] : ['sweep'];
     const loadouts = {
         4: repeat('doors', 1, 2),
         5: repeat('doors', 1, 2),
@@ -24,7 +26,7 @@ const profileForRound = round => {
         12: ['wrench', 'freshener', 'musak', 'turbo', 'tardis', 'doors'].flatMap(id => repeat(id, 2, 3)),
         13: ['wrench', 'freshener', 'musak', 'turbo', 'tardis', 'doors'].flatMap(id => repeat(id, 2, 2))
     };
-    return { automation, loadout: loadouts[round] || [] };
+    return { automations, loadout: loadouts[round] || [] };
 };
 
 const mean = values => values.reduce((sum, value) => sum + value, 0) / values.length;
@@ -127,23 +129,27 @@ const markdown = report => {
 
                 if (round !== 3) {
                     const profile = profileForRound(round);
-                    const policyScripts = Object.fromEntries(Array.from({ length: liftCount }, (_, index) => [index, profile.automation]));
-                    const supported = await page.evaluate(
-                        args => Game.Simulator.runRound(args.seed, args.scripts, args.round, {
-                            strategy: 'resource-supported',
-                            loadout: args.loadout,
-                            interventionIntervalSec: 12
-                        }),
-                        { seed, scripts: policyScripts, round, loadout: profile.loadout }
-                    );
-                    comparatorRuns.push({
-                        round,
-                        seed,
-                        profile: `resource-supported-${profile.automation}`,
-                        loadout: profile.loadout,
-                        metrics: metricsFor(supported)
-                    });
-                    console.log(`R${round} seed ${seed}: ideal ${result.elapsedSeconds}s, supported ${supported.elapsedSeconds}s`);
+                    const supportedTimes = [];
+                    for (const automation of profile.automations) {
+                        const policyScripts = Object.fromEntries(Array.from({ length: liftCount }, (_, index) => [index, automation]));
+                        const supported = await page.evaluate(
+                            args => Game.Simulator.runRound(args.seed, args.scripts, args.round, {
+                                strategy: 'resource-supported',
+                                loadout: args.loadout,
+                                interventionIntervalSec: 12
+                            }),
+                            { seed, scripts: policyScripts, round, loadout: profile.loadout }
+                        );
+                        comparatorRuns.push({
+                            round,
+                            seed,
+                            profile: `resource-supported-${automation}`,
+                            loadout: profile.loadout,
+                            metrics: metricsFor(supported)
+                        });
+                        supportedTimes.push(`${automation}:${supported.elapsedSeconds}s`);
+                    }
+                    console.log(`R${round} seed ${seed}: ideal ${result.elapsedSeconds}s, ${supportedTimes.join(', ')}`);
                 } else {
                     console.log(`R${round} seed ${seed}: ideal ${result.elapsedSeconds}s; accepted Wide Doors evidence used`);
                 }

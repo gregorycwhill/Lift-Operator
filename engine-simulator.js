@@ -155,14 +155,22 @@ window.Game.Simulator = {
                 const impairedLift = Registry.lifts.find(lift => lift.jamTimer > 0 || lift.stinkTimer > 0);
                 if (criticalCount === 0 && peakQueue < 8 && !impairedLift) return;
 
-                const item = PowerUps.inventory[0];
+                const findItem = ids => PowerUps.inventory.find(candidate => ids.includes(candidate.id));
+                const jammedLift = Registry.lifts.find(lift => lift.jamTimer > 0);
+                const stinkyLift = Registry.lifts.find(lift => lift.stinkTimer > 0);
+                const item =
+                    (jammedLift && findItem(['wrench'])) ||
+                    (stinkyLift && findItem(['freshener'])) ||
+                    (criticalCount >= 3 && findItem(['musak'])) ||
+                    (peakQueue >= 12 && findItem(['doors', 'tardis', 'doubleDecker', 'turbo'])) ||
+                    findItem(['turbo', 'tardis', 'doors', 'musak', 'wrench', 'freshener', 'doubleDecker']);
                 if (!item) return;
                 const ability = PowerUps.catalog[item.id] && PowerUps.catalog[item.id].tiers[item.tier];
                 if (!ability) return;
                 if (ability.target === 'instant') {
                     PowerUps.primeAbility(item.id, item.tier);
                 } else {
-                    const targetLift = impairedLift || [...Registry.lifts].sort((a, b) => b.passengers.length - a.passengers.length)[0];
+                    const targetLift = jammedLift || stinkyLift || [...Registry.lifts].sort((a, b) => b.passengers.length - a.passengers.length)[0];
                     ability.execute(targetLift.id, Math.round(targetLift.pos / Registry.floorHeight));
                     PowerUps.consumeFromInventory(item.id, item.tier);
                 }
