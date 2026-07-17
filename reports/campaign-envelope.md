@@ -1,6 +1,6 @@
 # Campaign Balance Envelope
 
-Balance version: `0.2.0-e2e-coarse`
+Balance version: `0.2.1-early-onboarding`
 
 | Round | Classification | Sweep survival | Strong survival | Sweep time | Strong time | Arrival | Delivery | Utilisation | Queue trend |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |

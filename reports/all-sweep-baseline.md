@@ -1,6 +1,6 @@
 # All-Sweep Balance Baseline
 
-Balance version: `0.2.0-e2e-coarse`  
+Balance version: `0.2.1-early-onboarding`  
 Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 | Round | Seed | Outcome | Elapsed | Lives | Served | First peril | Min SI | Peak queue | P90 journey | Classification |

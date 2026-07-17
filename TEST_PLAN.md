@@ -14,6 +14,8 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Ordinary failure preserves round and seed and returns to the shop.
 - [x] Ordinary failure clears all runtime and achievement effects from the attempt.
 - [x] Ordinary failure shows a non-paying failed-attempt review before returning to the shop.
+- [x] Failed Round 2 review and retry controls explicitly retain and display Round 2.
+- [x] Successful review explicitly identifies the won round and newly unlocked round.
 - [x] Successful retry/evaluation can commit only one payout.
 - [x] Round 12 death commits one Endurance payout and progresses to Round 13 through review.
 - [ ] Reset clears runtime state and retains intended career state.

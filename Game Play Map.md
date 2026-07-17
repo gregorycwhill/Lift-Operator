@@ -108,7 +108,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 
 | R | Theme | Objective | Floors | Lifts | Spawn start→end | Primary introduction | Shop unlock |
 | ---: | --- | --- | ---: | ---: | ---: | --- | --- |
-| 1 | First Shift | Survive 90s | 8 | 1 | 0.20→0.35 | Manual routing | None |
+| 1 | First Shift | Survive 180s | 10 | 1 | 0.15→0.30 | Manual routing | None |
 | 2 | Let It Sweep | Survive 120s | 8 | 1 | 0.35→0.55 | Sweep | None |
 | 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
 | 4 | Triage Protocol | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |

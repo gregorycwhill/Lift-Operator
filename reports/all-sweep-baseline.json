@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "balanceVersion": "0.2.0-e2e-coarse",
-  "balanceHash": "13067b1b1579c9a0d77a24cb59df6c9883e1af2b471c3d0ebb537c811954391a",
+  "balanceVersion": "0.2.1-early-onboarding",
+  "balanceHash": "da08a4c59acb93a11497d192353974f139f98d5c0ee1a4e75adbb11321f80d90",
   "matrixHash": "e057df00431294d0258008f3c778dba598ae25192353686221243927af6327dc",
   "policy": {
     "id": "all-sweep-unattended",

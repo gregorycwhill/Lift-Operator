@@ -94,7 +94,18 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     if (typeof Achievements === 'undefined') return;
     const evaluation = suppliedEvaluation || Achievements.evaluateRound();
     const heading = document.querySelector('#roundReviewOverlay h2');
-    if (heading) heading.innerText = reason === 'failed' ? `Round ${completedRound} Attempt Failed` : 'Round Complete!';
+    const outcome = document.getElementById('reviewOutcomeMessage');
+    const continueButton = document.getElementById('continueToBriefingBtn');
+    const failed = reason === 'failed';
+    if (heading) heading.innerText = failed
+        ? `Round ${completedRound} Attempt Failed`
+        : `You Did It! Round ${completedRound} Complete!`;
+    if (outcome) outcome.innerText = failed
+        ? `Your Round ${completedRound} checkpoint is safe. Review the results, revise your plan, and try the same round again.`
+        : `Excellent work — Round ${completedRound} is won and Round ${Math.min(13, completedRound + 1)} is unlocked!`;
+    if (continueButton) continueButton.innerText = failed
+        ? `Supply Closet & Retry Round ${completedRound}`
+        : completedRound >= 13 ? 'Finish Campaign' : `Supply Closet & Continue to Round ${completedRound + 1}`;
     
     document.getElementById('reviewServedText').innerText = evaluation.guestsServed;
     document.getElementById('breakdownHappy').innerText = Registry.roundStats.happyServed || 0;

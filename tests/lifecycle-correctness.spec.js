@@ -131,10 +131,27 @@ test('failed attempt review awards nothing and continues to same-round shop', as
     expect(result.points).toBe(8);
     expect(result.evaluation).toBeNull();
     expect(result.pending.round).toBe(2);
+    await expect(page.locator('#roundReviewOverlay h2')).toHaveText('Round 2 Attempt Failed');
+    await expect(page.locator('#reviewOutcomeMessage')).toContainText('same round again');
+    await expect(page.locator('#continueToBriefingBtn')).toHaveText('Supply Closet & Retry Round 2');
 
     await page.click('#continueToBriefingBtn');
     await expect(page.locator('#roundModalOverlay')).toBeVisible();
     expect(await page.evaluate(() => Registry.stats.round)).toBe(2);
+    await expect(page.locator('#roundTitle')).toContainText('Round 2');
+});
+
+test('successful review explicitly celebrates the completed round and next unlock', async ({ page }) => {
+    await page.evaluate(() => {
+        skipToRound(2, { showBriefing: false });
+        Registry.roundStats.servedThisRound = 20;
+        Registry.roundTerminalHandled = false;
+        completeRound('completed');
+    });
+
+    await expect(page.locator('#roundReviewOverlay h2')).toHaveText('You Did It! Round 2 Complete!');
+    await expect(page.locator('#reviewOutcomeMessage')).toContainText('Round 2 is won');
+    await expect(page.locator('#continueToBriefingBtn')).toHaveText('Supply Closet & Continue to Round 3');
 });
 
 test('queue rendering is bounded under heavy late-round backlog', async ({ page }) => {
@@ -751,7 +768,7 @@ test('design telemetry records Little’s Law inputs and weighted VIP exposure',
     expect(result.sample.littlesLawEstimate).toBe(6);
     expect(result.sample.imminentLives).toBe(10);
     expect(result.sample.manualDecisionsPerMinute).toBe(3);
-    expect(result.exported.balanceVersion).toBe('0.2.0-e2e-coarse');
+    expect(result.exported.balanceVersion).toBe('0.2.1-early-onboarding');
     expect(result.exported.samples).toHaveLength(1);
 });
 

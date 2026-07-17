@@ -433,7 +433,15 @@ body {
 .leaderboard-list li:nth-child(even) { background-color: #ecf0f1; }
 
 /* Round Review Layout Framework */
-.review-stats-row { 
+.review-outcome-message {
+    margin: -4px 0 18px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.review-stats-row {
     display: flex; 
     justify-content: space-around; 
     margin: 20px 0; 

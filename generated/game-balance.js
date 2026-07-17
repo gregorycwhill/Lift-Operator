@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.0-e2e-coarse
+// Balance version: 0.2.1-early-onboarding
 window.GameBalanceData = {
-  "balanceVersion": "0.2.0-e2e-coarse",
+  "balanceVersion": "0.2.1-early-onboarding",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -404,8 +404,8 @@ window.GameBalanceData = {
     "1": {
       "floors": 10,
       "lifts": 1,
-      "spawnStart": 0.25,
-      "spawnEnd": 0.5,
+      "spawnStart": 0.15,
+      "spawnEnd": 0.3,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },

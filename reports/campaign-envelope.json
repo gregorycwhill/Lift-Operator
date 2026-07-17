@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "balanceVersion": "0.2.0-e2e-coarse",
+  "balanceVersion": "0.2.1-early-onboarding",
   "seeds": [
     1234,
     3141,

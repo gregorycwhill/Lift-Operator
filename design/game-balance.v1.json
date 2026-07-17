@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.0-e2e-coarse",
+  "balanceVersion": "0.2.1-early-onboarding",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -365,8 +365,8 @@
     "1": {
       "floors": 10,
       "lifts": 1,
-      "spawnStart": 0.25,
-      "spawnEnd": 0.5,
+      "spawnStart": 0.15,
+      "spawnEnd": 0.3,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
