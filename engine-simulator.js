@@ -9,7 +9,7 @@ window.Game.Simulator = {
      * Runs a simulation in a disposable same-origin browser realm.
      * The iframe owns its own Registry, Config mutations, timers, and random stream.
      */
-    runRound: async function(seed, scripts = {}, round = 1) {
+    runRound: async function(seed, scripts = {}, round = 1, options = {}) {
         const frame = document.createElement('iframe');
         frame.hidden = true;
         frame.setAttribute('aria-hidden', 'true');
@@ -36,7 +36,7 @@ window.Game.Simulator = {
                 throw new Error('Simulation realm did not initialize.');
             }
 
-            return await simulator.runRoundLocal(seed, scripts, round);
+            return await simulator.runRoundLocal(seed, scripts, round, options);
         } catch (error) {
             console.error('[Simulator] Fatal Error:', error);
             return { error: error.message, success: false };
@@ -48,7 +48,7 @@ window.Game.Simulator = {
     /**
      * Internal worker used only inside the disposable simulation realm.
      */
-    runRoundLocal: async function(seed, scripts = {}, round = 1) {
+    runRoundLocal: async function(seed, scripts = {}, round = 1, options = {}) {
         console.log(`[Simulator] Starting isolated run for Round ${round} (Seed: ${seed})`);
 
         window.Game.UI = {
@@ -67,6 +67,12 @@ window.Game.Simulator = {
 
         Registry.autoPilotActive = false;
         Registry.seed = seed;
+        if (options.roundOverrides) {
+            Config.GAME_DATA.rounds[round] = {
+                ...Config.GAME_DATA.rounds[round],
+                ...options.roundOverrides
+            };
+        }
         const virtualStart = 1000000;
         window.Game.virtualTime = virtualStart;
         window.initializeRound(round, {
@@ -79,6 +85,9 @@ window.Game.Simulator = {
                 Registry.lifts[liftIndex].automation = scripts[liftIndex];
             }
         });
+        if (Array.isArray(options.loadout)) {
+            PowerUps.inventory = options.loadout.map(item => ({ ...item }));
+        }
 
         Registry.gameActive = true;
         let virtualTime = virtualStart;
@@ -86,13 +95,127 @@ window.Game.Simulator = {
         const totalSeconds = objective === 'ENDURANCE' ? 1800 : Config.roundTime;
         const animationStepMs = 1000 / 60;
         let elapsedSeconds = 0;
+        let lastInterventionSecond = -Infinity;
+
+        const runStrategyController = second => {
+            if (!options.strategy || options.strategy === 'all-sweep') return;
+            const interval = options.interventionIntervalSec || 20;
+
+            if (options.strategy === 'hybrid-manual-wide-doors') {
+                const manualLift = Registry.lifts.find(lift => lift.automation === 'manual');
+                const hasCritical = Registry.floors.some(floor =>
+                    floor.waitingGuests.some(guest => guest.status === GuestStatus.CRITICAL)
+                );
+                if (
+                    hasCritical &&
+                    PowerUps.timers.wideDoors <= 0 &&
+                    PowerUps.inventory.some(item => item.id === 'doors' && item.tier === 0)
+                ) {
+                    PowerUps.primeAbility('doors', 0);
+                }
+                if (!manualLift || manualLift.manualOverride || manualLift.jamTimer > 0) return;
+                if (manualLift.passengers.length > 0 && manualLift.state === 'IDLE') {
+                    const currentFloor = Math.round(manualLift.pos / Registry.floorHeight);
+                    const destination = [...manualLift.passengers]
+                        .sort((a, b) => Math.abs(a.dest - currentFloor) - Math.abs(b.dest - currentFloor))[0].dest;
+                    window.setLiftTarget(manualLift.id, destination);
+                    lastInterventionSecond = second;
+                    return;
+                }
+                if (manualLift.passengers.length > 0 || second - lastInterventionSecond < interval) return;
+                const target = Registry.floors.map((floor, floorIndex) => ({
+                    floorIndex,
+                    count: floor.waitingGuests.length,
+                    oldestWaitMs: floor.waitingGuests.reduce(
+                        (maximum, guest) => Math.max(maximum, virtualTime - guest.spawnTime),
+                        0
+                    )
+                })).sort((a, b) => b.oldestWaitMs - a.oldestWaitMs || b.count - a.count)[0];
+                if (target && target.count > 0) {
+                    window.setLiftTarget(manualLift.id, target.floorIndex);
+                    lastInterventionSecond = second;
+                }
+                return;
+            }
+
+            if (second - lastInterventionSecond < interval) return;
+
+            const availableLift = Registry.lifts.find(lift =>
+                !lift.manualOverride &&
+                lift.jamTimer <= 0 &&
+                lift.passengers.length === 0
+            );
+            if (!availableLift) return;
+            const currentFloor = Math.round(availableLift.pos / Registry.floorHeight);
+            const ranked = Registry.floors.map((floor, floorIndex) => {
+                const critical = floor.waitingGuests.filter(guest => guest.status === GuestStatus.CRITICAL).length;
+                const annoyed = floor.waitingGuests.filter(guest => guest.status === GuestStatus.ANNOYED).length;
+                const oldestWaitMs = floor.waitingGuests.reduce(
+                    (maximum, guest) => Math.max(maximum, virtualTime - guest.spawnTime),
+                    0
+                );
+                return {
+                    floorIndex,
+                    critical,
+                    annoyed,
+                    surge: floor.waitingGuests.length >= 5,
+                    oldestWaitMs,
+                    distance: Math.abs(floorIndex - currentFloor),
+                    score: critical * 100 + annoyed * 10 + floor.waitingGuests.length
+                };
+            }).sort((a, b) =>
+                b.critical - a.critical ||
+                Number(b.surge) - Number(a.surge) ||
+                b.oldestWaitMs - a.oldestWaitMs ||
+                a.distance - b.distance ||
+                b.score - a.score
+            );
+            if (
+                options.strategy === 'wide-doors-rescue' &&
+                ranked[0] &&
+                ranked[0].critical > 0 &&
+                PowerUps.timers.wideDoors <= 0 &&
+                PowerUps.inventory.some(item => item.id === 'doors' && item.tier === 0)
+            ) {
+                PowerUps.primeAbility('doors', 0);
+            }
+            if (!ranked[0] || (ranked[0].critical === 0 && ranked[0].annoyed === 0 && !ranked[0].surge)) return;
+            window.setLiftTarget(availableLift.id, ranked[0].floorIndex);
+            lastInterventionSecond = second;
+        };
 
         for (let second = 0; second < totalSeconds; second++) {
             await new Promise(resolve => setTimeout(resolve, 0));
             if (!Registry.gameActive) break;
 
+            (options.trafficBursts || [])
+                .filter(burst => burst.atSecond === second + 1)
+                .forEach(burst => {
+                    const floor = Math.max(0, Math.min(Config.numFloors - 1, burst.floor));
+                    for (let index = 0; index < burst.count; index++) {
+                        const destination = burst.destination === undefined
+                            ? (floor === 0 ? Config.numFloors - 1 : 0)
+                            : burst.destination;
+                        Registry.floors[floor].waitingGuests.push({
+                            dest: destination,
+                            status: GuestStatus.HAPPY,
+                            spawnTime: virtualTime,
+                            isVip: false,
+                            isFarter: false,
+                            isSunset: false,
+                            isPartying: false,
+                            isGymBro: false,
+                            isBulky: false,
+                            isRoomService: false,
+                            boardingWeight: 1
+                        });
+                        Game.BalanceTelemetry.recordSpawn();
+                    }
+                });
+
             window.gameTick(virtualTime);
             elapsedSeconds = second + 1;
+            runStrategyController(elapsedSeconds);
             for (let frame = 0; frame < 60; frame++) {
                 virtualTime += animationStepMs;
                 window.animationTick(virtualTime);
@@ -102,6 +225,7 @@ window.Game.Simulator = {
         }
 
         const result = {
+            roundDefinition: JSON.parse(JSON.stringify(Config.GAME_DATA.rounds[round])),
             served: Registry.stats.served,
             livesRemaining: Registry.stats.lives,
             timeLeft: Registry.stats.timeLeft,

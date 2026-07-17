@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.1.0-stabilized
+// Balance version: 0.1.1-round-3-pressure
 window.GameBalanceData = {
-  "balanceVersion": "0.1.0-stabilized",
+  "balanceVersion": "0.1.1-round-3-pressure",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -420,8 +420,8 @@ window.GameBalanceData = {
     "3": {
       "floors": 10,
       "lifts": 2,
-      "spawnStart": 0.65,
-      "spawnEnd": 0.8,
+      "spawnStart": 1,
+      "spawnEnd": 1.2,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },

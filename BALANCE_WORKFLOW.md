@@ -187,6 +187,20 @@ npm.cmd run balance:matrix
 
 The command executes three fixed seeds for Rounds 2–13 and regenerates `reports/all-sweep-baseline.json` plus its readable Markdown summary. `npm.cmd run balance:report:check` verifies that the committed report matches both canonical balance data and the matrix definition. Known balance violations remain report findings rather than making the general correctness suite fail.
 
+### Early-round candidate experiments
+
+Candidate curves can be evaluated without mutating the live balance data with:
+
+```powershell
+npm.cmd run balance:experiment:early
+```
+
+Set `EXPERIMENT_CANDIDATE` to a candidate ID such as `r3-c2` to run one candidate. The simulator applies curve overrides, loadouts, strategies, and experimental traffic only inside its disposable realm. `reports/early-balance-experiments.json` is evidence, not a release gate.
+
+The accepted Round 3 pressure candidate is `r3-c2` (`1.00→1.20`). Across seeds 1234, 3141, and 6060, unattended all-Sweep failed all three runs, while supervised Wide Doors and hybrid-manual/Wide Doors comparators survived all three. The automated comparator carries four Bronze Wide Doors to establish recoverability conservatively; it does not establish an intended purchase quota. Human playtesting remains required.
+
+Round 2 remains unresolved. Raising general arrival pressure and adding a late synthetic burst caused both all-Sweep and the current minimal-rescue proxy to fail. No Round 2 candidate should be promoted until a small, legible intervention reliably separates the intended strategy from unattended Sweep.
+
 ### Campaign economy simulation
 
 Models struggling, typical, and expert spending paths across all rounds.

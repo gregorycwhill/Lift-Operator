@@ -452,6 +452,31 @@ test('same seed, round, and strategy produce the same simulation result', async 
     expect(Number.isFinite(results.first.timeLeft)).toBe(true);
 });
 
+test('simulation experiment overrides and strategy actions remain isolated', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+        const canonical = JSON.stringify(Config.GAME_DATA.rounds[3]);
+        const simulation = await window.Game.Simulator.runRound(
+            1234,
+            { 0: 'sweep', 1: 'sweep' },
+            3,
+            {
+                strategy: 'minimal-rescue',
+                interventionIntervalSec: 12,
+                roundOverrides: { spawnStart: 1.01, spawnEnd: 1.21 }
+            }
+        );
+        return {
+            canonicalUnchanged: JSON.stringify(Config.GAME_DATA.rounds[3]) === canonical,
+            simulation
+        };
+    });
+
+    expect(result.canonicalUnchanged).toBe(true);
+    expect(result.simulation.roundDefinition.spawnStart).toBe(1.01);
+    expect(result.simulation.roundDefinition.spawnEnd).toBe(1.21);
+    expect(result.simulation.roundStats.manualClicks).toBeGreaterThan(0);
+});
+
 test('automation bridge rejects out-of-range targets', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = Registry.lifts[0];
@@ -685,7 +710,7 @@ test('design telemetry records Little’s Law inputs and weighted VIP exposure',
     expect(result.sample.littlesLawEstimate).toBe(6);
     expect(result.sample.imminentLives).toBe(10);
     expect(result.sample.manualDecisionsPerMinute).toBe(3);
-    expect(result.exported.balanceVersion).toBe('0.1.0-stabilized');
+    expect(result.exported.balanceVersion).toBe('0.1.1-round-3-pressure');
     expect(result.exported.samples).toHaveLength(1);
 });
 

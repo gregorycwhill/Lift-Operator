@@ -1,0 +1,284 @@
+{
+  "balanceVersion": "0.1.1-round-3-pressure",
+  "seeds": [
+    1234,
+    3141,
+    6060
+  ],
+  "summaries": [
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 153.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 42.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 147,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 4,
+      "averagePeakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 6,
+      "averageManualClicks": 5.333333333333333,
+      "averagePeakQueue": 40.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 9.666666666666666,
+      "averageManualClicks": 37,
+      "averagePeakQueue": 38
+    }
+  ],
+  "experiments": [
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 179,
+      "livesRemaining": 0,
+      "served": 124,
+      "manualClicks": 0,
+      "firstPerilSecond": 58.999999999935504,
+      "secondsInPeril": 112,
+      "peakQueue": 41
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 145,
+      "livesRemaining": 0,
+      "served": 80,
+      "manualClicks": 0,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 71,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 136,
+      "livesRemaining": 0,
+      "served": 77,
+      "manualClicks": 0,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 67,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 92,
+      "manualClicks": 5,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 90,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 154,
+      "livesRemaining": 0,
+      "served": 95,
+      "manualClicks": 4,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 72,
+      "peakQueue": 39
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 137,
+      "livesRemaining": 0,
+      "served": 81,
+      "manualClicks": 3,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 68,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 142,
+      "manualClicks": 6,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 107,
+      "peakQueue": 39
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 137,
+      "manualClicks": 5,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 65,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 138,
+      "manualClicks": 5,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 72,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 5,
+      "served": 128,
+      "manualClicks": 36,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 83,
+      "peakQueue": 41
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 13,
+      "served": 142,
+      "manualClicks": 36,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 29,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c2",
+        "spawnStart": 1,
+        "spawnEnd": 1.2
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 150,
+      "manualClicks": 39,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 33,
+      "peakQueue": 30
+    }
+  ]
+}

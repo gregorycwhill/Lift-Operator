@@ -280,4 +280,8 @@ Telemetry is included in isolated simulator results and can be exported through 
 
 The initial `0.1.0-stabilized` baseline contains 36 runs and 12 hard violations. All-Sweep survives every tested seed in Rounds 3–5 and one Round 2 seed. The other Round 2 runs die at 167 and 176 seconds, too late to provide the intended intervention window. Rounds 6–11 and 13 fail consistently. Round 12 all-Sweep survives 89–101 seconds and still needs comparison against an approved competent strategy.
 
+Balance `0.1.1-round-3-pressure` promotes the tested Round 3 arrival curve `1.00→1.20`. On the three fixed seeds, all-Sweep fails 3/3 while two active Wide Doors comparators survive 3/3. This is simulation evidence of separation, not a completed fun or affordability judgment. Round 2 remains an open design problem because tested increases in generic pressure defeated both the unattended floor and the minimal-rescue proxy.
+
+The regenerated 36-run matrix now has 9 hard violations, down from 12. Round 3 is no longer a violation; Rounds 2, 4, and 5 remain above the all-Sweep floor.
+
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

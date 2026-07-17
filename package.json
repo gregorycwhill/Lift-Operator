@@ -12,6 +12,7 @@
     "balance:check": "node scripts/generate-balance.js --check",
     "test:economy": "node scripts/simulate-economy.js",
     "balance:matrix": "node scripts/run-balance-matrix.js",
+    "balance:experiment:early": "node scripts/run-early-balance-experiments.js",
     "balance:report:check": "node scripts/validate-balance-report.js",
     "test:lifecycle": "playwright test tests/lifecycle-correctness.spec.js",
     "test:e2e": "playwright test tests/auto-pilot.spec.js",

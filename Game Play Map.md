@@ -110,7 +110,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | ---: | --- | --- | ---: | ---: | ---: | --- | --- |
 | 1 | First Shift | Survive 90s | 8 | 1 | 0.20→0.35 | Manual routing | None |
 | 2 | Let It Sweep | Survive 120s | 8 | 1 | 0.35→0.55 | Sweep | None |
-| 3 | Rush Delivery | Survive 120s | 10 | 2 | 0.50→0.75 | Room Service, lift roles | Wide Doors |
+| 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
 | 4 | Triage Protocol | Survive 150s | 10 | 2 | 0.65→0.90 | Priority Sweep | Wide Doors T2 |
 | 5 | Democracy | Survive 150s | 10 | 3 | 0.80→1.05 | Voting and Weighted Voting | None |
 | 6 | Maintenance Crisis | Survive 150s | 12 | 3 | 0.85→1.10 | Lift jams, redundancy | Wrench |
@@ -202,7 +202,7 @@ These figures are a candidate baseline. The current implementation uses 180-seco
 **Target feel**
 
 - First round where a new player may fail once.
-- Wide Doors Bronze should be affordable, but not mandatory.
+- Wide Doors Bronze should be affordable. The automated balance comparator carries four uses as a conservative proof that an active response can survive; human playtesting must determine whether successful play actually requires too many purchases.
 
 ### Round 4 — Triage Protocol
 
