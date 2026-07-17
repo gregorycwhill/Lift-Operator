@@ -33,6 +33,16 @@ window.isGuestDirectionCompatible = function(lift, guest, floor) {
     return true;
 };
 
+window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity) {
+    const guestWeight = guest.boardingWeight || (guest.type === 'room-service' ? 3 : (guest.isGymBro ? 2 : 1));
+    if (Registry.getLiftWeight(lift) + guestWeight > maxCapacity) return false;
+    if (guest.status === GuestStatus.RAGE) return false;
+    if (isStinky && !guest.isGymBro) return false;
+    if (lift.passengers.some(passenger => passenger.isVip)) return false;
+    if (guest.isVip && lift.passengers.length > 0) return false;
+    return window.isGuestDirectionCompatible(lift, guest, floor);
+};
+
 window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
@@ -511,27 +521,15 @@ window.animationTick = function(timestamp) {
                     else {
                         let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
                         let targetFloorToBoard = f;
-                        let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g => {
-                            let gWeight = g.boardingWeight || (g.type === 'room-service' ? 3.0 : (g.isGymBro ? 2.0 : 1.0));
-                            if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
-                            if (g.status === GuestStatus.RAGE) return false;
-                            if (isStinky && !g.isGymBro) return false;
-                            if (lift.passengers.some(p => p.isVip)) return false; 
-                            if (g.isVip && lift.passengers.length > 0) return false; 
-                            return window.isGuestDirectionCompatible(lift, g, f);
-                        });
+                        let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g =>
+                            window.canGuestBoardLift(lift, g, f, isStinky, maxCap)
+                        );
 
                         if (boardableGuestIndex === -1 && isDouble && Registry.floors[f+1]) {
                             targetFloorToBoard = f + 1;
-                            boardableGuestIndex = Registry.floors[f+1].waitingGuests.findIndex(g => {
-                                let gWeight = g.boardingWeight || (g.type === 'room-service' ? 3.0 : (g.isGymBro ? 2.0 : 1.0));
-                                if (Registry.getLiftWeight(lift) + gWeight > maxCap) return false;
-                                if (g.status === GuestStatus.RAGE) return false;
-                                if (isStinky && !g.isGymBro) return false;
-                                if (lift.passengers.some(p => p.isVip)) return false; 
-                                if (g.isVip && lift.passengers.length > 0) return false; 
-                                return window.isGuestDirectionCompatible(lift, g, f + 1);
-                            });
+                            boardableGuestIndex = Registry.floors[f+1].waitingGuests.findIndex(g =>
+                                window.canGuestBoardLift(lift, g, f + 1, isStinky, maxCap)
+                            );
                         }
 
                         if (boardableGuestIndex !== -1) {
@@ -606,6 +604,7 @@ window.Game.Engine = window.Game.Engine || {};
 window.Game.Engine.gameTick = window.gameTick;
 window.Game.Engine.animationTick = window.animationTick;
 window.Game.Engine.isGuestDirectionCompatible = window.isGuestDirectionCompatible;
+window.Game.Engine.canGuestBoardLift = window.canGuestBoardLift;
 window.Game.Engine.getGuestStatusForWait = window.getGuestStatusForWait;
 window.Game.Engine.getBoardingDurationMs = window.getBoardingDurationMs;
 window.Game.Engine.getGravitySpeedMultiplier = window.getGravitySpeedMultiplier;

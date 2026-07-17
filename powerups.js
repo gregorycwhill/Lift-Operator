@@ -209,7 +209,7 @@ const PowerUps = {
         groupThink: {
             id: 'groupThink', name: 'Group Think', icon: '✨',
             tiers: [
-                { cost: 2, desc: 'Target a floor: All waiting guests change dest to the majority choice.', target: 'floor', 
+                { cost: window.Config.GAME_DATA.powerups.groupThink.tiers[0].cost, desc: 'Target a floor: All waiting guests change dest to the majority choice.', target: 'floor',
                   execute: (liftId, floorId) => { 
                       const guests = Registry.floors[floorId].waitingGuests;
                       if (!guests.length) return;
@@ -227,7 +227,7 @@ const PowerUps = {
                       PowerUps.showEffectOnFloor(floorId, '✨');
                   } 
                 },
-                { cost: 4, desc: 'Target a lift: All passengers change dest to the majority choice.', target: 'lift', 
+                { cost: window.Config.GAME_DATA.powerups.groupThink.tiers[1].cost, desc: 'Target a lift: All passengers change dest to the majority choice.', target: 'lift',
                   execute: (liftId, floorId) => { 
                       const passengers = Registry.lifts[liftId].passengers;
                       if (!passengers.length) return;
@@ -245,7 +245,7 @@ const PowerUps = {
                       PowerUps.showEffectOnLift(liftId, '✨');
                   } 
                 },
-                { cost: 6, desc: 'Global Consensus: All guests (floors & lifts) sync to their group majority.', target: 'instant', 
+                { cost: window.Config.GAME_DATA.powerups.groupThink.tiers[2].cost, desc: 'Global Consensus: All guests (floors & lifts) sync to their group majority.', target: 'instant',
                   execute: () => { 
                       Registry.floors.forEach((f, fIdx) => {
                           const guests = f.waitingGuests;

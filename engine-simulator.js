@@ -155,6 +155,34 @@ window.Game.Simulator = {
                 const impairedLift = Registry.lifts.find(lift => lift.jamTimer > 0 || lift.stinkTimer > 0);
                 if (criticalCount === 0 && peakQueue < 8 && !impairedLift) return;
 
+                // Model competent hybrid play: preserve the featured automation,
+                // but redirect one available empty lift toward the most urgent
+                // unclaimed queue when pressure becomes visible.
+                const rescueLift = [...Registry.lifts]
+                    .filter(lift => !lift.manualOverride && lift.jamTimer <= 0)
+                    .sort((a, b) =>
+                        a.passengers.length - b.passengers.length ||
+                        Registry.getLiftWeight(a) - Registry.getLiftWeight(b)
+                    )[0];
+                if (rescueLift) {
+                    const currentFloor = Math.round(rescueLift.pos / Registry.floorHeight);
+                    const rescueTarget = Registry.floors.map((floor, floorIndex) => {
+                        const critical = floor.waitingGuests.filter(guest => guest.status === GuestStatus.CRITICAL).length;
+                        const annoyed = floor.waitingGuests.filter(guest => guest.status === GuestStatus.ANNOYED).length;
+                        const oldestWaitMs = floor.waitingGuests.reduce(
+                            (maximum, guest) => Math.max(maximum, virtualTime - guest.spawnTime),
+                            0
+                        );
+                        return {
+                            floorIndex,
+                            count: floor.waitingGuests.length,
+                            score: critical * 100000 + annoyed * 10000 + oldestWaitMs + floor.waitingGuests.length * 100 - Math.abs(floorIndex - currentFloor)
+                        };
+                    }).filter(target => target.count > 0)
+                        .sort((a, b) => b.score - a.score)[0];
+                    if (rescueTarget) window.setLiftTarget(rescueLift.id, rescueTarget.floorIndex);
+                }
+
                 const findItem = ids => PowerUps.inventory.find(candidate => ids.includes(candidate.id));
                 const jammedLift = Registry.lifts.find(lift => lift.jamTimer > 0);
                 const stinkyLift = Registry.lifts.find(lift => lift.stinkTimer > 0);
@@ -164,15 +192,15 @@ window.Game.Simulator = {
                     (criticalCount >= 3 && findItem(['musak'])) ||
                     (peakQueue >= 12 && findItem(['doors', 'tardis', 'doubleDecker', 'turbo'])) ||
                     findItem(['turbo', 'tardis', 'doors', 'musak', 'wrench', 'freshener', 'doubleDecker']);
-                if (!item) return;
-                const ability = PowerUps.catalog[item.id] && PowerUps.catalog[item.id].tiers[item.tier];
-                if (!ability) return;
-                if (ability.target === 'instant') {
-                    PowerUps.primeAbility(item.id, item.tier);
-                } else {
-                    const targetLift = jammedLift || stinkyLift || [...Registry.lifts].sort((a, b) => b.passengers.length - a.passengers.length)[0];
-                    ability.execute(targetLift.id, Math.round(targetLift.pos / Registry.floorHeight));
-                    PowerUps.consumeFromInventory(item.id, item.tier);
+                if (item) {
+                    const ability = PowerUps.catalog[item.id] && PowerUps.catalog[item.id].tiers[item.tier];
+                    if (ability && ability.target === 'instant') {
+                        PowerUps.primeAbility(item.id, item.tier);
+                    } else if (ability) {
+                        const targetLift = jammedLift || stinkyLift || [...Registry.lifts].sort((a, b) => b.passengers.length - a.passengers.length)[0];
+                        ability.execute(targetLift.id, Math.round(targetLift.pos / Registry.floorHeight));
+                        PowerUps.consumeFromInventory(item.id, item.tier);
+                    }
                 }
                 lastInterventionSecond = second;
                 return;

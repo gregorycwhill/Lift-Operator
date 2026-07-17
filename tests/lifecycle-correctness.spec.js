@@ -532,7 +532,7 @@ test('idealized campaign comparator uses production movement without player clic
     expect(result.designTelemetry.samples.length).toBeGreaterThan(0);
 });
 
-test('resource-supported comparator consumes declared inventory without player clicks', async ({ page }) => {
+test('resource-supported comparator combines declared inventory with manual rescues', async ({ page }) => {
     const result = await page.evaluate(() => window.Game.Simulator.runRound(
         1234,
         { 0: 'priority-sweep', 1: 'priority-sweep' },
@@ -545,7 +545,7 @@ test('resource-supported comparator consumes declared inventory without player c
     ));
 
     expect(result.error).toBeUndefined();
-    expect(result.roundStats.manualClicks).toBe(0);
+    expect(result.roundStats.manualClicks).toBeGreaterThan(0);
     expect(result.livesRemaining).toBeGreaterThanOrEqual(0);
 });
 
@@ -736,6 +736,97 @@ test('manual floor selection overrides Sweep direction for every waiting guest',
     expect(result).toEqual({
         automatic: { upward: true, downward: false },
         manuallySelected: { upward: true, downward: true }
+    });
+});
+
+test('Hands-Free accepts custom automation only and rejects built-in policies', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.stats.round = 6;
+        Registry.roundStats.manualClicks = 0;
+        Registry.customScriptTicks = 0;
+        const builtIn = Achievements.definitions.handsfree.check(Registry.roundStats);
+        Registry.customScriptTicks = 120;
+        const custom = Achievements.definitions.handsfree.check(Registry.roundStats);
+        Registry.roundStats.manualClicks = 1;
+        const customWithClick = Achievements.definitions.handsfree.check(Registry.roundStats);
+        return { builtIn, custom, customWithClick };
+    });
+
+    expect(result).toEqual({ builtIn: 0, custom: 6, customWithClick: 0 });
+});
+
+test('runtime power-up catalog uses canonical prices and core effects', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        buildWorld();
+        const lift = Registry.lifts[0];
+        lift.effects = [];
+        lift.jamTimer = 99;
+        PowerUps.catalog.wrench.tiers[0].execute(0, 0);
+        lift.stinkTimer = 99;
+        PowerUps.catalog.freshener.tiers[0].execute(0, 0);
+        PowerUps.catalog.turbo.tiers[0].execute(0, 0);
+        PowerUps.catalog.tardis.tiers[0].execute(0, 0);
+        PowerUps.catalog.doubleDecker.tiers[0].execute(0, 0);
+
+        return {
+            pricesMatch: Object.entries(PowerUps.catalog).every(([id, item]) =>
+                item.tiers.every((tier, index) => tier.cost === Config.GAME_DATA.powerups[id].tiers[index].cost)
+            ),
+            jamTimer: lift.jamTimer,
+            stinkTimer: lift.stinkTimer,
+            freshenerTimer: lift.freshenerTimer,
+            turboTimer: lift.turboTimer,
+            tardisCapacity: PowerUps.getLiftCapacity(0),
+            doubleCapacityActive: lift.doubleDeckerTimer > 0
+        };
+    });
+
+    expect(result.pricesMatch).toBe(true);
+    expect(result.jamTimer).toBe(0);
+    expect(result.stinkTimer).toBe(0);
+    expect(result.freshenerTimer).toBeGreaterThan(0);
+    expect(result.turboTimer).toBeGreaterThan(0);
+    expect(result.tardisCapacity).toBe(999);
+    expect(result.doubleCapacityActive).toBe(true);
+});
+
+test('production boarding enforces capacity, rage, VIP, and stink compatibility', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const lift = { automation: 'manual', manualOverride: false, sweepDirection: 1, passengers: [] };
+        const canBoard = (guest, stinky = false, capacity = Config.liftCapacity) =>
+            Game.Engine.canGuestBoardLift(lift, guest, 2, stinky, capacity);
+        const ordinary = { dest: 4, status: GuestStatus.HAPPY };
+        const roomService = { dest: 4, status: GuestStatus.HAPPY, type: 'room-service' };
+        const gymBro = { dest: 4, status: GuestStatus.HAPPY, isGymBro: true };
+        const rage = { dest: 4, status: GuestStatus.RAGE };
+        const vip = { dest: 4, status: GuestStatus.HAPPY, isVip: true };
+
+        const empty = {
+            ordinary: canBoard(ordinary),
+            roomServiceTooHeavy: !canBoard(roomService, false, 2),
+            rageRejected: !canBoard(rage),
+            ordinaryRejectedByStink: !canBoard(ordinary, true),
+            gymBroAcceptsStink: canBoard(gymBro, true),
+            vipBoardsAlone: canBoard(vip)
+        };
+        lift.passengers = [ordinary];
+        const vipRejectedWithPassenger = !canBoard(vip);
+        lift.passengers = [vip];
+        const ordinaryRejectedWithVip = !canBoard(ordinary);
+        return { empty, vipRejectedWithPassenger, ordinaryRejectedWithVip };
+    });
+
+    expect(result).toEqual({
+        empty: {
+            ordinary: true,
+            roomServiceTooHeavy: true,
+            rageRejected: true,
+            ordinaryRejectedByStink: true,
+            gymBroAcceptsStink: true,
+            vipBoardsAlone: true
+        },
+        vipRejectedWithPassenger: true,
+        ordinaryRejectedWithVip: true
     });
 });
 

@@ -223,6 +223,8 @@ The strong result is selected per seed from a small, auditable portfolio rather 
 
 Resource-supported profiles select items from observed conditions rather than inventory order: Wrench for jams, Freshener for stink, Musak for critical exposure, and throughput items for large queues. Where available, the portfolio compares Sweep, Priority Sweep, and Weighted Voting. A band-wide pressure change is rejected wholesale if it creates unattended survivors without establishing competent survival.
 
+Resource-supported profiles also perform bounded manual rescues: when visible pressure crosses the intervention threshold, one available lift is redirected to the highest-scoring urgent queue. This represents the intended hybrid play loop rather than treating power-up activation alone as competent play. The July 2026 late-campaign 20% pressure experiment failed the batch gate—Rounds 7 and 8 gained unattended survivors while Rounds 9–11 and 13 still lacked competent survival—and was rolled back. Further late-round experiments should add event-specific response logic or improve the leverage of the introduced solution before changing arrival curves.
+
 ## 7. Human playtest protocol
 
 For each candidate balance version:

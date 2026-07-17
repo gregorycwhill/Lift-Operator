@@ -33,28 +33,28 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 ## Milestone C — Balance data
 
 - [x] Schema validator covers all 13 rounds.
-- [ ] Power-up and achievement references resolve.
-- [ ] Tier prices and duration rules validate.
+- [x] Power-up and achievement references resolve.
+- [x] Tier prices and duration rules validate.
 - [x] Canonical config has a balance version.
 - [ ] Legacy duplicate parameters are rejected or removed.
 - [ ] Production engine consumes generated values.
 
 ## Milestone D — Mechanic coverage
 
-- [ ] Patience and rage.
+- [x] Patience and rage.
 - [ ] VIP exclusivity and penalty.
-- [ ] Room Service weight and boarding.
+- [x] Room Service weight and boarding.
 - [ ] Gym Bro weight and stink threshold.
 - [ ] Jam and Wrench.
 - [ ] Stink, evacuation, and Freshener.
 - [ ] Rooftop redirect and release.
-- [ ] Wide Doors.
-- [ ] Turbo.
+- [x] Wide Doors.
+- [x] Turbo.
 - [ ] Musak.
-- [ ] TARDIS.
+- [x] TARDIS.
 - [ ] Group Think.
-- [ ] Double-Decker.
-- [ ] Gravity.
+- [x] Double-Decker.
+- [x] Gravity.
 - [ ] Open Plan remains experimental and is excluded from campaign gates.
 
 ## Milestone E — Deterministic campaign tests
@@ -72,11 +72,12 @@ Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds f
 - [ ] Unattended all-Sweep fails accepted seeds for every campaign round from Round 2 onward.
 - [ ] Round 2 unattended Sweep fails late while the approved minimal-intervention policy survives.
 - [ ] Each later intended strategy materially outperforms all-Sweep on its representative seeds.
-- [ ] Hands-Free rejects every built-in automation and accepts eligible player-authored custom automation only.
+- [x] Hands-Free rejects every built-in automation and accepts eligible player-authored custom automation only.
 - [x] All-Sweep baseline report covers three fixed seeds across Rounds 2–13.
 - [x] Simulator candidate overrides, loadouts, and intervention strategies run in an isolated realm without changing the live configuration.
 - [x] Built-in-only balance comparators record zero manual decisions and cannot fall through into rescue-controller actions.
 - [x] Campaign envelope classifies all rounds and marks an underperforming candidate comparator as Unproven rather than Overloaded.
+- [x] Resource-supported campaign profiles combine auditable inventory use with bounded urgent-queue manual rescue.
 - [x] Round 3 `1.00→1.20` candidate makes all-Sweep fail 3/3 fixed seeds while active Wide Doors comparators survive 3/3.
 - [x] Coarse campaign balance makes Rounds 4–6 all-Sweep fail 3/3 while supported portfolio profiles survive 3/3.
 - [x] Event/strategic portfolio compares multiple unlocked policies and condition-driven resource use without changing player-facing behavior.

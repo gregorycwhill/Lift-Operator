@@ -68,6 +68,13 @@ Object.keys(design.powerups).forEach(id => {
         assert(Number.isInteger(round) && round >= 1 && round <= 14, `${id} tier ${index + 1}: invalid unlock round.`);
     });
 });
+Object.keys(design.shopUnlocks).forEach(id => {
+    assert(Boolean(design.powerups[id]), `${id}: shop unlock references an unknown power-up.`);
+});
+assert(
+    Object.keys(design.shopUnlocks).length === Object.keys(design.powerups).length,
+    'Every power-up must have exactly one shop unlock entry.'
+);
 
 const standardPayout = design.payouts.standard;
 const endurancePayout = design.payouts.endurance;
@@ -95,6 +102,9 @@ Object.entries(design.achievements).forEach(([id, achievement]) => {
         }
     }
 });
+
+const achievementIds = new Set(Object.values(design.achievements).map(achievement => achievement.id));
+assert(achievementIds.size === Object.keys(design.achievements).length, 'Achievement ids must be unique.');
 
 const probabilities = [
     ['checkoutChance', design.system.checkoutChance],

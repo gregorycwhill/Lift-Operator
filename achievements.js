@@ -11,7 +11,13 @@ const Achievements = {
         },
         handsfree: {
             ...window.Config.GAME_DATA.achievements.handsfree,
-            check: (stats) => (stats.manualClicks === 0 && Registry.stats.round >= 2) ? Registry.stats.round : 0
+            // Hands-Free rewards authored automation, not selecting a built-in
+            // policy and watching it run unattended.
+            check: (stats) => (
+                stats.manualClicks === 0 &&
+                (Registry.customScriptTicks || 0) > 0 &&
+                Registry.stats.round >= 2
+            ) ? Registry.stats.round : 0
         },
         sardine: {
             ...window.Config.GAME_DATA.achievements.sardine,
