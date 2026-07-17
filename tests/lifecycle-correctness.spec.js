@@ -477,6 +477,17 @@ test('simulation experiment overrides and strategy actions remain isolated', asy
     expect(result.simulation.roundStats.manualClicks).toBeGreaterThan(0);
 });
 
+test('built-in simulation comparators do not inject manual rescue actions', async ({ page }) => {
+    const result = await page.evaluate(() => window.Game.Simulator.runRound(
+        1234,
+        { 0: 'priority-sweep', 1: 'priority-sweep' },
+        4,
+        { strategy: 'all-priority', roundOverrides: { spawnStart: 0.95, spawnEnd: 1.15 } }
+    ));
+
+    expect(result.roundStats.manualClicks).toBe(0);
+});
+
 test('automation bridge rejects out-of-range targets', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = Registry.lifts[0];

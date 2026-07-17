@@ -98,10 +98,10 @@ window.Game.Simulator = {
         let lastInterventionSecond = -Infinity;
 
         const runStrategyController = second => {
-            if (!options.strategy || options.strategy === 'all-sweep') return;
+            if (!options.strategy || options.strategy.startsWith('all-')) return;
             const interval = options.interventionIntervalSec || 20;
 
-            if (options.strategy === 'hybrid-manual-wide-doors') {
+            if (options.strategy.startsWith('hybrid-manual-')) {
                 const manualLift = Registry.lifts.find(lift => lift.automation === 'manual');
                 const hasCritical = Registry.floors.some(floor =>
                     floor.waitingGuests.some(guest => guest.status === GuestStatus.CRITICAL)

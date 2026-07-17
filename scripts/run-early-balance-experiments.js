@@ -27,7 +27,34 @@ const candidates = {
         { id: 'r3-c18', spawnStart: 0.99, spawnEnd: 1.19 },
         { id: 'r3-c2', spawnStart: 1.00, spawnEnd: 1.20 },
         { id: 'r3-d', spawnStart: 1.05, spawnEnd: 1.25 }
+    ],
+    4: [
+        { id: 'r4-a', spawnStart: 0.95, spawnEnd: 1.15 },
+        { id: 'r4-b', spawnStart: 1.10, spawnEnd: 1.30 },
+        { id: 'r4-c', spawnStart: 1.25, spawnEnd: 1.45 }
+    ],
+    5: [
+        { id: 'r5-a', spawnStart: 1.10, spawnEnd: 1.30 },
+        { id: 'r5-b', spawnStart: 1.25, spawnEnd: 1.45 },
+        { id: 'r5-c', spawnStart: 1.40, spawnEnd: 1.60 }
     ]
+};
+
+const strategiesForRound = round => ({
+    2: ['all-sweep', 'minimal-rescue'],
+    3: ['all-sweep', 'minimal-rescue', 'wide-doors-rescue', 'hybrid-manual-wide-doors'],
+    4: ['all-sweep', 'all-priority', 'hybrid-manual-priority'],
+    5: ['all-sweep', 'all-voting', 'all-weighted-voting', 'hybrid-manual-weighted-voting']
+}[round]);
+
+const automationForStrategy = (strategy, index) => {
+    if (strategy === 'hybrid-manual-wide-doors' && index === 0) return 'manual';
+    if (strategy === 'hybrid-manual-priority') return index === 0 ? 'manual' : 'priority-sweep';
+    if (strategy === 'hybrid-manual-weighted-voting') return index === 0 ? 'manual' : 'weighted-voting';
+    if (strategy === 'all-priority') return 'priority-sweep';
+    if (strategy === 'all-voting') return 'voting';
+    if (strategy === 'all-weighted-voting') return 'weighted-voting';
+    return 'sweep';
 };
 
 (async () => {
@@ -40,17 +67,15 @@ const candidates = {
         await page.goto('http://127.0.0.1:5500/index.html');
         const experiments = [];
 
-        for (const round of [2, 3]) {
+        for (const round of [2, 3, 4, 5]) {
             for (const candidate of candidates[round]) {
                 if (candidateFilter && candidate.id !== candidateFilter) continue;
-                const strategies = round === 2
-                    ? ['all-sweep', 'minimal-rescue']
-                    : ['all-sweep', 'minimal-rescue', 'wide-doors-rescue', 'hybrid-manual-wide-doors'];
+                const strategies = strategiesForRound(round);
                 for (const strategy of strategies) {
                     const scripts = Object.fromEntries(
                         Array.from({ length: balance.rounds[round].lifts }, (_, index) => [
                             index,
-                            strategy === 'hybrid-manual-wide-doors' && index === 0 ? 'manual' : 'sweep'
+                            automationForStrategy(strategy, index)
                         ])
                     );
                     for (const seed of seeds) {
@@ -99,12 +124,10 @@ const candidates = {
         }
 
         const summaries = [];
-        for (const round of [2, 3]) {
+        for (const round of [2, 3, 4, 5]) {
             for (const candidate of candidates[round]) {
                 if (candidateFilter && candidate.id !== candidateFilter) continue;
-                const strategies = round === 2
-                    ? ['all-sweep', 'minimal-rescue']
-                    : ['all-sweep', 'minimal-rescue', 'wide-doors-rescue', 'hybrid-manual-wide-doors'];
+                const strategies = strategiesForRound(round);
                 for (const strategy of strategies) {
                     const runs = experiments.filter(run => run.round === round && run.candidate.id === candidate.id && run.strategy === strategy);
                     summaries.push({

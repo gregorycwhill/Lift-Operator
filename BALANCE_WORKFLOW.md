@@ -201,6 +201,8 @@ The accepted Round 3 pressure candidate is `r3-c2` (`1.00→1.20`). Across seeds
 
 Round 2 remains unresolved. Raising general arrival pressure and adding a late synthetic burst caused both all-Sweep and the current minimal-rescue proxy to fail. No Round 2 candidate should be promoted until a small, legible intervention reliably separates the intended strategy from unattended Sweep.
 
+Rounds 4 and 5 candidate experiments also remain exploratory. Increased traffic can make all-Sweep fail, but all-Priority, all-Voting, and the current hybrid-manual proxies do not reliably outperform it. These results must not be interpreted as evidence that the featured policies are useless: the scripted manual controller is a deliberately simple heuristic and currently performs worse than Sweep. Before promoting further curves, define competent, round-specific strategy profiles and validate them against observed human play.
+
 ### Campaign economy simulation
 
 Models struggling, typical, and expert spending paths across all rounds.

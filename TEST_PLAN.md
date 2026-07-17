@@ -69,6 +69,7 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [ ] Hands-Free rejects every built-in automation and accepts eligible player-authored custom automation only.
 - [x] All-Sweep baseline report covers three fixed seeds across Rounds 2–13.
 - [x] Simulator candidate overrides, loadouts, and intervention strategies run in an isolated realm without changing the live configuration.
+- [x] Built-in-only balance comparators record zero manual decisions and cannot fall through into rescue-controller actions.
 - [x] Round 3 `1.00→1.20` candidate makes all-Sweep fail 3/3 fixed seeds while active Wide Doors comparators survive 3/3.
 - [ ] Human playtest confirms Round 3 remains readable and does not require an excessive Wide Doors purchase count.
 - [x] Baseline report freshness is tied to canonical balance and matrix hashes.
