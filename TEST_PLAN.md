@@ -92,6 +92,7 @@ Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds f
 - [ ] Quota rounds terminate correctly.
 - [x] Endurance has no timer or quota and terminates only at zero lives.
 - [x] Endurance score records survival time and guests served.
+- [x] Endurance envelope keeps unattended all-Sweep below 4 minutes and supported play within 4–8 minutes across accepted seeds.
 - [x] Accelerated Monkey Endurance reaches death and continues to Round 13.
 - [x] Economy paths remain non-negative for struggling, typical, and expert models; accumulated-bank inflation remains a tuning finding.
 - [x] Shop tiers and automation choices follow canonical progression unlocks.

@@ -294,4 +294,6 @@ Balance `0.2.0-e2e-coarse` applies the first satisficing batch. Rounds 4–6 are
 
 The event/strategic portfolio now selects condition-appropriate resources and compares Sweep, Priority Sweep, and Weighted Voting where unlocked. It classifies Rounds 7–11 and 13 as Overloaded. A uniform 20% pressure reduction failed the satisficing gate—it introduced additional unattended Sweep survivors without producing competent survival—so the entire experimental batch was rolled back. Late-campaign progress now requires stronger solution leverage or event-specific strategy, not further blind pressure reduction.
 
+Round 12 now uses the Endurance-specific `0.80→1.00` arrival curve. Across accepted seeds, unattended all-Sweep lasts 104–184 seconds (about 147 seconds average), while the supported portfolio lasts 264–357 seconds (about 314 seconds average). This satisfies the design window: built-ins remain below four minutes and competent play lasts four to eight minutes. Death remains the intended completion event.
+
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

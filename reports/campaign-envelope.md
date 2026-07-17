@@ -14,7 +14,7 @@ Balance version: `0.2.0-e2e-coarse`
 | 9 | OVERLOADED | 0/3 | 0/3 | 113s | 123s | 1.37 | 0.55 | 2.47 | 0.81 |
 | 10 | OVERLOADED | 0/3 | 0/3 | 118s | 135s | 1.62 | 0.73 | 2.26 | 0.89 |
 | 11 | OVERLOADED | 0/3 | 0/3 | 103s | 117s | 1.85 | 0.73 | 2.63 | 1.12 |
-| 12 | UNPROVEN | 0/3 | 0/3 | 94s | 93s | 2.13 | 0.72 | 3.00 | 1.41 |
+| 12 | CONTESTED | 0/3 | 0/3 | 147s | 314s | 0.88 | 0.38 | 2.55 | 0.50 |
 | 13 | OVERLOADED | 0/3 | 0/3 | 87s | 129s | 1.62 | 0.43 | 3.79 | 1.19 |
 
 The strong result is the best per-seed outcome from an auditable portfolio: an omniscient direct dispatcher and a featured-policy profile with a declared round-appropriate loadout. Where the portfolio does not outperform Sweep, the round remains Unproven rather than being tuned around weak comparator evidence.

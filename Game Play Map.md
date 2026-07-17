@@ -119,7 +119,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | 9 | Happy Hour | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |
 | 10 | Automation Workshop | Deliver 40 | 15 | 5 | 1.20→1.50 | Custom scripts | TARDIS, Group Think |
 | 11 | Heavy Lifting | Survive 180s | 15 | 5 | 1.35→1.70 | Gym Bros and mixed weight | Double-Decker |
-| 12 | Endurance Operations | Survive until 20 lives are lost | 15 | 5 | 1.45→2.10+ | Resource endurance and recombination | Higher tiers |
+| 12 | Endurance Operations | Survive until 20 lives are lost | 15 | 4 | 0.80→1.00 | Resource endurance and recombination | Higher tiers |
 | 13 | Pedal Power | Deliver 50 | 15 | 5 | 1.20→1.55 | Gravity and load optimization | Full catalog |
 
 These figures are a candidate baseline. The current implementation uses 180-second early rounds and substantially different values.

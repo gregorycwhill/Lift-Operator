@@ -453,8 +453,8 @@
     "12": {
       "floors": 15,
       "lifts": 4,
-      "spawnStart": 2,
-      "spawnEnd": 2.5,
+      "spawnStart": 0.8,
+      "spawnEnd": 1,
       "objective": "ENDURANCE",
       "gravityScalar": 0
     },

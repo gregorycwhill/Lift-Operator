@@ -38,6 +38,10 @@ envelope.rounds.forEach(entry => {
     assert(entry.unattended.survivors >= 0 && entry.unattended.survivors <= matrix.seeds.length, `Round ${entry.round}: invalid unattended outcome count.`);
     assert(entry.strong.survivors >= 0 && entry.strong.survivors <= matrix.seeds.length, `Round ${entry.round}: invalid strong outcome count.`);
 });
+const endurance = envelope.rounds.find(entry => entry.round === 12);
+assert(endurance && endurance.unattended.averageElapsedSeconds < 240, 'Round 12 unattended survival must remain below four minutes.');
+assert(endurance && endurance.strong.averageElapsedSeconds >= 240, 'Round 12 competent survival must reach four minutes.');
+assert(endurance && endurance.strong.averageElapsedSeconds <= 480, 'Round 12 competent survival must remain below eight minutes.');
 
 if (errors.length) {
     console.error(errors.map(error => `- ${error}`).join('\n'));
