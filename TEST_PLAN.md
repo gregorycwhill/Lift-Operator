@@ -16,6 +16,7 @@ This document is the execution checklist for the strategy in `TESTING_STRATEGY.m
 - [x] Ordinary failure shows a non-paying failed-attempt review before returning to the shop.
 - [x] Failed Round 2 review and retry controls explicitly retain and display Round 2.
 - [x] Successful review explicitly identifies the won round and newly unlocked round.
+- [x] Round 1 review and Round 2 briefing omit Supply Closet and purchase language before the first shop unlock.
 - [x] Successful retry/evaluation can commit only one payout.
 - [x] Round 12 death commits one Endurance payout and progresses to Round 13 through review.
 - [ ] Reset clears runtime state and retains intended career state.
@@ -67,6 +68,7 @@ Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds f
 - [x] Boarding duration invokes production weight and Wide Doors rules.
 - [x] Gravity invokes the production loaded-lift multiplier.
 - [x] Onboarding Sweep strategy beats a deliberately idle policy on its named golden seed.
+- [x] A manually selected stop overrides Sweep direction for all waiting guests, while unattended Sweep retains directional boarding.
 - [ ] Unattended all-Sweep fails accepted seeds for every campaign round from Round 2 onward.
 - [ ] Round 2 unattended Sweep fails late while the approved minimal-intervention policy survives.
 - [ ] Each later intended strategy materially outperforms all-Sweep on its representative seeds.

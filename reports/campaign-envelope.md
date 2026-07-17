@@ -1,10 +1,10 @@
 # Campaign Balance Envelope
 
-Balance version: `0.2.1-early-onboarding`
+Balance version: `0.2.2-round-2-accessibility`
 
 | Round | Classification | Sweep survival | Strong survival | Sweep time | Strong time | Arrival | Delivery | Utilisation | Queue trend |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 2 | UNDERLOADED | 1/3 | 1/3 | 174s | 174s | 0.60 | 0.32 | 1.90 | 0.28 |
+| 2 | UNDERLOADED | 3/3 | 3/3 | 180s | 180s | 0.51 | 0.31 | 1.69 | 0.21 |
 | 3 | CONTESTED | 0/3 | 3/3 | 153s | 180s | 1.09 | 0.61 | 1.81 | 0.48 |
 | 4 | CONTESTED | 0/3 | 3/3 | 159s | 180s | 1.07 | 0.64 | 1.68 | 0.43 |
 | 5 | CONTESTED | 0/3 | 3/3 | 149s | 180s | 1.56 | 0.95 | 1.66 | 0.62 |

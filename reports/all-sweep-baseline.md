@@ -1,13 +1,13 @@
 # All-Sweep Balance Baseline
 
-Balance version: `0.2.1-early-onboarding`  
+Balance version: `0.2.2-round-2-accessibility`
 Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 | Round | Seed | Outcome | Elapsed | Lives | Served | First peril | Min SI | Peak queue | P90 journey | Classification |
 | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 2 | 1234 | died | 176s | 0 | 56 | 89s | 0.00 | 28 | 53.1s | VIOLATION_FAILURE_TIMING |
-| 2 | 3141 | died | 167s | 0 | 49 | 70s | 0.00 | 30 | 53.7s | VIOLATION_FAILURE_TIMING |
-| 2 | 6060 | survived | 180s | 3 | 61 | 57s | 0.41 | 25 | 55.3s | VIOLATION_SURVIVED |
+| 2 | 1234 | survived | 180s | 5 | 50 | 70s | 0.55 | 27 | 54.1s | VIOLATION_SURVIVED |
+| 2 | 3141 | survived | 180s | 9 | 55 | 90s | 0.71 | 23 | 51.0s | VIOLATION_SURVIVED |
+| 2 | 6060 | survived | 180s | 8 | 59 | 59s | 0.61 | 20 | 50.9s | VIOLATION_SURVIVED |
 | 3 | 1234 | died | 179s | 0 | 124 | 59s | 0.00 | 41 | 47.9s | MEETS_ALL_SWEEP_FLOOR |
 | 3 | 3141 | died | 145s | 0 | 80 | 73s | 0.00 | 43 | 50.0s | MEETS_ALL_SWEEP_FLOOR |
 | 3 | 6060 | died | 136s | 0 | 77 | 69s | 0.00 | 43 | 47.0s | MEETS_ALL_SWEEP_FLOOR |

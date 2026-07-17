@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.1-early-onboarding",
+  "balanceVersion": "0.2.2-round-2-accessibility",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -373,8 +373,8 @@
     "2": {
       "floors": 10,
       "lifts": 1,
-      "spawnStart": 0.5,
-      "spawnEnd": 0.65,
+      "spawnStart": 0.4,
+      "spawnEnd": 0.52,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },

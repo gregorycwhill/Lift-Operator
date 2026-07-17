@@ -23,6 +23,16 @@ window.getGravitySpeedMultiplier = function(currentWeight, maxCapacity, gravityS
     return Math.max(0.1, 1 - ((currentWeight / maxCapacity) * gravityScalar));
 };
 
+window.isGuestDirectionCompatible = function(lift, guest, floor) {
+    // A clicked floor is an explicit pickup instruction. The lift's previous
+    // Sweep direction must not make that instruction appear to be ignored.
+    if (lift.manualOverride) return true;
+    if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
+    const guestDirection = guest.dest > floor ? 1 : -1;
+    if (lift.passengers.length > 0) return guestDirection === lift.sweepDirection;
+    return true;
+};
+
 window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
@@ -508,10 +518,7 @@ window.animationTick = function(timestamp) {
                             if (isStinky && !g.isGymBro) return false;
                             if (lift.passengers.some(p => p.isVip)) return false; 
                             if (g.isVip && lift.passengers.length > 0) return false; 
-                            if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
-                            const guestDir = g.dest > f ? 1 : -1;
-                            if (lift.passengers.length > 0) return guestDir === lift.sweepDirection;
-                            return true;
+                            return window.isGuestDirectionCompatible(lift, g, f);
                         });
 
                         if (boardableGuestIndex === -1 && isDouble && Registry.floors[f+1]) {
@@ -523,10 +530,7 @@ window.animationTick = function(timestamp) {
                                 if (isStinky && !g.isGymBro) return false;
                                 if (lift.passengers.some(p => p.isVip)) return false; 
                                 if (g.isVip && lift.passengers.length > 0) return false; 
-                                if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
-                                const guestDir = g.dest > (f + 1) ? 1 : -1;
-                                if (lift.passengers.length > 0) return guestDir === lift.sweepDirection;
-                                return true;
+                                return window.isGuestDirectionCompatible(lift, g, f + 1);
                             });
                         }
 
@@ -601,6 +605,7 @@ window.Game = window.Game || {};
 window.Game.Engine = window.Game.Engine || {};
 window.Game.Engine.gameTick = window.gameTick;
 window.Game.Engine.animationTick = window.animationTick;
+window.Game.Engine.isGuestDirectionCompatible = window.isGuestDirectionCompatible;
 window.Game.Engine.getGuestStatusForWait = window.getGuestStatusForWait;
 window.Game.Engine.getBoardingDurationMs = window.getBoardingDurationMs;
 window.Game.Engine.getGravitySpeedMultiplier = window.getGravitySpeedMultiplier;

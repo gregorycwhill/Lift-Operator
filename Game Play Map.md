@@ -109,7 +109,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | R | Theme | Objective | Floors | Lifts | Spawn start→end | Primary introduction | Shop unlock |
 | ---: | --- | --- | ---: | ---: | ---: | --- | --- |
 | 1 | First Shift | Survive 180s | 10 | 1 | 0.15→0.30 | Manual routing | None |
-| 2 | Let It Sweep | Survive 120s | 8 | 1 | 0.35→0.55 | Sweep | None |
+| 2 | Let It Sweep | Survive 180s | 10 | 1 | 0.40→0.52 | Sweep | None |
 | 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
 | 4 | Triage Protocol | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
 | 5 | Democracy | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
@@ -164,6 +164,7 @@ These figures are a candidate baseline. The current implementation uses 180-seco
 
 - Enable Sweep and observe it.
 - Use Sweep with occasional manual correction.
+- Clicking a floor while Sweep is active is an explicit pickup command: on arrival, the lift ignores its previous travel direction and boards every waiting guest who can legally fit. Capacity, VIP, rage, and hazard restrictions still apply; Sweep resumes after the stop.
 - Stay manual with high-skill routing.
 
 **Mastery**

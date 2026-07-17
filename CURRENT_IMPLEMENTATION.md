@@ -109,7 +109,7 @@ The gameplay map previously implied that some hazards continued or scaled after 
 | Automation | Status | Summary |
 | --- | --- | --- |
 | Manual | Implemented | Player clicks a shaft floor |
-| Sweep | Implemented | Directional routing using waiting and onboard demand |
+| Sweep | Implemented | Directional routing using waiting and onboard demand; a manually selected stop boards waiting guests in either direction, subject to normal capacity and compatibility rules |
 | Priority Sweep | Implemented | Favors urgent guests |
 | Voting | Implemented | Selects the floor with greatest request volume |
 | Weighted Voting | Implemented | Gives urgent requests greater weight |
@@ -297,5 +297,7 @@ The event/strategic portfolio now selects condition-appropriate resources and co
 Round 12 now uses the Endurance-specific `0.80→1.00` arrival curve. Across accepted seeds, unattended all-Sweep lasts 104–184 seconds (about 147 seconds average), while the supported portfolio lasts 264–357 seconds (about 314 seconds average). This satisfies the design window: built-ins remain below four minutes and competent play lasts four to eight minutes. Death remains the intended completion event.
 
 Human playtest feedback found Round 1 too difficult and the review/retry outcome unclear. Balance `0.2.1-early-onboarding` reduces Round 1 arrival pressure to `0.15→0.30`. Successful reviews now explicitly celebrate the won round and next unlock; failed reviews explicitly promise and label a same-round retry. The Round 2 retry transaction was reconfirmed in production-path tests: failure preserves Round 2, its seed, and its checkpoint. Round 2 pressure remains an open human-play outlier because reducing it blindly would worsen the existing unattended-Sweep violation.
+
+Repeated human playtesting still found Round 2 inaccessible, so balance `0.2.2-round-2-accessibility` provisionally reduces its pressure to `0.40→0.52`. This prioritizes novice progression while leaving the resulting unattended-Sweep violation explicit. Manual floor selection now supplies the missing supervised action: while Sweep is active, the selected stop ignores Sweep direction and boards all legally compatible guests until capacity is reached, then returns to automation. Review and briefing copy now derives Supply Closet language from canonical unlocks: Round 1 continues directly to Round 2, and Round 2 shows `Start Round 2` with no locked shop messaging.
 
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

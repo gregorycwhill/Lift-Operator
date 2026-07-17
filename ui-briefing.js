@@ -63,7 +63,9 @@ window.showRoundModal = function(round) {
         btn.parentNode.insertBefore(shopDiv, btn);
     }
     
-    if (round > 1 && typeof PowerUps !== 'undefined') {
+    const hasShopUnlocks = typeof PowerUps !== 'undefined' && Object.values(Config.GAME_DATA.shopUnlocks || {})
+        .some(tiers => tiers.some(unlockRound => unlockRound <= round));
+    if (hasShopUnlocks) {
         if (shopDiv) shopDiv.style.display = 'block';
         if (typeof ui.renderShop === 'function') ui.renderShop();
         if (btn) {
@@ -97,6 +99,9 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     const outcome = document.getElementById('reviewOutcomeMessage');
     const continueButton = document.getElementById('continueToBriefingBtn');
     const failed = reason === 'failed';
+    const destinationRound = failed ? completedRound : Math.min(13, completedRound + 1);
+    const destinationHasShop = Object.values(Config.GAME_DATA.shopUnlocks || {})
+        .some(tiers => tiers.some(unlockRound => unlockRound <= destinationRound));
     if (heading) heading.innerText = failed
         ? `Round ${completedRound} Attempt Failed`
         : `You Did It! Round ${completedRound} Complete!`;
@@ -104,8 +109,12 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
         ? `Your Round ${completedRound} checkpoint is safe. Review the results, revise your plan, and try the same round again.`
         : `Excellent work — Round ${completedRound} is won and Round ${Math.min(13, completedRound + 1)} is unlocked!`;
     if (continueButton) continueButton.innerText = failed
-        ? `Supply Closet & Retry Round ${completedRound}`
-        : completedRound >= 13 ? 'Finish Campaign' : `Supply Closet & Continue to Round ${completedRound + 1}`;
+        ? destinationHasShop ? `Supply Closet & Retry Round ${completedRound}` : `Retry Round ${completedRound}`
+        : completedRound >= 13
+            ? 'Finish Campaign'
+            : destinationHasShop
+                ? `Supply Closet & Continue to Round ${completedRound + 1}`
+                : `Continue to Round ${completedRound + 1}`;
     
     document.getElementById('reviewServedText').innerText = evaluation.guestsServed;
     document.getElementById('breakdownHappy').innerText = Registry.roundStats.happyServed || 0;

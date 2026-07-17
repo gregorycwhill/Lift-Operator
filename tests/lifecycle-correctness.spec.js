@@ -133,7 +133,7 @@ test('failed attempt review awards nothing and continues to same-round shop', as
     expect(result.pending.round).toBe(2);
     await expect(page.locator('#roundReviewOverlay h2')).toHaveText('Round 2 Attempt Failed');
     await expect(page.locator('#reviewOutcomeMessage')).toContainText('same round again');
-    await expect(page.locator('#continueToBriefingBtn')).toHaveText('Supply Closet & Retry Round 2');
+    await expect(page.locator('#continueToBriefingBtn')).toHaveText('Retry Round 2');
 
     await page.click('#continueToBriefingBtn');
     await expect(page.locator('#roundModalOverlay')).toBeVisible();
@@ -152,6 +152,20 @@ test('successful review explicitly celebrates the completed round and next unloc
     await expect(page.locator('#roundReviewOverlay h2')).toHaveText('You Did It! Round 2 Complete!');
     await expect(page.locator('#reviewOutcomeMessage')).toContainText('Round 2 is won');
     await expect(page.locator('#continueToBriefingBtn')).toHaveText('Supply Closet & Continue to Round 3');
+});
+
+test('Round 1 review and Round 2 briefing do not advertise a locked Supply Closet', async ({ page }) => {
+    await page.evaluate(() => {
+        skipToRound(1, { showBriefing: false });
+        Registry.roundTerminalHandled = false;
+        completeRound('completed');
+    });
+    await expect(page.locator('#continueToBriefingBtn')).toHaveText('Continue to Round 2');
+
+    await page.click('#continueToBriefingBtn');
+    await expect(page.locator('#roundModalOverlay')).toBeVisible();
+    await expect(page.locator('#shopContainer')).toBeHidden();
+    await expect(page.locator('#startRoundBtn')).toHaveText('Start Round 2');
 });
 
 test('queue rendering is bounded under heavy late-round backlog', async ({ page }) => {
@@ -696,6 +710,35 @@ test('production boarding duration accounts for guest weight and Wide Doors', as
     });
 });
 
+test('manual floor selection overrides Sweep direction for every waiting guest', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const lift = {
+            automation: 'sweep',
+            manualOverride: false,
+            sweepDirection: 1,
+            passengers: [{ dest: 5 }]
+        };
+        const upwardGuest = { dest: 6 };
+        const downwardGuest = { dest: 1 };
+        const automatic = {
+            upward: Game.Engine.isGuestDirectionCompatible(lift, upwardGuest, 3),
+            downward: Game.Engine.isGuestDirectionCompatible(lift, downwardGuest, 3)
+        };
+
+        lift.manualOverride = true;
+        const manuallySelected = {
+            upward: Game.Engine.isGuestDirectionCompatible(lift, upwardGuest, 3),
+            downward: Game.Engine.isGuestDirectionCompatible(lift, downwardGuest, 3)
+        };
+        return { automatic, manuallySelected };
+    });
+
+    expect(result).toEqual({
+        automatic: { upward: true, downward: false },
+        manuallySelected: { upward: true, downward: true }
+    });
+});
+
 test('production gravity multiplier slows loaded upward travel with a safety floor', async ({ page }) => {
     const result = await page.evaluate(() => ({
         noGravity: Game.Engine.getGravitySpeedMultiplier(10, 10, 0),
@@ -768,7 +811,7 @@ test('design telemetry records Little’s Law inputs and weighted VIP exposure',
     expect(result.sample.littlesLawEstimate).toBe(6);
     expect(result.sample.imminentLives).toBe(10);
     expect(result.sample.manualDecisionsPerMinute).toBe(3);
-    expect(result.exported.balanceVersion).toBe('0.2.1-early-onboarding');
+    expect(result.exported.balanceVersion).toBe('0.2.2-round-2-accessibility');
     expect(result.exported.samples).toHaveLength(1);
 });
 

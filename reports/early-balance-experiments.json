@@ -1,11 +1,659 @@
 {
-  "balanceVersion": "0.2.1-early-onboarding",
+  "balanceVersion": "0.2.2-round-2-accessibility",
   "seeds": [
     1234,
     3141,
     6060
   ],
   "summaries": [
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 161,
+      "averageLivesRemaining": 0.3333333333333333,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 30.666666666666668
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 1,
+      "averageElapsedSeconds": 167.33333333333334,
+      "averageLivesRemaining": 0.6666666666666666,
+      "averageManualClicks": 3,
+      "averagePeakQueue": 31
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 157,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 153,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 2,
+      "averagePeakQueue": 32.333333333333336
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 142,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 144,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 1.6666666666666667,
+      "averagePeakQueue": 34.333333333333336
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 136,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 132,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 1.6666666666666667,
+      "averagePeakQueue": 35.333333333333336
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 162.66666666666666,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 31.666666666666668
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 156.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 2.6666666666666665,
+      "averagePeakQueue": 33.333333333333336
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 153,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 34.666666666666664
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 154.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 3,
+      "averagePeakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "all-sweep",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 9.333333333333334,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 31.666666666666668
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 10.666666666666666,
+      "averageManualClicks": 4,
+      "averagePeakQueue": 31.666666666666668
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 14.333333333333334,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 28.333333333333332
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 11.666666666666666,
+      "averageManualClicks": 37.333333333333336,
+      "averagePeakQueue": 24.666666666666668
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "all-sweep",
+      "survivors": 2,
+      "averageElapsedSeconds": 178,
+      "averageLivesRemaining": 5.666666666666667,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 36.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 173.66666666666666,
+      "averageLivesRemaining": 2.3333333333333335,
+      "averageManualClicks": 4,
+      "averagePeakQueue": 41.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 9,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 13.333333333333334,
+      "averageManualClicks": 35.333333333333336,
+      "averagePeakQueue": 28
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "all-sweep",
+      "survivors": 2,
+      "averageElapsedSeconds": 174,
+      "averageLivesRemaining": 3,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 40.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 177.66666666666666,
+      "averageLivesRemaining": 2,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 39
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 9.333333333333334,
+      "averageManualClicks": 5,
+      "averagePeakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 10.666666666666666,
+      "averageManualClicks": 41,
+      "averagePeakQueue": 29.666666666666668
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 169.66666666666666,
+      "averageLivesRemaining": 0.6666666666666666,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 40.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 1,
+      "averageElapsedSeconds": 169.66666666666666,
+      "averageLivesRemaining": 1.6666666666666667,
+      "averageManualClicks": 3.6666666666666665,
+      "averagePeakQueue": 35.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 175.33333333333334,
+      "averageLivesRemaining": 6,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 14,
+      "averageManualClicks": 41,
+      "averagePeakQueue": 32.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 165.66666666666666,
+      "averageLivesRemaining": 1.3333333333333333,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 39.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 167.66666666666666,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 3.3333333333333335,
+      "averagePeakQueue": 40.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 7.666666666666667,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 12.333333333333334,
+      "averageManualClicks": 39.666666666666664,
+      "averagePeakQueue": 31
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 163.33333333333334,
+      "averageLivesRemaining": 2.3333333333333335,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 41
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 149.66666666666666,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 2,
+      "averagePeakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 167.66666666666666,
+      "averageLivesRemaining": 5.666666666666667,
+      "averageManualClicks": 3.3333333333333335,
+      "averagePeakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 10,
+      "averageManualClicks": 38,
+      "averagePeakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 170.66666666666666,
+      "averageLivesRemaining": 1.3333333333333333,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 40.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 162.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 4.333333333333333,
+      "averagePeakQueue": 43.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 175.33333333333334,
+      "averageLivesRemaining": 9,
+      "averageManualClicks": 5.666666666666667,
+      "averagePeakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 10.333333333333334,
+      "averageManualClicks": 39,
+      "averagePeakQueue": 32.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 161,
+      "averageLivesRemaining": 2.3333333333333335,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 45
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 168,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 3.6666666666666665,
+      "averagePeakQueue": 44.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 7.666666666666667,
+      "averageManualClicks": 4.333333333333333,
+      "averagePeakQueue": 38.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 9,
+      "averageManualClicks": 40,
+      "averagePeakQueue": 39.333333333333336
+    },
     {
       "round": 3,
       "candidate": {
@@ -32,7 +680,7 @@
       "averageElapsedSeconds": 147,
       "averageLivesRemaining": 0,
       "averageManualClicks": 4,
-      "averagePeakQueue": 42
+      "averagePeakQueue": 41.666666666666664
     },
     {
       "round": 3,
@@ -42,11 +690,11 @@
         "spawnEnd": 1.2
       },
       "strategy": "wide-doors-rescue",
-      "survivors": 3,
+      "survivors": 2,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 6,
-      "averageManualClicks": 5.333333333333333,
-      "averagePeakQueue": 40.333333333333336
+      "averageLivesRemaining": 4,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 40
     },
     {
       "round": 3,
@@ -61,9 +709,2831 @@
       "averageLivesRemaining": 9.666666666666666,
       "averageManualClicks": 37,
       "averagePeakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 157,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 46
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 148.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 3.6666666666666665,
+      "averagePeakQueue": 46
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 176,
+      "averageLivesRemaining": 1,
+      "averageManualClicks": 4.333333333333333,
+      "averagePeakQueue": 43.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 6,
+      "averageManualClicks": 37,
+      "averagePeakQueue": 40.666666666666664
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 165.66666666666666,
+      "averageLivesRemaining": 1.3333333333333333,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 39.333333333333336
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-priority",
+      "survivors": 1,
+      "averageElapsedSeconds": 168.33333333333334,
+      "averageLivesRemaining": 1,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 38.333333333333336
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-priority",
+      "survivors": 1,
+      "averageElapsedSeconds": 157.66666666666666,
+      "averageLivesRemaining": 0.3333333333333333,
+      "averageManualClicks": 30.333333333333332,
+      "averagePeakQueue": 38.666666666666664
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 137,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 48
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-priority",
+      "survivors": 0,
+      "averageElapsedSeconds": 132,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 49.333333333333336
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-priority",
+      "survivors": 0,
+      "averageElapsedSeconds": 126,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 22,
+      "averagePeakQueue": 45
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 126.33333333333333,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 55
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-priority",
+      "survivors": 0,
+      "averageElapsedSeconds": 126.66666666666667,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 53
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-priority",
+      "survivors": 0,
+      "averageElapsedSeconds": 122,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 21.333333333333332,
+      "averagePeakQueue": 50.333333333333336
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 12.333333333333334,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 37.333333333333336
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-voting",
+      "survivors": 2,
+      "averageElapsedSeconds": 169,
+      "averageLivesRemaining": 2.3333333333333335,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 28.333333333333332
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-weighted-voting",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 7,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 39
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "survivors": 2,
+      "averageElapsedSeconds": 176.66666666666666,
+      "averageLivesRemaining": 3.6666666666666665,
+      "averageManualClicks": 32,
+      "averagePeakQueue": 38
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 7.333333333333333,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 43.333333333333336
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-voting",
+      "survivors": 0,
+      "averageElapsedSeconds": 167.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 40
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-weighted-voting",
+      "survivors": 1,
+      "averageElapsedSeconds": 176.33333333333334,
+      "averageLivesRemaining": 2,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 46.333333333333336
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "survivors": 0,
+      "averageElapsedSeconds": 171.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 32,
+      "averagePeakQueue": 46.333333333333336
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 171.66666666666666,
+      "averageLivesRemaining": 1.3333333333333333,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 58.666666666666664
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-voting",
+      "survivors": 0,
+      "averageElapsedSeconds": 150,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 45
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-weighted-voting",
+      "survivors": 0,
+      "averageElapsedSeconds": 166.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 57
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "survivors": 0,
+      "averageElapsedSeconds": 149.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 25.666666666666668,
+      "averagePeakQueue": 55
     }
   ],
   "experiments": [
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 155,
+      "livesRemaining": 0,
+      "served": 49,
+      "manualClicks": 0,
+      "firstPerilSecond": 61.99999999994947,
+      "secondsInPeril": 93,
+      "peakQueue": 29
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 148,
+      "livesRemaining": 0,
+      "served": 43,
+      "manualClicks": 0,
+      "firstPerilSecond": 69.99999999998673,
+      "secondsInPeril": 75,
+      "peakQueue": 32
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 1,
+      "served": 65,
+      "manualClicks": 0,
+      "firstPerilSecond": 55.999999999921535,
+      "secondsInPeril": 96,
+      "peakQueue": 31
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 155,
+      "livesRemaining": 0,
+      "served": 49,
+      "manualClicks": 2,
+      "firstPerilSecond": 61.99999999994947,
+      "secondsInPeril": 93,
+      "peakQueue": 29
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 167,
+      "livesRemaining": 0,
+      "served": 54,
+      "manualClicks": 3,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 94,
+      "peakQueue": 31
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-a",
+        "spawnStart": 0.55,
+        "spawnEnd": 0.75
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 62,
+      "manualClicks": 4,
+      "firstPerilSecond": 55.999999999921535,
+      "secondsInPeril": 92,
+      "peakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 155,
+      "livesRemaining": 0,
+      "served": 49,
+      "manualClicks": 0,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 92,
+      "peakQueue": 31
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 159,
+      "livesRemaining": 0,
+      "served": 55,
+      "manualClicks": 0,
+      "firstPerilSecond": 60.99999999994482,
+      "secondsInPeril": 85,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 157,
+      "livesRemaining": 0,
+      "served": 47,
+      "manualClicks": 0,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 95,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 48,
+      "manualClicks": 1,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 84,
+      "peakQueue": 30
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 164,
+      "livesRemaining": 0,
+      "served": 57,
+      "manualClicks": 2,
+      "firstPerilSecond": 60.99999999994482,
+      "secondsInPeril": 90,
+      "peakQueue": 35
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-b",
+        "spawnStart": 0.6,
+        "spawnEnd": 0.8
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 148,
+      "livesRemaining": 0,
+      "served": 46,
+      "manualClicks": 3,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 86,
+      "peakQueue": 32
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 140,
+      "livesRemaining": 0,
+      "served": 44,
+      "manualClicks": 0,
+      "firstPerilSecond": 66.99999999997276,
+      "secondsInPeril": 69,
+      "peakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 46,
+      "manualClicks": 0,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 80,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 43,
+      "manualClicks": 0,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 88,
+      "peakQueue": 32
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 146,
+      "livesRemaining": 0,
+      "served": 45,
+      "manualClicks": 2,
+      "firstPerilSecond": 66.99999999997276,
+      "secondsInPeril": 75,
+      "peakQueue": 37
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 46,
+      "manualClicks": 1,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 80,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 43,
+      "manualClicks": 2,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 88,
+      "peakQueue": 32
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 134,
+      "livesRemaining": 0,
+      "served": 45,
+      "manualClicks": 0,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 68,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 141,
+      "livesRemaining": 0,
+      "served": 44,
+      "manualClicks": 0,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 78,
+      "peakQueue": 37
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 133,
+      "livesRemaining": 0,
+      "served": 43,
+      "manualClicks": 0,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 78,
+      "peakQueue": 31
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 134,
+      "livesRemaining": 0,
+      "served": 43,
+      "manualClicks": 1,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 68,
+      "peakQueue": 35
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 141,
+      "livesRemaining": 0,
+      "served": 44,
+      "manualClicks": 1,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 78,
+      "peakQueue": 37
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 121,
+      "livesRemaining": 0,
+      "served": 38,
+      "manualClicks": 3,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 66,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 167,
+      "livesRemaining": 0,
+      "served": 54,
+      "manualClicks": 0,
+      "firstPerilSecond": 89.0000000000752,
+      "secondsInPeril": 75,
+      "peakQueue": 32
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 152,
+      "livesRemaining": 0,
+      "served": 47,
+      "manualClicks": 0,
+      "firstPerilSecond": 69.99999999998673,
+      "secondsInPeril": 72,
+      "peakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 169,
+      "livesRemaining": 0,
+      "served": 55,
+      "manualClicks": 0,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 94,
+      "peakQueue": 30
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 161,
+      "livesRemaining": 0,
+      "served": 51,
+      "manualClicks": 2,
+      "firstPerilSecond": 89.0000000000752,
+      "secondsInPeril": 69,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 152,
+      "livesRemaining": 0,
+      "served": 42,
+      "manualClicks": 3,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 80,
+      "peakQueue": 36
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 156,
+      "livesRemaining": 0,
+      "served": 49,
+      "manualClicks": 3,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 81,
+      "peakQueue": 30
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 159,
+      "livesRemaining": 0,
+      "served": 53,
+      "manualClicks": 0,
+      "firstPerilSecond": 89.0000000000752,
+      "secondsInPeril": 67,
+      "peakQueue": 35
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 45,
+      "manualClicks": 0,
+      "firstPerilSecond": 69.99999999998673,
+      "secondsInPeril": 70,
+      "peakQueue": 36
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 49,
+      "manualClicks": 0,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 75,
+      "peakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 163,
+      "livesRemaining": 0,
+      "served": 51,
+      "manualClicks": 3,
+      "firstPerilSecond": 89.0000000000752,
+      "secondsInPeril": 71,
+      "peakQueue": 36
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 42,
+      "manualClicks": 3,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 78,
+      "peakQueue": 39
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 46,
+      "manualClicks": 3,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 75,
+      "peakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 16,
+      "served": 119,
+      "manualClicks": 0,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 28
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 103,
+      "manualClicks": 0,
+      "firstPerilSecond": 94.00000000009848,
+      "secondsInPeril": 34,
+      "peakQueue": 32
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 3,
+      "served": 99,
+      "manualClicks": 0,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 95,
+      "peakQueue": 35
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 17,
+      "served": 119,
+      "manualClicks": 2,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 101,
+      "manualClicks": 5,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 39,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 7,
+      "served": 103,
+      "manualClicks": 5,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 67,
+      "peakQueue": 32
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 17,
+      "served": 119,
+      "manualClicks": 2,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 16,
+      "served": 117,
+      "manualClicks": 6,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 14,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 110,
+      "manualClicks": 6,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 41,
+      "peakQueue": 27
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 114,
+      "manualClicks": 39,
+      "firstPerilSecond": 81.00000000003796,
+      "secondsInPeril": 31,
+      "peakQueue": 27
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 111,
+      "manualClicks": 38,
+      "firstPerilSecond": 71.99999999999604,
+      "secondsInPeril": 39,
+      "peakQueue": 24
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-a",
+        "spawnStart": 0.75,
+        "spawnEnd": 0.95
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 15,
+      "served": 121,
+      "manualClicks": 35,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 23
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 125,
+      "manualClicks": 0,
+      "firstPerilSecond": 109.00000000016834,
+      "secondsInPeril": 21,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 108,
+      "manualClicks": 0,
+      "firstPerilSecond": 109.00000000016834,
+      "secondsInPeril": 46,
+      "peakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 174,
+      "livesRemaining": 0,
+      "served": 99,
+      "manualClicks": 0,
+      "firstPerilSecond": 102.00000000013574,
+      "secondsInPeril": 72,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 161,
+      "livesRemaining": 0,
+      "served": 90,
+      "manualClicks": 3,
+      "firstPerilSecond": 82.0000000000426,
+      "secondsInPeril": 78,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 3,
+      "served": 103,
+      "manualClicks": 4,
+      "firstPerilSecond": 109.00000000016834,
+      "secondsInPeril": 53,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 109,
+      "manualClicks": 5,
+      "firstPerilSecond": 102.00000000013574,
+      "secondsInPeril": 40,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 132,
+      "manualClicks": 4,
+      "firstPerilSecond": 82.0000000000426,
+      "secondsInPeril": 72,
+      "peakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 122,
+      "manualClicks": 4,
+      "firstPerilSecond": 110.00000000017299,
+      "secondsInPeril": 23,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 122,
+      "manualClicks": 6,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 35
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 14,
+      "served": 132,
+      "manualClicks": 36,
+      "firstPerilSecond": 80.0000000000333,
+      "secondsInPeril": 3,
+      "peakQueue": 28
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 16,
+      "served": 128,
+      "manualClicks": 35,
+      "firstPerilSecond": 93.00000000009383,
+      "secondsInPeril": 12,
+      "peakQueue": 23
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 119,
+      "manualClicks": 35,
+      "firstPerilSecond": 87.0000000000659,
+      "secondsInPeril": 1,
+      "peakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 162,
+      "livesRemaining": 0,
+      "served": 99,
+      "manualClicks": 0,
+      "firstPerilSecond": 70.99999999999139,
+      "secondsInPeril": 78,
+      "peakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 5,
+      "served": 118,
+      "manualClicks": 0,
+      "firstPerilSecond": 91.00000000008451,
+      "secondsInPeril": 32,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 115,
+      "manualClicks": 0,
+      "firstPerilSecond": 117.00000000020559,
+      "secondsInPeril": 34,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 3,
+      "served": 123,
+      "manualClicks": 4,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 88,
+      "peakQueue": 31
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 3,
+      "served": 113,
+      "manualClicks": 5,
+      "firstPerilSecond": 100.00000000012643,
+      "secondsInPeril": 56,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 173,
+      "livesRemaining": 0,
+      "served": 112,
+      "manualClicks": 5,
+      "firstPerilSecond": 103.0000000001404,
+      "secondsInPeril": 69,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 131,
+      "manualClicks": 6,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 74,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 131,
+      "manualClicks": 3,
+      "firstPerilSecond": 104.00000000014505,
+      "secondsInPeril": 2,
+      "peakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 14,
+      "served": 133,
+      "manualClicks": 6,
+      "firstPerilSecond": 127.00000000025216,
+      "secondsInPeril": 1,
+      "peakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 129,
+      "manualClicks": 42,
+      "firstPerilSecond": 88.00000000007054,
+      "secondsInPeril": 10,
+      "peakQueue": 30
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 131,
+      "manualClicks": 42,
+      "firstPerilSecond": 136.00000000029405,
+      "secondsInPeril": 3,
+      "peakQueue": 30
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 14,
+      "served": 136,
+      "manualClicks": 39,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 155,
+      "livesRemaining": 0,
+      "served": 92,
+      "manualClicks": 0,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 81,
+      "peakQueue": 41
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 119,
+      "manualClicks": 0,
+      "firstPerilSecond": 92.00000000008917,
+      "secondsInPeril": 59,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 174,
+      "livesRemaining": 0,
+      "served": 109,
+      "manualClicks": 0,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 73,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 5,
+      "served": 123,
+      "manualClicks": 4,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 83,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 163,
+      "livesRemaining": 0,
+      "served": 105,
+      "manualClicks": 4,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 89,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 166,
+      "livesRemaining": 0,
+      "served": 103,
+      "manualClicks": 3,
+      "firstPerilSecond": 90.00000000007987,
+      "secondsInPeril": 76,
+      "peakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 128,
+      "manualClicks": 6,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 60,
+      "peakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 133,
+      "manualClicks": 5,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 51,
+      "peakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 166,
+      "livesRemaining": 0,
+      "served": 107,
+      "manualClicks": 3,
+      "firstPerilSecond": 90.00000000007987,
+      "secondsInPeril": 76,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 16,
+      "served": 134,
+      "manualClicks": 44,
+      "firstPerilSecond": 70.99999999999139,
+      "secondsInPeril": 27,
+      "peakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 14,
+      "served": 137,
+      "manualClicks": 41,
+      "firstPerilSecond": 92.00000000008917,
+      "secondsInPeril": 7,
+      "peakQueue": 30
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 12,
+      "served": 131,
+      "manualClicks": 38,
+      "firstPerilSecond": 97.00000000011245,
+      "secondsInPeril": 9,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 148,
+      "livesRemaining": 0,
+      "served": 88,
+      "manualClicks": 0,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 74,
+      "peakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 126,
+      "manualClicks": 0,
+      "firstPerilSecond": 92.00000000008917,
+      "secondsInPeril": 42,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 169,
+      "livesRemaining": 0,
+      "served": 110,
+      "manualClicks": 0,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 82,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 164,
+      "livesRemaining": 0,
+      "served": 105,
+      "manualClicks": 3,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 100,
+      "peakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 173,
+      "livesRemaining": 0,
+      "served": 110,
+      "manualClicks": 3,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 99,
+      "peakQueue": 45
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 166,
+      "livesRemaining": 0,
+      "served": 105,
+      "manualClicks": 4,
+      "firstPerilSecond": 79.00000000002863,
+      "secondsInPeril": 83,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 137,
+      "manualClicks": 5,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 60,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 134,
+      "manualClicks": 4,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 53,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 138,
+      "manualClicks": 5,
+      "firstPerilSecond": 79.00000000002863,
+      "secondsInPeril": 56,
+      "peakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 140,
+      "manualClicks": 40,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 12,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 17,
+      "served": 143,
+      "manualClicks": 43,
+      "firstPerilSecond": 96.0000000001078,
+      "secondsInPeril": 10,
+      "peakQueue": 27
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 137,
+      "manualClicks": 36,
+      "firstPerilSecond": 71.99999999999604,
+      "secondsInPeril": 46,
+      "peakQueue": 30
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 159,
+      "livesRemaining": 0,
+      "served": 96,
+      "manualClicks": 0,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 91,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 7,
+      "served": 130,
+      "manualClicks": 0,
+      "firstPerilSecond": 87.0000000000659,
+      "secondsInPeril": 52,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 151,
+      "livesRemaining": 0,
+      "served": 95,
+      "manualClicks": 0,
+      "firstPerilSecond": 79.00000000002863,
+      "secondsInPeril": 72,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 83,
+      "manualClicks": 2,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 77,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 155,
+      "livesRemaining": 0,
+      "served": 93,
+      "manualClicks": 2,
+      "firstPerilSecond": 87.0000000000659,
+      "secondsInPeril": 68,
+      "peakQueue": 45
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 151,
+      "livesRemaining": 0,
+      "served": 95,
+      "manualClicks": 2,
+      "firstPerilSecond": 79.00000000002863,
+      "secondsInPeril": 72,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 86,
+      "manualClicks": 2,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 77,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 136,
+      "manualClicks": 4,
+      "firstPerilSecond": 87.0000000000659,
+      "secondsInPeril": 37,
+      "peakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 132,
+      "manualClicks": 4,
+      "firstPerilSecond": 79.00000000002863,
+      "secondsInPeril": 85,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 15,
+      "served": 134,
+      "manualClicks": 38,
+      "firstPerilSecond": 67.99999999997742,
+      "secondsInPeril": 19,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 7,
+      "served": 126,
+      "manualClicks": 38,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 39,
+      "peakQueue": 35
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 136,
+      "manualClicks": 38,
+      "firstPerilSecond": 80.0000000000333,
+      "secondsInPeril": 62,
+      "peakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 128,
+      "manualClicks": 0,
+      "firstPerilSecond": 91.00000000008451,
+      "secondsInPeril": 67,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 171,
+      "livesRemaining": 0,
+      "served": 110,
+      "manualClicks": 0,
+      "firstPerilSecond": 89.0000000000752,
+      "secondsInPeril": 82,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 161,
+      "livesRemaining": 0,
+      "served": 112,
+      "manualClicks": 0,
+      "firstPerilSecond": 61.99999999994947,
+      "secondsInPeril": 85,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 173,
+      "livesRemaining": 0,
+      "served": 116,
+      "manualClicks": 4,
+      "firstPerilSecond": 78.00000000002399,
+      "secondsInPeril": 79,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 167,
+      "livesRemaining": 0,
+      "served": 103,
+      "manualClicks": 5,
+      "firstPerilSecond": 90.00000000007987,
+      "secondsInPeril": 77,
+      "peakQueue": 46
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 89,
+      "manualClicks": 4,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 74,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 17,
+      "served": 147,
+      "manualClicks": 6,
+      "firstPerilSecond": 78.00000000002399,
+      "secondsInPeril": 7,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 138,
+      "manualClicks": 6,
+      "firstPerilSecond": 90.00000000007987,
+      "secondsInPeril": 37,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 166,
+      "livesRemaining": 0,
+      "served": 114,
+      "manualClicks": 5,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 93,
+      "peakQueue": 39
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 15,
+      "served": 153,
+      "manualClicks": 41,
+      "firstPerilSecond": 87.0000000000659,
+      "secondsInPeril": 16,
+      "peakQueue": 29
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 132,
+      "manualClicks": 40,
+      "firstPerilSecond": 85.00000000005657,
+      "secondsInPeril": 56,
+      "peakQueue": 38
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 147,
+      "manualClicks": 36,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 68,
+      "peakQueue": 31
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 157,
+      "livesRemaining": 0,
+      "served": 96,
+      "manualClicks": 0,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 84,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 7,
+      "served": 127,
+      "manualClicks": 0,
+      "firstPerilSecond": 103.0000000001404,
+      "secondsInPeril": 36,
+      "peakQueue": 46
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 146,
+      "livesRemaining": 0,
+      "served": 88,
+      "manualClicks": 0,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 69,
+      "peakQueue": 46
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 177,
+      "livesRemaining": 0,
+      "served": 121,
+      "manualClicks": 3,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 97,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 153,
+      "livesRemaining": 0,
+      "served": 92,
+      "manualClicks": 4,
+      "firstPerilSecond": 82.0000000000426,
+      "secondsInPeril": 71,
+      "peakQueue": 50
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 174,
+      "livesRemaining": 0,
+      "served": 123,
+      "manualClicks": 4,
+      "firstPerilSecond": 64.99999999996345,
+      "secondsInPeril": 93,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 145,
+      "manualClicks": 4,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 45,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 135,
+      "manualClicks": 5,
+      "firstPerilSecond": 82.0000000000426,
+      "secondsInPeril": 58,
+      "peakQueue": 49
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 147,
+      "manualClicks": 4,
+      "firstPerilSecond": 64.99999999996345,
+      "secondsInPeril": 38,
+      "peakQueue": 32
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 7,
+      "served": 129,
+      "manualClicks": 42,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 43,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 136,
+      "manualClicks": 40,
+      "firstPerilSecond": 80.0000000000333,
+      "secondsInPeril": 35,
+      "peakQueue": 41
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c18",
+        "spawnStart": 0.99,
+        "spawnEnd": 1.19
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 139,
+      "manualClicks": 38,
+      "firstPerilSecond": 84.00000000005193,
+      "secondsInPeril": 43,
+      "peakQueue": 34
+    },
     {
       "round": 3,
       "candidate": {
@@ -130,11 +3600,11 @@
       "survived": false,
       "elapsedSeconds": 150,
       "livesRemaining": 0,
-      "served": 92,
+      "served": 91,
       "manualClicks": 5,
       "firstPerilSecond": 59.999999999940165,
       "secondsInPeril": 90,
-      "peakQueue": 44
+      "peakQueue": 43
     },
     {
       "round": 3,
@@ -181,14 +3651,14 @@
       },
       "strategy": "wide-doors-rescue",
       "seed": 1234,
-      "survived": true,
+      "survived": false,
       "elapsedSeconds": 180,
-      "livesRemaining": 4,
-      "served": 142,
-      "manualClicks": 6,
+      "livesRemaining": 0,
+      "served": 137,
+      "manualClicks": 4,
       "firstPerilSecond": 59.999999999940165,
-      "secondsInPeril": 107,
-      "peakQueue": 39
+      "secondsInPeril": 110,
+      "peakQueue": 40
     },
     {
       "round": 3,
@@ -202,7 +3672,7 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 6,
-      "served": 137,
+      "served": 135,
       "manualClicks": 5,
       "firstPerilSecond": 77.00000000001933,
       "secondsInPeril": 65,
@@ -219,12 +3689,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 8,
-      "served": 138,
+      "livesRemaining": 6,
+      "served": 141,
       "manualClicks": 5,
       "firstPerilSecond": 68.99999999998207,
-      "secondsInPeril": 72,
-      "peakQueue": 40
+      "secondsInPeril": 74,
+      "peakQueue": 38
     },
     {
       "round": 3,
@@ -279,6 +3749,1356 @@
       "firstPerilSecond": 77.00000000001933,
       "secondsInPeril": 33,
       "peakQueue": 30
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 101,
+      "manualClicks": 0,
+      "firstPerilSecond": 58.999999999935504,
+      "secondsInPeril": 91,
+      "peakQueue": 45
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 176,
+      "livesRemaining": 0,
+      "served": 123,
+      "manualClicks": 0,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 103,
+      "peakQueue": 50
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 145,
+      "livesRemaining": 0,
+      "served": 93,
+      "manualClicks": 0,
+      "firstPerilSecond": 52.999999999907565,
+      "secondsInPeril": 86,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "minimal-rescue",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 161,
+      "livesRemaining": 0,
+      "served": 110,
+      "manualClicks": 3,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 101,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 148,
+      "livesRemaining": 0,
+      "served": 87,
+      "manualClicks": 4,
+      "firstPerilSecond": 80.0000000000333,
+      "secondsInPeril": 68,
+      "peakQueue": 52
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 136,
+      "livesRemaining": 0,
+      "served": 84,
+      "manualClicks": 4,
+      "firstPerilSecond": 60.99999999994482,
+      "secondsInPeril": 75,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 146,
+      "manualClicks": 5,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 79,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 1,
+      "served": 132,
+      "manualClicks": 3,
+      "firstPerilSecond": 81.00000000003796,
+      "secondsInPeril": 89,
+      "peakQueue": 48
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 168,
+      "livesRemaining": 0,
+      "served": 128,
+      "manualClicks": 5,
+      "firstPerilSecond": 60.99999999994482,
+      "secondsInPeril": 107,
+      "peakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 137,
+      "manualClicks": 35,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 50,
+      "peakQueue": 48
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 145,
+      "manualClicks": 38,
+      "firstPerilSecond": 53.99999999991222,
+      "secondsInPeril": 47,
+      "peakQueue": 41
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 142,
+      "manualClicks": 38,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 94,
+      "peakQueue": 33
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 148,
+      "livesRemaining": 0,
+      "served": 88,
+      "manualClicks": 0,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 74,
+      "peakQueue": 38
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 126,
+      "manualClicks": 0,
+      "firstPerilSecond": 92.00000000008917,
+      "secondsInPeril": 42,
+      "peakQueue": 36
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 169,
+      "livesRemaining": 0,
+      "served": 110,
+      "manualClicks": 0,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 82,
+      "peakQueue": 44
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-priority",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 3,
+      "served": 126,
+      "manualClicks": 0,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 75,
+      "peakQueue": 34
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-priority",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 159,
+      "livesRemaining": 0,
+      "served": 98,
+      "manualClicks": 0,
+      "firstPerilSecond": 71.99999999999604,
+      "secondsInPeril": 75,
+      "peakQueue": 45
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "all-priority",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 166,
+      "livesRemaining": 0,
+      "served": 109,
+      "manualClicks": 0,
+      "firstPerilSecond": 70.99999999999139,
+      "secondsInPeril": 95,
+      "peakQueue": 36
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 1,
+      "served": 116,
+      "manualClicks": 33,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 96,
+      "peakQueue": 44
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 83,
+      "manualClicks": 30,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 83,
+      "peakQueue": 34
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-a",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 146,
+      "livesRemaining": 0,
+      "served": 82,
+      "manualClicks": 28,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 88,
+      "peakQueue": 38
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 131,
+      "livesRemaining": 0,
+      "served": 85,
+      "manualClicks": 0,
+      "firstPerilSecond": 54.99999999991688,
+      "secondsInPeril": 76,
+      "peakQueue": 42
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 141,
+      "livesRemaining": 0,
+      "served": 77,
+      "manualClicks": 0,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 77,
+      "peakQueue": 55
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 139,
+      "livesRemaining": 0,
+      "served": 93,
+      "manualClicks": 0,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 82,
+      "peakQueue": 47
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-priority",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 125,
+      "livesRemaining": 0,
+      "served": 69,
+      "manualClicks": 0,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 67,
+      "peakQueue": 47
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-priority",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 137,
+      "livesRemaining": 0,
+      "served": 79,
+      "manualClicks": 0,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 79,
+      "peakQueue": 50
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-priority",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 134,
+      "livesRemaining": 0,
+      "served": 86,
+      "manualClicks": 0,
+      "firstPerilSecond": 61.99999999994947,
+      "secondsInPeril": 72,
+      "peakQueue": 51
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 125,
+      "livesRemaining": 0,
+      "served": 71,
+      "manualClicks": 21,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 67,
+      "peakQueue": 43
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 120,
+      "livesRemaining": 0,
+      "served": 64,
+      "manualClicks": 22,
+      "firstPerilSecond": 55.999999999921535,
+      "secondsInPeril": 63,
+      "peakQueue": 42
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-b",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 133,
+      "livesRemaining": 0,
+      "served": 81,
+      "manualClicks": 23,
+      "firstPerilSecond": 60.99999999994482,
+      "secondsInPeril": 72,
+      "peakQueue": 50
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 125,
+      "livesRemaining": 0,
+      "served": 77,
+      "manualClicks": 0,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 56,
+      "peakQueue": 58
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 131,
+      "livesRemaining": 0,
+      "served": 81,
+      "manualClicks": 0,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 60,
+      "peakQueue": 55
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 123,
+      "livesRemaining": 0,
+      "served": 81,
+      "manualClicks": 0,
+      "firstPerilSecond": 50.99999999989825,
+      "secondsInPeril": 65,
+      "peakQueue": 52
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-priority",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 141,
+      "livesRemaining": 0,
+      "served": 108,
+      "manualClicks": 0,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 81,
+      "peakQueue": 54
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-priority",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 123,
+      "livesRemaining": 0,
+      "served": 78,
+      "manualClicks": 0,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 65,
+      "peakQueue": 56
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-priority",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 116,
+      "livesRemaining": 0,
+      "served": 74,
+      "manualClicks": 0,
+      "firstPerilSecond": 61.99999999994947,
+      "secondsInPeril": 54,
+      "peakQueue": 49
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 122,
+      "livesRemaining": 0,
+      "served": 80,
+      "manualClicks": 22,
+      "firstPerilSecond": 55.999999999921535,
+      "secondsInPeril": 66,
+      "peakQueue": 50
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 129,
+      "livesRemaining": 0,
+      "served": 81,
+      "manualClicks": 21,
+      "firstPerilSecond": 55.999999999921535,
+      "secondsInPeril": 73,
+      "peakQueue": 54
+    },
+    {
+      "round": 4,
+      "candidate": {
+        "id": "r4-c",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-priority",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 115,
+      "livesRemaining": 0,
+      "served": 69,
+      "manualClicks": 21,
+      "firstPerilSecond": 58.999999999935504,
+      "secondsInPeril": 56,
+      "peakQueue": 47
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 17,
+      "served": 172,
+      "manualClicks": 0,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 34
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 154,
+      "manualClicks": 0,
+      "firstPerilSecond": 88.00000000007054,
+      "secondsInPeril": 2,
+      "peakQueue": 47
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 170,
+      "manualClicks": 0,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 61,
+      "peakQueue": 31
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-voting",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 159,
+      "manualClicks": 0,
+      "firstPerilSecond": 58.999999999935504,
+      "secondsInPeril": 103,
+      "peakQueue": 27
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-voting",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 5,
+      "served": 155,
+      "manualClicks": 0,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 59,
+      "peakQueue": 32
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 115,
+      "manualClicks": 0,
+      "firstPerilSecond": 67.99999999997742,
+      "secondsInPeril": 79,
+      "peakQueue": 26
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 7,
+      "served": 148,
+      "manualClicks": 0,
+      "firstPerilSecond": 81.00000000003796,
+      "secondsInPeril": 12,
+      "peakQueue": 42
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 142,
+      "manualClicks": 0,
+      "firstPerilSecond": 133.0000000002801,
+      "secondsInPeril": 37,
+      "peakQueue": 44
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 160,
+      "manualClicks": 0,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 25,
+      "peakQueue": 31
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 154,
+      "manualClicks": 35,
+      "firstPerilSecond": 101.00000000013108,
+      "secondsInPeril": 25,
+      "peakQueue": 37
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 141,
+      "manualClicks": 29,
+      "firstPerilSecond": 76.00000000001467,
+      "secondsInPeril": 65,
+      "peakQueue": 42
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-a",
+        "spawnStart": 1.1,
+        "spawnEnd": 1.3
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 170,
+      "livesRemaining": 0,
+      "served": 135,
+      "manualClicks": 32,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 87,
+      "peakQueue": 35
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 5,
+      "served": 176,
+      "manualClicks": 0,
+      "firstPerilSecond": 96.0000000001078,
+      "secondsInPeril": 44,
+      "peakQueue": 45
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 11,
+      "served": 172,
+      "manualClicks": 0,
+      "firstPerilSecond": 119.0000000002149,
+      "secondsInPeril": 3,
+      "peakQueue": 46
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 185,
+      "manualClicks": 0,
+      "firstPerilSecond": 51.99999999990291,
+      "secondsInPeril": 61,
+      "peakQueue": 39
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-voting",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 167,
+      "livesRemaining": 0,
+      "served": 147,
+      "manualClicks": 0,
+      "firstPerilSecond": 64.99999999996345,
+      "secondsInPeril": 74,
+      "peakQueue": 39
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-voting",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 180,
+      "livesRemaining": 0,
+      "served": 156,
+      "manualClicks": 0,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 108,
+      "peakQueue": 44
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 155,
+      "livesRemaining": 0,
+      "served": 135,
+      "manualClicks": 0,
+      "firstPerilSecond": 53.99999999991222,
+      "secondsInPeril": 94,
+      "peakQueue": 37
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 171,
+      "livesRemaining": 0,
+      "served": 143,
+      "manualClicks": 0,
+      "firstPerilSecond": 85.00000000005657,
+      "secondsInPeril": 79,
+      "peakQueue": 45
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 6,
+      "served": 156,
+      "manualClicks": 0,
+      "firstPerilSecond": 151.0000000003639,
+      "secondsInPeril": 18,
+      "peakQueue": 49
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 178,
+      "livesRemaining": 0,
+      "served": 152,
+      "manualClicks": 0,
+      "firstPerilSecond": 75.00000000001002,
+      "secondsInPeril": 98,
+      "peakQueue": 45
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 174,
+      "livesRemaining": 0,
+      "served": 146,
+      "manualClicks": 34,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 106,
+      "peakQueue": 47
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 173,
+      "livesRemaining": 0,
+      "served": 140,
+      "manualClicks": 32,
+      "firstPerilSecond": 66.99999999997276,
+      "secondsInPeril": 92,
+      "peakQueue": 50
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-b",
+        "spawnStart": 1.25,
+        "spawnEnd": 1.45
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 167,
+      "livesRemaining": 0,
+      "served": 141,
+      "manualClicks": 30,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 87,
+      "peakQueue": 42
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-sweep",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 167,
+      "livesRemaining": 0,
+      "served": 152,
+      "manualClicks": 0,
+      "firstPerilSecond": 81.00000000003796,
+      "secondsInPeril": 80,
+      "peakQueue": 60
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 189,
+      "manualClicks": 0,
+      "firstPerilSecond": 84.00000000005193,
+      "secondsInPeril": 71,
+      "peakQueue": 53
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-sweep",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 168,
+      "livesRemaining": 0,
+      "served": 160,
+      "manualClicks": 0,
+      "firstPerilSecond": 82.0000000000426,
+      "secondsInPeril": 72,
+      "peakQueue": 63
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-voting",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 156,
+      "livesRemaining": 0,
+      "served": 138,
+      "manualClicks": 0,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 92,
+      "peakQueue": 42
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-voting",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 128,
+      "manualClicks": 0,
+      "firstPerilSecond": 56.999999999926196,
+      "secondsInPeril": 87,
+      "peakQueue": 47
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 124,
+      "manualClicks": 0,
+      "firstPerilSecond": 57.99999999993085,
+      "secondsInPeril": 88,
+      "peakQueue": 46
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 165,
+      "livesRemaining": 0,
+      "served": 145,
+      "manualClicks": 0,
+      "firstPerilSecond": 67.99999999997742,
+      "secondsInPeril": 74,
+      "peakQueue": 53
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 156,
+      "livesRemaining": 0,
+      "served": 135,
+      "manualClicks": 0,
+      "firstPerilSecond": 60.99999999994482,
+      "secondsInPeril": 90,
+      "peakQueue": 54
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "all-weighted-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 178,
+      "livesRemaining": 0,
+      "served": 161,
+      "manualClicks": 0,
+      "firstPerilSecond": 87.0000000000659,
+      "secondsInPeril": 79,
+      "peakQueue": 64
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 130,
+      "livesRemaining": 0,
+      "served": 90,
+      "manualClicks": 19,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 57,
+      "peakQueue": 51
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 126,
+      "manualClicks": 26,
+      "firstPerilSecond": 58.999999999935504,
+      "secondsInPeril": 85,
+      "peakQueue": 56
+    },
+    {
+      "round": 5,
+      "candidate": {
+        "id": "r5-c",
+        "spawnStart": 1.4,
+        "spawnEnd": 1.6
+      },
+      "strategy": "hybrid-manual-weighted-voting",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 168,
+      "livesRemaining": 0,
+      "served": 149,
+      "manualClicks": 32,
+      "firstPerilSecond": 83.00000000004727,
+      "secondsInPeril": 85,
+      "peakQueue": 58
     }
   ]
 }
