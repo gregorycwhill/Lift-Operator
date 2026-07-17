@@ -72,6 +72,7 @@ Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds f
 - [x] All-Sweep baseline report covers three fixed seeds across Rounds 2–13.
 - [x] Simulator candidate overrides, loadouts, and intervention strategies run in an isolated realm without changing the live configuration.
 - [x] Built-in-only balance comparators record zero manual decisions and cannot fall through into rescue-controller actions.
+- [x] Campaign envelope classifies all rounds and marks an underperforming candidate comparator as Unproven rather than Overloaded.
 - [x] Round 3 `1.00→1.20` candidate makes all-Sweep fail 3/3 fixed seeds while active Wide Doors comparators survive 3/3.
 - [ ] Human playtest confirms Round 3 remains readable and does not require an excessive Wide Doors purchase count.
 - [x] Baseline report freshness is tied to canonical balance and matrix hashes.

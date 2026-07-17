@@ -101,6 +101,50 @@ window.Game.Simulator = {
             if (!options.strategy || options.strategy.startsWith('all-')) return;
             const interval = options.interventionIntervalSec || 20;
 
+            if (options.strategy === 'idealized-dispatch') {
+                const claimedFloors = new Set();
+                Registry.lifts.forEach(lift => {
+                    const currentFloor = Math.round(lift.pos / Registry.floorHeight);
+                    const isAtTarget = Math.abs(lift.pos - lift.targetFloor * Registry.floorHeight) < 0.01;
+                    if (!isAtTarget || (lift.state !== 'IDLE' && lift.state !== 'DONE')) {
+                        claimedFloors.add(lift.targetFloor);
+                        return;
+                    }
+
+                    let targetFloor;
+                    if (lift.passengers.length > 0) {
+                        targetFloor = [...lift.passengers].sort((a, b) =>
+                            (virtualTime - b.spawnTime) - (virtualTime - a.spawnTime) ||
+                            Math.abs(a.dest - currentFloor) - Math.abs(b.dest - currentFloor)
+                        )[0].dest;
+                    } else {
+                        const target = Registry.floors.map((floor, floorIndex) => {
+                            const critical = floor.waitingGuests.filter(guest => guest.status === GuestStatus.CRITICAL).length;
+                            const annoyed = floor.waitingGuests.filter(guest => guest.status === GuestStatus.ANNOYED).length;
+                            const oldestWaitMs = floor.waitingGuests.reduce(
+                                (maximum, guest) => Math.max(maximum, virtualTime - guest.spawnTime),
+                                0
+                            );
+                            return {
+                                floorIndex,
+                                count: floor.waitingGuests.length,
+                                score: critical * 100000 + annoyed * 10000 + oldestWaitMs + floor.waitingGuests.length * 100 - Math.abs(floorIndex - currentFloor)
+                            };
+                        }).filter(target => target.count > 0 && !claimedFloors.has(target.floorIndex))
+                            .sort((a, b) => b.score - a.score)[0];
+                        targetFloor = target && target.floorIndex;
+                    }
+
+                    if (Number.isInteger(targetFloor)) {
+                        lift.targetFloor = targetFloor;
+                        if (targetFloor > currentFloor) lift.sweepDirection = 1;
+                        if (targetFloor < currentFloor) lift.sweepDirection = -1;
+                        claimedFloors.add(targetFloor);
+                    }
+                });
+                return;
+            }
+
             if (options.strategy.startsWith('hybrid-manual-')) {
                 const manualLift = Registry.lifts.find(lift => lift.automation === 'manual');
                 const hasCritical = Registry.floors.some(floor =>

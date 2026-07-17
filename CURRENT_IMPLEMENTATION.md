@@ -286,4 +286,6 @@ The regenerated 36-run matrix now has 9 hard violations, down from 12. Round 3 i
 
 The candidate runner now covers Rounds 4 and 5 with pure featured-policy and hybrid-manual comparators. Initial experiments found no defensible separation: pressure sufficient to defeat Sweep also defeated Priority/Voting and the simple manual proxy. No production values were changed. Built-in-only comparators are now explicitly prevented from falling through into manual rescue actions, preserving zero-click evidence.
 
+The campaign envelope runner (`npm.cmd run balance:envelope`) now compares the committed all-Sweep floor with a candidate idealized dispatcher and reports Little's Law pressure summaries across Rounds 2–13. Its first run confirms Rounds 4 and 5 are Underloaded. The direct dispatcher underperforms Sweep elsewhere because it sacrifices en-route pickups, so those rounds are correctly classified Unproven rather than being tuned around an invalid comparator. Round-specific strong profiles remain the next evidence task.
+
 The simulator now advances virtual animation time by exactly one simulated second per 60 frames and reports elapsed simulation seconds explicitly. Endurance simulations use a bounded 30-minute safety horizon rather than incorrectly stopping at the standard round duration.

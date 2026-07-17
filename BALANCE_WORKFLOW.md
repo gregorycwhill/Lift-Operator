@@ -209,6 +209,16 @@ Rounds 4 and 5 candidate experiments also remain exploratory. Increased traffic 
 
 Models struggling, typical, and expert spending paths across all rounds.
 
+### Campaign envelope
+
+Run the coarse end-to-end classification with:
+
+```powershell
+npm.cmd run balance:envelope
+```
+
+This writes `reports/campaign-envelope.json` and a readable Markdown summary. A candidate strong comparator that does not outperform all-Sweep causes an `UNPROVEN` classification; it must never be used to justify raising or lowering production pressure.
+
 ## 7. Human playtest protocol
 
 For each candidate balance version:

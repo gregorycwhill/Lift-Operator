@@ -1,0 +1,944 @@
+{
+  "schemaVersion": 1,
+  "balanceVersion": "0.1.1-round-3-pressure",
+  "seeds": [
+    1234,
+    3141,
+    6060
+  ],
+  "profiles": {
+    "unattended": "all-sweep-unattended",
+    "defaultStrong": "idealized-dispatch",
+    "roundOverrides": {
+      "3": "wide-doors-rescue"
+    }
+  },
+  "rounds": [
+    {
+      "round": 2,
+      "classification": "UNDERLOADED",
+      "unattended": {
+        "survivors": 1,
+        "averageElapsedSeconds": 174.33333333333334,
+        "averageServed": 55.333333333333336,
+        "averageArrivalRate": 0.6020482248210507,
+        "averageDeliveryRate": 0.3186542819313373,
+        "averageUtilisationProxy": 1.896899743503959,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.2833939428897134,
+        "averageFirstPerilSecond": 71.99999999999604
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 156.33333333333334,
+        "averageServed": 37.666666666666664,
+        "averageArrivalRate": 0.6008956537480968,
+        "averageDeliveryRate": 0.24128826322198807,
+        "averageUtilisationProxy": 2.5186046511627906,
+        "averageLittleLawResidual": 1.4527901768188158,
+        "averageQueueTrend": 0.3596073905261088,
+        "averageFirstPerilSecond": 64.33333333329367
+      }
+    },
+    {
+      "round": 3,
+      "classification": "CONTESTED",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 153.33333333333334,
+        "averageServed": 93.66666666666667,
+        "averageArrivalRate": 1.0889547787461729,
+        "averageDeliveryRate": 0.6075183798015515,
+        "averageUtilisationProxy": 1.8092410277894146,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.4814363989446213,
+        "averageFirstPerilSecond": 66.99999999997276
+      },
+      "strong": {
+        "survivors": 3,
+        "averageElapsedSeconds": 180,
+        "averageServed": 55.333333333333336,
+        "averageArrivalRate": 1.0743569470777916,
+        "averageDeliveryRate": 0.4350305713674701,
+        "averageUtilisationProxy": 2.488527206966923,
+        "averageLittleLawResidual": -0.04397099855878395,
+        "averageQueueTrend": 0.6393263757103215,
+        "averageFirstPerilSecond": 59.33333333327039
+      }
+    },
+    {
+      "round": 4,
+      "classification": "UNDERLOADED",
+      "unattended": {
+        "survivors": 3,
+        "averageElapsedSeconds": 180,
+        "averageServed": 112.66666666666667,
+        "averageArrivalRate": 0.8864059590292096,
+        "averageDeliveryRate": 0.6294227188064555,
+        "averageUtilisationProxy": 1.4113659531090725,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.25698324022275404,
+        "averageFirstPerilSecond": 117.66666666670903
+      },
+      "strong": {
+        "survivors": 2,
+        "averageElapsedSeconds": 162,
+        "averageServed": 78,
+        "averageArrivalRate": 0.8833966480424978,
+        "averageDeliveryRate": 0.47275977653510776,
+        "averageUtilisationProxy": 1.9254227053140098,
+        "averageLittleLawResidual": 1.470421400798082,
+        "averageQueueTrend": 0.41063687150739003,
+        "averageFirstPerilSecond": 68.3333333333123
+      }
+    },
+    {
+      "round": 5,
+      "classification": "UNDERLOADED",
+      "unattended": {
+        "survivors": 3,
+        "averageElapsedSeconds": 180,
+        "averageServed": 146.66666666666666,
+        "averageArrivalRate": 1.0316573556768531,
+        "averageDeliveryRate": 0.8100558659195508,
+        "averageUtilisationProxy": 1.2735562203677462,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.2216014897573024,
+        "averageFirstPerilSecond": 136.6666666667975
+      },
+      "strong": {
+        "survivors": 2,
+        "averageElapsedSeconds": 177.66666666666666,
+        "averageServed": 125.66666666666667,
+        "averageArrivalRate": 1.0322636525024815,
+        "averageDeliveryRate": 0.7064332423868747,
+        "averageUtilisationProxy": 1.476311409572511,
+        "averageLittleLawResidual": -0.8047599630511968,
+        "averageQueueTrend": 0.3258304101156067,
+        "averageFirstPerilSecond": 128.33333333342537
+      }
+    },
+    {
+      "round": 6,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 119.66666666666667,
+        "averageServed": 56.666666666666664,
+        "averageArrivalRate": 1.138202020200027,
+        "averageDeliveryRate": 0.46261279461193716,
+        "averageUtilisationProxy": 2.694349711591091,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.6755892255880899,
+        "averageFirstPerilSecond": 58.333333333265735
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 115.33333333333333,
+        "averageServed": 42,
+        "averageArrivalRate": 1.12865344586837,
+        "averageDeliveryRate": 0.3539650952668812,
+        "averageUtilisationProxy": 3.5775362318840584,
+        "averageLittleLawResidual": 1.7821095895464936,
+        "averageQueueTrend": 0.7746883506014887,
+        "averageFirstPerilSecond": 65.66666666663322
+      }
+    },
+    {
+      "round": 7,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 146.33333333333334,
+        "averageServed": 106.66666666666667,
+        "averageArrivalRate": 1.3092411208988388,
+        "averageDeliveryRate": 0.7271136087634543,
+        "averageUtilisationProxy": 1.8137755102040816,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.5821275121353844,
+        "averageFirstPerilSecond": 61.66666666661459
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 120.33333333333333,
+        "averageServed": 71,
+        "averageArrivalRate": 1.2978547445059418,
+        "averageDeliveryRate": 0.5920130760671172,
+        "averageUtilisationProxy": 2.2117146824019436,
+        "averageLittleLawResidual": 3.108657422406047,
+        "averageQueueTrend": 0.7058416684388248,
+        "averageFirstPerilSecond": 64.66666666662856
+      }
+    },
+    {
+      "round": 8,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 146.33333333333334,
+        "averageServed": 100.33333333333333,
+        "averageArrivalRate": 1.104434489024843,
+        "averageDeliveryRate": 0.6886977816061969,
+        "averageUtilisationProxy": 1.6055788999170872,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.41573670741864605,
+        "averageFirstPerilSecond": 57.99999999993085
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 129.33333333333334,
+        "averageServed": 69.66666666666667,
+        "averageArrivalRate": 1.1064487493693829,
+        "averageDeliveryRate": 0.5335438662633903,
+        "averageUtilisationProxy": 2.096695129664769,
+        "averageLittleLawResidual": 0.9801751080335777,
+        "averageQueueTrend": 0.5729048831059925,
+        "averageFirstPerilSecond": 61.99999999994947
+      }
+    },
+    {
+      "round": 9,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 113,
+        "averageServed": 62,
+        "averageArrivalRate": 1.3656615317360066,
+        "averageDeliveryRate": 0.553070981715714,
+        "averageUtilisationProxy": 2.471165286954761,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.8125905500202926,
+        "averageFirstPerilSecond": 51.66666666656803
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 99,
+        "averageServed": 30.666666666666668,
+        "averageArrivalRate": 1.3681084420482508,
+        "averageDeliveryRate": 0.3113251041412431,
+        "averageUtilisationProxy": 4.644414065466697,
+        "averageLittleLawResidual": 15.326388234008396,
+        "averageQueueTrend": 1.0567833379070077,
+        "averageFirstPerilSecond": 61.33333333327971
+      }
+    },
+    {
+      "round": 10,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 118.33333333333333,
+        "averageServed": 87.66666666666667,
+        "averageArrivalRate": 1.620351903556143,
+        "averageDeliveryRate": 0.7339170956230152,
+        "averageUtilisationProxy": 2.2558538581346848,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 0.8864348079331276,
+        "averageFirstPerilSecond": 54.333333333247104
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 102,
+        "averageServed": 54.666666666666664,
+        "averageArrivalRate": 1.6213900134931858,
+        "averageDeliveryRate": 0.5414304993245374,
+        "averageUtilisationProxy": 2.99492700282174,
+        "averageLittleLawResidual": 5.8669177752570265,
+        "averageQueueTrend": 1.0799595141686482,
+        "averageFirstPerilSecond": 62.99999999995413
+      }
+    },
+    {
+      "round": 11,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 102.66666666666667,
+        "averageServed": 76.66666666666667,
+        "averageArrivalRate": 1.8484892787500813,
+        "averageDeliveryRate": 0.7329434697845799,
+        "averageUtilisationProxy": 2.6292890919717338,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 1.115545808965501,
+        "averageFirstPerilSecond": 49.33333333322514
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 96,
+        "averageServed": 48.666666666666664,
+        "averageArrivalRate": 1.8612188465109545,
+        "averageDeliveryRate": 0.507372848804511,
+        "averageUtilisationProxy": 3.829199927665401,
+        "averageLittleLawResidual": 5.133777021633996,
+        "averageQueueTrend": 1.3538459977064434,
+        "averageFirstPerilSecond": 57.666666666595965
+      }
+    },
+    {
+      "round": 12,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 94,
+        "averageServed": 67.66666666666667,
+        "averageArrivalRate": 2.132494172492043,
+        "averageDeliveryRate": 0.7224358974351578,
+        "averageUtilisationProxy": 2.999603881956823,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 1.410058275056885,
+        "averageFirstPerilSecond": 94
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 85.66666666666667,
+        "averageServed": 40,
+        "averageArrivalRate": 2.1496440306667366,
+        "averageDeliveryRate": 0.4721157356696459,
+        "averageUtilisationProxy": 4.55665923903378,
+        "averageLittleLawResidual": 5.230256319056821,
+        "averageQueueTrend": 1.677528294997091,
+        "averageFirstPerilSecond": 85.66666666666667
+      }
+    },
+    {
+      "round": 13,
+      "classification": "UNPROVEN",
+      "unattended": {
+        "survivors": 0,
+        "averageElapsedSeconds": 86.66666666666667,
+        "averageServed": 37,
+        "averageArrivalRate": 1.6242511245084097,
+        "averageDeliveryRate": 0.431199157813845,
+        "averageUtilisationProxy": 3.79477834826672,
+        "averageLittleLawResidual": null,
+        "averageQueueTrend": 1.1930519666945647,
+        "averageFirstPerilSecond": 50.99999999989825
+      },
+      "strong": {
+        "survivors": 0,
+        "averageElapsedSeconds": 85,
+        "averageServed": 21,
+        "averageArrivalRate": 1.5746214194480348,
+        "averageDeliveryRate": 0.24837316791323857,
+        "averageUtilisationProxy": 6.645238095238096,
+        "averageLittleLawResidual": 11.701131110702933,
+        "averageQueueTrend": 1.326248251534796,
+        "averageFirstPerilSecond": 52.333333333237796
+      }
+    }
+  ],
+  "strongRuns": [
+    {
+      "round": 2,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 146,
+        "served": 30,
+        "livesRemaining": 0,
+        "firstPerilSecond": 69.99999999998673,
+        "peakQueue": 30,
+        "arrivalRate": 0.5999999999986098,
+        "deliveryRate": 0.20689655172365853,
+        "utilisationProxy": 2.9,
+        "littlesLawResidual": 1.409762557075645,
+        "queueTrend": 0.39310344827495125
+      }
+    },
+    {
+      "round": 2,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 159,
+        "served": 40,
+        "livesRemaining": 0,
+        "firstPerilSecond": 65.9999999999681,
+        "peakQueue": 29,
+        "arrivalRate": 0.607594936707336,
+        "deliveryRate": 0.25316455696139,
+        "utilisationProxy": 2.4,
+        "littlesLawResidual": 2.5922872382641593,
+        "queueTrend": 0.354430379745946
+      }
+    },
+    {
+      "round": 2,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 164,
+        "served": 43,
+        "livesRemaining": 0,
+        "firstPerilSecond": 56.999999999926196,
+        "peakQueue": 27,
+        "arrivalRate": 0.5950920245383448,
+        "deliveryRate": 0.26380368098091567,
+        "utilisationProxy": 2.2558139534883725,
+        "littlesLawResidual": 0.3563207351166433,
+        "queueTrend": 0.3312883435574291
+      }
+    },
+    {
+      "round": 3,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 125,
+        "served": 54,
+        "livesRemaining": 0,
+        "firstPerilSecond": 57.99999999993085,
+        "peakQueue": 42,
+        "arrivalRate": 1.0725806451592301,
+        "deliveryRate": 0.43548387096690544,
+        "utilisationProxy": 2.4629629629629632,
+        "littlesLawResidual": -1.0076731381911443,
+        "queueTrend": 0.6370967741923247
+      }
+    },
+    {
+      "round": 3,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 137,
+        "served": 65,
+        "livesRemaining": 0,
+        "firstPerilSecond": 65.9999999999681,
+        "peakQueue": 46,
+        "arrivalRate": 1.0588235294094754,
+        "deliveryRate": 0.47794117646955486,
+        "utilisationProxy": 2.2153846153846155,
+        "littlesLawResidual": -0.20485715229540347,
+        "queueTrend": 0.5808823529399205
+      }
+    },
+    {
+      "round": 3,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 121,
+        "served": 47,
+        "livesRemaining": 0,
+        "firstPerilSecond": 53.99999999991222,
+        "peakQueue": 52,
+        "arrivalRate": 1.0916666666646693,
+        "deliveryRate": 0.39166666666595007,
+        "utilisationProxy": 2.7872340425531914,
+        "littlesLawResidual": 1.080617294810196,
+        "queueTrend": 0.6999999999987192
+      }
+    },
+    {
+      "round": 4,
+      "seed": 1234,
+      "metrics": {
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 96,
+        "livesRemaining": 5,
+        "firstPerilSecond": 80.0000000000333,
+        "peakQueue": 36,
+        "arrivalRate": 0.8826815642433725,
+        "deliveryRate": 0.5363128491605301,
+        "utilisationProxy": 1.6458333333333335,
+        "littlesLawResidual": 0.3266333022828576,
+        "queueTrend": 0.3463687150828424
+      }
+    },
+    {
+      "round": 4,
+      "seed": 3141,
+      "metrics": {
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 92,
+        "livesRemaining": 3,
+        "firstPerilSecond": 75.00000000001002,
+        "peakQueue": 38,
+        "arrivalRate": 0.8715083798858615,
+        "deliveryRate": 0.5139664804455081,
+        "utilisationProxy": 1.6956521739130435,
+        "littlesLawResidual": 1.354849809706355,
+        "queueTrend": 0.3575418994403534
+      }
+    },
+    {
+      "round": 4,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 126,
+        "served": 46,
+        "livesRemaining": 0,
+        "firstPerilSecond": 49.999999999893596,
+        "peakQueue": 32,
+        "arrivalRate": 0.8959999999982593,
+        "deliveryRate": 0.36799999999928507,
+        "utilisationProxy": 2.4347826086956523,
+        "littlesLawResidual": 2.7297810904050337,
+        "queueTrend": 0.5279999999989742
+      }
+    },
+    {
+      "round": 5,
+      "seed": 1234,
+      "metrics": {
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 143,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 21,
+        "arrivalRate": 1.0223463687122605,
+        "deliveryRate": 0.7877094972045287,
+        "utilisationProxy": 1.2978723404255317,
+        "littlesLawResidual": -1.381996777500305,
+        "queueTrend": 0.23463687150773183
+      }
+    },
+    {
+      "round": 5,
+      "seed": 3141,
+      "metrics": {
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 127,
+        "livesRemaining": 12,
+        "firstPerilSecond": 114.00000000019162,
+        "peakQueue": 29,
+        "arrivalRate": 1.0279329608910162,
+        "deliveryRate": 0.7094972067019514,
+        "utilisationProxy": 1.4488188976377954,
+        "littlesLawResidual": -1.0520149367088436,
+        "queueTrend": 0.3184357541890648
+      }
+    },
+    {
+      "round": 5,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 173,
+        "served": 107,
+        "livesRemaining": 0,
+        "firstPerilSecond": 91.00000000008451,
+        "peakQueue": 31,
+        "arrivalRate": 1.0465116279041675,
+        "deliveryRate": 0.6220930232541441,
+        "utilisationProxy": 1.6822429906542056,
+        "littlesLawResidual": 0.01973182505555826,
+        "queueTrend": 0.42441860465002346
+      }
+    },
+    {
+      "round": 6,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 119,
+        "served": 46,
+        "livesRemaining": 0,
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 43,
+        "arrivalRate": 1.0847457627099317,
+        "deliveryRate": 0.3898305084738817,
+        "utilisationProxy": 2.7826086956521743,
+        "littlesLawResidual": 0.789228174710189,
+        "queueTrend": 0.69491525423605
+      }
+    },
+    {
+      "round": 6,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 131,
+        "served": 60,
+        "livesRemaining": 0,
+        "firstPerilSecond": 67.99999999997742,
+        "peakQueue": 46,
+        "arrivalRate": 1.1538461538437919,
+        "deliveryRate": 0.46153846153751676,
+        "utilisationProxy": 2.5,
+        "littlesLawResidual": -0.36197396750384314,
+        "queueTrend": 0.6923076923062751
+      }
+    },
+    {
+      "round": 6,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 96,
+        "served": 20,
+        "livesRemaining": 0,
+        "firstPerilSecond": 57.99999999993085,
+        "peakQueue": 62,
+        "arrivalRate": 1.147368421051386,
+        "deliveryRate": 0.2105263157892451,
+        "utilisationProxy": 5.45,
+        "littlesLawResidual": 4.919074561433135,
+        "queueTrend": 0.9368421052621408
+      }
+    },
+    {
+      "round": 7,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 112,
+        "served": 60,
+        "livesRemaining": 0,
+        "firstPerilSecond": 68.99999999998207,
+        "peakQueue": 49,
+        "arrivalRate": 1.2702702702682374,
+        "deliveryRate": 0.5405405405396755,
+        "utilisationProxy": 2.35,
+        "littlesLawResidual": 6.102550407546431,
+        "queueTrend": 0.7297297297285619
+      }
+    },
+    {
+      "round": 7,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 128,
+        "served": 86,
+        "livesRemaining": 0,
+        "firstPerilSecond": 69.99999999998673,
+        "peakQueue": 51,
+        "arrivalRate": 1.314960629918649,
+        "deliveryRate": 0.6771653543293642,
+        "utilisationProxy": 1.9418604651162787,
+        "littlesLawResidual": 0.12253050035690194,
+        "queueTrend": 0.6377952755892847
+      }
+    },
+    {
+      "round": 7,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 121,
+        "served": 67,
+        "livesRemaining": 0,
+        "firstPerilSecond": 54.99999999991688,
+        "peakQueue": 53,
+        "arrivalRate": 1.3083333333309395,
+        "deliveryRate": 0.5583333333323118,
+        "utilisationProxy": 2.343283582089552,
+        "littlesLawResidual": 3.100891359314808,
+        "queueTrend": 0.7499999999986277
+      }
+    },
+    {
+      "round": 8,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 129,
+        "served": 68,
+        "livesRemaining": 0,
+        "firstPerilSecond": 55.999999999921535,
+        "peakQueue": 46,
+        "arrivalRate": 1.085937499997821,
+        "deliveryRate": 0.5312499999989341,
+        "utilisationProxy": 2.0441176470588234,
+        "littlesLawResidual": 0.4627298684703618,
+        "queueTrend": 0.554687499998887
+      }
+    },
+    {
+      "round": 8,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 154,
+        "served": 93,
+        "livesRemaining": 0,
+        "firstPerilSecond": 69.99999999998673,
+        "peakQueue": 44,
+        "arrivalRate": 1.13725490195801,
+        "deliveryRate": 0.6078431372534192,
+        "utilisationProxy": 1.8709677419354838,
+        "littlesLawResidual": 1.3021572917065924,
+        "queueTrend": 0.5294117647045908
+      }
+    },
+    {
+      "round": 8,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 105,
+        "served": 48,
+        "livesRemaining": 0,
+        "firstPerilSecond": 59.999999999940165,
+        "peakQueue": 40,
+        "arrivalRate": 1.0961538461523173,
+        "deliveryRate": 0.4615384615378178,
+        "utilisationProxy": 2.375,
+        "littlesLawResidual": 1.1756381639237787,
+        "queueTrend": 0.6346153846144995
+      }
+    },
+    {
+      "round": 9,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 95,
+        "served": 21,
+        "livesRemaining": 0,
+        "firstPerilSecond": 63.99999999995879,
+        "peakQueue": 79,
+        "arrivalRate": 1.404255319147465,
+        "deliveryRate": 0.2234042553189149,
+        "utilisationProxy": 6.285714285714286,
+        "littlesLawResidual": 17.17602516930114,
+        "queueTrend": 1.18085106382855
+      }
+    },
+    {
+      "round": 9,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 102,
+        "served": 33,
+        "livesRemaining": 0,
+        "firstPerilSecond": 65.9999999999681,
+        "peakQueue": 71,
+        "arrivalRate": 1.346534653463599,
+        "deliveryRate": 0.3267326732669027,
+        "utilisationProxy": 4.121212121212121,
+        "littlesLawResidual": 18.061195531309316,
+        "queueTrend": 1.0198019801966962
+      }
+    },
+    {
+      "round": 9,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 100,
+        "served": 38,
+        "livesRemaining": 0,
+        "firstPerilSecond": 53.99999999991222,
+        "peakQueue": 62,
+        "arrivalRate": 1.3535353535336887,
+        "deliveryRate": 0.3838383838379117,
+        "utilisationProxy": 3.5263157894736845,
+        "littlesLawResidual": 10.74194400141473,
+        "queueTrend": 0.969696969695777
+      }
+    },
+    {
+      "round": 10,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 105,
+        "served": 55,
+        "livesRemaining": 0,
+        "firstPerilSecond": 68.99999999998207,
+        "peakQueue": 83,
+        "arrivalRate": 1.59615384615162,
+        "deliveryRate": 0.5288461538454162,
+        "utilisationProxy": 3.0181818181818185,
+        "littlesLawResidual": 7.019413919500693,
+        "queueTrend": 1.067307692306204
+      }
+    },
+    {
+      "round": 10,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 105,
+        "served": 57,
+        "livesRemaining": 0,
+        "firstPerilSecond": 57.99999999993085,
+        "peakQueue": 67,
+        "arrivalRate": 1.6153846153823623,
+        "deliveryRate": 0.5480769230761586,
+        "utilisationProxy": 2.947368421052632,
+        "littlesLawResidual": 3.832591093159408,
+        "queueTrend": 1.0673076923062037
+      }
+    },
+    {
+      "round": 10,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 96,
+        "served": 52,
+        "livesRemaining": 0,
+        "firstPerilSecond": 61.99999999994947,
+        "peakQueue": 68,
+        "arrivalRate": 1.652631578945574,
+        "deliveryRate": 0.5473684210520373,
+        "utilisationProxy": 3.019230769230769,
+        "littlesLawResidual": 6.74874831311098,
+        "queueTrend": 1.1052631578935368
+      }
+    },
+    {
+      "round": 11,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 103,
+        "served": 66,
+        "livesRemaining": 0,
+        "firstPerilSecond": 58.999999999935504,
+        "peakQueue": 77,
+        "arrivalRate": 1.9215686274484232,
+        "deliveryRate": 0.6470588235285507,
+        "utilisationProxy": 2.9696969696969693,
+        "littlesLawResidual": 7.420107605717227,
+        "queueTrend": 1.2745098039198726
+      }
+    },
+    {
+      "round": 11,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 92,
+        "served": 46,
+        "livesRemaining": 0,
+        "firstPerilSecond": 53.99999999991222,
+        "peakQueue": 83,
+        "arrivalRate": 1.9120879120861363,
+        "deliveryRate": 0.5054945054940361,
+        "utilisationProxy": 3.7826086956521734,
+        "littlesLawResidual": -0.9403965598995256,
+        "queueTrend": 1.4065934065921002
+      }
+    },
+    {
+      "round": 11,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 93,
+        "served": 34,
+        "livesRemaining": 0,
+        "firstPerilSecond": 59.999999999940165,
+        "peakQueue": 95,
+        "arrivalRate": 1.7499999999983038,
+        "deliveryRate": 0.36956521739094617,
+        "utilisationProxy": 4.735294117647059,
+        "littlesLawResidual": 8.921620019084287,
+        "queueTrend": 1.3804347826073577
+      }
+    },
+    {
+      "round": 12,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 84,
+        "served": 39,
+        "livesRemaining": 0,
+        "firstPerilSecond": null,
+        "peakQueue": 99,
+        "arrivalRate": 2.144578313251791,
+        "deliveryRate": 0.46987951807202155,
+        "utilisationProxy": 4.564102564102565,
+        "littlesLawResidual": 13.275203377711136,
+        "queueTrend": 1.6746987951797694
+      }
+    },
+    {
+      "round": 12,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 84,
+        "served": 38,
+        "livesRemaining": 0,
+        "firstPerilSecond": null,
+        "peakQueue": 113,
+        "arrivalRate": 2.156626506022868,
+        "deliveryRate": 0.4578313253009441,
+        "utilisationProxy": 4.7105263157894735,
+        "littlesLawResidual": 3.0971215690756964,
+        "queueTrend": 1.6987951807219241
+      }
+    },
+    {
+      "round": 12,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 89,
+        "served": 43,
+        "livesRemaining": 0,
+        "firstPerilSecond": null,
+        "peakQueue": 110,
+        "arrivalRate": 2.147727272725551,
+        "deliveryRate": 0.48863636363597196,
+        "utilisationProxy": 4.395348837209302,
+        "littlesLawResidual": -0.6815559896163705,
+        "queueTrend": 1.6590909090895791
+      }
+    },
+    {
+      "round": 13,
+      "seed": 1234,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 82,
+        "served": 15,
+        "livesRemaining": 0,
+        "firstPerilSecond": 48.99999999988894,
+        "peakQueue": 80,
+        "arrivalRate": 1.5555555555548266,
+        "deliveryRate": 0.1851851851850984,
+        "utilisationProxy": 8.4,
+        "littlesLawResidual": 25.906395664025197,
+        "queueTrend": 1.370370370369728
+      }
+    },
+    {
+      "round": 13,
+      "seed": 3141,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 88,
+        "served": 28,
+        "livesRemaining": 0,
+        "firstPerilSecond": 55.999999999921535,
+        "peakQueue": 67,
+        "arrivalRate": 1.6206896551711862,
+        "deliveryRate": 0.32183908045952636,
+        "utilisationProxy": 5.035714285714286,
+        "littlesLawResidual": -1.0145861321734841,
+        "queueTrend": 1.2988505747116599
+      }
+    },
+    {
+      "round": 13,
+      "seed": 6060,
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 85,
+        "served": 20,
+        "livesRemaining": 0,
+        "firstPerilSecond": 51.99999999990291,
+        "peakQueue": 74,
+        "arrivalRate": 1.5476190476180909,
+        "deliveryRate": 0.23809523809509092,
+        "utilisationProxy": 6.499999999999999,
+        "littlesLawResidual": 10.211583800257088,
+        "queueTrend": 1.309523809523
+      }
+    }
+  ]
+}

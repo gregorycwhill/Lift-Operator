@@ -488,6 +488,19 @@ test('built-in simulation comparators do not inject manual rescue actions', asyn
     expect(result.roundStats.manualClicks).toBe(0);
 });
 
+test('idealized campaign comparator uses production movement without player clicks', async ({ page }) => {
+    const result = await page.evaluate(() => window.Game.Simulator.runRound(
+        1234,
+        { 0: 'manual', 1: 'manual' },
+        4,
+        { strategy: 'idealized-dispatch' }
+    ));
+
+    expect(result.error).toBeUndefined();
+    expect(result.roundStats.manualClicks).toBe(0);
+    expect(result.designTelemetry.samples.length).toBeGreaterThan(0);
+});
+
 test('automation bridge rejects out-of-range targets', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = Registry.lifts[0];
