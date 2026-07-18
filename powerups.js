@@ -58,7 +58,9 @@ const PowerUps = {
     showEffectOnLift: function(liftId, icon) {
         const lift = Registry.lifts[liftId];
         if (lift && lift.effects) {
-            lift.effects.push({ icon, startTime: Date.now(), duration: 1500 });
+            const now = (window.Game && window.Game.virtualTime) || Date.now();
+            lift.effects = lift.effects.filter(effect => effect.icon !== icon);
+            lift.effects.push({ icon, startTime: now, duration: 1500 });
         }
 
         const world = document.getElementById('world');

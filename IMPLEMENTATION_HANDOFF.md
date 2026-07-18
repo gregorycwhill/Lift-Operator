@@ -784,6 +784,33 @@ Finally, exact simulator success cannot establish the human completion bands. Au
 
 ## 14. Handoff status and accepted-change log
 
+### Playtest remediation plan: Round 13 stalled lifts
+
+Before changing Round 13 pressure or gravity values:
+
+1. Add a deterministic production-path regression that starts an empty and occupied Round 13 lift at every adjacent
+   floor pair, advances integer simulation ticks, and asserts that it reaches a quantized floor or remains explicitly
+   in a documented transition state—never an unclassified between-floor stall.
+2. Instrument lift state transitions (`TRANSIT`, door opening/closing, `BOARDING`, `IDLE`, jammed) with stable
+   reason codes and assert that a jammed lift cannot board, cannot silently self-repair, and cannot move unless the
+   documented repair/effect path permits it.
+3. Test gravity independently at zero, partial, and full load, including upward and downward travel, with a safety
+   floor on effective speed and a bounded arrival tolerance.
+4. Test Turbo/rocket effects at the top floor and confirm that modifiers alter travel speed only; they must not alter
+   legal floor bounds or destination routing.
+5. Verify that effect icon rendering is derived from active timers and removes expired effects rather than appending
+   duplicates.
+6. Re-run the Round 13 release and robustness seeds only after these correctness tests pass. Do not tune gravity or
+   traffic to mask a transition bug.
+
+Acceptance: no empty or occupied lift stalls between floors for more than one simulation tick; jammed lifts obey one
+consistent movement/boarding contract; top-floor access is unchanged by Turbo; and effect icons match active state.
+
+Initial diagnostic implementation completed 18 July 2026: jammed lifts are stopped in both game and animation ticks;
+Round 13 empty-lift gravity/Turbo top-floor coverage passes; repeated effect icons are deduplicated and use the
+simulation clock when available. Remaining full-campaign verification is still required before treating the issue as
+closed.
+
 | Date | Commit/balance | Decision |
 | --- | --- | --- |
 | 18 July 2026 | `f10f135` / `0.2.2-round-2-accessibility` | Handoff baseline. R2 Underloaded; R3–6 Contested; R7–11/13 Overloaded; R12 within Endurance window. No implementation or balance changes made during handoff preparation. |

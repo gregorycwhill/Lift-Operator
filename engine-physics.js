@@ -405,6 +405,18 @@ window.animationTick = function(timestamp) {
         if (typeof ui.updateLiftVisualState === 'function') {
             ui.updateLiftVisualState(lift, index);
         }
+        if (lift.effects) {
+            const effectNow = (window.Game && window.Game.virtualTime) || now;
+            lift.effects = lift.effects.filter(effect => (effectNow - effect.startTime) < effect.duration);
+        }
+
+        // A jam is a hard movement/boarding stop. gameTick owns timer decay;
+        // animationTick must not advance a visibly jammed lift between ticks.
+        if (lift.jamTimer > 0 || lift.isJammed) {
+            lift.state = 'IDLE';
+            lift.stateProgress = 0;
+            return;
+        }
 
         const currentFloor = Math.round(lift.pos / Registry.floorHeight);
         const targetPos = lift.targetFloor * Registry.floorHeight;

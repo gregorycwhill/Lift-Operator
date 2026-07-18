@@ -286,6 +286,17 @@ rate changes from `0.52` to `0.468` (a 10% reduction); all other round parameter
 all-Sweep matrix still records R2 survival on all three seeds, while R3 death timing changes from `179/145/136s` to
 `177/145/131s` on seeds `1234/3141/6060`. This is a playtest build, not a completed campaign-wide balance promotion.
 
+### Open playtest diagnostics
+
+Round 13 playtesting reported lifts stopping between floors and failing to board or progress, including when empty.
+This is treated as a runtime correctness issue, not a balance result. Related observations include jammed lifts moving
+while flashing, accumulating effect icons, and a rocket/Turbo effect appearing to restrict the top floor.
+
+The first correction is now implemented: animation ticks hard-stop jammed lifts, Round 13 gravity/Turbo regression
+coverage confirms empty lifts can reach floor 14 without changing legal bounds, and repeated effect icons refresh
+instead of accumulating. Full expiry behavior remains covered by the shared timer path and should be rechecked during
+the next full campaign run.
+
 ## Design-only balance telemetry
 
 `balance-telemetry.js` samples operational state once per game second. It records arrivals, deliveries, queue and onboard work in progress, journey time, Little's Law diagnostics, productive lift utilisation, manual decision rate, critical exposure, weighted life loss, and the Projected Survival Index.

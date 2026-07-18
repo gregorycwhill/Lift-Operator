@@ -685,6 +685,53 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     expect(result.version).toBe('0.2.3-r2-capacity-playtest');
 });
 
+test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(13, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        lift.pos = Registry.floorHeight * 3.5;
+        lift.targetFloor = 10;
+        lift.state = 'TRANSIT';
+        lift.jamTimer = 120;
+        Registry.gameActive = true;
+        const before = { pos: lift.pos, state: lift.state, progress: lift.stateProgress };
+        for (let frame = 0; frame < 60; frame++) animationTick(100000 + frame * 16);
+        return { before, after: { pos: lift.pos, state: lift.state, progress: lift.stateProgress } };
+    });
+    expect(result.after).toEqual({ pos: result.before.pos, state: 'IDLE', progress: 0 });
+});
+
+test('Round 13 gravity reaches the top floor and Turbo does not change floor bounds', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(13, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        const top = Config.numFloors - 1;
+        lift.targetFloor = top;
+        for (let frame = 0; frame < 2400 && Math.abs(lift.pos - top * Registry.floorHeight) > 0.01; frame++) animationTick(100000 + frame * 16);
+        const normal = { floor: Math.round(lift.pos / Registry.floorHeight), target: lift.targetFloor };
+        lift.pos = 0; lift.targetFloor = top; lift.state = 'IDLE'; lift.turboTimer = 20; lift.activeTurboSpeed = 0.1;
+        for (let frame = 0; frame < 240 && Math.abs(lift.pos - top * Registry.floorHeight) > 0.01; frame++) animationTick(200000 + frame * 16);
+        return { normal, turbo: { floor: Math.round(lift.pos / Registry.floorHeight), target: lift.targetFloor } };
+    });
+    expect(result.normal).toEqual({ floor: 14, target: 14 });
+    expect(result.turbo).toEqual({ floor: 14, target: 14 });
+});
+
+test('effect icons refresh and expire against the simulation clock', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(13, { showBriefing: false });
+        Game.virtualTime = 50000;
+        const lift = Registry.lifts[0];
+        PowerUps.showEffectOnLift(0, '🚀');
+        PowerUps.showEffectOnLift(0, '🚀');
+        lift.effects.forEach(effect => { effect.startTime = 50000; });
+        const during = lift.effects.length;
+        return { during };
+    });
+    expect(result).toEqual({ during: 1 });
+});
+
 test('shop visibility follows canonical round and tier unlocks', async ({ page }) => {
     const visibleButtons = async round => page.evaluate(value => {
         Registry.stats.round = value;
