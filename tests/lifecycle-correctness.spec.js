@@ -107,6 +107,37 @@ test('retry resets attempt-scoped achievement telemetry', async ({ page }) => {
     expect(result.roundEvaluation).toBeNull();
 });
 
+test('campaign reset clears campaign and attempt state while retaining career identity', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.playerName = 'Career Pilot';
+        Registry.points = 88;
+        Registry.highestUnlockedRound = 9;
+        Registry.stats.round = 9;
+        Registry.roundStats = { servedThisRound: 44 };
+        Registry.customScriptTicks = 123;
+        Registry.trophyCase = [{ id: 'career-trophy' }];
+        PowerUps.inventory = [{ id: 'wrench', tier: 0 }];
+        PowerUps.cart = [{ id: 'turbo', tier: 0 }];
+        resetGame();
+        return {
+            playerName: Registry.playerName,
+            trophies: Registry.trophyCase,
+            points: Registry.points,
+            highestUnlockedRound: Registry.highestUnlockedRound,
+            round: Registry.stats.round,
+            served: Registry.roundStats.servedThisRound,
+            customScriptTicks: Registry.customScriptTicks,
+            inventory: PowerUps.inventory.length,
+            cart: PowerUps.cart.length
+        };
+    });
+
+    expect(result).toEqual({
+        playerName: 'Career Pilot', trophies: [{ id: 'career-trophy' }], points: 0,
+        highestUnlockedRound: 1, round: 1, served: 0, customScriptTicks: 0, inventory: 0, cart: 0
+    });
+});
+
 test('queue renders oldest guest at the right-hand lift side', async ({ page }) => {
     const result = await page.evaluate(() => {
         Registry.floors[0].waitingGuests = [

@@ -196,6 +196,17 @@ The round now follows this lifecycle. Its final numerical payout and traffic esc
 
 ## Current testing state
 
+The stabilization handoff infrastructure is now implemented: unit, mechanics, integration, smoke, full, and
+UTF-8 validation tiers are available through `package.json`; production simulations support batch execution,
+reproducibility checks, replay hashing, compact summaries, named strategy profiles, bounded balance search, and
+economy candidate experiments. Custom automation runs in a deadline-terminated worker, and imported blueprints
+require schema/version/checksum validation plus explicit consent.
+
+The full 54-test gate and complete 13-round Monkey campaign pass. Canonical promotion remains intentionally blocked:
+Round 2 has no feasible candidate satisfying both the all-Sweep failure invariant and low-intervention hybrid
+success, and human campaign evidence has not yet been collected. Provisional economy bands are owner-accepted for
+now; Round 10 custom automation is optional but must provide measurable advantage.
+
 The project contains:
 
 - A browser regression scorecard.

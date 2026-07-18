@@ -1,0 +1,2 @@
+#!/usr/bin/env node
+const fs = require('fs'); const file = process.argv[process.argv.indexOf('--candidate') + 1]; if (!file) throw new Error('--candidate is required'); const candidate = JSON.parse(fs.readFileSync(file, 'utf8')); const failures = candidate.runs.filter(run => run.unattended || !run.strong); if (failures.length) { console.error(`Release gate failed for ${failures.length} seed(s).`); process.exit(1); } console.log('Release gate passed.');

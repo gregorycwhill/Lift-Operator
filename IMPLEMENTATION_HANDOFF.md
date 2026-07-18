@@ -682,8 +682,8 @@ Run the short human protocol later when results are available. Do not block infr
 
 The implementation agent must request a decision before canonical promotion if any of these remain unresolved:
 
-1. Confirm or replace the provisional economy ending-credit bands and reserves in Section 5.6.
-2. Confirm whether Round 10 custom automation must be required for the accepted strong profile or merely one of several viable solutions. Default: it must be materially useful but not mandatory.
+1. **Owner decision (18 July 2026):** Accept the provisional economy ending-credit bands and reserves in Section 5.6 for the current promotion/search gate. Revisit after human economy evidence.
+2. **Owner decision (18 July 2026):** Round 10 custom automation is optional for the accepted strong profile, but must provide a measurable advantage over a comparable built-in profile. Future rounds may make custom automation necessary.
 3. Confirm whether the full 30-seed invariant is strictly `0/30` unattended survivors. Default: yes, because the stated design rule is absolute.
 4. Confirm whether direct `master` commits should continue. Default: follow the current established workflow.
 5. If worker isolation materially changes browser support or deployment simplicity, choose Web Worker versus constrained interpreter. Default: Web Worker with a strict deadline and immutable sensor/action messages.
@@ -787,5 +787,7 @@ Finally, exact simulator success cannot establish the human completion bands. Au
 | Date | Commit/balance | Decision |
 | --- | --- | --- |
 | 18 July 2026 | `f10f135` / `0.2.2-round-2-accessibility` | Handoff baseline. R2 Underloaded; R3–6 Contested; R7–11/13 Overloaded; R12 within Endurance window. No implementation or balance changes made during handoff preparation. |
+
+| 18 July 2026 | `02efb44` / `0.2.2-round-2-accessibility` | Owner accepted provisional economy bands/reserves for now; Round 10 custom automation is optional but must show measurable advantage. Future rounds may require custom automation. |
 
 Append one row only when a candidate is canonically promoted or a plan-level owner decision changes an acceptance gate. Exploratory candidates belong in generated search summaries, not this log.

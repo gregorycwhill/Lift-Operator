@@ -31,9 +31,9 @@ jsGen.forBlock["set_target_floor"] = function(block, generator) {
 };
 jsGen.forBlock["set_sweep_direction"] = function(block) { return `lift.sweepDirection = ${block.getFieldValue("DIRECTION")};\n`; };
 jsGen.forBlock["my_floor"] = function() { return ["Building.getFloor()", javascript.Order.FUNCTION_CALL]; };
-jsGen.forBlock["my_free_space"] = function() { return ["(Config.liftCapacity - lift.passengers.length)", javascript.Order.ATOMIC]; };
+jsGen.forBlock["my_free_space"] = function() { return ["Building.getFreeCapacity()", javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["is_empty"] = function() { return ["(lift.passengers.length === 0)", javascript.Order.ATOMIC]; };
-jsGen.forBlock["is_full"] = function() { return ["(lift.passengers.length >= Config.liftCapacity)", javascript.Order.ATOMIC]; };
+jsGen.forBlock["is_full"] = function() { return ["(Building.getFreeCapacity() <= 0)", javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["my_direction"] = function() { return ["Building.getPhysicalDirection()", javascript.Order.FUNCTION_CALL]; };
 jsGen.forBlock["my_sweep_direction"] = function() { return ["lift.sweepDirection", javascript.Order.ATOMIC]; };
 jsGen.forBlock["nearest_target"] = function(block) { return [`Building.getNearestTarget("${block.getFieldValue("TARGET_TYPE")}")`, javascript.Order.FUNCTION_CALL]; };
@@ -334,17 +334,21 @@ const AutomationWorkshop = {
 
         // Ensure we include all components for a complete restoration on the other side
         // Note: Manifest expects 'xml' for the compressed blockly data
+        const blueprint = {
+            schema: "lift-operator-blueprint",
+            schemaVersion: 1,
+            name: script.name,
+            description: script.description || "",
+            author: script.author,
+            date: script.date,
+            version: script.version || "1.0",
+            xml: LZString.compressToEncodedURIComponent(JSON.stringify(script.blocklyData)),
+            compiledJS: script.compiledJS
+        };
+        blueprint.checksum = window.Game.Blueprints.checksum(blueprint);
         const payload = {
             type: 'blueprint',
-            data: {
-                name: script.name,
-                description: script.description || "",
-                author: script.author,
-                date: script.date,
-                version: script.version || "1.0",
-                xml: LZString.compressToEncodedURIComponent(JSON.stringify(script.blocklyData)),
-                compiledJS: script.compiledJS
-            }
+            data: blueprint
         };
 
         const encoded = (typeof GameShared === 'function' ? GameShared().encodePayload(payload) : null) || (window.Game.encodePayload ? window.Game.encodePayload(payload) : null);

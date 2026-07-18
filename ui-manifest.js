@@ -2,6 +2,30 @@
 // UI-MANIFEST.JS : INBOUND TRANSMISSIONS & PAYLOAD PROCESSING
 // ============================================================================
 
+window.Game = window.Game || {};
+window.Game.Blueprints = window.Game.Blueprints || {
+    maxEncodedSize: 75000,
+    checksum(data) {
+        const copy = { ...data };
+        delete copy.checksum;
+        const input = JSON.stringify(copy);
+        let hash = 2166136261;
+        for (let i = 0; i < input.length; i++) {
+            hash ^= input.charCodeAt(i);
+            hash = Math.imul(hash, 16777619);
+        }
+        return `fnv1a-${(hash >>> 0).toString(16).padStart(8, '0')}`;
+    },
+    validate(data) {
+        if (!data || typeof data !== 'object') return { valid: false, reason: 'missing blueprint data' };
+        if (data.schema !== 'lift-operator-blueprint' || data.schemaVersion !== 1) return { valid: false, reason: 'unsupported blueprint schema/version' };
+        if (typeof data.xml !== 'string' || !data.xml || data.xml.length > this.maxEncodedSize) return { valid: false, reason: 'missing data or payload exceeds the safe import limit' };
+        if (typeof data.name !== 'string' || data.name.length > 120) return { valid: false, reason: 'invalid blueprint name' };
+        if (typeof data.checksum !== 'string' || data.checksum !== this.checksum(data)) return { valid: false, reason: 'checksum mismatch' };
+        return { valid: true };
+    }
+};
+
 /**
  * Process the next pending manifest item (shared data like seeds or blueprints).
  */
@@ -143,9 +167,9 @@ window.processNextManifestItem = function() {
         case 'blueprint':
             const bData = item.data || {};
             const bpName = bData.name || "Imported Automation";
-            const encodedBlueprint = typeof bData.xml === 'string' ? bData.xml : '';
-            if (!encodedBlueprint || encodedBlueprint.length > 75000) {
-                descText = "Blueprint rejected: missing data or payload exceeds the safe import limit.";
+            const blueprintValidation = window.Game.Blueprints.validate(bData);
+            if (!blueprintValidation.valid) {
+                descText = `Blueprint rejected: ${blueprintValidation.reason}.`;
                 acceptCallback = () => {};
                 break;
             }
@@ -159,8 +183,8 @@ window.processNextManifestItem = function() {
                 descText = `⚠️ NAMING CONFLICT: A script named '${bpName}' already exists in your Workshop.\n` +
                            `Importing this will create a duplicate. Continue with import?`;
             } else {
-                descText = `Incoming Automation Blueprint: '${bpName}' authored by Pilot ${bData.author || 'Unknown'}.\n` +
-                           `Import to local Workshop profiles?`;
+                descText = `Incoming Automation Blueprint: '${bpName}' from ${bData.author || 'Unknown'} (external origin).\n` +
+                           `Review and explicitly consent to import it into local Workshop profiles.`;
             }
 
             acceptCallback = () => {
@@ -172,10 +196,10 @@ window.processNextManifestItem = function() {
                             name: bpName,
                             author: bData.author || "Shared Pilot",
                             date: new Date().toLocaleDateString(),
-                            description: bData.desc || "Shared script blueprint link.",
+                            description: bData.description || "Shared script blueprint link.",
                             blocklyData: decompressedBlockly,
                             compiledJS: "",
-                            version: bData.v || "1.0",
+                            version: bData.version || "1.0",
                             origin: "external"
                         };
 

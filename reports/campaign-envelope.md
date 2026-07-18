@@ -14,7 +14,7 @@ Balance version: `0.2.2-round-2-accessibility`
 | 9 | OVERLOADED | 0/3 | 0/3 | 113s | 120s | 1.37 | 0.55 | 2.47 | 0.81 |
 | 10 | OVERLOADED | 0/3 | 0/3 | 118s | 126s | 1.62 | 0.73 | 2.26 | 0.89 |
 | 11 | OVERLOADED | 0/3 | 0/3 | 103s | 104s | 1.85 | 0.73 | 2.63 | 1.12 |
-| 12 | CONTESTED | 0/3 | 0/3 | 147s | 294s | 0.88 | 0.38 | 2.55 | 0.50 |
-| 13 | OVERLOADED | 0/3 | 0/3 | 87s | 90s | 1.62 | 0.43 | 3.79 | 1.19 |
+| 12 | CONTESTED | 0/3 | 0/3 | 147s | 375s | 0.88 | 0.38 | 2.55 | 0.50 |
+| 13 | OVERLOADED | 0/3 | 0/3 | 87s | 173s | 1.62 | 0.43 | 3.79 | 1.19 |
 
 The strong result is the best per-seed outcome from an auditable portfolio: an omniscient direct dispatcher and a featured-policy profile with a declared round-appropriate loadout. Where the portfolio does not outperform Sweep, the round remains Unproven rather than being tuned around weak comparator evidence.

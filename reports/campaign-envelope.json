@@ -290,14 +290,14 @@
       },
       "strong": {
         "survivors": 0,
-        "averageElapsedSeconds": 294,
-        "averageServed": 211,
-        "averageArrivalRate": 0.9505363526284296,
-        "averageDeliveryRate": 0.7130631896632608,
-        "averageUtilisationProxy": 1.3415833496109058,
-        "averageLittleLawResidual": 5.025000724175836,
-        "averageQueueTrend": 0.23747316296516885,
-        "averageFirstPerilSecond": 294
+        "averageElapsedSeconds": 375.3333333333333,
+        "averageServed": 267.3333333333333,
+        "averageArrivalRate": 0.9573250563972984,
+        "averageDeliveryRate": 0.7126548136966347,
+        "averageUtilisationProxy": 1.3497875137481534,
+        "averageLittleLawResidual": 11.07302489186241,
+        "averageQueueTrend": 0.24467024270066354,
+        "averageFirstPerilSecond": 375.3333333333333
       }
     },
     {
@@ -316,14 +316,14 @@
       },
       "strong": {
         "survivors": 0,
-        "averageElapsedSeconds": 90,
-        "averageServed": 43.666666666666664,
-        "averageArrivalRate": 1.6448925834688026,
-        "averageDeliveryRate": 0.48773604269252285,
-        "averageUtilisationProxy": 3.6184392139769717,
-        "averageLittleLawResidual": 1.4783556175531463,
-        "averageQueueTrend": 1.1571565407762796,
-        "averageFirstPerilSecond": 52.33333333323912
+        "averageElapsedSeconds": 173,
+        "averageServed": 133.66666666666666,
+        "averageArrivalRate": 1.637986245056718,
+        "averageDeliveryRate": 0.7788090398268211,
+        "averageUtilisationProxy": 2.121558509146331,
+        "averageLittleLawResidual": 42.37521962844799,
+        "averageQueueTrend": 0.8591772052298969,
+        "averageFirstPerilSecond": 52.666666666574
       }
     }
   ],
@@ -3202,16 +3202,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 220,
-        "served": 152,
+        "elapsedSeconds": 337,
+        "served": 243,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 23,
-        "arrivalRate": 0.9041095890382863,
-        "deliveryRate": 0.6940639269384824,
-        "utilisationProxy": 1.3026315789473684,
-        "littlesLawResidual": 1.170692960593005,
-        "queueTrend": 0.2100456620998039
+        "peakQueue": 46,
+        "arrivalRate": 0.937499999996581,
+        "deliveryRate": 0.7232142857116481,
+        "utilisationProxy": 1.2962962962962963,
+        "littlesLawResidual": 13.236742857858054,
+        "queueTrend": 0.21428571428493282
       }
     },
     {
@@ -3294,16 +3294,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 194,
-        "served": 128,
+        "elapsedSeconds": 379,
+        "served": 299,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 29,
-        "arrivalRate": 0.9170984455931964,
-        "deliveryRate": 0.6632124352312381,
-        "utilisationProxy": 1.3828125,
-        "littlesLawResidual": 4.477891555580765,
-        "queueTrend": 0.25388601036195835
+        "peakQueue": 38,
+        "arrivalRate": 0.9576719576683576,
+        "deliveryRate": 0.7910052910023174,
+        "utilisationProxy": 1.2107023411371238,
+        "littlesLawResidual": 9.450551898652495,
+        "queueTrend": 0.16666666666604013
       }
     },
     {
@@ -3386,16 +3386,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 342,
-        "served": 272,
+        "elapsedSeconds": 439,
+        "served": 315,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 21,
-        "arrivalRate": 0.9560117302017779,
-        "deliveryRate": 0.7976539589413607,
-        "utilisationProxy": 1.1985294117647058,
-        "littlesLawResidual": -1.544977331256007,
-        "queueTrend": 0.15835777126041717
+        "peakQueue": 69,
+        "arrivalRate": 0.9657534246537851,
+        "deliveryRate": 0.7191780821889889,
+        "utilisationProxy": 1.3428571428571427,
+        "littlesLawResidual": 9.059439929722299,
+        "queueTrend": 0.24657534246479618
       }
     },
     {
@@ -3497,16 +3497,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 262,
-        "served": 173,
+        "elapsedSeconds": 271,
+        "served": 188,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 45,
-        "arrivalRate": 0.9425287356290201,
-        "deliveryRate": 0.6628352490399205,
-        "utilisationProxy": 1.4219653179190754,
-        "littlesLawResidual": 7.96955939285176,
-        "queueTrend": 0.27969348658909954
+        "peakQueue": 44,
+        "arrivalRate": 0.9444444444412331,
+        "deliveryRate": 0.6962962962939286,
+        "utilisationProxy": 1.3563829787234043,
+        "littlesLawResidual": 10.860693801052278,
+        "queueTrend": 0.24814814814730446
       }
     },
     {
@@ -3589,16 +3589,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 230,
-        "served": 165,
+        "elapsedSeconds": 352,
+        "served": 271,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 29,
-        "arrivalRate": 0.9344978165909191,
-        "deliveryRate": 0.7205240174649611,
-        "utilisationProxy": 1.2969696969696969,
-        "littlesLawResidual": 2.048371123401786,
-        "queueTrend": 0.21397379912595804
+        "peakQueue": 45,
+        "arrivalRate": 0.9601139601104172,
+        "deliveryRate": 0.772079772076923,
+        "utilisationProxy": 1.2435424354243543,
+        "littlesLawResidual": 10.64038806789457,
+        "queueTrend": 0.18803418803349414
       }
     },
     {
@@ -3792,16 +3792,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 278,
-        "served": 188,
+        "elapsedSeconds": 296,
+        "served": 206,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 49,
-        "arrivalRate": 0.9530685920544909,
-        "deliveryRate": 0.6787003610085011,
-        "utilisationProxy": 1.4042553191489362,
-        "littlesLawResidual": 8.650420110931755,
-        "queueTrend": 0.27436823104598984
+        "peakQueue": 62,
+        "arrivalRate": 0.9559322033864783,
+        "deliveryRate": 0.6983050847433139,
+        "utilisationProxy": 1.3689320388349515,
+        "littlesLawResidual": 10.864077870016057,
+        "queueTrend": 0.25762711864316445
       }
     },
     {
@@ -3884,16 +3884,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 272,
-        "served": 178,
+        "elapsedSeconds": 282,
+        "served": 193,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 54,
-        "arrivalRate": 0.9557195571923179,
-        "deliveryRate": 0.6568265682634463,
-        "utilisationProxy": 1.4550561797752808,
-        "littlesLawResidual": 7.799428710893483,
-        "queueTrend": 0.2988929889288716
+        "peakQueue": 62,
+        "arrivalRate": 0.9572953736621783,
+        "deliveryRate": 0.6868327402111539,
+        "utilisationProxy": 1.3937823834196892,
+        "littlesLawResidual": 11.593818548600684,
+        "queueTrend": 0.2704626334510244
       }
     },
     {
@@ -3976,16 +3976,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 217,
-        "served": 147,
+        "elapsedSeconds": 335,
+        "served": 216,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 20,
-        "arrivalRate": 0.9166666666638377,
-        "deliveryRate": 0.6805555555534553,
-        "utilisationProxy": 1.346938775510204,
-        "littlesLawResidual": -0.73337783143959,
-        "queueTrend": 0.2361111111103824
+        "peakQueue": 76,
+        "arrivalRate": 0.946107784427693,
+        "deliveryRate": 0.6467065868239927,
+        "utilisationProxy": 1.462962962962963,
+        "littlesLawResidual": 13.519246677970362,
+        "queueTrend": 0.2994011976037003
       }
     },
     {
@@ -4063,16 +4063,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 85,
-        "served": 46,
+        "elapsedSeconds": 168,
+        "served": 147,
         "livesRemaining": 0,
         "firstPerilSecond": 52.999999999907565,
-        "peakQueue": 69,
-        "arrivalRate": 1.678571428570391,
-        "deliveryRate": 0.547619047618709,
-        "utilisationProxy": 3.065217391304348,
-        "littlesLawResidual": -1.1275423212525055,
-        "queueTrend": 1.130952380951682
+        "peakQueue": 107,
+        "arrivalRate": 1.6706586826303444,
+        "deliveryRate": 0.8802395209557728,
+        "utilisationProxy": 1.8979591836734695,
+        "littlesLawResidual": 33.44657012493322,
+        "queueTrend": 0.7904191616745716
       }
     },
     {
@@ -4131,16 +4131,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 78,
-        "served": 54,
+        "elapsedSeconds": 166,
+        "served": 140,
         "livesRemaining": 0,
         "firstPerilSecond": 61.99999999994947,
-        "peakQueue": 48,
-        "arrivalRate": 1.5974025974021964,
-        "deliveryRate": 0.7012987012985252,
-        "utilisationProxy": 2.2777777777777777,
-        "littlesLawResidual": 0.1874246124614274,
-        "queueTrend": 0.8961038961036711
+        "peakQueue": 99,
+        "arrivalRate": 1.6545454545411515,
+        "deliveryRate": 0.8484848484826418,
+        "utilisationProxy": 1.95,
+        "littlesLawResidual": 34.234825848784226,
+        "queueTrend": 0.8060606060585097
       }
     },
     {
@@ -4199,16 +4199,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 75,
-        "served": 16,
+        "elapsedSeconds": 149,
+        "served": 87,
         "livesRemaining": 0,
         "firstPerilSecond": 48.99999999988894,
-        "peakQueue": 81,
-        "arrivalRate": 1.662162162162042,
-        "deliveryRate": 0.21621621621620057,
-        "utilisationProxy": 7.6875,
-        "littlesLawResidual": -1.5354954954383757,
-        "queueTrend": 1.4459459459458412
+        "peakQueue": 106,
+        "arrivalRate": 1.6351351351312688,
+        "deliveryRate": 0.5878378378364478,
+        "utilisationProxy": 2.7816091954022992,
+        "littlesLawResidual": 49.075719354918014,
+        "queueTrend": 1.0472972972948211
       }
     },
     {
@@ -4286,16 +4286,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 66,
-        "served": 36,
+        "elapsedSeconds": 168,
+        "served": 101,
         "livesRemaining": 0,
         "firstPerilSecond": 50.99999999989825,
-        "peakQueue": 44,
-        "arrivalRate": 1.692307692308644,
-        "deliveryRate": 0.5538461538464653,
-        "utilisationProxy": 3.055555555555556,
-        "littlesLawResidual": 3.920344470386368,
-        "queueTrend": 1.1384615384621788
+        "peakQueue": 143,
+        "arrivalRate": 1.646706586822024,
+        "deliveryRate": 0.6047904191600889,
+        "utilisationProxy": 2.7227722772277225,
+        "littlesLawResidual": 55.13769278978817,
+        "queueTrend": 1.041916167661935
       }
     },
     {
@@ -4354,16 +4354,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 77,
-        "served": 45,
+        "elapsedSeconds": 177,
+        "served": 122,
         "livesRemaining": 0,
         "firstPerilSecond": 56.999999999926196,
-        "peakQueue": 51,
-        "arrivalRate": 1.5657894736839084,
-        "deliveryRate": 0.5921052631577804,
-        "utilisationProxy": 2.644444444444445,
-        "littlesLawResidual": 3.112869104623421,
-        "queueTrend": 0.973684210526128
+        "peakQueue": 121,
+        "arrivalRate": 1.6363636363591705,
+        "deliveryRate": 0.6931818181799264,
+        "utilisationProxy": 2.360655737704918,
+        "littlesLawResidual": 46.561348270088295,
+        "queueTrend": 0.9431818181792441
       }
     },
     {
@@ -4422,16 +4422,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 71,
-        "served": 17,
+        "elapsedSeconds": 156,
+        "served": 54,
         "livesRemaining": 0,
         "firstPerilSecond": 49.999999999893596,
-        "peakQueue": 57,
-        "arrivalRate": 1.6000000000003034,
-        "deliveryRate": 0.2428571428571889,
-        "utilisationProxy": 6.588235294117648,
-        "littlesLawResidual": 3.1695553715157345,
-        "queueTrend": 1.3571428571431146
+        "peakQueue": 156,
+        "arrivalRate": 1.5999999999960512,
+        "deliveryRate": 0.34838709677333374,
+        "utilisationProxy": 4.592592592592593,
+        "littlesLawResidual": 59.66138651462017,
+        "queueTrend": 1.2516129032227175
       }
     },
     {
@@ -4509,16 +4509,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 65,
-        "served": 39,
+        "elapsedSeconds": 154,
+        "served": 133,
         "livesRemaining": 0,
         "firstPerilSecond": 47.99999999988824,
-        "peakQueue": 39,
-        "arrivalRate": 1.562500000001006,
-        "deliveryRate": 0.6093750000003924,
-        "utilisationProxy": 2.5641025641025643,
-        "littlesLawResidual": 1.6123130342243002,
-        "queueTrend": 0.9531250000006137
+        "peakQueue": 95,
+        "arrivalRate": 1.6601307189501986,
+        "deliveryRate": 0.8692810457495135,
+        "utilisationProxy": 1.9097744360902256,
+        "littlesLawResidual": 33.659088451872094,
+        "queueTrend": 0.7908496732006851
       }
     },
     {
@@ -4577,16 +4577,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 97,
-        "served": 57,
+        "elapsedSeconds": 174,
+        "served": 132,
         "livesRemaining": 0,
         "firstPerilSecond": 47.99999999988824,
-        "peakQueue": 54,
-        "arrivalRate": 1.6354166666648302,
-        "deliveryRate": 0.5937499999993332,
-        "utilisationProxy": 2.754385964912281,
-        "littlesLawResidual": 6.577195306085429,
-        "queueTrend": 1.041666666665497
+        "peakQueue": 116,
+        "arrivalRate": 1.6069364161806392,
+        "deliveryRate": 0.7630057803447639,
+        "utilisationProxy": 2.1060606060606064,
+        "littlesLawResidual": 47.11774049032246,
+        "queueTrend": 0.8439306358358754
       }
     },
     {
@@ -4645,16 +4645,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 73,
-        "served": 10,
+        "elapsedSeconds": 159,
+        "served": 58,
         "livesRemaining": 0,
         "firstPerilSecond": 50.99999999989825,
-        "peakQueue": 56,
-        "arrivalRate": 1.5000000000000826,
-        "deliveryRate": 0.13888888888889653,
-        "utilisationProxy": 10.8,
-        "littlesLawResidual": 19.428732876771274,
-        "queueTrend": 1.361111111111186
+        "peakQueue": 129,
+        "arrivalRate": 1.5759493670846527,
+        "deliveryRate": 0.36708860759401546,
+        "utilisationProxy": 4.293103448275862,
+        "littlesLawResidual": 56.869912653673325,
+        "queueTrend": 1.2088607594906373
       }
     }
   ]

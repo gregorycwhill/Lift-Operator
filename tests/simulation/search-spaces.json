@@ -1,0 +1,4 @@
+{
+  "r2-accessibility": { "families": ["manualRescueLeverage", "arrivalShape"], "bounds": { "manualRescueLeverage": [1, 6], "arrivalShape": [0.4, 0.52] }, "step": 0.02 },
+  "late-solution-leverage": { "families": ["eventLeverage"], "bounds": { "eventLeverage": [0, 1] }, "step": 0.1 }
+}

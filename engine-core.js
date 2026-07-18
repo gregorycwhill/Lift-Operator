@@ -399,6 +399,7 @@ window.resetGame = function() {
         Registry.highestUnlockedRound = 11;
     } else {
         Registry.points = 0;
+        Registry.highestUnlockedRound = 1;
     }
     
     return window.initializeRound(1, { resetCampaign: true });

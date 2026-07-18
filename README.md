@@ -127,3 +127,11 @@ The project protects the experience from accidents, not the source from curious 
 - Reverse-engineering the manifest, finding the XOR secret, or constructing a debug link is considered a successful learning outcome.
 
 The obfuscation is therefore fit for the project’s purpose. Strong authentication, anti-cheat, and adversarial security are not goals.
+# Stabilization status
+
+The current implementation passes the full automated gate, including the 13-round Monkey campaign. Developer
+simulation and balance tooling is available through `npm.cmd run sim:matrix`, `sim:repro`, `balance:search`,
+`balance:search:late`, `economy:search`, and `audit:completion`.
+
+Canonical balance promotion is not automatic. The current pointer in `reports/latest-balance.json` records the
+exploratory baseline and the remaining blockers: Round 2 solution leverage and human playtest evidence.
