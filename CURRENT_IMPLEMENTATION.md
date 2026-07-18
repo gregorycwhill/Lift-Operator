@@ -1,6 +1,6 @@
 # Current Implementation Baseline
 
-**Baseline date:** 16 July 2026  
+**Baseline date:** 18 July 2026
 **Purpose:** Describe observable implementation, not desired balance.  
 **Authority:** The code remains authoritative where this document is incomplete.
 
@@ -203,7 +203,7 @@ The project contains:
 - Simulation baseline scripts.
 - A reproducible Playwright autonomous-pilot lifecycle suite.
 
-The Playwright suite invokes the obfuscated manifest gateway, launches UNIT_01 through the visible Debug modal, completes all 13 accelerated rounds, verifies the human-intervention kill switch, and verifies ordinary-death rollback. The first complete local campaign run passed in approximately 6.6 minutes.
+The Playwright suite invokes the obfuscated manifest gateway, launches UNIT_01 through the visible Debug modal, completes all 13 accelerated rounds, verifies the human-intervention kill switch, and verifies ordinary-death rollback. With the real five-second countdown on every round, the current full Monkey campaign passes in approximately 7.6 minutes and the complete 50-test gate in approximately 8.4 minutes on the development machine.
 
 The older in-browser scorecard remains useful diagnostically but is not yet authoritative because several checks:
 
@@ -222,18 +222,18 @@ Custom scripts still execute using `new Function`, but generated source is now s
 
 ## Known high-priority issues
 
-1. Shop exit and round-review lifecycle can repeat or restore stale state.
-2. Average wait now records total journey time from spawn to successful destination delivery; broader telemetry validation remains pending.
-3. Early round payouts trivialize shop choices.
-4. Current configuration and documentation disagree.
-5. Simulation is isolated from live state; deterministic strategy baselines and separate environment/agent random streams remain pending.
-6. Production excludes developer test scripts and uses pinned local runtime assets; Debug loads diagnostics only after explicit opt-in.
-7. UTF-8 text is inconsistently represented in source files.
+1. Round 2 remains underloaded: unattended all-Sweep survives all three accepted release seeds.
+2. Rounds 7–11 and 13 are overloaded under the current strong-comparator portfolio.
+3. Deterministic economy scenarios remain inflationary: struggling/typical/expert paths end with 81/99/174 Credits.
+4. The simulator is isolated and deterministic but lacks first-class action replay, a batch execution contract, compact anomaly reporting, a held-out robustness set, and bounded parameter search.
+5. Several production mechanics still lack independent coverage: VIP penalty, Gym Bro stink threshold, jam/stink recovery, rooftop release, Musak, and Group Think.
+6. Campaign reset/career persistence needs an explicit browser regression test.
+7. Remaining legacy compatibility parameters are not yet rejected as independent numerical sources.
 8. Workshop capacity sensors use passenger count rather than weight/effective capacity.
-9. Unattended all-Sweep is currently too effective and can complete rounds without the active supervision required by the target design.
-10. Hands-Free currently checks only for zero manual clicks; it does not require player-authored custom automation and can therefore reward built-in policies incorrectly.
+9. Imported blueprints still need explicit origin/consent behavior, and custom automation needs deadline isolation to guarantee UI responsiveness.
+10. UTF-8 text is inconsistently represented in first-party source files.
 
-These are addressed in `STABILIZATION_PLAN.md`.
+These are addressed by `IMPLEMENTATION_HANDOFF.md`; `STABILIZATION_PLAN.md` remains supporting rationale.
 
 ## Implemented ordinary-death retry behaviour
 
@@ -256,7 +256,7 @@ Lobby rendering is throttled to 10 updates per second and bounded to 18 visible 
 
 Lift passenger rendering uses a stable state hash. Visual-state updates no longer overwrite that hash and therefore no longer destroy and recreate unchanged passenger DOM every animation frame. Idle automation policy evaluation is limited to ten decisions per second per lift, bounding full-building queue scans while retaining responsive routing.
 
-The Round Review places its three column labels—Served, Round Performance, and Total Bank—directly below the outcome heading and above their statistics.
+The Round Review places its three column labels—Served, Credits Earned, and Total Credits—directly below the outcome heading and above their statistics.
 
 ## Balance data pipeline
 

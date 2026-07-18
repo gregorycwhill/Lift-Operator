@@ -1,5 +1,7 @@
 # Lift Operator Product Roadmap
 
+`IMPLEMENTATION_HANDOFF.md` is the implementation authority for completing Stages 2–5. This roadmap remains the high-level product sequence.
+
 The roadmap is organized by gates, not by feature quantity. The game already has sufficient mechanics for a complete campaign.
 
 ## Stage 1 — Documentation true-up
@@ -58,6 +60,8 @@ Canonical JSON, validation, generation, runtime loading, payout/unlock data, and
 Production behaviour, deterministic simulation, lifecycle, Monkey, manifest validation, pure mechanic rules, an onboarding golden comparison, and campaign economy scenarios are covered. Worker isolation, broader golden strategy comparisons, and richer economy telemetry remain open.
 
 ## Stage 5 — Campaign balance
+
+**Status:** Infrastructure established; execution blocked on replay/batch/search hardening and round-specific strong profiles. Rounds 3–6 and Endurance are provisionally Contested, Round 2 is Underloaded, and Rounds 7–11/13 are Overloaded.
 
 Tune by act:
 

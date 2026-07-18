@@ -25,9 +25,9 @@ For most shop visits:
 
 ## 2. Currency model
 
-### 2.1 Operational Points
+### 2.1 Operational Credits
 
-Operational Points are the visible shop currency.
+Credits are the visible shop currency. Internal code may retain `points` identifiers until a deliberate compatibility migration, but player-facing and design language uses Credits.
 
 They are:
 
@@ -44,7 +44,7 @@ Their primary rewards should be:
 
 - Badge/trophy progression.
 - Rank or showcase recognition.
-- Optional small one-time Operational Point bonuses.
+- Optional small one-time Credit bonuses.
 - Potential future cosmetic or sandbox unlocks.
 
 Achievements must not be the main source of routine purchasing power.
@@ -53,19 +53,19 @@ Achievements must not be the main source of routine purchasing power.
 
 The retry model uses a checkpoint created immediately after the previous round’s payout and before the next shop:
 
-1. Save the point balance, target round, and round seed.
+1. Save the Credit balance, target round, and round seed.
 2. Enter the shop and choose a provisional loadout.
 3. Start the attempt with those items in inventory.
 4. If the player dies in an ordinary round, discard the entire attempt.
-5. Restore the saved point balance in full.
+5. Restore the saved Credit balance in full.
 6. Clear inventory and cart.
 7. Recreate the same round with the same seed.
 8. Return to the shop so the player can choose a different loadout.
 9. On successful completion, commit spending and award the round payout once.
 
-Nothing from the failed gameplay attempt carries forward: no spent points, inventory, cart, served counts, achievements, timers, hazard state, or lift state. The player keeps only the knowledge gained from the attempt.
+Nothing from the failed gameplay attempt carries forward: no spent Credits, inventory, cart, served counts, achievements, timers, hazard state, or lift state. The player keeps only the knowledge gained from the attempt.
 
-This makes difficult rounds repeatable strategy puzzles without enabling point farming.
+This makes difficult rounds repeatable strategy puzzles without enabling Credit farming.
 
 ### 3.1 Endurance exception
 
@@ -179,7 +179,7 @@ Initial candidate:
 
 The payout should be generous without making Round 13 purchases meaningless. Candidate safeguards:
 
-- Cap repeatable Operational Points at 40–50.
+- Cap repeatable Credits at 40–50.
 - Continue recording uncapped survival time and score for personal-best purposes.
 - Award time achievements once per tier.
 

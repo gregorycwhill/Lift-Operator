@@ -2,9 +2,11 @@
 
 ## 1. Objective
 
+`IMPLEMENTATION_HANDOFF.md` is the implementation authority for the next phase, including exact metrics, seed sets, replay format, executable search, reporting caps, thresholds, commands, and stopping rules. This document remains the design-to-data workflow and human-playtest protocol.
+
 Create a short, repeatable loop in which design changes can be proposed in documentation, validated, converted into configuration, exercised by the unchanged engine, and evaluated through simulation and human play.
 
-`E2E_BALANCE_PLAN.md` defines the active campaign-wide delivery sequence. This workflow is the technical process used to execute it. The first pass satisfices across all rounds with coarse changes; fine-grained optimisation is reserved for human-identified outliers.
+`E2E_BALANCE_PLAN.md` explains the campaign-wide satisficing rationale. `IMPLEMENTATION_HANDOFF.md` defines the active delivery sequence. The first pass satisfices across all rounds with coarse changes; fine-grained optimisation is reserved for human-identified outliers.
 
 ```text
 Design hypothesis
@@ -294,7 +296,7 @@ For Round 12, the terminal outcome is always Endurance completion at zero lives.
 - Ending bank
 - Payout components
 
-For Endurance, separately record points earned from survival time, service volume, quality, and achievements. Preserve uncapped personal-best score even if Operational Points are capped.
+For Endurance, separately record Credits earned from survival time, service volume, quality, and achievements. Preserve uncapped personal-best score even if repeatable Credits are capped.
 
 ### Design-only pressure forecast
 

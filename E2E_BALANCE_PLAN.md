@@ -1,5 +1,7 @@
 # End-to-End Satisficing Balance Plan
 
+**Status:** Design rationale retained by `IMPLEMENTATION_HANDOFF.md`. When thresholds, commands, sequence, replay, reporting, or stopping rules differ, the handoff is authoritative.
+
 ## Objective
 
 Bring the complete 13-round campaign into a broadly playable, progressively demanding shape quickly. This pass seeks a defensible balance envelope, not an optimum for every seed or round.

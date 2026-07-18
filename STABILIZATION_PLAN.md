@@ -1,5 +1,7 @@
 # Lift Operator — Stabilization Plan
 
+`IMPLEMENTATION_HANDOFF.md` is the active implementation authority. This document retains the stabilization rationale and historical gates.
+
 **Objective:** Make the existing game reliable, data-driven, testable, and resilient enough for systematic balance iteration.  
 **Scope:** Bug fixes, intent/behaviour alignment, configuration centralization, testing rigor, access gating, and script containment.  
 **Out of scope:** New mechanics, rounds, themes, profiles, and online services.
@@ -302,7 +304,7 @@ Follow `E2E_BALANCE_PLAN.md` as the authoritative delivery sequence:
 
 Round 12 uses a separate survival gate: competent play should last 4–8 minutes, while unattended built-in automation should last materially less than 4 minutes.
 
-**Current status:** Campaign-wide balance infrastructure is ready. Round 3 has provisional simulation separation; Rounds 2, 4, and 5 demonstrate why a coarse end-to-end pass and stronger idealised comparators are preferable to per-round fine search.
+**Current status:** Canonical balance, isolated simulation, telemetry, three-seed reports, and coarse comparators exist. Rounds 3–6 and Round 12 have provisional separation; Round 2 remains Underloaded and Rounds 7–11/13 remain Overloaded. The next gate is deterministic batch/replay/search infrastructure plus event-specific strong profiles, as specified in `IMPLEMENTATION_HANDOFF.md`.
 
 ## 11. Suggested issue groups
 

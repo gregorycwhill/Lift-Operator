@@ -127,6 +127,23 @@ Campaign balance acceptance follows `E2E_BALANCE_PLAN.md`: classify all rounds f
 - [ ] UTF-8 validation.
 - [x] CI workflow and reproducible npm commands added.
 
+## Milestone H — Executable balance search and handoff completion
+
+The exact architecture, thresholds, seed partitions, commands, reporting caps, sequence, and stopping rules are in `IMPLEMENTATION_HANDOFF.md`.
+
+- [ ] Fast unit/mechanic/integration/smoke/full npm tiers exist.
+- [ ] Integer-tick batch simulation matches the legacy isolated runner.
+- [ ] Action replay reproduces terminal and metric hashes.
+- [ ] Discovery, release, robustness, and golden seed sets are versioned separately.
+- [ ] Candidate overlays cannot mutate canonical data or sequential worker state.
+- [ ] Search uses hard feasibility gates and bounded stopping rules rather than an opaque fitness score.
+- [ ] Compact summaries and capped anomalous replays replace raw per-run reasoning.
+- [ ] Round-specific strong profiles exist for R2 and R7–11/13.
+- [ ] R2 satisfies late unattended failure and low-intervention hybrid survival gates.
+- [ ] R7–11/13 satisfy release and 30-seed robustness gates.
+- [ ] Owner-confirmed economy affordability, reserve, inflation, and purchase-dominance gates pass.
+- [ ] Full promotion command updates canonical data, generated artifact, reports, docs, and balance version atomically.
+
 ## Reporting format
 
 Every authoritative run includes:

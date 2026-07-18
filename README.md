@@ -25,19 +25,20 @@ The documents have distinct responsibilities:
 
 | Document | Purpose | Authority |
 | --- | --- | --- |
+| [IMPLEMENTATION_HANDOFF.md](IMPLEMENTATION_HANDOFF.md) | Self-contained remaining-work architecture, thresholds, executable simulation/search plan, sequence, commands, risks, and stopping rules | Primary implementation authority |
 | [Lift-Operator_GDD.md](Lift-Operator_GDD.md) | Product vision, player experience, rules, and design principles | Design intent |
 | [CURRENT_IMPLEMENTATION.md](CURRENT_IMPLEMENTATION.md) | What the current code actually does, including known inconsistencies | Implemented baseline |
 | [Game Play Map.md](Game%20Play%20Map.md) | Target round sequence, learning arc, problems, solution spaces, and tuning parameters | Target progression |
 | [Game Economy.md](Game%20Economy.md) | Target earning, spending, affordability, retry, and progression model | Target economy |
 | [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) | Docs-to-config-to-playtest iteration and telemetry | Balance process |
-| [E2E_BALANCE_PLAN.md](E2E_BALANCE_PLAN.md) | Coarse campaign-wide satisficing pass, gates, and stopping rules | Active balance delivery plan |
+| [E2E_BALANCE_PLAN.md](E2E_BALANCE_PLAN.md) | Coarse campaign-wide satisficing rationale retained by the handoff | Balance rationale |
 | [Automation_Workshop_Spec.md](Automation_Workshop_Spec.md) | Current and target automation experience and execution-containment model | Automation specification |
 | [STABILIZATION_PLAN.md](STABILIZATION_PLAN.md) | Prioritized work needed before systematic balance iteration | Delivery plan |
-| [ORIENTATION_IMPLEMENTATION_PLAN.md](ORIENTATION_IMPLEMENTATION_PLAN.md) | Five-second setup, transient teaching cues, capacity effects, credits, and wait-time delivery plan | Active interface implementation plan |
+| [ORIENTATION_IMPLEMENTATION_PLAN.md](ORIENTATION_IMPLEMENTATION_PLAN.md) | Implemented five-second setup, transient teaching cues, capacity effects, credits, and wait-time contract | Completed interface plan |
 | [TESTING_STRATEGY.md](TESTING_STRATEGY.md) | Required evidence and testing layers | Quality strategy |
 | [ROADMAP.md](ROADMAP.md) | High-level product stages and gates | Product sequencing |
 
-`IMPLEMENTATION_PLAN.md`, `REFACTOR_PLAN.md`, and `TEST_PLAN.md` are retained as historical records. Where they conflict with the documents above, the documents above take precedence.
+`IMPLEMENTATION_PLAN.md` and `REFACTOR_PLAN.md` are retained as historical records. `TEST_PLAN.md` remains the live checklist. Where a delivery document conflicts with `IMPLEMENTATION_HANDOFF.md`, the handoff takes precedence; product intent still comes from the GDD, Game Play Map, and Game Economy.
 
 ## Status vocabulary
 
@@ -54,13 +55,13 @@ All specifications use the following terms:
 
 The game is an entirely playable advanced prototype completing stabilization infrastructure and entering data-driven balance work.
 
-The immediate priorities are:
+The immediate priorities are defined in `IMPLEMENTATION_HANDOFF.md`:
 
-1. Classify all rounds with the campaign-wide heuristic and strategy matrix.
-2. Apply coarse pressure changes until unattended automation fails and a strong comparator survives.
-3. Place Round 12 competent survival inside its 4–8-minute window.
-4. Verify campaign-wide solution affordability.
-5. Run a short human campaign pass and refine only material outliers.
+1. Close remaining correctness, containment, canonical-data, and mechanic-test gaps.
+2. Add deterministic batch simulation, action replay, compact aggregation, and reproducibility checks.
+3. Build round-specific competent profiles before changing late-round pressure.
+4. Use bounded code-driven search for Round 2 and Rounds 7–11/13.
+5. Verify economy feasibility, promote only the first gated candidate, then run human outlier testing.
 
 New power-ups, hazards, themes, profiles, and online services are outside the current focus.
 

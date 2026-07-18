@@ -182,7 +182,7 @@ The player:
 
 - Starts with the normal 20 lives.
 - Continues until lives reach zero.
-- Earns score and Operational Points from survival duration, guests served, and service quality.
+- Earns score and Credits from survival duration, guests served, and service quality.
 - Does not retry the round after death.
 - Automatically progresses to Round 13.
 
@@ -256,7 +256,7 @@ For most shop visits:
 - The player cannot buy every relevant answer.
 - Gold tiers require saving, excellent performance, or achievement milestones.
 
-Points should reward the behaviour a round teaches. Remaining-time bonuses should only be used where time remaining is a meaningful performance measure.
+Credits should reward the behaviour a round teaches. Remaining-time bonuses should only be used where time remaining is a meaningful performance measure.
 
 Career achievements should primarily represent mastery and long-term status. They should not overwhelm repeatable operational income.
 
