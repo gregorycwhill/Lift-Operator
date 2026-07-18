@@ -663,6 +663,28 @@ test('canonical balance data drives runtime compatibility values', async ({ page
     expect(result.roundThirteenSpawn).toEqual(result.canonicalRoundThirteenSpawn);
 });
 
+test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const capacities = [1, 2, 3, 4].map(round => {
+            initializeRound(round, { showBriefing: false });
+            return { round, capacity: Config.liftCapacity };
+        });
+        return {
+            capacities,
+            r2SpawnEnd: Config.GAME_DATA.rounds[2].spawnEnd,
+            r2SpawnStart: Config.GAME_DATA.rounds[2].spawnStart,
+            version: Config.balanceVersion
+        };
+    });
+    expect(result.capacities).toEqual([
+        { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
+        { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
+    ]);
+    expect(result.r2SpawnStart).toBe(0.4);
+    expect(result.r2SpawnEnd).toBe(0.468);
+    expect(result.version).toBe('0.2.3-r2-capacity-playtest');
+});
+
 test('shop visibility follows canonical round and tier unlocks', async ({ page }) => {
     const visibleButtons = async round => page.evaluate(value => {
         Registry.stats.round = value;
@@ -1039,7 +1061,7 @@ test('design telemetry records Little’s Law inputs and weighted VIP exposure',
             isVip: true
         });
         const sample = telemetry.sample(160000);
-        return { sample, exported: telemetry.export() };
+        return { sample, exported: telemetry.export(), version: Config.balanceVersion };
     });
 
     expect(result.sample.arrivalRate).toBeCloseTo(0.2, 6);
@@ -1051,7 +1073,7 @@ test('design telemetry records Little’s Law inputs and weighted VIP exposure',
     expect(result.sample.littlesLawEstimate).toBe(6);
     expect(result.sample.imminentLives).toBe(10);
     expect(result.sample.manualDecisionsPerMinute).toBe(3);
-    expect(result.exported.balanceVersion).toBe('0.2.2-round-2-accessibility');
+    expect(result.exported.balanceVersion).toBe(result.version);
     expect(result.exported.samples).toHaveLength(1);
 });
 

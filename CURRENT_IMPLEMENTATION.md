@@ -279,6 +279,13 @@ Canonical data now also defines the implemented payout formula, shop tier visibi
 
 The current payout magnitudes and power-up prices have deliberately not been rebalanced yet. Deterministic economy scenarios show that the existing low prices leave large unspent balances, especially for expert play. This is evidence for the candidate economy redesign, not a reason to change several economic variables without playtest baselines.
 
+### Playtest tuning: R1-R3 capacity and R2 traffic
+
+Balance `0.2.3-r2-capacity-playtest` sets lift capacity to 15 for Rounds 1, 2, and 3 only. Round 2's final spawn
+rate changes from `0.52` to `0.468` (a 10% reduction); all other round parameters remain unchanged. The release
+all-Sweep matrix still records R2 survival on all three seeds, while R3 death timing changes from `179/145/136s` to
+`177/145/131s` on seeds `1234/3141/6060`. This is a playtest build, not a completed campaign-wide balance promotion.
+
 ## Design-only balance telemetry
 
 `balance-telemetry.js` samples operational state once per game second. It records arrivals, deliveries, queue and onboard work in progress, journey time, Little's Law diagnostics, productive lift utilisation, manual decision rate, critical exposure, weighted life loss, and the Projected Survival Index.

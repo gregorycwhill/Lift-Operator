@@ -790,4 +790,6 @@ Finally, exact simulator success cannot establish the human completion bands. Au
 
 | 18 July 2026 | `02efb44` / `0.2.2-round-2-accessibility` | Owner accepted provisional economy bands/reserves for now; Round 10 custom automation is optional but must show measurable advantage. Future rounds may require custom automation. |
 
+| 18 July 2026 | `0.2.3-r2-capacity-playtest` | Playtest tuning: lift capacity 15 in Rounds 1–3 only; Round 2 final spawn rate reduced 10% (`0.52` → `0.468`). No other balance parameters changed. |
+
 Append one row only when a candidate is canonically promoted or a plan-level owner decision changes an acceptance gate. Exploratory candidates belong in generated search summaries, not this log.

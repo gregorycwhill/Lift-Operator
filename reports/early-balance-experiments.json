@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.2-round-2-accessibility",
+  "balanceVersion": "0.2.3-r2-capacity-playtest",
   "seeds": [
     1234,
     3141,
@@ -14,11 +14,11 @@
         "spawnEnd": 0.75
       },
       "strategy": "all-sweep",
-      "survivors": 1,
-      "averageElapsedSeconds": 161,
-      "averageLivesRemaining": 0.3333333333333333,
+      "survivors": 0,
+      "averageElapsedSeconds": 161.33333333333334,
+      "averageLivesRemaining": 0,
       "averageManualClicks": 0,
-      "averagePeakQueue": 30.666666666666668
+      "averagePeakQueue": 29.333333333333332
     },
     {
       "round": 2,
@@ -28,11 +28,11 @@
         "spawnEnd": 0.75
       },
       "strategy": "minimal-rescue",
-      "survivors": 1,
-      "averageElapsedSeconds": 167.33333333333334,
-      "averageLivesRemaining": 0.6666666666666666,
+      "survivors": 0,
+      "averageElapsedSeconds": 162.33333333333334,
+      "averageLivesRemaining": 0,
       "averageManualClicks": 3,
-      "averagePeakQueue": 31
+      "averagePeakQueue": 29.333333333333332
     },
     {
       "round": 2,
@@ -43,10 +43,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 0,
-      "averageElapsedSeconds": 157,
+      "averageElapsedSeconds": 155.66666666666666,
       "averageLivesRemaining": 0,
       "averageManualClicks": 0,
-      "averagePeakQueue": 33
+      "averagePeakQueue": 31.666666666666668
     },
     {
       "round": 2,
@@ -57,9 +57,23 @@
       },
       "strategy": "minimal-rescue",
       "survivors": 0,
-      "averageElapsedSeconds": 153,
+      "averageElapsedSeconds": 151,
       "averageLivesRemaining": 0,
-      "averageManualClicks": 2,
+      "averageManualClicks": 1.6666666666666667,
+      "averagePeakQueue": 30.333333333333332
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 148.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
       "averagePeakQueue": 32.333333333333336
     },
     {
@@ -69,26 +83,12 @@
         "spawnStart": 0.65,
         "spawnEnd": 0.85
       },
-      "strategy": "all-sweep",
-      "survivors": 0,
-      "averageElapsedSeconds": 142,
-      "averageLivesRemaining": 0,
-      "averageManualClicks": 0,
-      "averagePeakQueue": 33
-    },
-    {
-      "round": 2,
-      "candidate": {
-        "id": "r2-c",
-        "spawnStart": 0.65,
-        "spawnEnd": 0.85
-      },
       "strategy": "minimal-rescue",
       "survivors": 0,
-      "averageElapsedSeconds": 144,
+      "averageElapsedSeconds": 146,
       "averageLivesRemaining": 0,
       "averageManualClicks": 1.6666666666666667,
-      "averagePeakQueue": 34.333333333333336
+      "averagePeakQueue": 32
     },
     {
       "round": 2,
@@ -99,72 +99,72 @@
       },
       "strategy": "all-sweep",
       "survivors": 0,
-      "averageElapsedSeconds": 136,
+      "averageElapsedSeconds": 133,
       "averageLivesRemaining": 0,
       "averageManualClicks": 0,
-      "averagePeakQueue": 34
-    },
-    {
-      "round": 2,
-      "candidate": {
-        "id": "r2-d",
-        "spawnStart": 0.7,
-        "spawnEnd": 0.9
-      },
-      "strategy": "minimal-rescue",
-      "survivors": 0,
-      "averageElapsedSeconds": 132,
-      "averageLivesRemaining": 0,
-      "averageManualClicks": 1.6666666666666667,
-      "averagePeakQueue": 35.333333333333336
-    },
-    {
-      "round": 2,
-      "candidate": {
-        "id": "r2-e",
-        "spawnStart": 0.5,
-        "spawnEnd": 0.65,
-        "trafficBursts": [
-          {
-            "atSecond": 90,
-            "floor": 9,
-            "destination": 0,
-            "count": 5
-          }
-        ]
-      },
-      "strategy": "all-sweep",
-      "survivors": 0,
-      "averageElapsedSeconds": 162.66666666666666,
-      "averageLivesRemaining": 0,
-      "averageManualClicks": 0,
-      "averagePeakQueue": 31.666666666666668
-    },
-    {
-      "round": 2,
-      "candidate": {
-        "id": "r2-e",
-        "spawnStart": 0.5,
-        "spawnEnd": 0.65,
-        "trafficBursts": [
-          {
-            "atSecond": 90,
-            "floor": 9,
-            "destination": 0,
-            "count": 5
-          }
-        ]
-      },
-      "strategy": "minimal-rescue",
-      "survivors": 0,
-      "averageElapsedSeconds": 156.33333333333334,
-      "averageLivesRemaining": 0,
-      "averageManualClicks": 2.6666666666666665,
       "averagePeakQueue": 33.333333333333336
     },
     {
       "round": 2,
       "candidate": {
+        "id": "r2-d",
+        "spawnStart": 0.7,
+        "spawnEnd": 0.9
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 134.66666666666666,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 2.3333333333333335,
+      "averagePeakQueue": 35
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "survivors": 0,
+      "averageElapsedSeconds": 159.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 30.666666666666668
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-e",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 5
+          }
+        ]
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 0,
+      "averageElapsedSeconds": 160.33333333333334,
+      "averageLivesRemaining": 0,
+      "averageManualClicks": 2,
+      "averagePeakQueue": 30.333333333333332
+    },
+    {
+      "round": 2,
+      "candidate": {
         "id": "r2-f",
         "spawnStart": 0.5,
         "spawnEnd": 0.65,
@@ -179,10 +179,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 0,
-      "averageElapsedSeconds": 153,
+      "averageElapsedSeconds": 155.66666666666666,
       "averageLivesRemaining": 0,
       "averageManualClicks": 0,
-      "averagePeakQueue": 34.666666666666664
+      "averagePeakQueue": 33.666666666666664
     },
     {
       "round": 2,
@@ -201,10 +201,10 @@
       },
       "strategy": "minimal-rescue",
       "survivors": 0,
-      "averageElapsedSeconds": 154.33333333333334,
+      "averageElapsedSeconds": 154.66666666666666,
       "averageLivesRemaining": 0,
-      "averageManualClicks": 3,
-      "averagePeakQueue": 36
+      "averageManualClicks": 2.3333333333333335,
+      "averagePeakQueue": 33.333333333333336
     },
     {
       "round": 3,
@@ -216,9 +216,9 @@
       "strategy": "all-sweep",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 9.333333333333334,
+      "averageLivesRemaining": 8,
       "averageManualClicks": 0,
-      "averagePeakQueue": 31.666666666666668
+      "averagePeakQueue": 30.333333333333332
     },
     {
       "round": 3,
@@ -230,9 +230,9 @@
       "strategy": "minimal-rescue",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 10.666666666666666,
-      "averageManualClicks": 4,
-      "averagePeakQueue": 31.666666666666668
+      "averageLivesRemaining": 11.666666666666666,
+      "averageManualClicks": 4.333333333333333,
+      "averagePeakQueue": 28
     },
     {
       "round": 3,
@@ -244,9 +244,9 @@
       "strategy": "wide-doors-rescue",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 14.333333333333334,
+      "averageLivesRemaining": 15.333333333333334,
       "averageManualClicks": 4.666666666666667,
-      "averagePeakQueue": 28.333333333333332
+      "averagePeakQueue": 26.666666666666668
     },
     {
       "round": 3,
@@ -258,9 +258,9 @@
       "strategy": "hybrid-manual-wide-doors",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 11.666666666666666,
-      "averageManualClicks": 37.333333333333336,
-      "averagePeakQueue": 24.666666666666668
+      "averageLivesRemaining": 11,
+      "averageManualClicks": 35.333333333333336,
+      "averagePeakQueue": 21
     },
     {
       "round": 3,
@@ -274,7 +274,7 @@
       "averageElapsedSeconds": 178,
       "averageLivesRemaining": 5.666666666666667,
       "averageManualClicks": 0,
-      "averagePeakQueue": 36.333333333333336
+      "averagePeakQueue": 38
     },
     {
       "round": 3,
@@ -286,79 +286,37 @@
       "strategy": "minimal-rescue",
       "survivors": 2,
       "averageElapsedSeconds": 173.66666666666666,
-      "averageLivesRemaining": 2.3333333333333335,
+      "averageLivesRemaining": 3.6666666666666665,
       "averageManualClicks": 4,
-      "averagePeakQueue": 41.333333333333336
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-b",
-        "spawnStart": 0.85,
-        "spawnEnd": 1.05
-      },
-      "strategy": "wide-doors-rescue",
-      "survivors": 3,
-      "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 9,
-      "averageManualClicks": 4.666666666666667,
-      "averagePeakQueue": 34
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-b",
-        "spawnStart": 0.85,
-        "spawnEnd": 1.05
-      },
-      "strategy": "hybrid-manual-wide-doors",
-      "survivors": 3,
-      "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 13.333333333333334,
-      "averageManualClicks": 35.333333333333336,
-      "averagePeakQueue": 28
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-b1",
-        "spawnStart": 0.9,
-        "spawnEnd": 1.1
-      },
-      "strategy": "all-sweep",
-      "survivors": 2,
-      "averageElapsedSeconds": 174,
-      "averageLivesRemaining": 3,
-      "averageManualClicks": 0,
       "averagePeakQueue": 40.666666666666664
     },
     {
       "round": 3,
       "candidate": {
-        "id": "r3-b1",
-        "spawnStart": 0.9,
-        "spawnEnd": 1.1
-      },
-      "strategy": "minimal-rescue",
-      "survivors": 2,
-      "averageElapsedSeconds": 177.66666666666666,
-      "averageLivesRemaining": 2,
-      "averageManualClicks": 4.666666666666667,
-      "averagePeakQueue": 39
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-b1",
-        "spawnStart": 0.9,
-        "spawnEnd": 1.1
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
       },
       "strategy": "wide-doors-rescue",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 9.333333333333334,
-      "averageManualClicks": 5,
-      "averagePeakQueue": 33
+      "averageLivesRemaining": 10,
+      "averageManualClicks": 4.333333333333333,
+      "averagePeakQueue": 34.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b",
+        "spawnStart": 0.85,
+        "spawnEnd": 1.05
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 11.666666666666666,
+      "averageManualClicks": 35,
+      "averagePeakQueue": 27.333333333333332
     },
     {
       "round": 3,
@@ -367,40 +325,54 @@
         "spawnStart": 0.9,
         "spawnEnd": 1.1
       },
-      "strategy": "hybrid-manual-wide-doors",
-      "survivors": 3,
-      "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 10.666666666666666,
-      "averageManualClicks": 41,
-      "averagePeakQueue": 29.666666666666668
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-b2",
-        "spawnStart": 0.925,
-        "spawnEnd": 1.125
-      },
       "strategy": "all-sweep",
-      "survivors": 1,
-      "averageElapsedSeconds": 169.66666666666666,
-      "averageLivesRemaining": 0.6666666666666666,
+      "survivors": 2,
+      "averageElapsedSeconds": 175.33333333333334,
+      "averageLivesRemaining": 3.3333333333333335,
       "averageManualClicks": 0,
       "averagePeakQueue": 40.333333333333336
     },
     {
       "round": 3,
       "candidate": {
-        "id": "r3-b2",
-        "spawnStart": 0.925,
-        "spawnEnd": 1.125
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
       },
       "strategy": "minimal-rescue",
-      "survivors": 1,
-      "averageElapsedSeconds": 169.66666666666666,
-      "averageLivesRemaining": 1.6666666666666667,
-      "averageManualClicks": 3.6666666666666665,
-      "averagePeakQueue": 35.333333333333336
+      "survivors": 2,
+      "averageElapsedSeconds": 173.66666666666666,
+      "averageLivesRemaining": 3.3333333333333335,
+      "averageManualClicks": 4,
+      "averagePeakQueue": 37.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 10.333333333333334,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 35.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b1",
+        "spawnStart": 0.9,
+        "spawnEnd": 1.1
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 11,
+      "averageManualClicks": 36.333333333333336,
+      "averagePeakQueue": 26.333333333333332
     },
     {
       "round": 3,
@@ -409,11 +381,11 @@
         "spawnStart": 0.925,
         "spawnEnd": 1.125
       },
-      "strategy": "wide-doors-rescue",
-      "survivors": 2,
-      "averageElapsedSeconds": 175.33333333333334,
-      "averageLivesRemaining": 6,
-      "averageManualClicks": 4.666666666666667,
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 169.66666666666666,
+      "averageLivesRemaining": 3.6666666666666665,
+      "averageManualClicks": 0,
       "averagePeakQueue": 37
     },
     {
@@ -423,12 +395,40 @@
         "spawnStart": 0.925,
         "spawnEnd": 1.125
       },
+      "strategy": "minimal-rescue",
+      "survivors": 1,
+      "averageElapsedSeconds": 174,
+      "averageLivesRemaining": 2.6666666666666665,
+      "averageManualClicks": 4,
+      "averagePeakQueue": 36.666666666666664
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 11,
+      "averageManualClicks": 5,
+      "averagePeakQueue": 33
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-b2",
+        "spawnStart": 0.925,
+        "spawnEnd": 1.125
+      },
       "strategy": "hybrid-manual-wide-doors",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 14,
-      "averageManualClicks": 41,
-      "averagePeakQueue": 32.333333333333336
+      "averageLivesRemaining": 12.666666666666666,
+      "averageManualClicks": 38.666666666666664,
+      "averagePeakQueue": 27
     },
     {
       "round": 3,
@@ -439,10 +439,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 1,
-      "averageElapsedSeconds": 165.66666666666666,
-      "averageLivesRemaining": 1.3333333333333333,
+      "averageElapsedSeconds": 164.66666666666666,
+      "averageLivesRemaining": 4.333333333333333,
       "averageManualClicks": 0,
-      "averagePeakQueue": 39.333333333333336
+      "averagePeakQueue": 39
     },
     {
       "round": 3,
@@ -453,10 +453,10 @@
       },
       "strategy": "minimal-rescue",
       "survivors": 0,
-      "averageElapsedSeconds": 167.66666666666666,
+      "averageElapsedSeconds": 172,
       "averageLivesRemaining": 0,
-      "averageManualClicks": 3.3333333333333335,
-      "averagePeakQueue": 40.666666666666664
+      "averageManualClicks": 3.6666666666666665,
+      "averagePeakQueue": 39.333333333333336
     },
     {
       "round": 3,
@@ -468,9 +468,9 @@
       "strategy": "wide-doors-rescue",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 7.666666666666667,
-      "averageManualClicks": 4.666666666666667,
-      "averagePeakQueue": 36
+      "averageLivesRemaining": 10.333333333333334,
+      "averageManualClicks": 5.333333333333333,
+      "averagePeakQueue": 37.333333333333336
     },
     {
       "round": 3,
@@ -482,9 +482,9 @@
       "strategy": "hybrid-manual-wide-doors",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 12.333333333333334,
-      "averageManualClicks": 39.666666666666664,
-      "averagePeakQueue": 31
+      "averageLivesRemaining": 10.666666666666666,
+      "averageManualClicks": 37.666666666666664,
+      "averagePeakQueue": 26
     },
     {
       "round": 3,
@@ -495,10 +495,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 1,
-      "averageElapsedSeconds": 163.33333333333334,
-      "averageLivesRemaining": 2.3333333333333335,
+      "averageElapsedSeconds": 161.66666666666666,
+      "averageLivesRemaining": 3,
       "averageManualClicks": 0,
-      "averagePeakQueue": 41
+      "averagePeakQueue": 40.666666666666664
     },
     {
       "round": 3,
@@ -511,78 +511,78 @@
       "survivors": 0,
       "averageElapsedSeconds": 149.66666666666666,
       "averageLivesRemaining": 0,
-      "averageManualClicks": 2,
-      "averagePeakQueue": 43
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c1",
-        "spawnStart": 0.975,
-        "spawnEnd": 1.175
-      },
-      "strategy": "wide-doors-rescue",
-      "survivors": 2,
-      "averageElapsedSeconds": 167.66666666666666,
-      "averageLivesRemaining": 5.666666666666667,
-      "averageManualClicks": 3.3333333333333335,
-      "averagePeakQueue": 40
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c1",
-        "spawnStart": 0.975,
-        "spawnEnd": 1.175
-      },
-      "strategy": "hybrid-manual-wide-doors",
-      "survivors": 3,
-      "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 10,
-      "averageManualClicks": 38,
-      "averagePeakQueue": 37
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c15",
-        "spawnStart": 0.985,
-        "spawnEnd": 1.185
-      },
-      "strategy": "all-sweep",
-      "survivors": 1,
-      "averageElapsedSeconds": 170.66666666666666,
-      "averageLivesRemaining": 1.3333333333333333,
-      "averageManualClicks": 0,
-      "averagePeakQueue": 40.666666666666664
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c15",
-        "spawnStart": 0.985,
-        "spawnEnd": 1.185
-      },
-      "strategy": "minimal-rescue",
-      "survivors": 0,
-      "averageElapsedSeconds": 162.33333333333334,
-      "averageLivesRemaining": 0,
-      "averageManualClicks": 4.333333333333333,
+      "averageManualClicks": 2.3333333333333335,
       "averagePeakQueue": 43.333333333333336
     },
     {
       "round": 3,
       "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "wide-doors-rescue",
+      "survivors": 2,
+      "averageElapsedSeconds": 172.66666666666666,
+      "averageLivesRemaining": 5.333333333333333,
+      "averageManualClicks": 3.6666666666666665,
+      "averagePeakQueue": 39.333333333333336
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c1",
+        "spawnStart": 0.975,
+        "spawnEnd": 1.175
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 6.666666666666667,
+      "averageManualClicks": 36.666666666666664,
+      "averagePeakQueue": 30
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "all-sweep",
+      "survivors": 1,
+      "averageElapsedSeconds": 168,
+      "averageLivesRemaining": 2.3333333333333335,
+      "averageManualClicks": 0,
+      "averagePeakQueue": 40
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "minimal-rescue",
+      "survivors": 1,
+      "averageElapsedSeconds": 167.66666666666666,
+      "averageLivesRemaining": 0.3333333333333333,
+      "averageManualClicks": 4.666666666666667,
+      "averagePeakQueue": 39
+    },
+    {
+      "round": 3,
+      "candidate": {
         "id": "r3-c15",
         "spawnStart": 0.985,
         "spawnEnd": 1.185
       },
       "strategy": "wide-doors-rescue",
-      "survivors": 2,
-      "averageElapsedSeconds": 175.33333333333334,
-      "averageLivesRemaining": 9,
+      "survivors": 3,
+      "averageElapsedSeconds": 180,
+      "averageLivesRemaining": 8.333333333333334,
       "averageManualClicks": 5.666666666666667,
-      "averagePeakQueue": 37
+      "averagePeakQueue": 39.333333333333336
     },
     {
       "round": 3,
@@ -594,9 +594,9 @@
       "strategy": "hybrid-manual-wide-doors",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 10.333333333333334,
-      "averageManualClicks": 39,
-      "averagePeakQueue": 32.666666666666664
+      "averageLivesRemaining": 8,
+      "averageManualClicks": 37.666666666666664,
+      "averagePeakQueue": 29.666666666666668
     },
     {
       "round": 3,
@@ -607,10 +607,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 1,
-      "averageElapsedSeconds": 161,
-      "averageLivesRemaining": 2.3333333333333335,
+      "averageElapsedSeconds": 158.33333333333334,
+      "averageLivesRemaining": 3.6666666666666665,
       "averageManualClicks": 0,
-      "averagePeakQueue": 45
+      "averagePeakQueue": 43.666666666666664
     },
     {
       "round": 3,
@@ -620,11 +620,11 @@
         "spawnEnd": 1.19
       },
       "strategy": "minimal-rescue",
-      "survivors": 0,
-      "averageElapsedSeconds": 168,
-      "averageLivesRemaining": 0,
-      "averageManualClicks": 3.6666666666666665,
-      "averagePeakQueue": 44.666666666666664
+      "survivors": 1,
+      "averageElapsedSeconds": 170.66666666666666,
+      "averageLivesRemaining": 1.3333333333333333,
+      "averageManualClicks": 3,
+      "averagePeakQueue": 39.333333333333336
     },
     {
       "round": 3,
@@ -636,9 +636,9 @@
       "strategy": "wide-doors-rescue",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 7.666666666666667,
-      "averageManualClicks": 4.333333333333333,
-      "averagePeakQueue": 38.333333333333336
+      "averageLivesRemaining": 5,
+      "averageManualClicks": 3.6666666666666665,
+      "averagePeakQueue": 38.666666666666664
     },
     {
       "round": 3,
@@ -650,9 +650,9 @@
       "strategy": "hybrid-manual-wide-doors",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 9,
-      "averageManualClicks": 40,
-      "averagePeakQueue": 39.333333333333336
+      "averageLivesRemaining": 10.666666666666666,
+      "averageManualClicks": 38.666666666666664,
+      "averagePeakQueue": 31
     },
     {
       "round": 3,
@@ -663,10 +663,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 0,
-      "averageElapsedSeconds": 153.33333333333334,
+      "averageElapsedSeconds": 151,
       "averageLivesRemaining": 0,
       "averageManualClicks": 0,
-      "averagePeakQueue": 42.333333333333336
+      "averagePeakQueue": 41
     },
     {
       "round": 3,
@@ -677,9 +677,9 @@
       },
       "strategy": "minimal-rescue",
       "survivors": 0,
-      "averageElapsedSeconds": 147,
+      "averageElapsedSeconds": 145.66666666666666,
       "averageLivesRemaining": 0,
-      "averageManualClicks": 4,
+      "averageManualClicks": 2.6666666666666665,
       "averagePeakQueue": 41.666666666666664
     },
     {
@@ -690,11 +690,11 @@
         "spawnEnd": 1.2
       },
       "strategy": "wide-doors-rescue",
-      "survivors": 2,
+      "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 4,
+      "averageLivesRemaining": 7.333333333333333,
       "averageManualClicks": 4.666666666666667,
-      "averagePeakQueue": 40
+      "averagePeakQueue": 39
     },
     {
       "round": 3,
@@ -706,9 +706,9 @@
       "strategy": "hybrid-manual-wide-doors",
       "survivors": 3,
       "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 9.666666666666666,
-      "averageManualClicks": 37,
-      "averagePeakQueue": 38
+      "averageLivesRemaining": 6.666666666666667,
+      "averageManualClicks": 33.666666666666664,
+      "averagePeakQueue": 35.333333333333336
     },
     {
       "round": 3,
@@ -719,10 +719,10 @@
       },
       "strategy": "all-sweep",
       "survivors": 0,
-      "averageElapsedSeconds": 157,
+      "averageElapsedSeconds": 148,
       "averageLivesRemaining": 0,
       "averageManualClicks": 0,
-      "averagePeakQueue": 46
+      "averagePeakQueue": 41.666666666666664
     },
     {
       "round": 3,
@@ -733,10 +733,10 @@
       },
       "strategy": "minimal-rescue",
       "survivors": 0,
-      "averageElapsedSeconds": 148.33333333333334,
+      "averageElapsedSeconds": 138.33333333333334,
       "averageLivesRemaining": 0,
-      "averageManualClicks": 3.6666666666666665,
-      "averagePeakQueue": 46
+      "averageManualClicks": 3.3333333333333335,
+      "averagePeakQueue": 47.333333333333336
     },
     {
       "round": 3,
@@ -746,11 +746,11 @@
         "spawnEnd": 1.25
       },
       "strategy": "wide-doors-rescue",
-      "survivors": 2,
-      "averageElapsedSeconds": 176,
-      "averageLivesRemaining": 1,
+      "survivors": 1,
+      "averageElapsedSeconds": 164.33333333333334,
+      "averageLivesRemaining": 1.6666666666666667,
       "averageManualClicks": 4.333333333333333,
-      "averagePeakQueue": 43.333333333333336
+      "averagePeakQueue": 42.333333333333336
     },
     {
       "round": 3,
@@ -760,11 +760,11 @@
         "spawnEnd": 1.25
       },
       "strategy": "hybrid-manual-wide-doors",
-      "survivors": 3,
-      "averageElapsedSeconds": 180,
-      "averageLivesRemaining": 6,
-      "averageManualClicks": 37,
-      "averagePeakQueue": 40.666666666666664
+      "survivors": 2,
+      "averageElapsedSeconds": 175.33333333333334,
+      "averageLivesRemaining": 5.333333333333333,
+      "averageManualClicks": 35,
+      "averagePeakQueue": 32.333333333333336
     },
     {
       "round": 4,
@@ -1072,12 +1072,12 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 155,
+      "elapsedSeconds": 151,
       "livesRemaining": 0,
-      "served": 49,
+      "served": 48,
       "manualClicks": 0,
       "firstPerilSecond": 61.99999999994947,
-      "secondsInPeril": 93,
+      "secondsInPeril": 89,
       "peakQueue": 29
     },
     {
@@ -1090,13 +1090,13 @@
       "strategy": "all-sweep",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 148,
+      "elapsedSeconds": 157,
       "livesRemaining": 0,
-      "served": 43,
+      "served": 49,
       "manualClicks": 0,
       "firstPerilSecond": 69.99999999998673,
-      "secondsInPeril": 75,
-      "peakQueue": 32
+      "secondsInPeril": 87,
+      "peakQueue": 29
     },
     {
       "round": 2,
@@ -1107,14 +1107,14 @@
       },
       "strategy": "all-sweep",
       "seed": 6060,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 1,
-      "served": 65,
+      "survived": false,
+      "elapsedSeconds": 176,
+      "livesRemaining": 0,
+      "served": 63,
       "manualClicks": 0,
       "firstPerilSecond": 55.999999999921535,
-      "secondsInPeril": 96,
-      "peakQueue": 31
+      "secondsInPeril": 101,
+      "peakQueue": 30
     },
     {
       "round": 2,
@@ -1126,12 +1126,12 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 155,
+      "elapsedSeconds": 151,
       "livesRemaining": 0,
-      "served": 49,
-      "manualClicks": 2,
+      "served": 48,
+      "manualClicks": 3,
       "firstPerilSecond": 61.99999999994947,
-      "secondsInPeril": 93,
+      "secondsInPeril": 89,
       "peakQueue": 29
     },
     {
@@ -1144,13 +1144,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 167,
+      "elapsedSeconds": 160,
       "livesRemaining": 0,
-      "served": 54,
-      "manualClicks": 3,
+      "served": 51,
+      "manualClicks": 4,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 94,
-      "peakQueue": 31
+      "secondsInPeril": 87,
+      "peakQueue": 30
     },
     {
       "round": 2,
@@ -1161,14 +1161,14 @@
       },
       "strategy": "minimal-rescue",
       "seed": 6060,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 2,
-      "served": 62,
-      "manualClicks": 4,
+      "survived": false,
+      "elapsedSeconds": 176,
+      "livesRemaining": 0,
+      "served": 63,
+      "manualClicks": 2,
       "firstPerilSecond": 55.999999999921535,
-      "secondsInPeril": 92,
-      "peakQueue": 33
+      "secondsInPeril": 103,
+      "peakQueue": 29
     },
     {
       "round": 2,
@@ -1180,12 +1180,12 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 155,
+      "elapsedSeconds": 147,
       "livesRemaining": 0,
       "served": 49,
       "manualClicks": 0,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 92,
+      "secondsInPeril": 84,
       "peakQueue": 31
     },
     {
@@ -1200,11 +1200,11 @@
       "survived": false,
       "elapsedSeconds": 159,
       "livesRemaining": 0,
-      "served": 55,
+      "served": 57,
       "manualClicks": 0,
       "firstPerilSecond": 60.99999999994482,
       "secondsInPeril": 85,
-      "peakQueue": 34
+      "peakQueue": 32
     },
     {
       "round": 2,
@@ -1216,13 +1216,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 157,
+      "elapsedSeconds": 161,
       "livesRemaining": 0,
-      "served": 47,
+      "served": 51,
       "manualClicks": 0,
       "firstPerilSecond": 54.99999999991688,
-      "secondsInPeril": 95,
-      "peakQueue": 34
+      "secondsInPeril": 99,
+      "peakQueue": 32
     },
     {
       "round": 2,
@@ -1234,13 +1234,13 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 147,
+      "elapsedSeconds": 146,
       "livesRemaining": 0,
-      "served": 48,
+      "served": 46,
       "manualClicks": 1,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 84,
-      "peakQueue": 30
+      "secondsInPeril": 83,
+      "peakQueue": 28
     },
     {
       "round": 2,
@@ -1252,13 +1252,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 164,
+      "elapsedSeconds": 159,
       "livesRemaining": 0,
       "served": 57,
-      "manualClicks": 2,
+      "manualClicks": 1,
       "firstPerilSecond": 60.99999999994482,
-      "secondsInPeril": 90,
-      "peakQueue": 35
+      "secondsInPeril": 85,
+      "peakQueue": 32
     },
     {
       "round": 2,
@@ -1276,7 +1276,7 @@
       "manualClicks": 3,
       "firstPerilSecond": 54.99999999991688,
       "secondsInPeril": 86,
-      "peakQueue": 32
+      "peakQueue": 31
     },
     {
       "round": 2,
@@ -1288,12 +1288,12 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 140,
+      "elapsedSeconds": 147,
       "livesRemaining": 0,
-      "served": 44,
+      "served": 49,
       "manualClicks": 0,
       "firstPerilSecond": 66.99999999997276,
-      "secondsInPeril": 69,
+      "secondsInPeril": 76,
       "peakQueue": 33
     },
     {
@@ -1306,13 +1306,13 @@
       "strategy": "all-sweep",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 143,
+      "elapsedSeconds": 153,
       "livesRemaining": 0,
-      "served": 46,
+      "served": 52,
       "manualClicks": 0,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 80,
-      "peakQueue": 34
+      "secondsInPeril": 84,
+      "peakQueue": 35
     },
     {
       "round": 2,
@@ -1324,13 +1324,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 143,
+      "elapsedSeconds": 145,
       "livesRemaining": 0,
       "served": 43,
       "manualClicks": 0,
       "firstPerilSecond": 54.99999999991688,
-      "secondsInPeril": 88,
-      "peakQueue": 32
+      "secondsInPeril": 90,
+      "peakQueue": 29
     },
     {
       "round": 2,
@@ -1341,31 +1341,31 @@
       },
       "strategy": "minimal-rescue",
       "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 147,
+      "livesRemaining": 0,
+      "served": 49,
+      "manualClicks": 1,
+      "firstPerilSecond": 66.99999999997276,
+      "secondsInPeril": 76,
+      "peakQueue": 33
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-c",
+        "spawnStart": 0.65,
+        "spawnEnd": 0.85
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
       "survived": false,
       "elapsedSeconds": 146,
       "livesRemaining": 0,
-      "served": 45,
+      "served": 48,
       "manualClicks": 2,
-      "firstPerilSecond": 66.99999999997276,
-      "secondsInPeril": 75,
-      "peakQueue": 37
-    },
-    {
-      "round": 2,
-      "candidate": {
-        "id": "r2-c",
-        "spawnStart": 0.65,
-        "spawnEnd": 0.85
-      },
-      "strategy": "minimal-rescue",
-      "seed": 3141,
-      "survived": false,
-      "elapsedSeconds": 143,
-      "livesRemaining": 0,
-      "served": 46,
-      "manualClicks": 1,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 80,
+      "secondsInPeril": 77,
       "peakQueue": 34
     },
     {
@@ -1378,13 +1378,13 @@
       "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 143,
+      "elapsedSeconds": 145,
       "livesRemaining": 0,
       "served": 43,
       "manualClicks": 2,
       "firstPerilSecond": 54.99999999991688,
-      "secondsInPeril": 88,
-      "peakQueue": 32
+      "secondsInPeril": 90,
+      "peakQueue": 29
     },
     {
       "round": 2,
@@ -1396,13 +1396,13 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 134,
+      "elapsedSeconds": 135,
       "livesRemaining": 0,
-      "served": 45,
+      "served": 46,
       "manualClicks": 0,
       "firstPerilSecond": 65.9999999999681,
-      "secondsInPeril": 68,
-      "peakQueue": 34
+      "secondsInPeril": 69,
+      "peakQueue": 33
     },
     {
       "round": 2,
@@ -1414,13 +1414,13 @@
       "strategy": "all-sweep",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 141,
+      "elapsedSeconds": 143,
       "livesRemaining": 0,
-      "served": 44,
+      "served": 50,
       "manualClicks": 0,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 78,
-      "peakQueue": 37
+      "secondsInPeril": 74,
+      "peakQueue": 36
     },
     {
       "round": 2,
@@ -1432,12 +1432,12 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 133,
+      "elapsedSeconds": 121,
       "livesRemaining": 0,
-      "served": 43,
+      "served": 39,
       "manualClicks": 0,
       "firstPerilSecond": 54.99999999991688,
-      "secondsInPeril": 78,
+      "secondsInPeril": 66,
       "peakQueue": 31
     },
     {
@@ -1450,13 +1450,13 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 134,
+      "elapsedSeconds": 135,
       "livesRemaining": 0,
-      "served": 43,
+      "served": 44,
       "manualClicks": 1,
       "firstPerilSecond": 65.9999999999681,
-      "secondsInPeril": 68,
-      "peakQueue": 35
+      "secondsInPeril": 69,
+      "peakQueue": 33
     },
     {
       "round": 2,
@@ -1468,13 +1468,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 141,
+      "elapsedSeconds": 148,
       "livesRemaining": 0,
-      "served": 44,
-      "manualClicks": 1,
+      "served": 49,
+      "manualClicks": 3,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 78,
-      "peakQueue": 37
+      "secondsInPeril": 79,
+      "peakQueue": 38
     },
     {
       "round": 2,
@@ -1512,13 +1512,13 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 167,
+      "elapsedSeconds": 172,
       "livesRemaining": 0,
-      "served": 54,
+      "served": 56,
       "manualClicks": 0,
       "firstPerilSecond": 89.0000000000752,
-      "secondsInPeril": 75,
-      "peakQueue": 32
+      "secondsInPeril": 80,
+      "peakQueue": 31
     },
     {
       "round": 2,
@@ -1538,13 +1538,13 @@
       "strategy": "all-sweep",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 152,
+      "elapsedSeconds": 150,
       "livesRemaining": 0,
-      "served": 47,
+      "served": 43,
       "manualClicks": 0,
       "firstPerilSecond": 69.99999999998673,
-      "secondsInPeril": 72,
-      "peakQueue": 33
+      "secondsInPeril": 71,
+      "peakQueue": 32
     },
     {
       "round": 2,
@@ -1564,13 +1564,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 169,
+      "elapsedSeconds": 156,
       "livesRemaining": 0,
-      "served": 55,
+      "served": 50,
       "manualClicks": 0,
       "firstPerilSecond": 56.999999999926196,
-      "secondsInPeril": 94,
-      "peakQueue": 30
+      "secondsInPeril": 81,
+      "peakQueue": 29
     },
     {
       "round": 2,
@@ -1590,13 +1590,13 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 161,
+      "elapsedSeconds": 172,
       "livesRemaining": 0,
-      "served": 51,
-      "manualClicks": 2,
+      "served": 56,
+      "manualClicks": 1,
       "firstPerilSecond": 89.0000000000752,
-      "secondsInPeril": 69,
-      "peakQueue": 34
+      "secondsInPeril": 80,
+      "peakQueue": 31
     },
     {
       "round": 2,
@@ -1616,13 +1616,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 152,
+      "elapsedSeconds": 153,
       "livesRemaining": 0,
-      "served": 42,
-      "manualClicks": 3,
+      "served": 43,
+      "manualClicks": 2,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 80,
-      "peakQueue": 36
+      "secondsInPeril": 81,
+      "peakQueue": 31
     },
     {
       "round": 2,
@@ -1644,11 +1644,11 @@
       "survived": false,
       "elapsedSeconds": 156,
       "livesRemaining": 0,
-      "served": 49,
+      "served": 48,
       "manualClicks": 3,
       "firstPerilSecond": 56.999999999926196,
       "secondsInPeril": 81,
-      "peakQueue": 30
+      "peakQueue": 29
     },
     {
       "round": 2,
@@ -1668,12 +1668,38 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 159,
+      "elapsedSeconds": 167,
       "livesRemaining": 0,
-      "served": 53,
+      "served": 55,
       "manualClicks": 0,
       "firstPerilSecond": 89.0000000000752,
-      "secondsInPeril": 67,
+      "secondsInPeril": 75,
+      "peakQueue": 34
+    },
+    {
+      "round": 2,
+      "candidate": {
+        "id": "r2-f",
+        "spawnStart": 0.5,
+        "spawnEnd": 0.65,
+        "trafficBursts": [
+          {
+            "atSecond": 90,
+            "floor": 9,
+            "destination": 0,
+            "count": 8
+          }
+        ]
+      },
+      "strategy": "all-sweep",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 150,
+      "livesRemaining": 0,
+      "served": 43,
+      "manualClicks": 0,
+      "firstPerilSecond": 69.99999999998673,
+      "secondsInPeril": 71,
       "peakQueue": 35
     },
     {
@@ -1692,32 +1718,6 @@
         ]
       },
       "strategy": "all-sweep",
-      "seed": 3141,
-      "survived": false,
-      "elapsedSeconds": 150,
-      "livesRemaining": 0,
-      "served": 45,
-      "manualClicks": 0,
-      "firstPerilSecond": 69.99999999998673,
-      "secondsInPeril": 70,
-      "peakQueue": 36
-    },
-    {
-      "round": 2,
-      "candidate": {
-        "id": "r2-f",
-        "spawnStart": 0.5,
-        "spawnEnd": 0.65,
-        "trafficBursts": [
-          {
-            "atSecond": 90,
-            "floor": 9,
-            "destination": 0,
-            "count": 8
-          }
-        ]
-      },
-      "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
       "elapsedSeconds": 150,
@@ -1726,7 +1726,7 @@
       "manualClicks": 0,
       "firstPerilSecond": 56.999999999926196,
       "secondsInPeril": 75,
-      "peakQueue": 33
+      "peakQueue": 32
     },
     {
       "round": 2,
@@ -1746,13 +1746,13 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 163,
+      "elapsedSeconds": 164,
       "livesRemaining": 0,
-      "served": 51,
-      "manualClicks": 3,
+      "served": 56,
+      "manualClicks": 2,
       "firstPerilSecond": 89.0000000000752,
-      "secondsInPeril": 71,
-      "peakQueue": 36
+      "secondsInPeril": 72,
+      "peakQueue": 34
     },
     {
       "round": 2,
@@ -1774,11 +1774,11 @@
       "survived": false,
       "elapsedSeconds": 150,
       "livesRemaining": 0,
-      "served": 42,
-      "manualClicks": 3,
+      "served": 43,
+      "manualClicks": 2,
       "firstPerilSecond": 63.99999999995879,
       "secondsInPeril": 78,
-      "peakQueue": 39
+      "peakQueue": 34
     },
     {
       "round": 2,
@@ -1800,11 +1800,11 @@
       "survived": false,
       "elapsedSeconds": 150,
       "livesRemaining": 0,
-      "served": 46,
+      "served": 47,
       "manualClicks": 3,
       "firstPerilSecond": 56.999999999926196,
       "secondsInPeril": 75,
-      "peakQueue": 33
+      "peakQueue": 32
     },
     {
       "round": 3,
@@ -1817,8 +1817,8 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 16,
-      "served": 119,
+      "livesRemaining": 15,
+      "served": 118,
       "manualClicks": 0,
       "firstPerilSecond": null,
       "secondsInPeril": 0,
@@ -1835,12 +1835,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 9,
-      "served": 103,
+      "livesRemaining": 6,
+      "served": 98,
       "manualClicks": 0,
       "firstPerilSecond": 94.00000000009848,
-      "secondsInPeril": 34,
-      "peakQueue": 32
+      "secondsInPeril": 36,
+      "peakQueue": 28
     },
     {
       "round": 3,
@@ -1871,12 +1871,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 17,
-      "served": 119,
-      "manualClicks": 2,
+      "livesRemaining": 16,
+      "served": 115,
+      "manualClicks": 3,
       "firstPerilSecond": null,
       "secondsInPeril": 0,
-      "peakQueue": 29
+      "peakQueue": 27
     },
     {
       "round": 3,
@@ -1889,12 +1889,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 8,
-      "served": 101,
+      "livesRemaining": 7,
+      "served": 97,
       "manualClicks": 5,
       "firstPerilSecond": 77.00000000001933,
-      "secondsInPeril": 39,
-      "peakQueue": 34
+      "secondsInPeril": 40,
+      "peakQueue": 33
     },
     {
       "round": 3,
@@ -1907,12 +1907,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 7,
-      "served": 103,
+      "livesRemaining": 12,
+      "served": 114,
       "manualClicks": 5,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 67,
-      "peakQueue": 32
+      "secondsInPeril": 32,
+      "peakQueue": 24
     },
     {
       "round": 3,
@@ -1925,12 +1925,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 17,
-      "served": 119,
-      "manualClicks": 2,
+      "livesRemaining": 16,
+      "served": 115,
+      "manualClicks": 3,
       "firstPerilSecond": null,
       "secondsInPeril": 0,
-      "peakQueue": 29
+      "peakQueue": 27
     },
     {
       "round": 3,
@@ -1943,8 +1943,8 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 16,
-      "served": 117,
+      "livesRemaining": 15,
+      "served": 119,
       "manualClicks": 6,
       "firstPerilSecond": 77.00000000001933,
       "secondsInPeril": 14,
@@ -1961,12 +1961,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 110,
-      "manualClicks": 6,
+      "livesRemaining": 15,
+      "served": 120,
+      "manualClicks": 5,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 41,
-      "peakQueue": 27
+      "secondsInPeril": 32,
+      "peakQueue": 24
     },
     {
       "round": 3,
@@ -1979,12 +1979,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 9,
-      "served": 114,
-      "manualClicks": 39,
+      "livesRemaining": 8,
+      "served": 116,
+      "manualClicks": 35,
       "firstPerilSecond": 81.00000000003796,
-      "secondsInPeril": 31,
-      "peakQueue": 27
+      "secondsInPeril": 39,
+      "peakQueue": 22
     },
     {
       "round": 3,
@@ -1997,12 +1997,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 11,
-      "served": 111,
-      "manualClicks": 38,
+      "livesRemaining": 8,
+      "served": 105,
+      "manualClicks": 37,
       "firstPerilSecond": 71.99999999999604,
-      "secondsInPeril": 39,
-      "peakQueue": 24
+      "secondsInPeril": 65,
+      "peakQueue": 21
     },
     {
       "round": 3,
@@ -2015,12 +2015,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 15,
-      "served": 121,
-      "manualClicks": 35,
+      "livesRemaining": 17,
+      "served": 122,
+      "manualClicks": 34,
       "firstPerilSecond": null,
       "secondsInPeril": 0,
-      "peakQueue": 23
+      "peakQueue": 20
     },
     {
       "round": 3,
@@ -2033,12 +2033,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 11,
-      "served": 125,
+      "livesRemaining": 10,
+      "served": 121,
       "manualClicks": 0,
-      "firstPerilSecond": 109.00000000016834,
-      "secondsInPeril": 21,
-      "peakQueue": 29
+      "firstPerilSecond": 117.00000000020559,
+      "secondsInPeril": 22,
+      "peakQueue": 37
     },
     {
       "round": 3,
@@ -2051,12 +2051,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 6,
-      "served": 108,
+      "livesRemaining": 7,
+      "served": 111,
       "manualClicks": 0,
       "firstPerilSecond": 109.00000000016834,
-      "secondsInPeril": 46,
-      "peakQueue": 38
+      "secondsInPeril": 48,
+      "peakQueue": 36
     },
     {
       "round": 3,
@@ -2070,11 +2070,11 @@
       "survived": false,
       "elapsedSeconds": 174,
       "livesRemaining": 0,
-      "served": 99,
+      "served": 100,
       "manualClicks": 0,
       "firstPerilSecond": 102.00000000013574,
       "secondsInPeril": 72,
-      "peakQueue": 42
+      "peakQueue": 41
     },
     {
       "round": 3,
@@ -2123,12 +2123,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 4,
-      "served": 109,
+      "livesRemaining": 8,
+      "served": 112,
       "manualClicks": 5,
-      "firstPerilSecond": 102.00000000013574,
-      "secondsInPeril": 40,
-      "peakQueue": 44
+      "firstPerilSecond": 101.00000000013108,
+      "secondsInPeril": 18,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -2141,7 +2141,7 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 8,
+      "livesRemaining": 7,
       "served": 132,
       "manualClicks": 4,
       "firstPerilSecond": 82.0000000000426,
@@ -2159,8 +2159,8 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 9,
-      "served": 122,
+      "livesRemaining": 10,
+      "served": 129,
       "manualClicks": 4,
       "firstPerilSecond": 110.00000000017299,
       "secondsInPeril": 23,
@@ -2177,12 +2177,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 122,
-      "manualClicks": 6,
+      "livesRemaining": 13,
+      "served": 125,
+      "manualClicks": 5,
       "firstPerilSecond": null,
       "secondsInPeril": 0,
-      "peakQueue": 35
+      "peakQueue": 36
     },
     {
       "round": 3,
@@ -2195,12 +2195,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 14,
-      "served": 132,
-      "manualClicks": 36,
+      "livesRemaining": 11,
+      "served": 134,
+      "manualClicks": 37,
       "firstPerilSecond": 80.0000000000333,
-      "secondsInPeril": 3,
-      "peakQueue": 28
+      "secondsInPeril": 6,
+      "peakQueue": 25
     },
     {
       "round": 3,
@@ -2213,12 +2213,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 16,
-      "served": 128,
-      "manualClicks": 35,
+      "livesRemaining": 10,
+      "served": 113,
+      "manualClicks": 32,
       "firstPerilSecond": 93.00000000009383,
-      "secondsInPeril": 12,
-      "peakQueue": 23
+      "secondsInPeril": 22,
+      "peakQueue": 31
     },
     {
       "round": 3,
@@ -2231,12 +2231,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 119,
-      "manualClicks": 35,
-      "firstPerilSecond": 87.0000000000659,
-      "secondsInPeril": 1,
-      "peakQueue": 33
+      "livesRemaining": 14,
+      "served": 126,
+      "manualClicks": 36,
+      "firstPerilSecond": 78.00000000002399,
+      "secondsInPeril": 14,
+      "peakQueue": 26
     },
     {
       "round": 3,
@@ -2248,13 +2248,13 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 162,
+      "elapsedSeconds": 166,
       "livesRemaining": 0,
-      "served": 99,
+      "served": 101,
       "manualClicks": 0,
       "firstPerilSecond": 70.99999999999139,
-      "secondsInPeril": 78,
-      "peakQueue": 37
+      "secondsInPeril": 82,
+      "peakQueue": 38
     },
     {
       "round": 3,
@@ -2271,7 +2271,7 @@
       "served": 118,
       "manualClicks": 0,
       "firstPerilSecond": 91.00000000008451,
-      "secondsInPeril": 32,
+      "secondsInPeril": 31,
       "peakQueue": 42
     },
     {
@@ -2285,12 +2285,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 4,
-      "served": 115,
+      "livesRemaining": 5,
+      "served": 117,
       "manualClicks": 0,
-      "firstPerilSecond": 117.00000000020559,
-      "secondsInPeril": 34,
-      "peakQueue": 43
+      "firstPerilSecond": 110.00000000017299,
+      "secondsInPeril": 44,
+      "peakQueue": 41
     },
     {
       "round": 3,
@@ -2303,12 +2303,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 3,
-      "served": 123,
-      "manualClicks": 4,
+      "livesRemaining": 4,
+      "served": 126,
+      "manualClicks": 3,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 88,
-      "peakQueue": 31
+      "secondsInPeril": 71,
+      "peakQueue": 30
     },
     {
       "round": 3,
@@ -2321,12 +2321,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 3,
-      "served": 113,
+      "livesRemaining": 6,
+      "served": 117,
       "manualClicks": 5,
       "firstPerilSecond": 100.00000000012643,
-      "secondsInPeril": 56,
-      "peakQueue": 44
+      "secondsInPeril": 37,
+      "peakQueue": 41
     },
     {
       "round": 3,
@@ -2338,13 +2338,13 @@
       "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 173,
+      "elapsedSeconds": 161,
       "livesRemaining": 0,
-      "served": 112,
-      "manualClicks": 5,
+      "served": 95,
+      "manualClicks": 4,
       "firstPerilSecond": 103.0000000001404,
-      "secondsInPeril": 69,
-      "peakQueue": 42
+      "secondsInPeril": 58,
+      "peakQueue": 41
     },
     {
       "round": 3,
@@ -2358,11 +2358,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 4,
-      "served": 131,
-      "manualClicks": 6,
+      "served": 126,
+      "manualClicks": 3,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 74,
-      "peakQueue": 29
+      "secondsInPeril": 71,
+      "peakQueue": 30
     },
     {
       "round": 3,
@@ -2375,12 +2375,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 131,
-      "manualClicks": 3,
-      "firstPerilSecond": 104.00000000014505,
-      "secondsInPeril": 2,
-      "peakQueue": 33
+      "livesRemaining": 12,
+      "served": 137,
+      "manualClicks": 5,
+      "firstPerilSecond": 108.00000000016368,
+      "secondsInPeril": 4,
+      "peakQueue": 35
     },
     {
       "round": 3,
@@ -2393,12 +2393,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 14,
-      "served": 133,
+      "livesRemaining": 15,
+      "served": 130,
       "manualClicks": 6,
-      "firstPerilSecond": 127.00000000025216,
-      "secondsInPeril": 1,
-      "peakQueue": 37
+      "firstPerilSecond": 106.00000000015437,
+      "secondsInPeril": 16,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -2411,12 +2411,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 129,
-      "manualClicks": 42,
-      "firstPerilSecond": 88.00000000007054,
-      "secondsInPeril": 10,
-      "peakQueue": 30
+      "livesRemaining": 12,
+      "served": 131,
+      "manualClicks": 33,
+      "firstPerilSecond": 73.0000000000007,
+      "secondsInPeril": 3,
+      "peakQueue": 28
     },
     {
       "round": 3,
@@ -2429,12 +2429,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 8,
-      "served": 131,
-      "manualClicks": 42,
-      "firstPerilSecond": 136.00000000029405,
-      "secondsInPeril": 3,
-      "peakQueue": 30
+      "livesRemaining": 15,
+      "served": 137,
+      "manualClicks": 39,
+      "firstPerilSecond": null,
+      "secondsInPeril": 0,
+      "peakQueue": 23
     },
     {
       "round": 3,
@@ -2447,12 +2447,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 14,
-      "served": 136,
-      "manualClicks": 39,
-      "firstPerilSecond": null,
-      "secondsInPeril": 0,
-      "peakQueue": 29
+      "livesRemaining": 6,
+      "served": 130,
+      "manualClicks": 37,
+      "firstPerilSecond": 84.00000000005193,
+      "secondsInPeril": 69,
+      "peakQueue": 28
     },
     {
       "round": 3,
@@ -2483,12 +2483,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 2,
-      "served": 119,
+      "livesRemaining": 11,
+      "served": 132,
       "manualClicks": 0,
-      "firstPerilSecond": 92.00000000008917,
-      "secondsInPeril": 59,
-      "peakQueue": 40
+      "firstPerilSecond": 69.99999999998673,
+      "secondsInPeril": 45,
+      "peakQueue": 32
     },
     {
       "round": 3,
@@ -2502,11 +2502,11 @@
       "survived": false,
       "elapsedSeconds": 174,
       "livesRemaining": 0,
-      "served": 109,
+      "served": 112,
       "manualClicks": 0,
       "firstPerilSecond": 73.0000000000007,
-      "secondsInPeril": 73,
-      "peakQueue": 40
+      "secondsInPeril": 78,
+      "peakQueue": 38
     },
     {
       "round": 3,
@@ -2519,12 +2519,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 5,
-      "served": 123,
+      "livesRemaining": 8,
+      "served": 132,
       "manualClicks": 4,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 83,
-      "peakQueue": 34
+      "secondsInPeril": 71,
+      "peakQueue": 33
     },
     {
       "round": 3,
@@ -2536,13 +2536,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 163,
+      "elapsedSeconds": 170,
       "livesRemaining": 0,
-      "served": 105,
+      "served": 106,
       "manualClicks": 4,
       "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 89,
-      "peakQueue": 34
+      "secondsInPeril": 95,
+      "peakQueue": 40
     },
     {
       "round": 3,
@@ -2554,13 +2554,13 @@
       "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 166,
+      "elapsedSeconds": 172,
       "livesRemaining": 0,
-      "served": 103,
-      "manualClicks": 3,
-      "firstPerilSecond": 90.00000000007987,
-      "secondsInPeril": 76,
-      "peakQueue": 38
+      "served": 111,
+      "manualClicks": 4,
+      "firstPerilSecond": 91.00000000008451,
+      "secondsInPeril": 81,
+      "peakQueue": 37
     },
     {
       "round": 3,
@@ -2574,11 +2574,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 10,
-      "served": 128,
-      "manualClicks": 6,
+      "served": 127,
+      "manualClicks": 4,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 60,
-      "peakQueue": 37
+      "secondsInPeril": 46,
+      "peakQueue": 36
     },
     {
       "round": 3,
@@ -2591,12 +2591,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 8,
-      "served": 133,
+      "livesRemaining": 9,
+      "served": 138,
       "manualClicks": 5,
       "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 51,
-      "peakQueue": 38
+      "secondsInPeril": 28,
+      "peakQueue": 30
     },
     {
       "round": 3,
@@ -2607,14 +2607,14 @@
       },
       "strategy": "wide-doors-rescue",
       "seed": 6060,
-      "survived": false,
-      "elapsedSeconds": 166,
-      "livesRemaining": 0,
-      "served": 107,
-      "manualClicks": 3,
-      "firstPerilSecond": 90.00000000007987,
-      "secondsInPeril": 76,
-      "peakQueue": 36
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 14,
+      "served": 139,
+      "manualClicks": 6,
+      "firstPerilSecond": 91.00000000008451,
+      "secondsInPeril": 20,
+      "peakQueue": 33
     },
     {
       "round": 3,
@@ -2628,11 +2628,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 16,
-      "served": 134,
-      "manualClicks": 44,
+      "served": 132,
+      "manualClicks": 40,
       "firstPerilSecond": 70.99999999999139,
-      "secondsInPeril": 27,
-      "peakQueue": 33
+      "secondsInPeril": 23,
+      "peakQueue": 27
     },
     {
       "round": 3,
@@ -2645,12 +2645,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 14,
-      "served": 137,
+      "livesRemaining": 13,
+      "served": 139,
       "manualClicks": 41,
-      "firstPerilSecond": 92.00000000008917,
-      "secondsInPeril": 7,
-      "peakQueue": 30
+      "firstPerilSecond": 84.00000000005193,
+      "secondsInPeril": 15,
+      "peakQueue": 25
     },
     {
       "round": 3,
@@ -2663,12 +2663,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 12,
-      "served": 131,
-      "manualClicks": 38,
+      "livesRemaining": 9,
+      "served": 134,
+      "manualClicks": 35,
       "firstPerilSecond": 97.00000000011245,
-      "secondsInPeril": 9,
-      "peakQueue": 34
+      "secondsInPeril": 46,
+      "peakQueue": 29
     },
     {
       "round": 3,
@@ -2680,12 +2680,12 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 148,
+      "elapsedSeconds": 147,
       "livesRemaining": 0,
-      "served": 88,
+      "served": 86,
       "manualClicks": 0,
       "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 74,
+      "secondsInPeril": 73,
       "peakQueue": 38
     },
     {
@@ -2699,11 +2699,11 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 4,
-      "served": 126,
+      "livesRemaining": 13,
+      "served": 131,
       "manualClicks": 0,
       "firstPerilSecond": 92.00000000008917,
-      "secondsInPeril": 42,
+      "secondsInPeril": 31,
       "peakQueue": 36
     },
     {
@@ -2716,13 +2716,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 169,
+      "elapsedSeconds": 167,
       "livesRemaining": 0,
       "served": 110,
       "manualClicks": 0,
       "firstPerilSecond": 65.9999999999681,
-      "secondsInPeril": 82,
-      "peakQueue": 44
+      "secondsInPeril": 85,
+      "peakQueue": 43
     },
     {
       "round": 3,
@@ -2734,12 +2734,30 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 164,
+      "elapsedSeconds": 178,
       "livesRemaining": 0,
-      "served": 105,
-      "manualClicks": 3,
+      "served": 117,
+      "manualClicks": 4,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 100,
+      "secondsInPeril": 114,
+      "peakQueue": 43
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "minimal-rescue",
+      "seed": 3141,
+      "survived": false,
+      "elapsedSeconds": 169,
+      "livesRemaining": 0,
+      "served": 111,
+      "manualClicks": 3,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 95,
       "peakQueue": 37
     },
     {
@@ -2750,86 +2768,14 @@
         "spawnEnd": 1.15
       },
       "strategy": "minimal-rescue",
-      "seed": 3141,
-      "survived": false,
-      "elapsedSeconds": 173,
-      "livesRemaining": 0,
-      "served": 110,
-      "manualClicks": 3,
-      "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 99,
-      "peakQueue": 45
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c",
-        "spawnStart": 0.95,
-        "spawnEnd": 1.15
-      },
-      "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 166,
+      "elapsedSeconds": 169,
       "livesRemaining": 0,
-      "served": 105,
+      "served": 108,
       "manualClicks": 4,
-      "firstPerilSecond": 79.00000000002863,
-      "secondsInPeril": 83,
-      "peakQueue": 40
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c",
-        "spawnStart": 0.95,
-        "spawnEnd": 1.15
-      },
-      "strategy": "wide-doors-rescue",
-      "seed": 1234,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 8,
-      "served": 137,
-      "manualClicks": 5,
-      "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 60,
-      "peakQueue": 34
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c",
-        "spawnStart": 0.95,
-        "spawnEnd": 1.15
-      },
-      "strategy": "wide-doors-rescue",
-      "seed": 3141,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 9,
-      "served": 134,
-      "manualClicks": 4,
-      "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 53,
-      "peakQueue": 36
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c",
-        "spawnStart": 0.95,
-        "spawnEnd": 1.15
-      },
-      "strategy": "wide-doors-rescue",
-      "seed": 6060,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 6,
-      "served": 138,
-      "manualClicks": 5,
-      "firstPerilSecond": 79.00000000002863,
-      "secondsInPeril": 56,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 86,
       "peakQueue": 38
     },
     {
@@ -2839,16 +2785,70 @@
         "spawnStart": 0.95,
         "spawnEnd": 1.15
       },
+      "strategy": "wide-doors-rescue",
+      "seed": 1234,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 10,
+      "served": 131,
+      "manualClicks": 6,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 58,
+      "peakQueue": 36
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 8,
+      "served": 133,
+      "manualClicks": 5,
+      "firstPerilSecond": 74.00000000000536,
+      "secondsInPeril": 60,
+      "peakQueue": 39
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 13,
+      "served": 145,
+      "manualClicks": 5,
+      "firstPerilSecond": 79.00000000002863,
+      "secondsInPeril": 29,
+      "peakQueue": 37
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c",
+        "spawnStart": 0.95,
+        "spawnEnd": 1.15
+      },
       "strategy": "hybrid-manual-wide-doors",
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 11,
-      "served": 140,
-      "manualClicks": 40,
+      "livesRemaining": 16,
+      "served": 146,
+      "manualClicks": 37,
       "firstPerilSecond": 73.0000000000007,
-      "secondsInPeril": 12,
-      "peakQueue": 36
+      "secondsInPeril": 18,
+      "peakQueue": 24
     },
     {
       "round": 3,
@@ -2861,11 +2861,11 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 17,
-      "served": 143,
-      "manualClicks": 43,
-      "firstPerilSecond": 96.0000000001078,
-      "secondsInPeril": 10,
+      "livesRemaining": 14,
+      "served": 146,
+      "manualClicks": 39,
+      "firstPerilSecond": 68.99999999998207,
+      "secondsInPeril": 6,
       "peakQueue": 27
     },
     {
@@ -2879,12 +2879,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 9,
-      "served": 137,
-      "manualClicks": 36,
+      "livesRemaining": 2,
+      "served": 130,
+      "manualClicks": 37,
       "firstPerilSecond": 71.99999999999604,
-      "secondsInPeril": 46,
-      "peakQueue": 30
+      "secondsInPeril": 67,
+      "peakQueue": 27
     },
     {
       "round": 3,
@@ -2896,12 +2896,12 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 159,
+      "elapsedSeconds": 154,
       "livesRemaining": 0,
-      "served": 96,
+      "served": 94,
       "manualClicks": 0,
-      "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 91,
+      "firstPerilSecond": 71.99999999999604,
+      "secondsInPeril": 82,
       "peakQueue": 43
     },
     {
@@ -2915,12 +2915,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 7,
-      "served": 130,
+      "livesRemaining": 9,
+      "served": 131,
       "manualClicks": 0,
       "firstPerilSecond": 87.0000000000659,
-      "secondsInPeril": 52,
-      "peakQueue": 36
+      "secondsInPeril": 48,
+      "peakQueue": 35
     },
     {
       "round": 3,
@@ -2950,12 +2950,12 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 143,
+      "elapsedSeconds": 144,
       "livesRemaining": 0,
-      "served": 83,
+      "served": 87,
       "manualClicks": 2,
       "firstPerilSecond": 65.9999999999681,
-      "secondsInPeril": 77,
+      "secondsInPeril": 78,
       "peakQueue": 40
     },
     {
@@ -2968,13 +2968,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 155,
+      "elapsedSeconds": 154,
       "livesRemaining": 0,
-      "served": 93,
-      "manualClicks": 2,
+      "served": 91,
+      "manualClicks": 3,
       "firstPerilSecond": 87.0000000000659,
-      "secondsInPeril": 68,
-      "peakQueue": 45
+      "secondsInPeril": 67,
+      "peakQueue": 46
     },
     {
       "round": 3,
@@ -3004,13 +3004,13 @@
       "strategy": "wide-doors-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 143,
+      "elapsedSeconds": 158,
       "livesRemaining": 0,
-      "served": 86,
-      "manualClicks": 2,
+      "served": 102,
+      "manualClicks": 3,
       "firstPerilSecond": 65.9999999999681,
-      "secondsInPeril": 77,
-      "peakQueue": 40
+      "secondsInPeril": 92,
+      "peakQueue": 38
     },
     {
       "round": 3,
@@ -3023,11 +3023,11 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 11,
-      "served": 136,
+      "livesRemaining": 10,
+      "served": 140,
       "manualClicks": 4,
       "firstPerilSecond": 87.0000000000659,
-      "secondsInPeril": 37,
+      "secondsInPeril": 39,
       "peakQueue": 37
     },
     {
@@ -3059,12 +3059,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 15,
-      "served": 134,
-      "manualClicks": 38,
+      "livesRemaining": 5,
+      "served": 130,
+      "manualClicks": 34,
       "firstPerilSecond": 67.99999999997742,
-      "secondsInPeril": 19,
-      "peakQueue": 43
+      "secondsInPeril": 34,
+      "peakQueue": 30
     },
     {
       "round": 3,
@@ -3078,11 +3078,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 7,
-      "served": 126,
+      "served": 133,
       "manualClicks": 38,
       "firstPerilSecond": 68.99999999998207,
-      "secondsInPeril": 39,
-      "peakQueue": 35
+      "secondsInPeril": 61,
+      "peakQueue": 28
     },
     {
       "round": 3,
@@ -3096,11 +3096,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 8,
-      "served": 136,
+      "served": 138,
       "manualClicks": 38,
-      "firstPerilSecond": 80.0000000000333,
-      "secondsInPeril": 62,
-      "peakQueue": 33
+      "firstPerilSecond": 70.99999999999139,
+      "secondsInPeril": 66,
+      "peakQueue": 32
     },
     {
       "round": 3,
@@ -3113,12 +3113,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 4,
-      "served": 128,
+      "livesRemaining": 7,
+      "served": 132,
       "manualClicks": 0,
       "firstPerilSecond": 91.00000000008451,
-      "secondsInPeril": 67,
-      "peakQueue": 40
+      "secondsInPeril": 45,
+      "peakQueue": 37
     },
     {
       "round": 3,
@@ -3132,11 +3132,11 @@
       "survived": false,
       "elapsedSeconds": 171,
       "livesRemaining": 0,
-      "served": 110,
+      "served": 111,
       "manualClicks": 0,
       "firstPerilSecond": 89.0000000000752,
       "secondsInPeril": 82,
-      "peakQueue": 42
+      "peakQueue": 41
     },
     {
       "round": 3,
@@ -3148,13 +3148,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 161,
+      "elapsedSeconds": 153,
       "livesRemaining": 0,
-      "served": 112,
+      "served": 99,
       "manualClicks": 0,
       "firstPerilSecond": 61.99999999994947,
-      "secondsInPeril": 85,
-      "peakQueue": 40
+      "secondsInPeril": 88,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -3165,14 +3165,14 @@
       },
       "strategy": "minimal-rescue",
       "seed": 1234,
-      "survived": false,
-      "elapsedSeconds": 173,
-      "livesRemaining": 0,
-      "served": 116,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 1,
+      "served": 128,
       "manualClicks": 4,
       "firstPerilSecond": 78.00000000002399,
-      "secondsInPeril": 79,
-      "peakQueue": 42
+      "secondsInPeril": 82,
+      "peakQueue": 38
     },
     {
       "round": 3,
@@ -3184,13 +3184,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 167,
+      "elapsedSeconds": 165,
       "livesRemaining": 0,
-      "served": 103,
+      "served": 104,
       "manualClicks": 5,
       "firstPerilSecond": 90.00000000007987,
-      "secondsInPeril": 77,
-      "peakQueue": 46
+      "secondsInPeril": 75,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -3202,13 +3202,13 @@
       "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 147,
+      "elapsedSeconds": 158,
       "livesRemaining": 0,
-      "served": 89,
-      "manualClicks": 4,
-      "firstPerilSecond": 73.0000000000007,
-      "secondsInPeril": 74,
-      "peakQueue": 42
+      "served": 105,
+      "manualClicks": 5,
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 86,
+      "peakQueue": 37
     },
     {
       "round": 3,
@@ -3221,12 +3221,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 17,
-      "served": 147,
-      "manualClicks": 6,
+      "livesRemaining": 13,
+      "served": 140,
+      "manualClicks": 5,
       "firstPerilSecond": 78.00000000002399,
-      "secondsInPeril": 7,
-      "peakQueue": 36
+      "secondsInPeril": 9,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -3237,32 +3237,32 @@
       },
       "strategy": "wide-doors-rescue",
       "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 2,
+      "served": 135,
+      "manualClicks": 6,
+      "firstPerilSecond": 90.00000000007987,
+      "secondsInPeril": 81,
+      "peakQueue": 42
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-c15",
+        "spawnStart": 0.985,
+        "spawnEnd": 1.185
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 10,
-      "served": 138,
+      "served": 143,
       "manualClicks": 6,
-      "firstPerilSecond": 90.00000000007987,
-      "secondsInPeril": 37,
-      "peakQueue": 36
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-c15",
-        "spawnStart": 0.985,
-        "spawnEnd": 1.185
-      },
-      "strategy": "wide-doors-rescue",
-      "seed": 6060,
-      "survived": false,
-      "elapsedSeconds": 166,
-      "livesRemaining": 0,
-      "served": 114,
-      "manualClicks": 5,
-      "firstPerilSecond": 73.0000000000007,
-      "secondsInPeril": 93,
-      "peakQueue": 39
+      "firstPerilSecond": 65.9999999999681,
+      "secondsInPeril": 55,
+      "peakQueue": 34
     },
     {
       "round": 3,
@@ -3275,12 +3275,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 15,
-      "served": 153,
-      "manualClicks": 41,
-      "firstPerilSecond": 87.0000000000659,
-      "secondsInPeril": 16,
-      "peakQueue": 29
+      "livesRemaining": 11,
+      "served": 149,
+      "manualClicks": 36,
+      "firstPerilSecond": 77.00000000001933,
+      "secondsInPeril": 18,
+      "peakQueue": 26
     },
     {
       "round": 3,
@@ -3294,11 +3294,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 6,
-      "served": 132,
-      "manualClicks": 40,
+      "served": 139,
+      "manualClicks": 41,
       "firstPerilSecond": 85.00000000005657,
-      "secondsInPeril": 56,
-      "peakQueue": 38
+      "secondsInPeril": 44,
+      "peakQueue": 31
     },
     {
       "round": 3,
@@ -3311,12 +3311,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 147,
+      "livesRemaining": 7,
+      "served": 151,
       "manualClicks": 36,
       "firstPerilSecond": 57.99999999993085,
-      "secondsInPeril": 68,
-      "peakQueue": 31
+      "secondsInPeril": 80,
+      "peakQueue": 32
     },
     {
       "round": 3,
@@ -3328,12 +3328,12 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 157,
+      "elapsedSeconds": 156,
       "livesRemaining": 0,
-      "served": 96,
+      "served": 97,
       "manualClicks": 0,
       "firstPerilSecond": 73.0000000000007,
-      "secondsInPeril": 84,
+      "secondsInPeril": 83,
       "peakQueue": 43
     },
     {
@@ -3347,11 +3347,11 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 7,
-      "served": 127,
+      "livesRemaining": 11,
+      "served": 147,
       "manualClicks": 0,
-      "firstPerilSecond": 103.0000000001404,
-      "secondsInPeril": 36,
+      "firstPerilSecond": 108.00000000016368,
+      "secondsInPeril": 10,
       "peakQueue": 46
     },
     {
@@ -3364,13 +3364,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 146,
+      "elapsedSeconds": 139,
       "livesRemaining": 0,
-      "served": 88,
+      "served": 84,
       "manualClicks": 0,
       "firstPerilSecond": 77.00000000001933,
-      "secondsInPeril": 69,
-      "peakQueue": 46
+      "secondsInPeril": 62,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -3381,14 +3381,14 @@
       },
       "strategy": "minimal-rescue",
       "seed": 1234,
-      "survived": false,
-      "elapsedSeconds": 177,
-      "livesRemaining": 0,
-      "served": 121,
-      "manualClicks": 3,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 4,
+      "served": 134,
+      "manualClicks": 4,
       "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 97,
-      "peakQueue": 44
+      "secondsInPeril": 82,
+      "peakQueue": 36
     },
     {
       "round": 3,
@@ -3400,13 +3400,13 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 153,
+      "elapsedSeconds": 154,
       "livesRemaining": 0,
-      "served": 92,
-      "manualClicks": 4,
+      "served": 93,
+      "manualClicks": 3,
       "firstPerilSecond": 82.0000000000426,
-      "secondsInPeril": 71,
-      "peakQueue": 50
+      "secondsInPeril": 72,
+      "peakQueue": 48
     },
     {
       "round": 3,
@@ -3418,13 +3418,13 @@
       "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 174,
+      "elapsedSeconds": 178,
       "livesRemaining": 0,
-      "served": 123,
-      "manualClicks": 4,
-      "firstPerilSecond": 64.99999999996345,
-      "secondsInPeril": 93,
-      "peakQueue": 40
+      "served": 126,
+      "manualClicks": 2,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 108,
+      "peakQueue": 34
     },
     {
       "round": 3,
@@ -3441,8 +3441,8 @@
       "served": 145,
       "manualClicks": 4,
       "firstPerilSecond": 74.00000000000536,
-      "secondsInPeril": 45,
-      "peakQueue": 34
+      "secondsInPeril": 67,
+      "peakQueue": 36
     },
     {
       "round": 3,
@@ -3455,12 +3455,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 6,
+      "livesRemaining": 4,
       "served": 135,
-      "manualClicks": 5,
+      "manualClicks": 4,
       "firstPerilSecond": 82.0000000000426,
-      "secondsInPeril": 58,
-      "peakQueue": 49
+      "secondsInPeril": 80,
+      "peakQueue": 46
     },
     {
       "round": 3,
@@ -3473,12 +3473,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 8,
-      "served": 147,
-      "manualClicks": 4,
-      "firstPerilSecond": 64.99999999996345,
-      "secondsInPeril": 38,
-      "peakQueue": 32
+      "livesRemaining": 2,
+      "served": 142,
+      "manualClicks": 3,
+      "firstPerilSecond": 62.999999999954134,
+      "secondsInPeril": 94,
+      "peakQueue": 34
     },
     {
       "round": 3,
@@ -3491,12 +3491,12 @@
       "seed": 1234,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 7,
-      "served": 129,
-      "manualClicks": 42,
+      "livesRemaining": 12,
+      "served": 141,
+      "manualClicks": 39,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 43,
-      "peakQueue": 43
+      "secondsInPeril": 40,
+      "peakQueue": 32
     },
     {
       "round": 3,
@@ -3509,12 +3509,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 11,
-      "served": 136,
-      "manualClicks": 40,
-      "firstPerilSecond": 80.0000000000333,
-      "secondsInPeril": 35,
-      "peakQueue": 41
+      "livesRemaining": 8,
+      "served": 144,
+      "manualClicks": 39,
+      "firstPerilSecond": 69.99999999998673,
+      "secondsInPeril": 53,
+      "peakQueue": 32
     },
     {
       "round": 3,
@@ -3527,12 +3527,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 9,
-      "served": 139,
+      "livesRemaining": 12,
+      "served": 149,
       "manualClicks": 38,
       "firstPerilSecond": 84.00000000005193,
-      "secondsInPeril": 43,
-      "peakQueue": 34
+      "secondsInPeril": 10,
+      "peakQueue": 29
     },
     {
       "round": 3,
@@ -3544,13 +3544,13 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 179,
+      "elapsedSeconds": 177,
       "livesRemaining": 0,
       "served": 124,
       "manualClicks": 0,
       "firstPerilSecond": 58.999999999935504,
-      "secondsInPeril": 112,
-      "peakQueue": 41
+      "secondsInPeril": 108,
+      "peakQueue": 39
     },
     {
       "round": 3,
@@ -3564,7 +3564,7 @@
       "survived": false,
       "elapsedSeconds": 145,
       "livesRemaining": 0,
-      "served": 80,
+      "served": 81,
       "manualClicks": 0,
       "firstPerilSecond": 73.0000000000007,
       "secondsInPeril": 71,
@@ -3580,13 +3580,13 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 136,
+      "elapsedSeconds": 131,
       "livesRemaining": 0,
-      "served": 77,
+      "served": 74,
       "manualClicks": 0,
       "firstPerilSecond": 68.99999999998207,
-      "secondsInPeril": 67,
-      "peakQueue": 43
+      "secondsInPeril": 62,
+      "peakQueue": 41
     },
     {
       "round": 3,
@@ -3598,13 +3598,13 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 150,
+      "elapsedSeconds": 140,
       "livesRemaining": 0,
-      "served": 91,
-      "manualClicks": 5,
+      "served": 77,
+      "manualClicks": 2,
       "firstPerilSecond": 59.999999999940165,
-      "secondsInPeril": 90,
-      "peakQueue": 43
+      "secondsInPeril": 80,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -3616,12 +3616,12 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 154,
+      "elapsedSeconds": 166,
       "livesRemaining": 0,
-      "served": 95,
-      "manualClicks": 4,
+      "served": 106,
+      "manualClicks": 3,
       "firstPerilSecond": 77.00000000001933,
-      "secondsInPeril": 72,
+      "secondsInPeril": 84,
       "peakQueue": 39
     },
     {
@@ -3634,13 +3634,13 @@
       "strategy": "minimal-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 137,
+      "elapsedSeconds": 131,
       "livesRemaining": 0,
-      "served": 81,
+      "served": 74,
       "manualClicks": 3,
       "firstPerilSecond": 68.99999999998207,
-      "secondsInPeril": 68,
-      "peakQueue": 43
+      "secondsInPeril": 62,
+      "peakQueue": 44
     },
     {
       "round": 3,
@@ -3651,13 +3651,13 @@
       },
       "strategy": "wide-doors-rescue",
       "seed": 1234,
-      "survived": false,
+      "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 0,
-      "served": 137,
+      "livesRemaining": 4,
+      "served": 130,
       "manualClicks": 4,
       "firstPerilSecond": 59.999999999940165,
-      "secondsInPeril": 110,
+      "secondsInPeril": 106,
       "peakQueue": 40
     },
     {
@@ -3671,12 +3671,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 6,
-      "served": 135,
+      "livesRemaining": 8,
+      "served": 136,
       "manualClicks": 5,
       "firstPerilSecond": 77.00000000001933,
-      "secondsInPeril": 65,
-      "peakQueue": 42
+      "secondsInPeril": 51,
+      "peakQueue": 40
     },
     {
       "round": 3,
@@ -3689,12 +3689,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 6,
-      "served": 141,
+      "livesRemaining": 10,
+      "served": 151,
       "manualClicks": 5,
       "firstPerilSecond": 68.99999999998207,
-      "secondsInPeril": 74,
-      "peakQueue": 38
+      "secondsInPeril": 68,
+      "peakQueue": 37
     },
     {
       "round": 3,
@@ -3708,11 +3708,11 @@
       "survived": true,
       "elapsedSeconds": 180,
       "livesRemaining": 5,
-      "served": 128,
-      "manualClicks": 36,
-      "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 83,
-      "peakQueue": 41
+      "served": 136,
+      "manualClicks": 34,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 71,
+      "peakQueue": 35
     },
     {
       "round": 3,
@@ -3725,12 +3725,12 @@
       "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 13,
-      "served": 142,
-      "manualClicks": 36,
+      "livesRemaining": 1,
+      "served": 128,
+      "manualClicks": 32,
       "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 29,
-      "peakQueue": 43
+      "secondsInPeril": 95,
+      "peakQueue": 42
     },
     {
       "round": 3,
@@ -3743,12 +3743,12 @@
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 11,
-      "served": 150,
-      "manualClicks": 39,
-      "firstPerilSecond": 77.00000000001933,
-      "secondsInPeril": 33,
-      "peakQueue": 30
+      "livesRemaining": 14,
+      "served": 154,
+      "manualClicks": 35,
+      "firstPerilSecond": 81.00000000003796,
+      "secondsInPeril": 22,
+      "peakQueue": 29
     },
     {
       "round": 3,
@@ -3760,13 +3760,13 @@
       "strategy": "all-sweep",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 150,
+      "elapsedSeconds": 152,
       "livesRemaining": 0,
-      "served": 101,
+      "served": 104,
       "manualClicks": 0,
       "firstPerilSecond": 58.999999999935504,
-      "secondsInPeril": 91,
-      "peakQueue": 45
+      "secondsInPeril": 93,
+      "peakQueue": 39
     },
     {
       "round": 3,
@@ -3778,13 +3778,13 @@
       "strategy": "all-sweep",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 176,
+      "elapsedSeconds": 153,
       "livesRemaining": 0,
-      "served": 123,
+      "served": 95,
       "manualClicks": 0,
       "firstPerilSecond": 63.99999999995879,
-      "secondsInPeril": 103,
-      "peakQueue": 50
+      "secondsInPeril": 81,
+      "peakQueue": 43
     },
     {
       "round": 3,
@@ -3796,12 +3796,12 @@
       "strategy": "all-sweep",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 145,
+      "elapsedSeconds": 139,
       "livesRemaining": 0,
-      "served": 93,
+      "served": 89,
       "manualClicks": 0,
       "firstPerilSecond": 52.999999999907565,
-      "secondsInPeril": 86,
+      "secondsInPeril": 80,
       "peakQueue": 43
     },
     {
@@ -3814,13 +3814,13 @@
       "strategy": "minimal-rescue",
       "seed": 1234,
       "survived": false,
-      "elapsedSeconds": 161,
+      "elapsedSeconds": 129,
       "livesRemaining": 0,
-      "served": 110,
+      "served": 70,
       "manualClicks": 3,
       "firstPerilSecond": 59.999999999940165,
-      "secondsInPeril": 101,
-      "peakQueue": 43
+      "secondsInPeril": 69,
+      "peakQueue": 49
     },
     {
       "round": 3,
@@ -3832,31 +3832,31 @@
       "strategy": "minimal-rescue",
       "seed": 3141,
       "survived": false,
-      "elapsedSeconds": 148,
-      "livesRemaining": 0,
-      "served": 87,
-      "manualClicks": 4,
-      "firstPerilSecond": 80.0000000000333,
-      "secondsInPeril": 68,
-      "peakQueue": 52
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-d",
-        "spawnStart": 1.05,
-        "spawnEnd": 1.25
-      },
-      "strategy": "minimal-rescue",
-      "seed": 6060,
-      "survived": false,
-      "elapsedSeconds": 136,
+      "elapsedSeconds": 143,
       "livesRemaining": 0,
       "served": 84,
       "manualClicks": 4,
+      "firstPerilSecond": 80.0000000000333,
+      "secondsInPeril": 63,
+      "peakQueue": 49
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "minimal-rescue",
+      "seed": 6060,
+      "survived": false,
+      "elapsedSeconds": 143,
+      "livesRemaining": 0,
+      "served": 92,
+      "manualClicks": 3,
       "firstPerilSecond": 60.99999999994482,
-      "secondsInPeril": 75,
-      "peakQueue": 43
+      "secondsInPeril": 82,
+      "peakQueue": 44
     },
     {
       "round": 3,
@@ -3867,13 +3867,31 @@
       },
       "strategy": "wide-doors-rescue",
       "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 144,
+      "livesRemaining": 0,
+      "served": 98,
+      "manualClicks": 4,
+      "firstPerilSecond": 59.999999999940165,
+      "secondsInPeril": 84,
+      "peakQueue": 44
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "wide-doors-rescue",
+      "seed": 3141,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 2,
-      "served": 146,
-      "manualClicks": 5,
-      "firstPerilSecond": 59.999999999940165,
-      "secondsInPeril": 79,
+      "livesRemaining": 5,
+      "served": 136,
+      "manualClicks": 4,
+      "firstPerilSecond": 81.00000000003796,
+      "secondsInPeril": 54,
       "peakQueue": 42
     },
     {
@@ -3884,68 +3902,14 @@
         "spawnEnd": 1.25
       },
       "strategy": "wide-doors-rescue",
-      "seed": 3141,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 1,
-      "served": 132,
-      "manualClicks": 3,
-      "firstPerilSecond": 81.00000000003796,
-      "secondsInPeril": 89,
-      "peakQueue": 48
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-d",
-        "spawnStart": 1.05,
-        "spawnEnd": 1.25
-      },
-      "strategy": "wide-doors-rescue",
       "seed": 6060,
       "survived": false,
-      "elapsedSeconds": 168,
+      "elapsedSeconds": 169,
       "livesRemaining": 0,
       "served": 128,
       "manualClicks": 5,
       "firstPerilSecond": 60.99999999994482,
-      "secondsInPeril": 107,
-      "peakQueue": 40
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-d",
-        "spawnStart": 1.05,
-        "spawnEnd": 1.25
-      },
-      "strategy": "hybrid-manual-wide-doors",
-      "seed": 1234,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 6,
-      "served": 137,
-      "manualClicks": 35,
-      "firstPerilSecond": 62.999999999954134,
-      "secondsInPeril": 50,
-      "peakQueue": 48
-    },
-    {
-      "round": 3,
-      "candidate": {
-        "id": "r3-d",
-        "spawnStart": 1.05,
-        "spawnEnd": 1.25
-      },
-      "strategy": "hybrid-manual-wide-doors",
-      "seed": 3141,
-      "survived": true,
-      "elapsedSeconds": 180,
-      "livesRemaining": 10,
-      "served": 145,
-      "manualClicks": 38,
-      "firstPerilSecond": 53.99999999991222,
-      "secondsInPeril": 47,
+      "secondsInPeril": 108,
       "peakQueue": 41
     },
     {
@@ -3956,15 +3920,51 @@
         "spawnEnd": 1.25
       },
       "strategy": "hybrid-manual-wide-doors",
+      "seed": 1234,
+      "survived": false,
+      "elapsedSeconds": 166,
+      "livesRemaining": 0,
+      "served": 132,
+      "manualClicks": 34,
+      "firstPerilSecond": 63.99999999995879,
+      "secondsInPeril": 102,
+      "peakQueue": 32
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "hybrid-manual-wide-doors",
+      "seed": 3141,
+      "survived": true,
+      "elapsedSeconds": 180,
+      "livesRemaining": 9,
+      "served": 146,
+      "manualClicks": 35,
+      "firstPerilSecond": 53.99999999991222,
+      "secondsInPeril": 37,
+      "peakQueue": 34
+    },
+    {
+      "round": 3,
+      "candidate": {
+        "id": "r3-d",
+        "spawnStart": 1.05,
+        "spawnEnd": 1.25
+      },
+      "strategy": "hybrid-manual-wide-doors",
       "seed": 6060,
       "survived": true,
       "elapsedSeconds": 180,
-      "livesRemaining": 2,
-      "served": 142,
-      "manualClicks": 38,
+      "livesRemaining": 7,
+      "served": 145,
+      "manualClicks": 36,
       "firstPerilSecond": 56.999999999926196,
-      "secondsInPeril": 94,
-      "peakQueue": 33
+      "secondsInPeril": 82,
+      "peakQueue": 31
     },
     {
       "round": 4,

@@ -261,6 +261,7 @@ window.createRoundState = function(round, seed, options = {}) {
 
 window.applyRoundState = function(roundState, options = {}) {
     Config.numFloors = roundState.definition.floors;
+    Config.liftCapacity = roundState.definition.liftCapacity || Config.GAME_DATA.system.liftCapacity;
     Registry.seed = roundState.seed;
     Registry.stats.round = roundState.definition.round;
     Registry.stats.timeLeft = roundState.timeLeft;
