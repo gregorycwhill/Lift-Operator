@@ -111,7 +111,7 @@ window.Config = {
     jamMaxSec: BalanceSystem.jam.maxSec,
     checkoutChance: BalanceSystem.checkoutChance,
     
-    liftsR1: BalanceRounds[1].lifts, liftsR2: BalanceRounds[2].lifts, liftsR3: BalanceRounds[3].lifts, liftsR4: BalanceRounds[4].lifts, liftsR5: BalanceRounds[5].lifts, liftsR6: BalanceRounds[6].lifts, liftsR7: BalanceRounds[7].lifts, liftsR8: BalanceRounds[8].lifts, liftsR9: BalanceRounds[9].lifts, liftsR10: BalanceRounds[10].lifts, liftsR11: BalanceRounds[11].lifts, liftsR12: BalanceRounds[12].lifts, liftsR13: BalanceRounds[13].lifts,
+    liftsR1: BalanceRounds[1].lifts, liftsR2: BalanceRounds[2].lifts, liftsR3: BalanceRounds[3].lifts, liftsR4: BalanceRounds[4].lifts, liftsR5: BalanceRounds[5].lifts, liftsR6: BalanceRounds[6].lifts, liftsR7: BalanceRounds[7].lifts, liftsR8: BalanceRounds[8].lifts, liftsR9: BalanceRounds[9].lifts, liftsR10: BalanceRounds[10].lifts, liftsR11: BalanceRounds[11].lifts, liftsR12: BalanceRounds[12].lifts, liftsR13: BalanceRounds[13].lifts, liftsR14: BalanceRounds[14].lifts, liftsR15: BalanceRounds[15].lifts, liftsR16: BalanceRounds[16].lifts, liftsR17: BalanceRounds[17].lifts, liftsR18: BalanceRounds[18].lifts, liftsR19: BalanceRounds[19].lifts, liftsR20: BalanceRounds[20].lifts,
     
     spawnR1Start: BalanceRounds[1].spawnStart, spawnR1End: BalanceRounds[1].spawnEnd, spawnR2Start: BalanceRounds[2].spawnStart, spawnR2End: BalanceRounds[2].spawnEnd,
     spawnR3Start: BalanceRounds[3].spawnStart, spawnR3End: BalanceRounds[3].spawnEnd, spawnR4Start: BalanceRounds[4].spawnStart, spawnR4End: BalanceRounds[4].spawnEnd,
@@ -152,7 +152,14 @@ window.Config = {
         10: "Workshop Sandbox",
         11: "Heavy Lifting",
         12: "Endurance Test",
-        13: "Pedal Power"
+        13: "Pedal Power",
+        14: "Split-Level Service",
+        15: "VIP Rooftop Gala",
+        16: "Maintenance Blackout",
+        17: "Express Check-Out",
+        18: "Festival Weekend",
+        19: "The Vertical City",
+        20: "Grand Hotel Network"
     },
 
     // GAME_DATA: The single source of truth for all game balancing
@@ -177,7 +184,7 @@ const debugDefinitions = [
     { key: 'sunsetMaxSec', label: 'Sunset Max Spawn (sec)', min: 20, max: 180, step: 5, dispFormat: (v)=>v },
     { key: 'sunsetDurationSec', label: 'Sunset Duration (sec)', min: 10, max: 120, step: 5, dispFormat: (v)=>v },
     { key: 'sunsetGuestRatio', label: 'Sunset Ratio', min: 0.1, max: 1.0, step: 0.1, dispFormat: (v)=>Math.round(v*100)+'%' },
-    { key: 'liftsR1', label: 'Lifts in Round 1', min: 1, max: 5, step: 1, dispFormat: (v)=>v },
+    ...Array.from({ length: 20 }, (_, index) => ({ key: `liftsR${index + 1}`, label: `Lifts in Round ${index + 1}`, min: 1, max: 10, step: 1, dispFormat: (v)=>v })),
     { key: 'spawnR1Start', label: 'R1 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
     { key: 'spawnR1End', label: 'R1 End Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
     { key: 'spawnR2Start', label: 'R2 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },

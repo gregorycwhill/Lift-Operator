@@ -138,6 +138,7 @@ window.Game = window.Game || {};
             const snapshot = {
                 lift: {
                     pos: lift.pos, targetFloor: lift.targetFloor, sweepDirection: lift.sweepDirection,
+                    serviceLower: lift.serviceLower, serviceUpper: lift.serviceUpper,
                     passengers: lift.passengers.map(passenger => ({ dest: passenger.dest, boardingWeight: passenger.boardingWeight, isGymBro: passenger.isGymBro }))
                 },
                 floor: bridge.getFloor(),
@@ -160,7 +161,11 @@ window.Game = window.Game || {};
                 const { source, snapshot } = data; const actions = {};
                 const lift = { ...snapshot.lift, passengers: snapshot.lift.passengers.slice() };
                 const Building = Object.freeze({
-                    setTarget: floor => { if (Number.isInteger(floor) && floor >= 0 && floor < snapshot.floorCount) actions.targetFloor = floor; },
+                    setTarget: floor => {
+                        const lower = Number.isInteger(snapshot.lift.serviceLower) ? snapshot.lift.serviceLower : 0;
+                        const upper = Number.isInteger(snapshot.lift.serviceUpper) ? snapshot.lift.serviceUpper : snapshot.floorCount - 1;
+                        if (Number.isInteger(floor) && floor >= lower && floor <= upper && floor >= 0 && floor < snapshot.floorCount) actions.targetFloor = floor;
+                    },
                     getFloor: () => snapshot.floor, getPhysicalDirection: () => snapshot.direction,
                     getCapacity: () => snapshot.capacity, getEffectiveCapacity: () => snapshot.capacity,
                     getFreeCapacity: () => snapshot.freeCapacity, getCurrentWeight: () => snapshot.capacity - snapshot.freeCapacity,
@@ -231,7 +236,8 @@ window.Game = window.Game || {};
                     let f = parseInt(floor);
                     const isDouble = lift.isDoubleDecker || (lift.doubleDeckerTimer && lift.doubleDeckerTimer > 0);
                     const maxAllowed = isDouble ? (window.Config.numFloors - 2) : (window.Config.numFloors - 1);
-                    if (!isNaN(f) && f >= 0 && f <= maxAllowed) {
+                    const inZone = !R.isZoningEnabled || !R.isZoningEnabled() || R.isFloorInLiftZone(lift, f);
+                    if (!isNaN(f) && f >= 0 && f <= maxAllowed && inZone) {
                         lift.targetFloor = f;
                     }
                 },

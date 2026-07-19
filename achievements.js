@@ -193,6 +193,8 @@ const Achievements = {
                 btn.style.gap = '4px';
                 btn.style.transition = 'all 0.2s';
                 btn.style.border = borderStyle;
+                btn.style.background = highestTier === 'gold' ? '#ffe08a' : (highestTier === 'silver' ? '#d5dde6' : '#d89555');
+                btn.style.color = highestTier === 'bronze' ? '#3b2415' : '#263238';
                 btn.style.background = isSelected ? '#e0f7fa' : '#f8f9fa';
                 btn.style.boxShadow = isSelected ? '0 0 8px rgba(52,152,219,0.5)' : 'none';
                 

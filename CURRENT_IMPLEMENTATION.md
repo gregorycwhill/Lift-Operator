@@ -29,6 +29,12 @@ The normal interface exposes rounds 1–13. Some documents previously described 
 
 The split into files is useful, but modules remain coupled through globals such as `Config`, `Registry`, `PowerUps`, `GameUI`, and `AutomationWorkshop`.
 
+## Extension implementation status
+
+Rounds 14-20 now have structural factory definitions, 20/25/30-floor layouts, larger fleet rendering, and direct
+single-lift Service Zoning controls. Floor 0 is the G service floor when included in a range. Spawn curves remain
+provisional pending structural playtesting; transfers and G-hub routing are not implemented.
+
 ## Implemented core loop
 
 1. The player enters a name and starts a seeded round.
@@ -299,7 +305,7 @@ the next full campaign run.
 
 ### Playtest follow-up: Credits, rooftop party, jams, and Gym Bros
 
-Balance `0.2.4-credit-rooftop-gym-playtest` reduces earned round Credits with a canonical `0.1` multiplier while
+Balance `0.2.5-clarity-endurance-gravity-debug` raises Endurance earned Credits to a `0.6` multiplier while
 leaving Supply Closet prices unchanged. Rooftop party guests are non-boardable until release, jams are capped at 20
 seconds, and Gym Bros/Gym Floor persist through Rounds 11–13. The Gym Floor label uses the flex symbol.
 

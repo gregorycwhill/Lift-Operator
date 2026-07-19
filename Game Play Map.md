@@ -5,6 +5,9 @@
 **Status:** Design candidate for iterative playtesting; not a statement of current implementation  
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
+**Implementation addendum (19 July 2026):** Rounds 14-20 structural shells and direct single-lift Service Zoning
+are now implemented. This document remains authoritative for their intended progression and future tuning.
+
 ## 1. How to use this document
 
 This map defines what each round is trying to teach and the parameter direction required to create that experience.
@@ -432,6 +435,38 @@ The 30-second Workflow Monkey must use a test-only Endurance pressure multiplier
 
 - Complete by optimizing flow rather than maximizing capacity.
 - Apply lessons from every earlier bottleneck.
+
+## 6.5 Extended campaign structure: Rounds 14–20
+
+Rounds 14–20 form a second campaign arc built around scale, fleet architecture, and Workshop engagement. Floors and
+lifts increase before spawn-rate tuning. The first new scale mechanic is **Service Zoning**: a player-configured
+direct-service band for each lift.
+
+### Service Zoning rules
+
+- A lift has an inclusive lower and upper service floor.
+- G is a normal serviced floor within the zone, not a transfer hub. A zone such as `G–10` includes G and Floors 1–10.
+- Guests board only when the lift can carry them directly from their current floor to their destination within its
+  configured zone. Multi-lift journeys and transfers are deferred.
+- Including G reflects real lift operation and is especially useful for Room Service and Checkout traffic, which often
+  begins or ends at the ground/lobby floor.
+- If a guest’s origin or destination is outside a lift’s zone, that lift refuses boarding with a plain explanation.
+- Workshop edits show covered floors, uncovered floors, and whether any direct origin-to-destination route is absent.
+- Overlapping zones provide resilience; disjoint zones reduce empty travel but are vulnerable when a lift jams.
+
+| Round | Title | Floors | Lifts | Structural challenge | Zoning/Workshop lesson |
+| --- | --- | ---: | ---: | --- | --- |
+| 14 | Split-Level Service | 20 | 5 | Lower, middle, and upper traffic bands | Configure direct local zones including G where useful |
+| 15 | VIP Rooftop Gala | 20 | 6 | VIP traffic combined with Rooftop Party | Preserve direct VIP and rooftop coverage |
+| 16 | Maintenance Blackout | 20 | 6 | Jams and stink create temporary fleet gaps | Keep overlapping rescue coverage |
+| 17 | Express Check-Out | 25 | 6 | Checkout traffic concentrates at special/G floors | Use local and express direct zones |
+| 18 | Festival Weekend | 25 | 7 | Rooftop, VIP, Gym Bros, and stink interact | Configure exception-safe zones and a flexible lift |
+| 19 | The Vertical City | 30 | 8 | Long distances and competing service bands | Make Workshop zoning strategically advantageous |
+| 20 | Grand Hotel Network | 30 | 10 | Full combination of traffic, hazards, and scale | Master direct-service fleet architecture |
+
+The current screen renders approximately seven lifts comfortably. R14–R18 should remain usable within that limit;
+R19–R20 require a deliberate large-fleet layout or horizontal fleet scrolling before those rounds are implemented.
+Every round should retain manual/hybrid, built-in automation plus loadout, and custom Workshop solutions where practical.
 
 ## 7. Hazard tuning principles
 

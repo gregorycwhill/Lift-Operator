@@ -104,6 +104,9 @@ const AutomationWorkshop = {
         });
 
         document.getElementById("shareScriptBtn")?.addEventListener("click", () => this.shareCurrentScript());
+
+        document.getElementById("zoneLiftSelect")?.addEventListener("change", () => this.refreshZoneControls());
+        document.getElementById("applyZoneBtn")?.addEventListener("click", () => this.applyZone());
     },
 
     show: function() {
@@ -112,6 +115,7 @@ const AutomationWorkshop = {
         if (overlay) overlay.style.display = "flex";
 
         const VM = this.getVM();
+        this.refreshZoneControls();
         setTimeout(() => {
             if (!this.currentScriptId && VM && VM.scripts.length > 0) {
                 this.openScript(VM.scripts[0].id); // Default to Sweep
@@ -125,6 +129,43 @@ const AutomationWorkshop = {
 
     getVM: function() {
         return window.Game.Automation;
+    },
+
+    refreshZoneControls: function() {
+        const panel = document.getElementById('zoningControls');
+        const lifts = window.Registry?.lifts || [];
+        const enabled = Boolean(window.Registry?.isZoningEnabled?.());
+        if (!panel) return;
+        panel.classList.toggle('hidden', !enabled || lifts.length === 0);
+        if (!enabled || lifts.length === 0) return;
+        const select = document.getElementById('zoneLiftSelect');
+        if (!select) return;
+        const previous = select.value;
+        select.innerHTML = lifts.map((lift, index) => `<option value="${index}">Lift ${index + 1}</option>`).join('');
+        select.value = previous && Number(previous) < lifts.length ? previous : '0';
+        const lift = lifts[Number(select.value)];
+        document.getElementById('zoneLowerInput').value = lift.serviceLower;
+        document.getElementById('zoneUpperInput').value = lift.serviceUpper;
+        document.getElementById('zoneLowerInput').max = Config.numFloors - 1;
+        document.getElementById('zoneUpperInput').max = Config.numFloors - 1;
+        document.getElementById('zoneCoverageStatus').innerText = `Covers ${lift.serviceLower === 0 ? 'G' : `Floor ${lift.serviceLower}`}–${lift.serviceUpper}. Guests outside this band wait for another lift.`;
+    },
+
+    applyZone: function() {
+        const select = document.getElementById('zoneLiftSelect');
+        const lift = window.Registry?.lifts?.[Number(select?.value)];
+        if (!lift) return;
+        let lower = Math.max(0, Math.min(Config.numFloors - 1, Number(document.getElementById('zoneLowerInput').value)));
+        let upper = Math.max(0, Math.min(Config.numFloors - 1, Number(document.getElementById('zoneUpperInput').value)));
+        if (!Number.isFinite(lower) || !Number.isFinite(upper) || lower > upper) {
+            window.UI?.showToast?.('Choose a valid lower and upper floor.');
+            return;
+        }
+        lift.serviceLower = Math.floor(lower);
+        lift.serviceUpper = Math.floor(upper);
+        window.UI?.showToast?.(`Lift ${lift.id + 1} zone set to ${lower === 0 ? 'G' : lower}–${upper}.`);
+        this.refreshZoneControls();
+        (typeof GameUI === 'function' ? GameUI() : window.UI)?.buildWorld?.();
     },
 
     saveCurrentScript: function() {

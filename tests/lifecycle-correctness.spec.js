@@ -378,10 +378,10 @@ test('pause and resume preserve guest and scheduled-event ages', async ({ page }
 
 test('all supported rounds have explicit factory configuration', async ({ page }) => {
     const definitions = await page.evaluate(() => {
-        return Array.from({ length: 13 }, (_, index) => getRoundDefinition(index + 1));
+        return Array.from({ length: 20 }, (_, index) => getRoundDefinition(index + 1));
     });
 
-    expect(definitions).toHaveLength(13);
+    expect(definitions).toHaveLength(20);
     definitions.forEach((definition, index) => {
         expect(definition.round).toBe(index + 1);
         expect(definition.floors).toBeGreaterThan(0);
@@ -663,6 +663,36 @@ test('canonical balance data drives runtime compatibility values', async ({ page
     expect(result.roundThirteenSpawn).toEqual(result.canonicalRoundThirteenSpawn);
 });
 
+test('R14-R20 expose scale definitions and direct single-lift zoning', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const expected = {
+            14: [20, 5], 15: [20, 6], 16: [20, 6], 17: [25, 6],
+            18: [25, 7], 19: [30, 8], 20: [30, 10]
+        };
+        const rows = Object.entries(expected).map(([round, [floors, lifts]]) => {
+            const definition = getRoundDefinition(Number(round));
+            initializeRound(Number(round), { showBriefing: false });
+            const lift = Registry.lifts[0];
+            lift.serviceLower = 3;
+            lift.serviceUpper = 10;
+            return {
+                round: Number(round), floors: definition.floors, lifts: definition.lifts,
+                zoning: definition.zoningEnabled,
+                local: Registry.canLiftDirectlyServe(lift, 4, 9),
+                outside: Registry.canLiftDirectlyServe(lift, 4, 12)
+            };
+        });
+        return rows;
+    });
+    result.forEach(row => {
+        expect([20, 25, 30]).toContain(row.floors);
+        expect(row.lifts).toBeGreaterThanOrEqual(5);
+        expect(row.zoning).toBe(true);
+        expect(row.local).toBe(true);
+        expect(row.outside).toBe(false);
+    });
+});
+
 test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
     const result = await page.evaluate(() => {
         const capacities = [1, 2, 3, 4].map(round => {
@@ -682,7 +712,7 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     ]);
     expect(result.r2SpawnStart).toBe(0.4);
     expect(result.r2SpawnEnd).toBe(0.468);
-    expect(result.version).toBe('0.2.4-credit-rooftop-gym-playtest');
+    expect(result.version).toBe('0.2.5-clarity-endurance-gravity-debug');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -804,7 +834,9 @@ test('canonical payout parameters drive standard and Endurance awards', async ({
         return { standard, endurance, capped };
     });
 
-    expect(result).toEqual({ standard: 0, endurance: 0, capped: 50 });
+    expect(result.standard).toBe(0);
+    expect(result.endurance).toBeGreaterThan(0);
+    expect(result.capped).toBe(50);
 });
 
 test('party guests remain at the rooftop until the event releases them', async ({ page }) => {

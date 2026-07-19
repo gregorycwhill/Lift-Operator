@@ -56,6 +56,13 @@
                     <option value="11">Round 11</option>
                     <option value="12">Round 12</option>
                     <option value="13">Round 13</option>
+                    <option value="14">Round 14</option>
+                    <option value="15">Round 15</option>
+                    <option value="16">Round 16</option>
+                    <option value="17">Round 17</option>
+                    <option value="18">Round 18</option>
+                    <option value="19">Round 19</option>
+                    <option value="20">Round 20</option>
                 </select>
                 <button id="jumpRoundBtn" class="btn btn-orange">Warp</button>
             </div>
@@ -160,6 +167,16 @@
                             <div>Author: <span id="scriptAuthorSpan" class="workshop-meta-val"></span></div>
                             <div class="meta-margin">Date: <span id="scriptDateSpan" class="workshop-meta-val"></span></div>
                         </div>
+
+                        <section id="zoningControls" class="zoning-controls hidden" aria-label="Lift service zoning">
+                            <h3>Service Zoning</h3>
+                            <p class="workshop-help">Set the inclusive direct-service band for a lift. G is floor 0; transfers are not supported.</p>
+                            <label>Lift <select id="zoneLiftSelect" class="workshop-select"></select></label>
+                            <label>Lower floor <input id="zoneLowerInput" type="number" min="0" step="1" class="workshop-input"></label>
+                            <label>Upper floor <input id="zoneUpperInput" type="number" min="0" step="1" class="workshop-input"></label>
+                            <button id="applyZoneBtn" class="btn btn-blue btn-small">Apply zone</button>
+                            <p id="zoneCoverageStatus" class="workshop-help"></p>
+                        </section>
                         
                         <div class="compiled-container">
                             <label class="compiled-label">Compiled JS:</label>

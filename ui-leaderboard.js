@@ -87,6 +87,10 @@ window.showLeaderboard = function(titleText) {
     const engine = GameEngine();
     const ui = GameUI();
     if (typeof engine.pause === 'function') engine.pause(); 
+    if (Registry.roundCountdownActive && Registry.roundCountdownTimer) {
+        clearInterval(Registry.roundCountdownTimer);
+        Registry.roundCountdownTimer = null;
+    }
     if (document.getElementById('lbTitle')) document.getElementById('lbTitle').innerText = titleText;
     
     const closeBtn = document.getElementById('closeLbBtn');

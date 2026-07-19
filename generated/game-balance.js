@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.4-credit-rooftop-gym-playtest
+// Balance version: 0.2.5-clarity-endurance-gravity-debug
 window.GameBalanceData = {
-  "balanceVersion": "0.2.4-credit-rooftop-gym-playtest",
+  "balanceVersion": "0.2.5-clarity-endurance-gravity-debug",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -12,7 +12,7 @@ window.GameBalanceData = {
     "endurance": {
       "survivalIntervalSec": 30,
       "serviceIntervalGuests": 10,
-      "creditMultiplier": 0.1,
+      "creditMultiplier": 0.6,
       "cap": 50
     }
   },
@@ -474,7 +474,7 @@ window.GameBalanceData = {
       "floors": 15,
       "lifts": 5,
       "spawnStart": 1.25,
-      "spawnEnd": 1.5,
+      "spawnEnd": 2,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -497,8 +497,8 @@ window.GameBalanceData = {
     "12": {
       "floors": 15,
       "lifts": 4,
-      "spawnStart": 0.8,
-      "spawnEnd": 1,
+      "spawnStart": 0.5,
+      "spawnEnd": 2.6,
       "objective": "ENDURANCE",
       "gravityScalar": 0
     },
@@ -508,7 +508,87 @@ window.GameBalanceData = {
       "spawnStart": 1.5,
       "spawnEnd": 1.75,
       "objective": "PEDAL_SURVIVAL",
-      "gravityScalar": 2
+      "gravityScalar": 1.4
+    },
+    "14": {
+      "floors": 20,
+      "lifts": 5,
+      "spawnStart": 1.5,
+      "spawnEnd": 1.9,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true
+    },
+    "15": {
+      "floors": 20,
+      "lifts": 6,
+      "spawnStart": 1.55,
+      "spawnEnd": 2,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true,
+      "vipEvent": true,
+      "rooftopEvent": true
+    },
+    "16": {
+      "floors": 20,
+      "lifts": 6,
+      "spawnStart": 1.6,
+      "spawnEnd": 2.1,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true,
+      "jamEvent": true,
+      "stinkEvent": true
+    },
+    "17": {
+      "floors": 25,
+      "lifts": 6,
+      "spawnStart": 1.65,
+      "spawnEnd": 2.2,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true,
+      "checkoutEvent": true
+    },
+    "18": {
+      "floors": 25,
+      "lifts": 7,
+      "spawnStart": 1.7,
+      "spawnEnd": 2.3,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true,
+      "vipEvent": true,
+      "rooftopEvent": true,
+      "stinkEvent": true,
+      "gymEvent": true
+    },
+    "19": {
+      "floors": 30,
+      "lifts": 8,
+      "spawnStart": 1.75,
+      "spawnEnd": 2.4,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true,
+      "vipEvent": true,
+      "rooftopEvent": true,
+      "stinkEvent": true,
+      "gymEvent": true
+    },
+    "20": {
+      "floors": 30,
+      "lifts": 10,
+      "spawnStart": 1.8,
+      "spawnEnd": 2.5,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "zoningEnabled": true,
+      "vipEvent": true,
+      "rooftopEvent": true,
+      "stinkEvent": true,
+      "gymEvent": true
     }
   }
 };

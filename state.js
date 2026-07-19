@@ -63,10 +63,11 @@ const Registry = {
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);
         
         for (let f = 0; f < Config.numFloors; f++) {
+            if (!this.isFloorInLiftZone(lift, f)) continue;
             let hasTarget = false;
             if (targetType === 'destination') hasTarget = lift.passengers.some(p => p.dest === f);
-            else if (targetType === 'any_waiting') hasTarget = Registry.floors[f].waitingGuests.length > 0;
-            else hasTarget = Registry.floors[f].waitingGuests.some(g => g.status === targetType || (targetType === 'vip' && g.isVip));
+            else if (targetType === 'any_waiting') hasTarget = Registry.floors[f].waitingGuests.some(g => this.canLiftDirectlyServe(lift, f, g.dest));
+            else hasTarget = Registry.floors[f].waitingGuests.some(g => this.canLiftDirectlyServe(lift, f, g.dest) && (g.status === targetType || (targetType === 'vip' && g.isVip)));
             
             if (hasTarget) {
                 let dist = Math.abs(f - currentFloor);
@@ -79,8 +80,21 @@ const Registry = {
         if(floor < 0 || floor >= Config.numFloors) return 0;
         return Registry.floors[floor].waitingGuests.length;
     },
+    isZoningEnabled: function() {
+        return Boolean(Config.GAME_DATA.rounds[Registry.stats.round]?.zoningEnabled);
+    },
+    isFloorInLiftZone: function(lift, floor) {
+        if (!this.isZoningEnabled()) return floor >= 0 && floor < Config.numFloors;
+        const lower = Number.isInteger(lift?.serviceLower) ? lift.serviceLower : 0;
+        const upper = Number.isInteger(lift?.serviceUpper) ? lift.serviceUpper : Config.numFloors - 1;
+        return floor >= lower && floor <= upper && floor >= 0 && floor < Config.numFloors;
+    },
+    canLiftDirectlyServe: function(lift, originFloor, destinationFloor) {
+        if (!this.isZoningEnabled()) return true;
+        return this.isFloorInLiftZone(lift, originFloor) && this.isFloorInLiftZone(lift, destinationFloor);
+    },
     isFloorClaimedByOther: function(floor, myLiftId) {
-        return Registry.lifts.some(l => l.id !== myLiftId && l.targetFloor === floor && l.jamTimer <= 0);
+        return Registry.lifts.some(l => l.id !== myLiftId && l.targetFloor === floor && l.jamTimer <= 0 && this.isFloorInLiftZone(l, floor));
     },
     getPhysicalDirection: function(lift) {
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);
@@ -101,8 +115,9 @@ const Registry = {
         const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
 
         for (let checkF = currentFloor + dir; checkF >= 0 && checkF <= maxF; checkF += dir) {
+            if (!this.isFloorInLiftZone(lift, checkF)) continue;
             // Dropoff check: passengers always want to get off
-            if (lift.passengers.some(p => p.dest === checkF)) return checkF;
+            if (lift.passengers.some(p => p.dest === checkF && this.isFloorInLiftZone(lift, p.dest))) return checkF;
             
             // Pickup check: stop if we have room and there is a valid guest
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {
@@ -114,7 +129,7 @@ const Registry = {
                     if (priorityOnly) {
                         return (g.status === 'critical' || g.status === 'annoyed');
                     }
-                    return true; // Simple sweep: stops for any guest
+                    return this.canLiftDirectlyServe(lift, checkF, g.dest);
                 });
                 if (hasStopReason) return checkF;
             }
@@ -142,11 +157,12 @@ const Registry = {
         const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
 
         for (let f = 0; f <= maxF; f++) {
+            if (!this.isFloorInLiftZone(lift, f)) continue;
             let score = 0;
-            lift.passengers.forEach(p => { if (p.dest === f) score += getVal(p); });
+            lift.passengers.forEach(p => { if (p.dest === f && this.isFloorInLiftZone(lift, p.dest)) score += getVal(p); });
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {
                 Registry.floors[f].waitingGuests.forEach(g => {
-                    if (!isStinky || g.isGymBro) score += getVal(g);
+                    if ((!isStinky || g.isGymBro) && this.canLiftDirectlyServe(lift, f, g.dest)) score += getVal(g);
                 });
             }
             if (score > maxScore && score > 0) { maxScore = score; bestFloors = [f]; }

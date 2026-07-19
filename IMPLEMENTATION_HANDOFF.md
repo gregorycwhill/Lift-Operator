@@ -811,12 +811,17 @@ Round 13 empty-lift gravity/Turbo top-floor coverage passes; repeated effect ico
 simulation clock when available. Remaining full-campaign verification is still required before treating the issue as
 closed.
 
-Playtest follow-up `0.2.4-credit-rooftop-gym-playtest`: earned Credits use a 0.1 multiplier with prices unchanged;
+Playtest follow-up `0.2.5-clarity-endurance-gravity-debug`: earned Credits use a 0.1 multiplier with prices unchanged;
 party guests cannot board until release; jam maximum is 20 seconds; Gym Bros persist in Rounds 11–13; and the Gym
 Floor is rendered with the flex symbol.
 
 The subsequent full panel produced one transient Protocol Beta kill-switch failure; isolated rerun passed immediately.
 Owner accepted this as a pass for playtesting, with no reproducible production failure identified.
+
+Playtest follow-up `0.2.5-clarity-endurance-gravity-debug`: Endurance earned Credits use a 0.6 multiplier; Round 13
+gravity is reduced 30%; debug lift overrides support 1-10 lifts; countdown duration is 3 seconds per lift with a
+5-second minimum; Check-out Challenge uses a suitcase floor marker; and modal/countdown and notification wording are
+being clarified.
 
 | Date | Commit/balance | Decision |
 | --- | --- | --- |
@@ -873,3 +878,89 @@ PSI is permitted only as an internal read-only control signal for the music serv
 6. Run unit/integration/browser coverage for event routing, reset/teardown, context transitions, asset failure, first gesture, persistence, Chromium, WebKit/Safari, and mobile layouts. Run the full existing panel to prove audio remains simulation-neutral.
 
 Completion requires all listed audio tests to pass, an attribution-complete manifest, graceful no-audio operation, and no regression of deterministic simulation or player-facing telemetry boundaries.
+
+## 16. Planned R14–R20 extension and Service Zoning (design only)
+
+This is a future implementation programme. No R14–R20 runtime rounds or Service Zoning behavior is currently
+implemented. The design authority is `Game Play Map.md`; this section defines the delivery boundary and evidence
+required before any extension is promoted.
+
+### 16.1 Structural scope
+
+The extension increases scale before traffic tuning:
+
+| Round | Floors | Lifts | Structural purpose |
+| --- | ---: | ---: | --- |
+| 14 | 20 | 5 | Introduce direct local service zones |
+| 15 | 20 | 6 | Combine VIP and Rooftop Party |
+| 16 | 20 | 6 | Combine zoning with jam/stink recovery |
+| 17 | 25 | 6 | Checkout/special-floor concentration |
+| 18 | 25 | 7 | Rooftop, VIP, Gym Bros, and stink combination |
+| 19 | 30 | 8 | Large-fleet Workshop advantage |
+| 20 | 30 | 10 | Full direct-service fleet architecture |
+
+The current screen renders approximately seven lifts comfortably. R14–R18 must remain usable within that limit;
+R19–R20 require an intentional large-fleet presentation (prefer horizontal fleet scrolling with readable shafts and
+sticky floor labels). Twenty floors is the initial vertical target; 25 and 30 floors are late-round scale targets.
+
+### 16.2 Service Zoning boundary
+
+Service Zoning is a Workshop-configured, direct single-lift service range. Each zoned lift has inclusive lower and
+upper bounds. G is an ordinary serviced floor within the range, not a transfer hub; including G supports real-world
+operation and Room Service/Checkout journeys that begin or end at the lobby.
+
+The authoritative production predicate must be shared by live boarding, simulation, built-in automation, custom
+automation, refusal messaging, and Review diagnostics:
+
+```text
+canLiftDirectlyServe(lift, originFloor, destinationFloor)
+```
+
+The predicate is true only when both floors are inside the lift’s range and all existing capacity, direction, VIP,
+party, Gym Bro, jam, stink, and patience rules also permit boarding. A guest never transfers in this release. G-hub
+routing, overlapping-zone transfers, transfer patience, and arbitrary multi-lift journeys remain deferred.
+
+Workshop requirements:
+
+- Edit lower and upper bounds, with an optional G inclusion control.
+- Preview covered and uncovered floors and direct route gaps.
+- Reject invalid ranges before launch.
+- Warn when no lift can directly serve a generated origin/destination pair.
+- Show each lift’s zone clearly during play and explain refusals in plain language.
+- Prevent manual targets and automation actions from bypassing the configured range.
+
+Overlapping zones are allowed for resilience. Disjoint zones reduce empty travel but become vulnerable when a lift jams;
+R14–R20 should use that trade-off as the intended strategic problem. Zoning must not alter guest destinations, create
+hidden routing, or make an invalid fleet silently appear successful.
+
+### 16.3 Delivery sequence
+
+1. Audit and extend the renderer for 20 floors and 5–7 lifts; add large-fleet scrolling/compact layout for 8–10 lifts.
+2. Add canonical structural definitions for R14–R20 with conservative placeholder traffic.
+3. Add zone state, normalization, direct-service predicate, and unit tests.
+4. Integrate zoning into live boarding, simulation, built-in policies, custom automation, and refusal/Review text.
+5. Add Workshop controls and coverage validation.
+6. Implement R14, validate structure, then add R15–R18 combo events one round at a time.
+7. Add the 30-floor presentation and implement R19–R20 shells.
+8. Extend telemetry/reporting for zone refusals, coverage gaps, empty travel, overlap utilization, and idle time caused
+   by restrictive zones.
+9. Tune spawn rates only after structural, routing, rendering, and simulation gates pass.
+
+### 16.4 Extension acceptance gates
+
+- Existing R1–R13 behavior and golden seeds remain unchanged.
+- Every new round initializes, resets, retries, simulates, and reviews deterministically.
+- Valid direct routes do not strand guests; intentional zone gaps fail visibly and are reported.
+- Built-in automation respects zones and cannot win unattended by default.
+- Custom automation cannot issue out-of-zone actions.
+- At least manual/hybrid, built-in-plus-loadout, and custom Workshop solution classes remain viable where practical.
+- 20/25/30 floors and 5–10 lifts render and remain interactive at desktop, tablet, and mobile sizes.
+- No lift, guest, power-up, zone badge, or floor label produces unbounded DOM growth.
+
+### 16.5 Implementation status (19 July 2026)
+
+The R14-R20 structural definitions, 20/25/30-floor factory layouts, 5-10 lift rendering baseline, direct-service
+zone predicate, live boarding enforcement, automation target enforcement, and Workshop lower/upper range controls
+are implemented. Floor 0 remains the G service floor when included in a range; transfers and G-hub routing remain
+deferred. Spawn-rate tuning, coverage-gap telemetry, overlap diagnostics, and full cross-device visual validation
+remain playtest work.

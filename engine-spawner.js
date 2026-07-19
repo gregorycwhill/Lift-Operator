@@ -5,7 +5,8 @@
 window.forceFirstSpawn = function(now) {
     let start = window.getRandomFloor();
     let dest;
-    if (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance) {
+    const roundDefinition = window.getRoundDefinition(Registry.stats.round);
+    if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
         dest = 0;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
     } else {
@@ -106,7 +107,8 @@ window.runSpawnerTick = function(now) {
             let start = window.getRandomFloor();
             let dest;
             
-            if (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance) {
+            const roundDefinition = window.getRoundDefinition(Registry.stats.round);
+            if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
                 dest = 0;
                 if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
             } else {

@@ -167,3 +167,35 @@ This milestone is not implemented. The complete architecture and acceptance boun
 - [ ] Test PSI-to-music mapping with clamped/smoothed inputs and prove it cannot alter engine state, RNG, timing, saves, player UI telemetry, or automation sensors.
 - [ ] Browser-test first-gesture unlock, suspended/resumed contexts, mute and independent music/SFX sliders, and graceful failed-asset handling on Chromium, WebKit/Safari, and mobile-sized targets.
 - [ ] Validate final asset licenses/source URLs and required CC attribution. The fallback manifest, attribution text, and both Leaderboard presentations are present and browser-tested.
+
+## Milestone J - Planned R14-R20 and Service Zoning
+
+Implementation addendum: the structural/runtime baseline is implemented. The checklist below now tracks remaining
+diagnostic, cross-device, and playtest gates rather than the initial implementation work.
+
+The original design-only status is superseded by the implementation addendum above. The complete delivery boundary is in
+`IMPLEMENTATION_HANDOFF.md` Section 16 and the round intent is in `Game Play Map.md`.
+
+- [ ] Render structural layouts for 20, 25, and 30 floors with 5–10 lifts; verify desktop, tablet, mobile, horizontal
+  fleet scrolling, sticky floor labels, shaft selection, and bounded DOM updates.
+- [ ] Validate canonical R14–R20 definitions, round factory initialization, reset/retry, seeded determinism, and Review
+  behavior before adding tuned traffic.
+- [ ] Unit-test zone normalization, inclusive bounds, G inclusion, invalid ranges, overlap detection, and direct-route
+  coverage analysis.
+- [ ] Test `canLiftDirectlyServe` through live boarding, simulation, built-in automation, custom automation, refusal
+  messaging, and Review diagnostics.
+- [ ] Verify guests never transfer in this release, cannot board a lift outside its zone, and remain visible with a
+  plain explanation when no direct lift is available.
+- [ ] Verify capacity, direction, VIP, Rooftop Party, Gym Bro, jam, stink, patience, Turbo, and Double-Decker rules
+  remain authoritative after zoning is enabled.
+- [ ] Test Workshop range edits, preview/warnings, invalid imports, persistence scope, and prevention of manual or
+  automation bypass.
+- [ ] Add simulation metrics for zone refusals, uncovered routes, overlap utilization, empty travel, and restrictive-zone
+  idle time; test compact reports and replay determinism.
+- [ ] Validate R14–R20 structural combo coverage: VIP/Rooftop, jam/stink recovery, Checkout/special floors, Gym Bros,
+  and large-fleet Workshop advantage.
+- [ ] Tune spawn rates only after all structural, routing, rendering, and simulation checks pass.
+
+Implementation status: the structural and direct-service baseline is now implemented and covered by the syntax,
+config, generated-balance, unit, and targeted lifecycle checks. The remaining unchecked items are intentionally
+playtest/diagnostic work, especially coverage telemetry, overlap analysis, and full Safari/mobile visual validation.

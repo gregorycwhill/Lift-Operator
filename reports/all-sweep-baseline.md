@@ -1,6 +1,6 @@
 # All-Sweep Balance Baseline
 
-Balance version: `0.2.4-credit-rooftop-gym-playtest`  
+Balance version: `0.2.5-clarity-endurance-gravity-debug`  
 Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 | Round | Seed | Outcome | Elapsed | Lives | Served | First peril | Min SI | Peak queue | P90 journey | Classification |
@@ -17,35 +17,35 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 | 5 | 1234 | died | 140s | 0 | 130 | 54s | 0.00 | 57 | 49.5s | MEETS_ALL_SWEEP_FLOOR |
 | 5 | 3141 | died | 152s | 0 | 140 | 66s | 0.00 | 67 | 48.8s | MEETS_ALL_SWEEP_FLOOR |
 | 5 | 6060 | died | 156s | 0 | 151 | 71s | 0.00 | 52 | 48.0s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 1234 | died | 149s | 0 | 61 | 69s | 0.00 | 39 | 46.2s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 3141 | died | 155s | 0 | 72 | 56s | 0.00 | 34 | 49.7s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 6060 | died | 122s | 0 | 33 | 62s | 0.00 | 38 | 41.1s | MEETS_ALL_SWEEP_FLOOR |
-| 7 | 1234 | died | 133s | 0 | 89 | 73s | 0.00 | 48 | 42.8s | MEETS_ALL_SWEEP_FLOOR |
-| 7 | 3141 | died | 164s | 0 | 128 | 51s | 0.00 | 55 | 50.2s | MEETS_ALL_SWEEP_FLOOR |
-| 7 | 6060 | died | 131s | 0 | 84 | 58s | 0.00 | 58 | 50.6s | MEETS_ALL_SWEEP_FLOOR |
-| 8 | 1234 | died | 115s | 0 | 62 | 56s | 0.00 | 31 | 45.9s | MEETS_ALL_SWEEP_FLOOR |
-| 8 | 3141 | died | 146s | 0 | 101 | 58s | 0.00 | 39 | 47.2s | MEETS_ALL_SWEEP_FLOOR |
-| 8 | 6060 | died | 151s | 0 | 107 | 60s | 0.00 | 34 | 49.8s | MEETS_ALL_SWEEP_FLOOR |
-| 9 | 1234 | died | 104s | 0 | 54 | 50s | 0.00 | 48 | 48.9s | MEETS_ALL_SWEEP_FLOOR |
-| 9 | 3141 | died | 123s | 0 | 69 | 51s | 0.00 | 63 | 44.4s | MEETS_ALL_SWEEP_FLOOR |
-| 9 | 6060 | died | 103s | 0 | 49 | 48s | 0.00 | 63 | 43.7s | MEETS_ALL_SWEEP_FLOOR |
-| 10 | 1234 | died | 94s | 0 | 50 | 57s | 0.00 | 61 | 39.5s | MEETS_ALL_SWEEP_FLOOR |
-| 10 | 3141 | died | 124s | 0 | 102 | 50s | 0.00 | 61 | 49.0s | MEETS_ALL_SWEEP_FLOOR |
-| 10 | 6060 | died | 102s | 0 | 62 | 52s | 0.00 | 74 | 46.1s | MEETS_ALL_SWEEP_FLOOR |
-| 11 | 1234 | died | 90s | 0 | 50 | 47s | 0.00 | 79 | 47.5s | MEETS_ALL_SWEEP_FLOOR |
-| 11 | 3141 | died | 119s | 0 | 108 | 49s | 0.00 | 84 | 49.9s | MEETS_ALL_SWEEP_FLOOR |
-| 11 | 6060 | died | 98s | 0 | 66 | 49s | 0.00 | 84 | 53.7s | MEETS_ALL_SWEEP_FLOOR |
-| 12 | 1234 | died | 144s | 0 | 59 | - | - | 40 | 44.3s | COMPARATOR_REQUIRED |
-| 12 | 3141 | died | 195s | 0 | 112 | - | - | 40 | 43.0s | COMPARATOR_REQUIRED |
-| 12 | 6060 | died | 118s | 0 | 32 | - | - | 37 | 43.8s | COMPARATOR_REQUIRED |
-| 13 | 1234 | died | 91s | 0 | 39 | 54s | 0.00 | 75 | 47.0s | MEETS_ALL_SWEEP_FLOOR |
-| 13 | 3141 | died | 84s | 0 | 24 | 50s | 0.00 | 76 | 48.5s | MEETS_ALL_SWEEP_FLOOR |
-| 13 | 6060 | died | 79s | 0 | 7 | 40s | 0.00 | 94 | 39.8s | MEETS_ALL_SWEEP_FLOOR |
+| 6 | 1234 | died | 178s | 0 | 93 | 69s | 0.00 | 33 | 51.3s | MEETS_ALL_SWEEP_FLOOR |
+| 6 | 3141 | survived | 180s | 11 | 112 | 73s | 0.43 | 29 | 49.2s | VIOLATION_SURVIVED |
+| 6 | 6060 | survived | 180s | 2 | 89 | 70s | 0.40 | 33 | 51.1s | VIOLATION_SURVIVED |
+| 7 | 1234 | died | 144s | 0 | 113 | 99s | 0.00 | 40 | 45.6s | MEETS_ALL_SWEEP_FLOOR |
+| 7 | 3141 | died | 168s | 0 | 142 | 51s | 0.00 | 51 | 50.2s | MEETS_ALL_SWEEP_FLOOR |
+| 7 | 6060 | died | 148s | 0 | 122 | 62s | 0.00 | 43 | 43.4s | MEETS_ALL_SWEEP_FLOOR |
+| 8 | 1234 | died | 160s | 0 | 122 | 56s | 0.00 | 31 | 52.8s | MEETS_ALL_SWEEP_FLOOR |
+| 8 | 3141 | died | 146s | 0 | 100 | 58s | 0.00 | 32 | 45.9s | MEETS_ALL_SWEEP_FLOOR |
+| 8 | 6060 | died | 138s | 0 | 91 | 60s | 0.00 | 38 | 49.2s | MEETS_ALL_SWEEP_FLOOR |
+| 9 | 1234 | died | 131s | 0 | 117 | 54s | 0.00 | 44 | 44.7s | MEETS_ALL_SWEEP_FLOOR |
+| 9 | 3141 | died | 123s | 0 | 92 | 51s | 0.00 | 52 | 44.1s | MEETS_ALL_SWEEP_FLOOR |
+| 9 | 6060 | died | 120s | 0 | 74 | 49s | 0.00 | 44 | 44.4s | MEETS_ALL_SWEEP_FLOOR |
+| 10 | 1234 | died | 109s | 0 | 87 | 59s | 0.00 | 54 | 46.9s | MEETS_ALL_SWEEP_FLOOR |
+| 10 | 3141 | died | 140s | 0 | 126 | 74s | 0.00 | 59 | 51.4s | MEETS_ALL_SWEEP_FLOOR |
+| 10 | 6060 | died | 118s | 0 | 93 | 54s | 0.00 | 51 | 49.3s | MEETS_ALL_SWEEP_FLOOR |
+| 11 | 1234 | died | 109s | 0 | 92 | 51s | 0.00 | 65 | 49.6s | MEETS_ALL_SWEEP_FLOOR |
+| 11 | 3141 | died | 127s | 0 | 125 | 49s | 0.00 | 71 | 46.8s | MEETS_ALL_SWEEP_FLOOR |
+| 11 | 6060 | died | 100s | 0 | 79 | 49s | 0.00 | 62 | 48.3s | MEETS_ALL_SWEEP_FLOOR |
+| 12 | 1234 | died | 329s | 0 | 250 | - | - | 27 | 48.4s | COMPARATOR_REQUIRED |
+| 12 | 3141 | died | 252s | 0 | 182 | - | - | 31 | 49.8s | COMPARATOR_REQUIRED |
+| 12 | 6060 | died | 177s | 0 | 99 | - | - | 36 | 54.2s | COMPARATOR_REQUIRED |
+| 13 | 1234 | died | 95s | 0 | 49 | 56s | 0.00 | 63 | 49.1s | MEETS_ALL_SWEEP_FLOOR |
+| 13 | 3141 | died | 97s | 0 | 55 | 51s | 0.00 | 59 | 57.4s | MEETS_ALL_SWEEP_FLOOR |
+| 13 | 6060 | died | 96s | 0 | 59 | 51s | 0.00 | 65 | 48.1s | MEETS_ALL_SWEEP_FLOOR |
 
 ## Current findings
 
-- Hard invariant violations: 3
-- Runs meeting the all-Sweep failure floor: 30
+- Hard invariant violations: 5
+- Runs meeting the all-Sweep failure floor: 28
 - Round 12 runs awaiting a competent-strategy comparator: 3
 
 A violation is a measured balance finding, not a test-runner failure. Parameter tuning should reduce violations without silently regenerating acceptance criteria.

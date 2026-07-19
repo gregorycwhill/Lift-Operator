@@ -136,6 +136,12 @@ window.setLiftTarget = function(liftIndex, targetFloor) {
     if (!Registry.gameActive) return;
     
     if (Registry.lifts[liftIndex]) {
+        const lift = Registry.lifts[liftIndex];
+        if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.isFloorInLiftZone(lift, targetFloor)) {
+            if (window.Game.Audio) window.Game.Audio.publish('ui_error', { reason: 'floor-outside-zone' });
+            if (typeof GameUI === 'function') GameUI().showToast?.(`Lift ${liftIndex + 1} is zoned for ${lift.serviceLower === 0 ? 'G' : lift.serviceLower}–${lift.serviceUpper}.`);
+            return;
+        }
         Registry.roundStats.manualClicks++;
         
         Registry.lifts[liftIndex].targetFloor = targetFloor;
@@ -197,11 +203,13 @@ window.resetAttemptTelemetry = function() {
 };
 
 window.getRoundDefinition = function(round) {
-    const supportedRound = Math.max(1, Math.min(13, parseInt(round) || 1));
+    const supportedRound = Math.max(1, Math.min(20, parseInt(round) || 1));
     const configured = Config.GAME_DATA.rounds[supportedRound];
+    const liftOverride = Number(Config[`liftsR${supportedRound}`]);
     return {
         round: supportedRound,
-        ...configured
+        ...configured,
+        lifts: Number.isFinite(liftOverride) && Config.debugMode ? Math.max(1, Math.min(10, liftOverride)) : configured.lifts
     };
 };
 
@@ -214,7 +222,9 @@ window.createLiftState = function(id) {
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
         sardineScored: false, isDoubleDecker: false,
         state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,
-        lastEffectiveCapacity: Config.liftCapacity
+        lastEffectiveCapacity: Config.liftCapacity,
+        serviceLower: 0,
+        serviceUpper: Math.max(0, Config.numFloors - 1)
     };
 };
 
@@ -246,15 +256,22 @@ window.createRoundState = function(round, seed, options = {}) {
         gymFloor: -1
     };
 
-    if (definition.round === 8) {
+    if (definition.round === 8 || definition.vipEvent === true) {
         state.vipTargetTime = now + (window.getRandomInt(Config.vipSpawnMinSec, Config.vipSpawnMaxSec) * 1000);
     }
-    if (definition.round === 9) {
+    if (definition.round === 9 || definition.rooftopEvent === true) {
         state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
     }
     if (definition.round >= 11) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
     }
+
+    // Service zoning starts as full-building coverage. Players can narrow each
+    // lift's inclusive band in the Workshop once the scale rounds introduce it.
+    state.lifts.forEach(lift => {
+        lift.serviceLower = 0;
+        lift.serviceUpper = definition.floors - 1;
+    });
 
     return state;
 };
@@ -377,7 +394,7 @@ window.completeRound = function(reason = 'completed') {
 
     Registry.highestUnlockedRound = Math.max(
         Registry.highestUnlockedRound,
-        Math.min(13, Registry.stats.round + 1)
+        Math.min(20, Registry.stats.round + 1)
     );
 
     const ui = GameUI();
@@ -386,7 +403,7 @@ window.completeRound = function(reason = 'completed') {
 };
 
 window.advanceToRound = function(targetRound) {
-    if (targetRound > 13) {
+    if (targetRound > 20) {
         const ui = GameUI();
         if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("You Won!");
         return;
@@ -397,7 +414,7 @@ window.advanceToRound = function(targetRound) {
 window.resetGame = function() {
     if (Config.debugMode) {
         Registry.points = 99999;
-        Registry.highestUnlockedRound = 11;
+        Registry.highestUnlockedRound = 20;
     } else {
         Registry.points = 0;
         Registry.highestUnlockedRound = 1;
@@ -483,7 +500,7 @@ window.initializeEngine = function() {
     }
 
     if (Config.debugMode) {
-        Registry.highestUnlockedRound = 11;
+        Registry.highestUnlockedRound = 20;
         Registry.points = 99999;
     } else {
         Registry.points = 0;

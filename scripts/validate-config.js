@@ -34,7 +34,7 @@ assert(
 );
 
 const rounds = design.rounds;
-for (let round = 1; round <= 13; round++) {
+for (let round = 1; round <= 20; round++) {
     const value = rounds[round];
     assert(value, `Missing round ${round}.`);
     if (!value) continue;
@@ -130,4 +130,4 @@ if (errors.length) {
     process.exit(1);
 }
 
-console.log(`Config valid: balance ${design.balanceVersion}, 13 rounds, ${Object.keys(design.powerups).length} power-ups.`);
+console.log(`Config valid: balance ${design.balanceVersion}, ${Object.keys(rounds).length} rounds, ${Object.keys(design.powerups).length} power-ups.`);

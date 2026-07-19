@@ -27,6 +27,7 @@ window.startRoundCountdown = function(seconds = 5) {
     const countdown = document.getElementById('roundCountdown');
     const value = document.getElementById('roundCountdownValue');
     let remaining = Math.max(0, seconds);
+    Registry.countdownRemaining = remaining;
     if (countdown) countdown.classList.remove('hidden');
     if (value) value.textContent = String(remaining);
 
@@ -56,6 +57,7 @@ window.startRoundCountdown = function(seconds = 5) {
     }
     Registry.roundCountdownTimer = setInterval(() => {
         remaining--;
+        Registry.countdownRemaining = remaining;
         if (remaining <= 0) begin();
         else if (value) value.textContent = String(remaining);
     }, 1000);
@@ -211,7 +213,7 @@ window.initializeUI = function() {
         const roundOverlay = document.getElementById("roundModalOverlay");
         if (roundOverlay) roundOverlay.style.display = "none";
         
-        window.startRoundCountdown(5);
+        window.startRoundCountdown(Math.max(5, Registry.lifts.length * 3));
     });
 
     bind("continueToBriefingBtn", () => {
@@ -237,7 +239,9 @@ window.initializeUI = function() {
     bind("closeLbBtn", () => {
         const lbOverlay = document.getElementById("leaderboardOverlay");
         if (lbOverlay) lbOverlay.style.display = "none";
-        if (typeof engine.resume === "function") engine.resume();
+        if (Registry.roundCountdownActive) {
+            if (typeof window.startRoundCountdown === 'function') window.startRoundCountdown(Math.max(0, Registry.countdownRemaining || 0));
+        } else if (typeof engine.resume === "function") engine.resume();
         if (window.Game.Audio) window.Game.Audio.setContext('gameplay');
         if (typeof ui.draw === "function") ui.draw();
     });

@@ -19,10 +19,11 @@ window.buildWorld = function() {
     
     for (let f = Config.numFloors - 1; f >= 0; f--) {
         const row = document.createElement('div'); 
-        row.className = 'floor';
+        row.className = 'floor floor-row';
         row.id = `floor-row-${f}`;
         
-        const labelText = (f === 0 ? 'G' : f);
+        const isCheckoutRound = Boolean(Config.GAME_DATA.rounds[Registry.stats.round]?.checkoutEvent) || Registry.stats.round === 7;
+        const labelText = (f === 0 ? (isCheckoutRound ? '🧳' : 'G') : f);
         const label = document.createElement('div');
         label.className = 'label';
         if (f === Config.numFloors - 1 && Registry.sunsetActive) {

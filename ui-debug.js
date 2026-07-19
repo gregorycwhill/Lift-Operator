@@ -105,9 +105,10 @@ window.renderDebugMenu = function() {
         if (typeof Telemetry === 'undefined') return;
         consoleDiv.innerHTML = Telemetry.logs.map(log => {
             const color = log.importance === 'error' ? '#e74c3c' : (log.importance === 'warning' ? '#f1c40f' : '#bdc3c7');
+            const plainCategory = ({ PHYSICS: 'Game engine', RENDER: 'Display', VM: 'Automation', SYSTEM: 'System' })[log.category] || log.category;
             return `<div style="margin-bottom: 4px; border-bottom: 1px solid #34495e; padding-bottom: 2px;">
                 <span style="color: #95a5a6;">[${log.timestamp}]</span> 
-                <span style="color: #3498db; font-weight: bold;">[${log.category}]</span> 
+                <span style="color: #3498db; font-weight: bold;">[${plainCategory}]</span> 
                 <span style="color: ${color};">${log.message}</span>
             </div>`;
         }).join('');
