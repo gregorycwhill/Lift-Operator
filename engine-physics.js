@@ -211,7 +211,7 @@ window.gameTick = function(timestamp) {
             g.status = window.getGuestStatusForWait(now - g.spawnTime);
             
             if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
-                if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('error');
+                if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('error', { id: 'rage' });
                 const livesLost = g.isVip ? Config.vipPenalty : 1;
                 Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
@@ -515,10 +515,11 @@ window.animationTick = function(timestamp) {
                     
                     if (indexToDrop !== -1) {
                         const p = lift.passengers.splice(indexToDrop, 1)[0];
+                        window.Game.Audio?.publish('guest_alighted', { id: p.type || 'guest', liftId: lift.id, floor: f });
                         const exitF = (isDouble && p.dest === f + 1) ? f + 1 : f;
                         
                         if (!forceExodus || p.dest === exitF) {
-                            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('ding');
+                            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('lift_arrived', { liftId: lift.id, floor: lift.currentFloor });
                             if (p.isSunset && exitF === Config.numFloors - 1) {
                                 p.isPartying = true;
                                 Registry.floors[exitF].waitingGuests.push(p);
@@ -569,6 +570,7 @@ window.animationTick = function(timestamp) {
                                     lift.sweepDirection = guestToBoard.dest > targetFloorToBoard ? 1 : -1;
                                 }
                                 lift.passengers.push(guestToBoard);
+                                window.Game.Audio?.publish('guest_boarded', { id: guestToBoard.type || 'guest', liftId: lift.id, floor: f });
                                 performedAction = true;
                                 lift.stateProgress = 0;
                                 lift.lastBoardingWeight = guestToBoard.boardingWeight || (guestToBoard.type === 'room-service' ? 3.0 : (guestToBoard.isGymBro ? 2.0 : 1.0));

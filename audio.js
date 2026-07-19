@@ -90,8 +90,8 @@ window.Game.Audio = (function () {
         const pulse = () => { if (currentContext === 'gameplay') tone(psi < 0.65 ? 'hazard' : 'door', musicGain); };
         musicTimer = setInterval(pulse, 2600);
     }
-    function setContext(next) { currentContext = next || 'menu'; if (initialized) startMusic(); emit('context_changed', { context: currentContext }); }
-    function setPsi(value) { const numeric = Number(value); if (Number.isFinite(numeric)) psi = Math.max(0, Math.min(2, numeric)); }
+    function setContext(next) { currentContext = next || 'menu'; init(); if (initialized) startMusic(); emit('context_changed', { context: currentContext }); }
+    function setPsi(value) { const numeric = Number(value); if (!Number.isFinite(numeric)) return; const previous = psi; psi = Math.max(0, Math.min(2, numeric)); if (initialized && currentContext === 'gameplay' && Math.abs(previous - psi) >= 0.08) startMusic(); }
     function play(name) { init(); if (!playBuffer(name === 'door' ? 'door' : name)) tone(name); emit('effect_played', { name }); }
     function on(name, handler) { if (typeof handler !== 'function') return () => {}; const list = listeners.get(name) || []; list.push(handler); listeners.set(name, list); return () => listeners.set(name, list.filter(fn => fn !== handler)); }
     function publish(name, payload = {}) { init(); const mapped = eventMap[name]; if (name === 'victory' && !playBuffer('victory')) tone('victory'); else if (name === 'guest_boarded' && !playBuffer('door')) tone(mapped, sfxGain, payload.id || name); else if (mapped) tone(mapped, sfxGain, payload.id || name); emit(name, payload); }
@@ -100,7 +100,8 @@ window.Game.Audio = (function () {
     function getSettings() { return { ...settings }; }
     ['pointerdown', 'keydown', 'touchstart'].forEach(type => document.addEventListener(type, init, { once: true, passive: true }));
 
-    return { init, play, publish, on, setContext, setPsi, setMuted, setVolume, getSettings };
+    function getStatus() { return { initialized, context: currentContext, menuLoaded: !!buffers.menu, baseLoaded: !!buffers.base, pressureLoaded: !!buffers.pressure, victoryLoaded: !!buffers.victory, doorLoaded: !!buffers.door, muted: settings.muted }; }
+    return { init, play, publish, on, setContext, setPsi, setMuted, setVolume, getSettings, getStatus };
 })();
 
 window.Game.AudioBus = window.Game.Audio;
