@@ -63,7 +63,7 @@ window.Game.Simulator = {
             updateLiftAutomationUI: () => {},
             triggerDefenestration: () => {}
         };
-        window.Game.Audio = { play: () => {} };
+        window.Game.Audio = { play: () => {}, publish: () => {}, setPsi: () => {}, setContext: () => {} };
 
         Registry.autoPilotActive = false;
         Registry.seed = seed;

@@ -183,12 +183,14 @@ window.gameTick = function(timestamp) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
             if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
                 lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec) * 60; // Convert sec to roughly 60fps ticks
+                window.Game.Audio?.publish('hazard_started', { id: 'jam', liftId: lift.id });
             }
             
             if (Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
                 if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
                     lift.stinkTimer = Config.fartStinkSec * 60; // Convert sec to ticks
+                    window.Game.Audio?.publish('hazard_started', { id: 'stink', liftId: lift.id });
                     const farterIndex = window.getRandomInt(0, lift.passengers.length - 1);
                     lift.passengers[farterIndex].isFarter = true;
                 }

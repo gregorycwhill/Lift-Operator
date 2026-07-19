@@ -296,6 +296,8 @@ The game must help the player diagnose:
 
 Round review should report actionable information, not just totals.
 
+Planned audio reinforces operational state without becoming a hidden rule system: effects make power-ups and hazards recognizable, gameplay music signals pressure, menus/modals remain neutral and quiet, and victory has a distinct fanfare. Pressure-derived audio must not expose developer telemetry or influence simulation decisions.
+
 ## 13. Scope boundaries
 
 Current stabilization excludes:
@@ -307,6 +309,8 @@ Current stabilization excludes:
 - Theme systems.
 - Mod/plugin APIs.
 - Major visual redesign.
+
+The approved audio workstream is a post-stabilization feedback improvement, not a theme system or new mechanic. Its implementation boundary, attribution requirements, and acceptance tests are maintained in `IMPLEMENTATION_HANDOFF.md` Section 15.
 
 These may return after the core progression, economy, configuration, testing, and execution-containment model are stable.
 

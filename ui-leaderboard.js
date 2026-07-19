@@ -82,6 +82,8 @@ window.shareGame = function() {
  * Open the leaderboard overlay and populate it with scores.
  */
 window.showLeaderboard = function(titleText) {
+    if (window.Game.Audio) window.Game.Audio.setContext('menu');
+    if (titleText === 'You Won!' && window.Game.Audio) window.Game.Audio.publish('victory');
     const engine = GameEngine();
     const ui = GameUI();
     if (typeof engine.pause === 'function') engine.pause(); 
@@ -109,6 +111,12 @@ window.showLeaderboard = function(titleText) {
     if (shareBtn) shareBtn.style.display = 'block';
 
     const listContainer = document.getElementById('lbList');
+    const audio = window.Game.Audio;
+    const mute = document.getElementById('audioMute'), music = document.getElementById('audioMusic'), sfx = document.getElementById('audioSfx');
+    if (audio && mute && music && sfx) {
+        const settings = audio.getSettings(); mute.checked = settings.muted; music.value = settings.music; sfx.value = settings.sfx;
+        mute.onchange = () => audio.setMuted(mute.checked); music.oninput = () => audio.setVolume('music', music.value); sfx.oninput = () => audio.setVolume('sfx', sfx.value);
+    }
     if (listContainer) {
         listContainer.innerHTML = '';
         const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));

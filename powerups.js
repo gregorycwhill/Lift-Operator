@@ -361,7 +361,7 @@ const PowerUps = {
         const ability = this.catalog[powerUpId].tiers[tierIndex];
         
         if (ability.target === 'instant') {
-            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('powerup');
+            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: powerUpId, tier: tierIndex });
             ability.execute(null, null);
             this.consumeFromInventory(powerUpId, tierIndex);
             this.flashScreen('rgba(46, 204, 113, 0.6)'); 
@@ -400,7 +400,7 @@ const PowerUps = {
         }
 
         const ability = this.catalog[abilityId].tiers[this.activeTargeting.tier];
-        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.play('powerup');
+        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: abilityId, tier: this.activeTargeting.tier });
         ability.execute(liftId, floorId);
         
         this.flashScreen('rgba(46, 204, 113, 0.6)'); 

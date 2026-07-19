@@ -25,7 +25,7 @@ The documents have distinct responsibilities:
 
 | Document | Purpose | Authority |
 | --- | --- | --- |
-| [IMPLEMENTATION_HANDOFF.md](IMPLEMENTATION_HANDOFF.md) | Self-contained remaining-work architecture, thresholds, executable simulation/search plan, sequence, commands, risks, and stopping rules | Primary implementation authority |
+| [IMPLEMENTATION_HANDOFF.md](IMPLEMENTATION_HANDOFF.md) | Implementation authority: stabilization/balance handoff plus the approved planned audio architecture and acceptance tests | Primary implementation authority |
 | [Lift-Operator_GDD.md](Lift-Operator_GDD.md) | Product vision, player experience, rules, and design principles | Design intent |
 | [CURRENT_IMPLEMENTATION.md](CURRENT_IMPLEMENTATION.md) | What the current code actually does, including known inconsistencies | Implemented baseline |
 | [Game Play Map.md](Game%20Play%20Map.md) | Target round sequence, learning arc, problems, solution spaces, and tuning parameters | Target progression |
@@ -53,9 +53,9 @@ All specifications use the following terms:
 
 ## Current project phase
 
-The game is an entirely playable advanced prototype completing stabilization infrastructure and entering data-driven balance work.
+The game is a playable 13-round playtest build with canonical balance data, compact simulation reports, and a stabilized core loop.
 
-The immediate priorities are defined in `IMPLEMENTATION_HANDOFF.md`:
+The completed stabilization/balance programme remains recorded in `IMPLEMENTATION_HANDOFF.md`:
 
 1. Close remaining correctness, containment, canonical-data, and mechanic-test gaps.
 2. Add deterministic batch simulation, action replay, compact aggregation, and reproducibility checks.
@@ -63,7 +63,7 @@ The immediate priorities are defined in `IMPLEMENTATION_HANDOFF.md`:
 4. Use bounded code-driven search for Round 2 and Rounds 7–11/13.
 5. Verify economy feasibility, promote only the first gated candidate, then run human outlier testing.
 
-New power-ups, hazards, themes, profiles, and online services are outside the current focus.
+The next approved workstream is planned audio: an adaptive layered gameplay loop, quiet neutral menu/modal music, a victory fanfare, unique power-up and hazard effects, compact Leaderboard controls, and attribution. It is a plan only; its scope, boundaries, asset-discovery rules, and test gates are in `IMPLEMENTATION_HANDOFF.md` Section 15. It does not add mechanics, expose PSI, or change simulation outcomes.
 
 ## Local development and tests
 

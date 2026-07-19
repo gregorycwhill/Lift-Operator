@@ -312,6 +312,8 @@ These values are recorded for simulation and developer analysis only. They are n
 
 VIP losses are weighted by lives lost rather than counted as one defenestration. Round 12 records projected time to death but has no Survival Index because it has no remaining-time success boundary.
 
+PSI may additionally be supplied to the planned audio controller as an internal, read-only music-control signal. That use must not render PSI, expose it to automation, persist it in player saves, alter simulation timing/RNG, or feed back into balance decisions. The full audio boundary and tests are in `IMPLEMENTATION_HANDOFF.md` Section 15.
+
 ### Automation
 
 - Script identifier/version

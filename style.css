@@ -500,6 +500,13 @@ body {
 .leaderboard-list li:last-child { border-bottom: none; }
 .leaderboard-list li:nth-child(odd) { background-color: #fdfdfd; }
 .leaderboard-list li:nth-child(even) { background-color: #ecf0f1; }
+.audio-controls { display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap; margin:8px 0; font-size:12px; color:#566; }
+.audio-controls label { display:flex; gap:4px; align-items:center; }
+.audio-credits { margin-top:8px; font-size:11px; color:#667; text-align:left; }
+.audio-credits p { margin:5px 0; }
+.audio-attribution-scroller { overflow:hidden; white-space:nowrap; font-size:10px; color:#889; margin:4px 0 8px; }
+.audio-attribution-scroller span { display:inline-block; animation: audioCreditsScroll 22s linear infinite; }
+@keyframes audioCreditsScroll { from { transform:translateX(100%); } to { transform:translateX(-100%); } }
 
 /* Round Review Layout Framework */
 .review-outcome-message {

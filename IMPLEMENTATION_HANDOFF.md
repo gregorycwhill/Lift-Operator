@@ -827,3 +827,49 @@ Owner accepted this as a pass for playtesting, with no reproducible production f
 | 18 July 2026 | `0.2.3-r2-capacity-playtest` | Playtest tuning: lift capacity 15 in Rounds 1–3 only; Round 2 final spawn rate reduced 10% (`0.52` → `0.468`). No other balance parameters changed. |
 
 Append one row only when a candidate is canonically promoted or a plan-level owner decision changes an acceptance gate. Exploratory candidates belong in generated search summaries, not this log.
+
+## 15. Approved audio implementation plan (in progress)
+
+Audio is a post-stabilization feedback workstream. It must preserve the game's 90s arcade/chiptune character while remaining strictly observational: playback must never change engine state, simulation results, RNG, timers, guest or lift behaviour, economy, or automation decisions.
+
+Implementation checkpoint: the event-bus-compatible service, context handling, Leaderboard controls, selected menu
+track, provisional gameplay/pressure loops, victory fanfare, elevator cue, manifest, attribution, and focused browser
+tests are implemented. Final unique power-up/hazard recordings and cross-browser/mobile acceptance remain open.
+
+### 15.1 Boundary and architecture
+
+1. Replace direct gameplay playback calls with an `AudioEventBus` adapter. Production publishes named, payload-light events; the simulator installs a no-op adapter. The engine must not wait for, inspect, or recover from playback.
+2. Keep source modules responsible only for semantic events (`lift_arrived`, `guest_boarded`, `hazard_jam_started`, `powerup_turbo_used`), not filenames, gain, pitch, or Web Audio details.
+3. Add a browser audio service that owns Web Audio unlock/resume, asset loading, buses, rate limiting, deduplication, context teardown, and menu/gameplay context changes. Do not create one audio context per event.
+4. Add a checked-in asset manifest and attribution record before adding licensed assets. Each record must include stable event ID, filename, source URL, author, license/version, modification note, and required attribution text. Prefer CC0 or CC BY. Do not use NC or ND assets where distribution or modification would be restricted.
+5. Preserve the current helper only as a temporary fallback during migration; do not expand its procedural sound list into the production architecture.
+
+### 15.2 Soundscape and event catalogue
+
+- Gameplay uses one seamless adaptive loop with independent layers. Pressure raises tempo and/or layers smoothly; recovery removes intensity gradually. There are no track jumps on individual PSI samples.
+- Menus, briefing, shop, leaderboard, pause, and mid-game modal pauses use quiet neutral music. Pausing gameplay swaps or ducks the gameplay mix; it does not leave intense gameplay music running behind a modal.
+- Victory plays a distinct fanfare. Failure/retry, round start/countdown, and teardown must have explicit, non-overlapping context rules.
+- Provide recognizable unique effects for core lift/guest lifecycle actions and for **every** power-up and hazard. The final mapping is discovered and recorded in the manifest before implementation; it must not rely on generic placeholder sounds for two different power-ups or hazards.
+- Candidate core effects include lift arrival/door/boarding/alighting, successful and refused boarding, urgency, jam start/end, stink start/end, rooftop party start/release, VIP arrival, purchase, and UI confirmation/error.
+
+### 15.3 PSI and adaptive mapping
+
+PSI is permitted only as an internal read-only control signal for the music service. It remains developer-only: never render it, expose it to ordinary automation, add it to player saves, or use it to change game difficulty. Use bounded, smoothed thresholds/hysteresis so a noisy value cannot produce audible pumping. Round 12, which has no remaining-time PSI, must use a documented fallback pressure mapping or a stable default layer state.
+
+### 15.4 Controls, accessibility, and attribution
+
+- Put compact controls on the Leaderboard modal: mute, Music volume, and SFX volume. Persist preferences locally; default safely until a user gesture unlocks audio.
+- Respect browser autoplay restrictions. A failed decode, unsupported codec, blocked context, or unavailable audio device must leave the game fully playable and must not produce console-error loops.
+- Support current Chromium, Safari/WebKit, and mobile-sized interaction targets. Use conservative, widely supported Web Audio APIs and test touch/first-gesture unlock and context resume.
+- The Leaderboard includes a subtle side-scrolling attribution line and a readable, non-prominent Audio Credits section. The latter is the accessible source of truth; the scroller is supplementary. Keep matching attribution in the checked-in manifest and documentation.
+
+### 15.5 Delivery sequence and test gates
+
+1. Inventory CC0/CC BY chiptune assets and document candidates, license evidence, formats, sizes, and fallback.
+2. Define the event catalogue and manifest, then add a no-op-capable event bus and unit coverage before wiring production emitters.
+3. Implement user-gesture-safe mixer/context handling and the quiet menu/modal loop.
+4. Add the layered gameplay loop with PSI smoothing and the victory fanfare; then map core effects, each power-up, and each hazard.
+5. Add Leaderboard controls and both attribution presentations; verify no visual prominence or modal-layout harm.
+6. Run unit/integration/browser coverage for event routing, reset/teardown, context transitions, asset failure, first gesture, persistence, Chromium, WebKit/Safari, and mobile layouts. Run the full existing panel to prove audio remains simulation-neutral.
+
+Completion requires all listed audio tests to pass, an attribution-complete manifest, graceful no-audio operation, and no regression of deterministic simulation or player-facing telemetry boundaries.

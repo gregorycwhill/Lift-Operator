@@ -20,6 +20,7 @@ window.showToast = function(message) {
 };
 
 window.startRoundCountdown = function(seconds = 5) {
+    if (window.Game.Audio) window.Game.Audio.setContext('gameplay');
     if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
     Registry.gameActive = false;
     Registry.roundCountdownActive = true;
@@ -237,6 +238,7 @@ window.initializeUI = function() {
         const lbOverlay = document.getElementById("leaderboardOverlay");
         if (lbOverlay) lbOverlay.style.display = "none";
         if (typeof engine.resume === "function") engine.resume();
+        if (window.Game.Audio) window.Game.Audio.setContext('gameplay');
         if (typeof ui.draw === "function") ui.draw();
     });
 

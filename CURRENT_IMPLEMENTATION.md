@@ -314,6 +314,16 @@ The forecast combines recent weighted life-loss windows with guests expected to 
 
 Telemetry is included in isolated simulator results and can be exported through `Game.BalanceTelemetry.export()` for developer analysis. It has no player-facing rendering and is absent from the automation bridge.
 
+## Audio status and approved direction
+
+The current build now has an `AudioEventBus`-compatible browser service in `audio.js`, menu/gameplay context handling,
+Leaderboard mute/music/SFX controls, and checked-in manifest/attribution. The selected title loop plus provisional
+gameplay base, pressure layer, victory fanfare, and elevator-door cue are imported; procedural fallback remains active.
+
+The remaining audio work is in `IMPLEMENTATION_HANDOFF.md` Section 15: complete asset review, replace remaining
+fallback tones, and complete unique per-power-up/hazard mappings plus Safari/mobile coverage. PSI may drive
+internal music layers and tempo, but remains unavailable to player UI, automation, saved state, and balance decisions.
+
 ## All-Sweep balance matrix
 
 `scripts/run-balance-matrix.js` runs three fixed seeds for each round from 2–13 with every lift on Sweep and no manual decisions, policy changes, or power-ups. Reports are committed under `reports/` and tied to hashes of the canonical balance data and matrix definition.

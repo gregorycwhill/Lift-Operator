@@ -458,6 +458,10 @@ Later difficulty should primarily increase:
 
 It should not primarily increase raw hazard frequency.
 
+### Planned audio feedback
+
+Audio is a feedback layer, not a new mechanic or difficulty lever. The planned soundscape uses one adaptive gameplay loop whose layers and tempo respond internally to pressure, while menus and modal pauses use quiet neutral music and victory uses a separate fanfare. Each power-up and hazard receives a distinct, learnable effect. It must never change guest, lift, hazard, RNG, or timer behaviour. The detailed implementation and Safari/mobile test requirements are in `IMPLEMENTATION_HANDOFF.md` Section 15.
+
 ## 8. Target success bands
 
 These are initial design targets for human playtesting, not automated pass criteria.

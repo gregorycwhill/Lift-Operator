@@ -180,6 +180,13 @@
             <div class="modal-content">
                 <h2 id="lbTitle">Leaderboard</h2>
                 <ul id="lbList" class="leaderboard-list"></ul>
+                <section class="audio-controls" aria-label="Audio controls">
+                    <label><input type="checkbox" id="audioMute"> Mute</label>
+                    <label>Music <input type="range" id="audioMusic" min="0" max="1" step="0.05"></label>
+                    <label>SFX <input type="range" id="audioSfx" min="0" max="1" step="0.05"></label>
+                </section>
+                <details class="audio-credits"><summary>Audio Credits</summary><p id="audioAttribution">Procedural fallback tones by Lift Operator. Licensed asset credits will be listed here when imported.</p></details>
+                <div class="audio-attribution-scroller" aria-label="Audio attribution"><span>Audio: Lift Operator procedural fallback tones • CC asset credits are listed in Audio Credits</span></div>
                 <button id="lbRestartBtn" class="btn btn-red btn-full-width btn-margin-top">Restart Game</button>
                 <button id="closeLbBtn" class="btn btn-gray btn-full-width btn-margin-top">Resume</button>
             </div>

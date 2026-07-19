@@ -156,3 +156,14 @@ Every authoritative run includes:
 - Links or paths to telemetry artifacts.
 
 The historical statement that the suite achieved 15/15 should not be used as a current quality gate; several of those checks require replacement under the new strategy.
+
+## Milestone I - Planned audio system
+
+This milestone is not implemented. The complete architecture and acceptance boundary are in `IMPLEMENTATION_HANDOFF.md` Section 15.
+
+- [x] Unit-test AudioEventBus routing, bounded fallback playback, no-op simulation adapter, and mute/volume persistence without a real audio device.
+- [ ] Test gameplay, menu, modal-pause, resume, victory, retry, and teardown transitions; no music layer or effect may leak across reset or round change.
+- [ ] Test one stable event mapping for every power-up and hazard, plus core lift/guest lifecycle effects.
+- [ ] Test PSI-to-music mapping with clamped/smoothed inputs and prove it cannot alter engine state, RNG, timing, saves, player UI telemetry, or automation sensors.
+- [ ] Browser-test first-gesture unlock, suspended/resumed contexts, mute and independent music/SFX sliders, and graceful failed-asset handling on Chromium, WebKit/Safari, and mobile-sized targets.
+- [ ] Validate final asset licenses/source URLs and required CC attribution. The fallback manifest, attribution text, and both Leaderboard presentations are present and browser-tested.
