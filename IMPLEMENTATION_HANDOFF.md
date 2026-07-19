@@ -811,6 +811,13 @@ Round 13 empty-lift gravity/Turbo top-floor coverage passes; repeated effect ico
 simulation clock when available. Remaining full-campaign verification is still required before treating the issue as
 closed.
 
+Playtest follow-up `0.2.4-credit-rooftop-gym-playtest`: earned Credits use a 0.1 multiplier with prices unchanged;
+party guests cannot board until release; jam maximum is 20 seconds; Gym Bros persist in Rounds 11–13; and the Gym
+Floor is rendered with the flex symbol.
+
+The subsequent full panel produced one transient Protocol Beta kill-switch failure; isolated rerun passed immediately.
+Owner accepted this as a pass for playtesting, with no reproducible production failure identified.
+
 | Date | Commit/balance | Decision |
 | --- | --- | --- |
 | 18 July 2026 | `f10f135` / `0.2.2-round-2-accessibility` | Handoff baseline. R2 Underloaded; R3–6 Contested; R7–11/13 Overloaded; R12 within Endurance window. No implementation or balance changes made during handoff preparation. |

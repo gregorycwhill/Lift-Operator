@@ -1,16 +1,18 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.3-r2-capacity-playtest
+// Balance version: 0.2.4-credit-rooftop-gym-playtest
 window.GameBalanceData = {
-  "balanceVersion": "0.2.3-r2-capacity-playtest",
+  "balanceVersion": "0.2.4-credit-rooftop-gym-playtest",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
-      "remainingTimeIntervalSec": 10
+      "remainingTimeIntervalSec": 10,
+      "creditMultiplier": 0.1
     },
     "endurance": {
       "survivalIntervalSec": 30,
       "serviceIntervalGuests": 10,
+      "creditMultiplier": 0.1,
       "cap": 50
     }
   },
@@ -379,7 +381,7 @@ window.GameBalanceData = {
     "jam": {
       "chancePerSec": 0.005,
       "minSec": 10,
-      "maxSec": 25
+      "maxSec": 20
     },
     "stink": {
       "chancePerSec": 0.005,

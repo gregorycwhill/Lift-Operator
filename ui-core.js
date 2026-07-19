@@ -25,7 +25,12 @@ window.buildWorld = function() {
         const labelText = (f === 0 ? 'G' : f);
         const label = document.createElement('div');
         label.className = 'label';
-        if (Registry.gymFloor && f === Registry.gymFloor) {
+        if (f === Config.numFloors - 1 && Registry.sunsetActive) {
+            label.innerText = '🍹';
+            label.setAttribute('aria-label', `Rooftop Party, floor ${f}`);
+            label.style.fontSize = '20px';
+            label.style.background = '#8e44ad';
+        } else if (Registry.gymFloor && f === Registry.gymFloor) {
             label.innerText = '💪';
             label.style.fontSize = '20px';
             label.style.background = '#f1c40f';
@@ -358,10 +363,13 @@ window.draw = function() {
     const ui = GameUI();
     const topFloorRow = document.getElementById(`floor-row-${Config.numFloors - 1}`);
     if (topFloorRow) {
+        const topLabel = topFloorRow.querySelector('.label');
         if (Registry.sunsetActive) { 
             if (!topFloorRow.classList.contains('rooftop-party')) topFloorRow.classList.add('rooftop-party'); 
+            if (topLabel) { topLabel.innerText = '🍹'; topLabel.setAttribute('aria-label', `Rooftop Party, floor ${Config.numFloors - 1}`); }
         } else { 
             if (topFloorRow.classList.contains('rooftop-party')) topFloorRow.classList.remove('rooftop-party'); 
+            if (topLabel) { topLabel.innerText = Config.numFloors - 1; topLabel.removeAttribute('aria-label'); }
         }
     }
 

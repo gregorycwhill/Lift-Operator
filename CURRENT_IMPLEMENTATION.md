@@ -297,6 +297,15 @@ coverage confirms empty lifts can reach floor 14 without changing legal bounds, 
 instead of accumulating. Full expiry behavior remains covered by the shared timer path and should be rechecked during
 the next full campaign run.
 
+### Playtest follow-up: Credits, rooftop party, jams, and Gym Bros
+
+Balance `0.2.4-credit-rooftop-gym-playtest` reduces earned round Credits with a canonical `0.1` multiplier while
+leaving Supply Closet prices unchanged. Rooftop party guests are non-boardable until release, jams are capped at 20
+seconds, and Gym Bros/Gym Floor persist through Rounds 11–13. The Gym Floor label uses the flex symbol.
+
+The post-change full panel completed 60 tests with one transient Monkey Protocol Beta kill-switch failure; that test
+passed on immediate isolated rerun and is accepted as a pass for this playtest push.
+
 ## Design-only balance telemetry
 
 `balance-telemetry.js` samples operational state once per game second. It records arrivals, deliveries, queue and onboard work in progress, journey time, Little's Law diagnostics, productive lift utilisation, manual decision rate, critical exposure, weighted life loss, and the Projected Survival Index.

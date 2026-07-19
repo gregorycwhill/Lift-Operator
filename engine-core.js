@@ -252,7 +252,7 @@ window.createRoundState = function(round, seed, options = {}) {
     if (definition.round === 9) {
         state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
     }
-    if (definition.round === 11) {
+    if (definition.round >= 11) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
     }
 

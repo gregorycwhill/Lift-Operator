@@ -34,6 +34,7 @@ window.isGuestDirectionCompatible = function(lift, guest, floor) {
 };
 
 window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity) {
+    if (guest.isPartying) return false;
     const guestWeight = guest.boardingWeight || (guest.type === 'room-service' ? 3 : (guest.isGymBro ? 2 : 1));
     if (Registry.getLiftWeight(lift) + guestWeight > maxCapacity) return false;
     if (guest.status === GuestStatus.RAGE) return false;

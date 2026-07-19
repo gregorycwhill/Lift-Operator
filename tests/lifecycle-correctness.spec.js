@@ -682,7 +682,7 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     ]);
     expect(result.r2SpawnStart).toBe(0.4);
     expect(result.r2SpawnEnd).toBe(0.468);
-    expect(result.version).toBe('0.2.3-r2-capacity-playtest');
+    expect(result.version).toBe('0.2.4-credit-rooftop-gym-playtest');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -716,6 +716,21 @@ test('Round 13 gravity reaches the top floor and Turbo does not change floor bou
     });
     expect(result.normal).toEqual({ floor: 14, target: 14 });
     expect(result.turbo).toEqual({ floor: 14, target: 14 });
+});
+
+test('Round 10 Turbo preserves top-floor access', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(10, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        const top = Config.numFloors - 1;
+        lift.targetFloor = top;
+        lift.turboTimer = 20;
+        lift.activeTurboSpeed = 0.1;
+        for (let frame = 0; frame < 240; frame++) animationTick(300000 + frame * 16);
+        return { target: lift.targetFloor, floor: Math.round(lift.pos / Registry.floorHeight) };
+    });
+    expect(result).toEqual({ target: 14, floor: 14 });
 });
 
 test('effect icons refresh and expire against the simulation clock', async ({ page }) => {
@@ -773,7 +788,33 @@ test('canonical payout parameters drive standard and Endurance awards', async ({
         return { standard, endurance, capped };
     });
 
-    expect(result).toEqual({ standard: 9, endurance: 6, capped: 50 });
+    expect(result).toEqual({ standard: 0, endurance: 0, capped: 50 });
+});
+
+test('party guests remain at the rooftop until the event releases them', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const lift = { passengers: [], automation: 'manual', manualOverride: false, sweepDirection: 1 };
+        const partyGuest = { dest: 4, status: GuestStatus.HAPPY, isPartying: true };
+        const releasedGuest = { dest: 4, status: GuestStatus.HAPPY, isPartying: false };
+        return {
+            partyBoards: Game.Engine.canGuestBoardLift(lift, partyGuest, 14, false, 10),
+            releasedBoards: Game.Engine.canGuestBoardLift(lift, releasedGuest, 14, false, 10)
+        };
+    });
+    expect(result).toEqual({ partyBoards: false, releasedBoards: true });
+});
+
+test('Gym Floor persists after introduction and jam duration stays within 20 seconds', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const floors = [11, 12, 13].map(round => {
+            initializeRound(round, { showBriefing: false });
+            return { round, gymFloor: Registry.gymFloor };
+        });
+        return { floors, jamMax: Config.jamMaxSec, multiplier: Config.GAME_DATA.payouts.standard.creditMultiplier };
+    });
+    expect(result.floors.every(item => item.gymFloor > 0 && item.gymFloor < 14)).toBe(true);
+    expect(result.jamMax).toBe(20);
+    expect(result.multiplier).toBe(0.1);
 });
 
 test('golden onboarding seed rewards Sweep over an idle manual lift', async ({ page }) => {

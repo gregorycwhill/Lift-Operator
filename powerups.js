@@ -44,7 +44,7 @@ const PowerUps = {
             const endurance = payouts.endurance;
             const survivalPoints = Math.floor((Registry.enduranceSeconds || 0) / endurance.survivalIntervalSec);
             const servicePoints = Math.floor((Registry.roundStats.servedThisRound || 0) / endurance.serviceIntervalGuests);
-            return Math.min(endurance.cap, survivalPoints + servicePoints);
+            return Math.min(endurance.cap, Math.floor((survivalPoints + servicePoints) * (endurance.creditMultiplier || 1)));
         }
         // Tally points earned this round + time bonus
         const standard = payouts.standard;
@@ -52,7 +52,7 @@ const PowerUps = {
         if (Registry.stats.timeLeft > 0) {
             points += Math.floor(Registry.stats.timeLeft / standard.remainingTimeIntervalSec);
         }
-        return points;
+        return Math.floor(points * (standard.creditMultiplier || 1));
     },
 
     showEffectOnLift: function(liftId, icon) {
