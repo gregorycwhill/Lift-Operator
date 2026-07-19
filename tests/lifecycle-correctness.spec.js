@@ -733,6 +733,22 @@ test('Round 10 Turbo preserves top-floor access', async ({ page }) => {
     expect(result).toEqual({ target: 14, floor: 14 });
 });
 
+test('Double-Decker Turbo preserves the top-floor target', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.stats.round = 13;
+        Registry.floors = Array.from({ length: Config.numFloors }, (_, id) => ({ id, waitingGuests: [] }));
+        Registry.lifts = [createLiftState(0)];
+        const lift = Registry.lifts[0];
+        lift.isDoubleDecker = true;
+        lift.targetFloor = Config.numFloors - 1;
+        lift.turboTimer = 10;
+        lift.pos = (Config.numFloors - 2) * Registry.floorHeight;
+        window.gameTick(window.Game.virtualTime || Date.now());
+        return { target: lift.targetFloor, top: Config.numFloors - 1 };
+    });
+    expect(result.target).toBe(result.top);
+});
+
 test('effect icons refresh and expire against the simulation clock', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(13, { showBriefing: false });

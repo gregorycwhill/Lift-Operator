@@ -14,14 +14,16 @@
     "gameplay-pressure-chip-bit-danger": { "file": "assets/audio/gameplay-pressure-chip-bit-danger.mp3", "source": "https://opengameart.org/content/chip-bit-danger", "author": "Sudocolon", "license": "CC0", "modification": "None; looped playback only" },
     "victory": { "file": "assets/audio/victory.mp3", "source": "https://opengameart.org/content/victory", "author": "celestialghost8", "license": "CC0", "modification": "None" },
     "elevator-door": { "file": "assets/audio/elevator-door.wav", "source": "https://opengameart.org/content/elevatordoor", "author": "PagDev", "license": "CC0", "modification": "None"
+    },
+    "sfx-pack-001": { "file": "assets/audio/sfx/", "source": "https://opengameart.org/content/8-bit-sound-effect-pack-vol-001", "author": "Deva (@Shades)", "license": "CC0", "modification": "Renamed selected WAV files; no audio edits" }
     }
   },
   "events": {
     "lift_arrived": { "asset": null, "fallback": "ding" },
     "guest_boarded": { "asset": "assets/audio/elevator-door.wav", "fallback": "door" },
     "guest_alighted": { "asset": null, "fallback": "ding" },
-    "powerup_used": { "asset": null, "fallback": "powerup", "uniquePerPayloadId": true },
-    "hazard_started": { "asset": null, "fallback": "hazard", "uniquePerPayloadId": true },
+    "powerup_used": { "asset": "assets/audio/sfx/{id}.wav", "fallback": "powerup", "uniquePerPayloadId": true },
+    "hazard_started": { "asset": "assets/audio/sfx/{id}.wav", "fallback": "hazard", "uniquePerPayloadId": true },
     "hazard_ended": { "asset": null, "fallback": "ding" },
     "victory": { "asset": "assets/audio/victory.mp3", "fallback": "victory" },
     "error": { "asset": null, "fallback": "error" }

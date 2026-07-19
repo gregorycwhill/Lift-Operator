@@ -37,3 +37,10 @@ test('audio manifest and attribution are available', async ({ request }) => {
     expect(manifest.ok()).toBe(true);
     expect((await manifest.json()).events).toHaveProperty('powerup_used');
 });
+
+test('provisional power-up and hazard effect assets are available', async ({ request }) => {
+    for (const file of ['powerup-wrench.wav', 'powerup-turbo.wav', 'powerup-special.wav', 'hazard-jam.wav', 'hazard-stink.wav']) {
+        const response = await request.get(`http://127.0.0.1:5500/assets/audio/sfx/${file}`);
+        expect(response.ok()).toBe(true);
+    }
+});

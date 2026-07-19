@@ -21,7 +21,7 @@ window.Game.Audio = (function () {
     };
     let context = null, masterGain = null, musicGain = null, sfxGain = null, menuBuffer = null, menuSource = null;
     const buffers = {}, musicSources = [];
-    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-chiploop.mp3', pressure: 'assets/audio/gameplay-pressure-chip-bit-danger.mp3', victory: 'assets/audio/victory.mp3', door: 'assets/audio/elevator-door.wav' };
+    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-chiploop.mp3', pressure: 'assets/audio/gameplay-pressure-chip-bit-danger.mp3', victory: 'assets/audio/victory.mp3', door: 'assets/audio/elevator-door.wav', wrench: 'assets/audio/sfx/powerup-wrench.wav', turbo: 'assets/audio/sfx/powerup-turbo.wav', musak: 'assets/audio/sfx/powerup-special.wav', freshener: 'assets/audio/sfx/hazard-stink.wav', tardis: 'assets/audio/sfx/powerup-tardis.wav', doors: 'assets/audio/sfx/powerup-wide-doors.wav', groupThink: 'assets/audio/sfx/powerup-group-think.wav', doubleDecker: 'assets/audio/sfx/powerup-special.wav', openPlan: 'assets/audio/sfx/powerup-tardis.wav', jam: 'assets/audio/sfx/hazard-jam.wav', stink: 'assets/audio/sfx/hazard-stink.wav' };
     let initialized = false, currentContext = 'menu', psi = 1, musicTimer = null;
     let settings = { muted: false, music: 0.22, sfx: 0.50 };
     const listeners = new Map();
@@ -94,7 +94,7 @@ window.Game.Audio = (function () {
     function setPsi(value) { const numeric = Number(value); if (!Number.isFinite(numeric)) return; const previous = psi; psi = Math.max(0, Math.min(2, numeric)); if (initialized && currentContext === 'gameplay' && Math.abs(previous - psi) >= 0.08) startMusic(); }
     function play(name) { init(); if (!playBuffer(name === 'door' ? 'door' : name)) tone(name); emit('effect_played', { name }); }
     function on(name, handler) { if (typeof handler !== 'function') return () => {}; const list = listeners.get(name) || []; list.push(handler); listeners.set(name, list); return () => listeners.set(name, list.filter(fn => fn !== handler)); }
-    function publish(name, payload = {}) { init(); const mapped = eventMap[name]; if (name === 'victory' && !playBuffer('victory')) tone('victory'); else if (name === 'guest_boarded' && !playBuffer('door')) tone(mapped, sfxGain, payload.id || name); else if (mapped) tone(mapped, sfxGain, payload.id || name); emit(name, payload); }
+    function publish(name, payload = {}) { init(); const mapped = eventMap[name]; const asset = name === 'powerup_used' ? payload.id : name === 'hazard_started' ? payload.id : name === 'victory' ? 'victory' : name === 'guest_boarded' ? 'door' : null; if (asset && !playBuffer(asset)) { if (mapped) tone(mapped, sfxGain, payload.id || name); } else if (!asset && mapped) tone(mapped, sfxGain, payload.id || name); emit(name, payload); }
     function setMuted(value) { settings.muted = !!value; applyVolumes(); persist(); }
     function setVolume(kind, value) { const n = Math.max(0, Math.min(1, Number(value) || 0)); if (kind === 'music') settings.music = n; else if (kind === 'sfx') settings.sfx = n; applyVolumes(); persist(); }
     function getSettings() { return { ...settings }; }

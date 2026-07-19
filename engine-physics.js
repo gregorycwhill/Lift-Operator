@@ -103,12 +103,6 @@ window.gameTick = function(timestamp) {
         if (typeof lift.isJammed === 'undefined') lift.isJammed = false;
 
         const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
-        if (isDouble) {
-            const maxF = Config.numFloors - 1;
-            if (lift.targetFloor >= maxF) {
-                lift.targetFloor = maxF - 1;
-            }
-        }
         
         if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) lift.jamTimer = 0;
 
@@ -182,14 +176,14 @@ window.gameTick = function(timestamp) {
         if (Registry.stats.round >= 6) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
             if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
-                lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec) * 60; // Convert sec to roughly 60fps ticks
+                lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec); // gameTick decrements once per second
                 window.Game.Audio?.publish('hazard_started', { id: 'jam', liftId: lift.id });
             }
             
             if (Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
                 if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
-                    lift.stinkTimer = Config.fartStinkSec * 60; // Convert sec to ticks
+                    lift.stinkTimer = Config.fartStinkSec; // gameTick decrements once per second
                     window.Game.Audio?.publish('hazard_started', { id: 'stink', liftId: lift.id });
                     const farterIndex = window.getRandomInt(0, lift.passengers.length - 1);
                     lift.passengers[farterIndex].isFarter = true;
