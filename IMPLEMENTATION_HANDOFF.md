@@ -964,3 +964,86 @@ zone predicate, live boarding enforcement, automation target enforcement, and Wo
 are implemented. Floor 0 remains the G service floor when included in a range; transfers and G-hub routing remain
 deferred. Spawn-rate tuning, coverage-gap telemetry, overlap diagnostics, and full cross-device visual validation
 remain playtest work.
+
+## 17. Playtest remediation plan — Debug access, checkout clarity, and late-round pacing
+
+This plan records the clarified playtest feedback received on 20 July 2026. It is an implementation and evidence
+plan only; no code or canonical balance values are changed by documenting it.
+
+### 17.1 Scope and intended behavior
+
+1. **Debug Warp coverage:** Warp must expose every available round, including rounds beyond Round 13. The list should
+   be derived from the available round definitions rather than a hard-coded upper bound. This is a testability
+   requirement, not a player-facing progression unlock.
+2. **Checkout Challenge destination marker:** Only checkout guests whose destination is floor G use a suitcase icon.
+   Other guest types and checkout destinations retain their existing indicators.
+3. **Room Service layout:** Room Service icons are too wide. Reduce their displayed horizontal width by 30% while
+   leaving their displayed height unchanged, then verify that the revised width does not cause UI overlap.
+4. **Rocket duration:** The intended effective duration is 10 seconds. Verify the configured timer, gameplay effect,
+   visible icon/effect lifetime, expiry, and reset behavior. A perceived 3–4 second duration is a defect until explained.
+5. **Rooftop bar event:** This is the defining event of its round. It should begin at an unpredictable time and remain
+   active for a long duration, approximately at least half of the round where the round model permits it. On release,
+   guests should create a large but readable return wave from floor 14 to their rooms. Start-time randomness must be
+   seeded for simulation and reproducible test cases, while remaining unpredictable to the player.
+6. **Round 13 affordability and pressure:** Increase Credits awarded in the preceding Endurance round so the intended
+   Round 13 loadout is affordable, and reduce the relevant Round 13 guest spawn rates by 20%. Apply the reduction to
+   canonical spawn-rate inputs, not a hidden runtime multiplier. Exact payout and affected fields require a candidate.
+7. **Stink as discretion:** Stink is an intentional emergency load-management tactic. It may be used to evacuate
+   overloaded lifts and should remain meaningful, provided it does not corrupt lift state, bypass objectives, or make
+   the intended Round 13 challenge irrelevant.
+
+### 17.2 Delivery sequence
+
+1. Add production-path Debug Warp coverage for all registered/available rounds.
+2. Correct destination-sensitive checkout rendering and Room Service horizontal layout.
+3. Add rocket timer/effect lifecycle tests and reproduce the Round 7 observation with a fixed seed.
+4. Implement a seeded rooftop event schedule with a long active window and a release surge; verify live play and
+   isolated simulation.
+5. Create a Round 13 balance candidate containing the preceding-Endurance payout increase and 20% spawn-rate
+   reduction. Do not edit canonical values during exploration.
+6. Run mechanic, lifecycle, economy, deterministic campaign, and human playtest gates before promotion.
+
+### 17.3 Acceptance and test gates
+
+- Debug Warp lists every available round and can start each one without changing normal unlock/progression state.
+- Ground-floor checkout guests render suitcase icons; non-ground-floor checkout guests do not.
+- Room Service icon rendered width is 70% of the prior value, with unchanged height and no layout collision.
+- Rocket effects remain active for 10.0 seconds within documented tolerance, expire once, and leave no duplicate/stale
+  icons. Test empty/occupied lifts, top-floor use, pause/resume, retry, and round reset.
+- At least three seeded rooftop schedules produce different player-visible start times while replaying identically for
+  the same seed. The active window lasts at least half of the round's intended event span, and release produces a
+  substantial return queue without invalid destinations or deadlock.
+- The Round 13 candidate makes required mechanics, deodoriser, and rockets affordable under the intended prior-round
+  payout path, with a documented reserve policy. Verify struggling, typical, and expert economy scenarios.
+- The 20% spawn reduction is visible in canonical/generated balance parity and does not alter unrelated rounds.
+- On accepted Round 13 seeds, supported play survives the intended objective while unattended Sweep remains below the
+  campaign's unattended threshold unless the owner explicitly revises that gate.
+- A controlled stink-use comparator can relieve an overloaded lift and improve recovery metrics, but cannot win by
+  bypassing the round objective or leave invalid guest/lift state.
+- Full regression passes lifecycle, config, generated-balance, mechanics, deterministic simulation, and UI smoke
+  coverage. Human playtest confirms the rooftop release wave is dramatic but manageable and Round 13 has meaningful
+  loadout and discretion choices.
+
+### 17.4 Evidence to capture
+
+For each candidate, record commit, balance version, seeds, loadout, Credits before/after purchase, rocket observed
+duration, rooftop start/end timestamps, release queue size, spawn-rate values, stink uses, lift overload/recovery
+metrics, and passed/failed/skipped tests. Keep exploratory candidates and replays outside canonical data until the
+owner accepts the resulting campaign behavior.
+
+### 17.5 Implementation status — 20 July 2026
+
+Implemented in balance `0.2.6-playtest-remediation`:
+
+- Debug Warp now derives its Debug choices from all configured rounds, including R14–R20.
+- Checkout guests carry an explicit `isCheckout` marker and only ground-floor checkout destinations render as suitcases.
+- Room Service display width is 42px (70% of the prior 60px width) with unchanged 20px height.
+- Rocket tier-one duration is verified at 10 seconds through production timer execution and expiry.
+- Rooftop event duration is 90 seconds, with the existing seeded 30–90 second start schedule and seeded release path.
+- Endurance payout multiplier is 1.0; Round 13 spawn rates are 1.20→1.40, a 20% reduction from 1.50→1.75.
+- Stink behavior was not removed or weakened; it remains a valid emergency load-management tactic.
+
+Automated evidence: syntax/config/generated-balance checks pass; lifecycle coverage passes 63/63; targeted remediation
+coverage passes; mechanics coverage passes 10/10; economy simulation passes; regenerated balance reports pass with 36
+matrix runs, 12 envelope classifications, and 5 documented all-Sweep violations. Human rooftop and Round 13
+affordability playtest gates remain open.

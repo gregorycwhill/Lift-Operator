@@ -68,7 +68,12 @@ window.startRoundCountdown = function(seconds = 5) {
  */
 window.updateLocksUI = function() {
     if (!Registry.highestUnlockedRound) Registry.highestUnlockedRound = 1;
-    let maxRoundAllowed = Config.debugMode ? 13 : Registry.highestUnlockedRound;
+    const availableRounds = Object.keys(Config.GAME_DATA.rounds || {})
+        .map(Number)
+        .filter(Number.isInteger)
+        .sort((a, b) => a - b);
+    const maxAvailableRound = availableRounds.length ? availableRounds[availableRounds.length - 1] : 1;
+    let maxRoundAllowed = Config.debugMode ? maxAvailableRound : Registry.highestUnlockedRound;
 
     const jumpSelect = document.getElementById("jumpRoundSelect");
     if (jumpSelect) {
@@ -76,12 +81,12 @@ window.updateLocksUI = function() {
         jumpSelect.innerHTML = '';
         
         // Only append unlocked rounds
-        for (let i = 1; i <= maxRoundAllowed; i++) {
+        availableRounds.filter(round => round <= maxRoundAllowed).forEach(i => {
             const opt = document.createElement("option");
             opt.value = i;
             opt.text = `Round ${i}`;
             jumpSelect.appendChild(opt);
-        }
+        });
         
         // Handle value selection
         if (Registry.stats.round <= maxRoundAllowed) {

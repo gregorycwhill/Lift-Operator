@@ -312,6 +312,18 @@ seconds, and Gym Bros/Gym Floor persist through Rounds 11–13. The Gym Floor la
 The post-change full panel completed 60 tests with one transient Monkey Protocol Beta kill-switch failure; that test
 passed on immediate isolated rerun and is accepted as a pass for this playtest push.
 
+### Playtest remediation: Debug access, checkout clarity, and late-round pacing
+
+Balance `0.2.6-playtest-remediation` implements the clarified playtest batch. Debug Warp now exposes every configured
+round. Checkout guests heading to floor G carry an explicit checkout marker and render with a suitcase; ordinary guests
+whose destination happens to be G still render `G`. Room Service guests render at 70% of the previous horizontal width.
+Rocket duration is verified at 10 seconds. Rooftop events use a seeded 30–90 second start window and a 90-second active
+duration. Endurance payout multiplier is 1.0, and Round 13 spawn rates are reduced 20% to `1.20→1.40`.
+
+Lifecycle coverage is 63/63, targeted remediation coverage passes, mechanics coverage is 10/10, economy/config/generated
+balance checks pass, and regenerated balance reports validate 36 matrix runs with 5 documented all-Sweep violations.
+Human confirmation of rooftop readability and Round 13 affordability remains outstanding.
+
 ## Design-only balance telemetry
 
 `balance-telemetry.js` samples operational state once per game second. It records arrivals, deliveries, queue and onboard work in progress, journey time, Little's Law diagnostics, productive lift utilisation, manual decision rate, critical exposure, weighted life loss, and the Projected Survival Index.

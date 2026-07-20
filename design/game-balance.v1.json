@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.5-clarity-endurance-gravity-debug",
+  "balanceVersion": "0.2.6-playtest-remediation",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -9,7 +9,7 @@
     "endurance": {
       "survivalIntervalSec": 30,
       "serviceIntervalGuests": 10,
-      "creditMultiplier": 0.6,
+      "creditMultiplier": 1,
       "cap": 50
     }
   },
@@ -353,7 +353,7 @@
     "sunset": {
       "minSec": 30,
       "maxSec": 90,
-      "durationSec": 30,
+      "durationSec": 90,
       "guestRatio": 0.5
     },
     "patience": {
@@ -466,8 +466,8 @@
     "13": {
       "floors": 15,
       "lifts": 4,
-      "spawnStart": 1.5,
-      "spawnEnd": 1.75,
+      "spawnStart": 1.2,
+      "spawnEnd": 1.4,
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.4
     },

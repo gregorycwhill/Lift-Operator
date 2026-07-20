@@ -5,9 +5,11 @@
 window.forceFirstSpawn = function(now) {
     let start = window.getRandomFloor();
     let dest;
+    let isCheckout = false;
     const roundDefinition = window.getRoundDefinition(Registry.stats.round);
     if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
         dest = 0;
+        isCheckout = true;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
     } else {
         dest = window.getRandomFloor();
@@ -20,7 +22,8 @@ window.forceFirstSpawn = function(now) {
         dest: dest, 
         status: GuestStatus.HAPPY, 
         spawnTime: now, 
-        isVip: false, 
+        isVip: false,
+        isCheckout,
         isFarter: false, 
         isSunset: false, 
         isPartying: false, 
@@ -106,10 +109,12 @@ window.runSpawnerTick = function(now) {
         if (seededRandom() < tempChance) {
             let start = window.getRandomFloor();
             let dest;
+            let isCheckout = false;
             
             const roundDefinition = window.getRoundDefinition(Registry.stats.round);
             if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
                 dest = 0;
+                isCheckout = true;
                 if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
             } else {
                 dest = window.getRandomFloor();
@@ -123,7 +128,8 @@ window.runSpawnerTick = function(now) {
                 dest: dest, 
                 status: GuestStatus.HAPPY, 
                 spawnTime: now, 
-                isVip: false, 
+                isVip: false,
+                isCheckout,
                 isFarter: false, 
                 isSunset: false, 
                 isPartying: false, 

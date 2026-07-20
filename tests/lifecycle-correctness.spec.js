@@ -712,7 +712,7 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     ]);
     expect(result.r2SpawnStart).toBe(0.4);
     expect(result.r2SpawnEnd).toBe(0.468);
-    expect(result.version).toBe('0.2.5-clarity-endurance-gravity-debug');
+    expect(result.version).toBe('0.2.6-playtest-remediation');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -891,6 +891,92 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
     expect(await optionsAtRound(2)).toEqual(['manual', 'sweep']);
     expect(await optionsAtRound(4)).toEqual(['manual', 'sweep', 'priority-sweep']);
     expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
+});
+
+test('Debug Warp exposes every configured round', async ({ page }) => {
+    const rounds = await page.evaluate(() => {
+        Config.debugMode = true;
+        updateLocksUI();
+        return [...document.querySelectorAll('#jumpRoundSelect option')].map(option => Number(option.value));
+    });
+
+    expect(rounds).toEqual(Object.keys(await page.evaluate(() => Config.GAME_DATA.rounds)).map(Number));
+});
+
+test('checkout guests heading to Ground use suitcase text only when marked checkout', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        checkout: getGuestText({ dest: 0, isCheckout: true, status: GuestStatus.HAPPY }),
+        ordinaryGround: getGuestText({ dest: 0, isCheckout: false, status: GuestStatus.HAPPY }),
+        checkoutUpper: getGuestText({ dest: 4, isCheckout: true, status: GuestStatus.HAPPY })
+    }));
+
+    expect(result).toEqual({ checkout: '🧳', ordinaryGround: 'G', checkoutUpper: 4 });
+});
+
+test('Room Service display width is reduced without changing height', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const guest = document.createElement('div');
+        guest.className = 'guest room-service';
+        document.body.appendChild(guest);
+        const style = getComputedStyle(guest);
+        return { width: style.width, height: style.height };
+    });
+
+    expect(result).toEqual({ width: '42px', height: '20px' });
+});
+
+test('rocket duration is canonical and lasts ten gameplay seconds', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(7, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        const duration = Config.GAME_DATA.powerups.turbo.tiers[0].duration;
+        PowerUps.catalog.turbo.tiers[0].execute(0, 0);
+        const activated = lift.turboTimer;
+        for (let tick = 0; tick < duration - 1; tick++) gameTick(100000 + tick * 1000);
+        const beforeExpiry = lift.turboTimer;
+        gameTick(100000 + (duration - 1) * 1000);
+        return { duration, activated, beforeExpiry, expired: lift.turboTimer };
+    });
+
+    expect(result).toEqual({ duration: 10, activated: 10, beforeExpiry: 1, expired: 0 });
+});
+
+test('rooftop event has a long seeded schedule and releases guests to their original rooms', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(9, { showBriefing: false });
+        const scheduledStart = Registry.sunsetTargetTime;
+        const guest = { dest: 3, status: GuestStatus.HAPPY, isVip: false, isSunset: false, isPartying: false, spawnTime: scheduledStart };
+        Registry.floors[1].waitingGuests.push(guest);
+        Registry.sunsetTargetTime = 100000;
+        const previousRatio = Config.sunsetGuestRatio;
+        Config.sunsetGuestRatio = 1;
+        runSpawnerTick(100000);
+        const active = { active: Registry.sunsetActive, redirected: guest.dest, original: guest.originalDest };
+        runSpawnerTick(190000);
+        Config.sunsetGuestRatio = previousRatio;
+        return {
+            scheduledStart,
+            scheduleSeconds: (scheduledStart - (window.Game.virtualTime || Date.now())) / 1000,
+            duration: Config.sunsetDurationSec,
+            active,
+            released: { active: Registry.sunsetActive, dest: guest.dest, partying: guest.isPartying }
+        };
+    });
+
+    expect(result.duration).toBeGreaterThanOrEqual(90);
+    expect(result.active).toEqual({ active: true, redirected: 14, original: 3 });
+    expect(result.released).toEqual({ active: false, dest: 3, partying: false });
+});
+
+test('Round 13 candidate increases Endurance payout and reduces its spawn curve by 20%', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        enduranceMultiplier: Config.GAME_DATA.payouts.endurance.creditMultiplier,
+        spawnStart: Config.GAME_DATA.rounds[13].spawnStart,
+        spawnEnd: Config.GAME_DATA.rounds[13].spawnEnd
+    }));
+
+    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 1.2, spawnEnd: 1.4 });
 });
 
 test('round countdown freezes play while allowing automation setup and transient capacity cues', async ({ page }) => {

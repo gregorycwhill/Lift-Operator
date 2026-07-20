@@ -609,7 +609,7 @@ window.getGuestText = function(g) {
     if (g.status === GuestStatus.RAGE) return '💀';
     if (g.isVip) return '⭐';
     
-    let txt = g.dest === 0 ? 'G' : g.dest;
+    let txt = g.isCheckout && g.dest === 0 ? '🧳' : (g.dest === 0 ? 'G' : g.dest);
     
     if (g.isRoomService) return `🍽️${txt}`;
     if (g.isGymBro) return `💪${txt}`;

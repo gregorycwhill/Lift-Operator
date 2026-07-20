@@ -306,6 +306,7 @@ window.Game.Simulator = {
                             status: GuestStatus.HAPPY,
                             spawnTime: virtualTime,
                             isVip: false,
+                            isCheckout: destination === 0,
                             isFarter: false,
                             isSunset: false,
                             isPartying: false,

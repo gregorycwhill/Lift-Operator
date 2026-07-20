@@ -56,4 +56,20 @@ Outcome:
 Suggested hypothesis:
 ```
 
+## Clarified playtest feedback — 20 July 2026
+
+The following items are now implementation-plan requirements rather than informal observations:
+
+- Debug Warp must expose every available round so late rounds can be tested.
+- Checkout guests heading to floor G use suitcase icons; this does not apply to checkout guests going elsewhere.
+- Room Service icons are too wide and need a 30% reduction in displayed horizontal width.
+- Rocket behavior must be tested against the intended 10-second duration.
+- The rooftop bar event is the defining event of its round: it needs a long, seeded-but-player-unpredictable active
+  window, followed by a major return wave from floor 14.
+- Round 13 needs more Credits from the preceding Endurance round and a 20% reduction in relevant spawn rates.
+- Stink is an accepted discretionary tactic for relieving overloaded lifts and should remain viable.
+
+The corresponding implementation sequence, acceptance gates, and evidence requirements are in
+`IMPLEMENTATION_HANDOFF.md` Section 17 and `TEST_PLAN.md` Milestone K.
+
 

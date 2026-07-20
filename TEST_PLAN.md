@@ -199,3 +199,37 @@ The original design-only status is superseded by the implementation addendum abo
 Implementation status: the structural and direct-service baseline is now implemented and covered by the syntax,
 config, generated-balance, unit, and targeted lifecycle checks. The remaining unchecked items are intentionally
 playtest/diagnostic work, especially coverage telemetry, overlap analysis, and full Safari/mobile visual validation.
+
+## Milestone K - Playtest remediation: Debug, checkout, icons, rockets, rooftop, and Round 13
+
+Plan authority: `IMPLEMENTATION_HANDOFF.md` Section 17. These checks are pending implementation and must run against
+the production path as well as isolated deterministic simulation where noted.
+
+- [x] Debug Warp derives its choices from all available round definitions and can launch every available round without
+  altering normal unlock/progression state.
+- [x] Checkout Challenge renders a suitcase icon only for checkout guests whose destination is floor G; other checkout
+  destinations and ordinary guests retain their existing markers.
+- [x] Room Service icons render at 70% of the previous horizontal width, retain their height, and do not overlap or
+  obscure adjacent UI at supported viewport sizes.
+- [x] Rocket/Turbo duration is 10.0 seconds within documented tolerance in Round 7 and Round 13, including empty/
+  occupied lifts, top-floor use, pause/resume, retry, reset, one-time expiry, and icon cleanup.
+- [x] Seeded rooftop schedules vary start time across seeds, replay identically for the same seed, remain active for a
+  long window (target: at least half the round), and release a substantial valid return wave from floor 14.
+- [ ] Rooftop release does not deadlock, create invalid destinations, or make the return demand unreadable in browser
+  playtest.
+- [ ] Round 13 candidate increases the preceding Endurance payout enough to afford the intended required mechanics,
+  deodoriser, and rockets, with struggling/typical/expert economy scenarios recorded.
+- [x] Round 13 canonical spawn-rate inputs are reduced by exactly 20%; generated/runtime parity passes and unrelated
+  rounds remain unchanged.
+- [ ] Round 13 release and robustness seeds pass supported-play feasibility gates while unattended Sweep remains within
+  the approved difficulty boundary.
+- [x] Controlled stink-use testing confirms stink can relieve overloaded lifts, preserves valid state, and does not
+  bypass the round objective.
+- [ ] Full regression panel passes syntax, config, balance/economy, lifecycle, mechanics, deterministic E2E, and UI
+  smoke tests.
+- [ ] Human playtest confirms the rooftop event is the round's defining pressure shift, Round 13 is affordable and
+  manageable, and stink provides meaningful discretion rather than a mandatory solution.
+
+Evidence must include commit, balance version, seeds, loadout, economy totals, effect timings, rooftop schedule and
+release metrics, spawn-rate values, stink uses, and passed/failed/skipped counts. Automated evidence is recorded in
+the implementation handoff; browser playtest gates for rooftop readability and Round 13 affordability remain open.

@@ -1,6 +1,6 @@
 # All-Sweep Balance Baseline
 
-Balance version: `0.2.5-clarity-endurance-gravity-debug`  
+Balance version: `0.2.6-playtest-remediation`
 Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 | Round | Seed | Outcome | Elapsed | Lives | Served | First peril | Min SI | Peak queue | P90 journey | Classification |
@@ -26,21 +26,21 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 | 8 | 1234 | died | 160s | 0 | 122 | 56s | 0.00 | 31 | 52.8s | MEETS_ALL_SWEEP_FLOOR |
 | 8 | 3141 | died | 146s | 0 | 100 | 58s | 0.00 | 32 | 45.9s | MEETS_ALL_SWEEP_FLOOR |
 | 8 | 6060 | died | 138s | 0 | 91 | 60s | 0.00 | 38 | 49.2s | MEETS_ALL_SWEEP_FLOOR |
-| 9 | 1234 | died | 131s | 0 | 117 | 54s | 0.00 | 44 | 44.7s | MEETS_ALL_SWEEP_FLOOR |
-| 9 | 3141 | died | 123s | 0 | 92 | 51s | 0.00 | 52 | 44.1s | MEETS_ALL_SWEEP_FLOOR |
-| 9 | 6060 | died | 120s | 0 | 74 | 49s | 0.00 | 44 | 44.4s | MEETS_ALL_SWEEP_FLOOR |
+| 9 | 1234 | died | 138s | 0 | 85 | 54s | 0.00 | 86 | 49.1s | MEETS_ALL_SWEEP_FLOOR |
+| 9 | 3141 | died | 144s | 0 | 82 | 51s | 0.00 | 95 | 45.2s | MEETS_ALL_SWEEP_FLOOR |
+| 9 | 6060 | died | 143s | 0 | 91 | 51s | 0.00 | 84 | 41.1s | MEETS_ALL_SWEEP_FLOOR |
 | 10 | 1234 | died | 109s | 0 | 87 | 59s | 0.00 | 54 | 46.9s | MEETS_ALL_SWEEP_FLOOR |
 | 10 | 3141 | died | 140s | 0 | 126 | 74s | 0.00 | 59 | 51.4s | MEETS_ALL_SWEEP_FLOOR |
 | 10 | 6060 | died | 118s | 0 | 93 | 54s | 0.00 | 51 | 49.3s | MEETS_ALL_SWEEP_FLOOR |
 | 11 | 1234 | died | 109s | 0 | 92 | 51s | 0.00 | 65 | 49.6s | MEETS_ALL_SWEEP_FLOOR |
 | 11 | 3141 | died | 127s | 0 | 125 | 49s | 0.00 | 71 | 46.8s | MEETS_ALL_SWEEP_FLOOR |
 | 11 | 6060 | died | 100s | 0 | 79 | 49s | 0.00 | 62 | 48.3s | MEETS_ALL_SWEEP_FLOOR |
-| 12 | 1234 | died | 329s | 0 | 250 | - | - | 27 | 48.4s | COMPARATOR_REQUIRED |
-| 12 | 3141 | died | 252s | 0 | 182 | - | - | 31 | 49.8s | COMPARATOR_REQUIRED |
-| 12 | 6060 | died | 177s | 0 | 99 | - | - | 36 | 54.2s | COMPARATOR_REQUIRED |
-| 13 | 1234 | died | 95s | 0 | 49 | 56s | 0.00 | 63 | 49.1s | MEETS_ALL_SWEEP_FLOOR |
-| 13 | 3141 | died | 97s | 0 | 55 | 51s | 0.00 | 59 | 57.4s | MEETS_ALL_SWEEP_FLOOR |
-| 13 | 6060 | died | 96s | 0 | 59 | 51s | 0.00 | 65 | 48.1s | MEETS_ALL_SWEEP_FLOOR |
+| 12 | 1234 | died | 161s | 0 | 117 | - | - | 75 | 44.8s | COMPARATOR_REQUIRED |
+| 12 | 3141 | died | 150s | 0 | 105 | - | - | 71 | 37.4s | COMPARATOR_REQUIRED |
+| 12 | 6060 | died | 161s | 0 | 116 | - | - | 73 | 52.2s | COMPARATOR_REQUIRED |
+| 13 | 1234 | died | 118s | 0 | 62 | 59s | 0.00 | 51 | 52.9s | MEETS_ALL_SWEEP_FLOOR |
+| 13 | 3141 | died | 120s | 0 | 70 | 60s | 0.00 | 44 | 46.8s | MEETS_ALL_SWEEP_FLOOR |
+| 13 | 6060 | died | 109s | 0 | 51 | 50s | 0.00 | 55 | 51.6s | MEETS_ALL_SWEEP_FLOOR |
 
 ## Current findings
 

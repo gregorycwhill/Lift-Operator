@@ -286,14 +286,15 @@ body {
 } 
 
 .room-service {
-    width: 60px !important; 
-    min-width: 60px !important; 
+    width: 42px !important;
+    min-width: 42px !important;
     height: 20px !important;
+    box-sizing: border-box;
     border-radius: 10px !important; /* Half height for perfect pill ends */
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    padding: 0 8px !important;
+    padding: 0 5px !important;
     font-size: 14px;
     background: #ecf0f1;
     color: #2c3e50;

@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.5-clarity-endurance-gravity-debug
+// Balance version: 0.2.6-playtest-remediation
 window.GameBalanceData = {
-  "balanceVersion": "0.2.5-clarity-endurance-gravity-debug",
+  "balanceVersion": "0.2.6-playtest-remediation",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -12,7 +12,7 @@ window.GameBalanceData = {
     "endurance": {
       "survivalIntervalSec": 30,
       "serviceIntervalGuests": 10,
-      "creditMultiplier": 0.6,
+      "creditMultiplier": 1,
       "cap": 50
     }
   },
@@ -392,7 +392,7 @@ window.GameBalanceData = {
     "sunset": {
       "minSec": 30,
       "maxSec": 90,
-      "durationSec": 30,
+      "durationSec": 90,
       "guestRatio": 0.5
     },
     "patience": {
@@ -505,8 +505,8 @@ window.GameBalanceData = {
     "13": {
       "floors": 15,
       "lifts": 4,
-      "spawnStart": 1.5,
-      "spawnEnd": 1.75,
+      "spawnStart": 1.2,
+      "spawnEnd": 1.4,
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.4
     },
