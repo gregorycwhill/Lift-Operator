@@ -4,13 +4,8 @@ This file previously contained a phase plan that mixed completed work, proposed 
 
 It is retained at this path to avoid breaking links, but it is no longer the active implementation plan.
 
-Use:
-
-- `STABILIZATION_PLAN.md` for prioritized engineering work.
-- `ROADMAP.md` for product stages.
-- `CURRENT_IMPLEMENTATION.md` for implemented reality.
-- `BALANCE_WORKFLOW.md` for the docs-to-config iteration model.
-- `TESTING_STRATEGY.md` for evidence requirements.
+Use `DOCUMENTATION.md` for the current document map, `ROADMAP.md` for product stages, `DELIVERY_PLAN.md` for active
+engineering work, and `TEST_PLAN.md` for evidence requirements.
 
 ## Historical work completed in substance
 

@@ -19,51 +19,31 @@ Built-in automation is a force multiplier, never autoplay. From Round 2 onward, 
 
 The game should be frenetic and novel early, tactical in the middle, and increasingly strategic and puzzle-like late. It does not need more mechanics. It needs the existing mechanics to create clear problems, multiple viable solutions, meaningful scarcity, and satisfying mastery.
 
-## Documentation map
+## Documentation
 
-The documents have distinct responsibilities:
+Start with [DOCUMENTATION.md](DOCUMENTATION.md). It defines document ownership, status vocabulary, and the update
+rules that keep current plans separate from history.
 
-| Document | Purpose | Authority |
-| --- | --- | --- |
-| [IMPLEMENTATION_HANDOFF.md](IMPLEMENTATION_HANDOFF.md) | Implementation authority: stabilization/balance handoff plus the approved audio architecture, current status, and acceptance tests | Primary implementation authority |
-| [Lift-Operator_GDD.md](Lift-Operator_GDD.md) | Product vision, player experience, rules, and design principles | Design intent |
-| [CURRENT_IMPLEMENTATION.md](CURRENT_IMPLEMENTATION.md) | What the current code actually does, including known inconsistencies | Implemented baseline |
-| [Game Play Map.md](Game%20Play%20Map.md) | Target round sequence, learning arc, problems, solution spaces, and tuning parameters | Target progression |
-| [Game Economy.md](Game%20Economy.md) | Target earning, spending, affordability, retry, and progression model | Target economy |
-| [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) | Docs-to-config-to-playtest iteration and telemetry | Balance process |
-| [E2E_BALANCE_PLAN.md](E2E_BALANCE_PLAN.md) | Coarse campaign-wide satisficing rationale retained by the handoff | Balance rationale |
-| [Automation_Workshop_Spec.md](Automation_Workshop_Spec.md) | Current and target automation experience and execution-containment model | Automation specification |
-| [STABILIZATION_PLAN.md](STABILIZATION_PLAN.md) | Prioritized work needed before systematic balance iteration | Delivery plan |
-| [ORIENTATION_IMPLEMENTATION_PLAN.md](ORIENTATION_IMPLEMENTATION_PLAN.md) | Implemented five-second setup, transient teaching cues, capacity effects, credits, and wait-time contract | Completed interface plan |
-| [TESTING_STRATEGY.md](TESTING_STRATEGY.md) | Required evidence and testing layers | Quality strategy |
-| [ROADMAP.md](ROADMAP.md) | High-level product stages and gates | Product sequencing |
+| Need | Document |
+| --- | --- |
+| Product direction and sequencing | [ROADMAP.md](ROADMAP.md) |
+| Current implementation scope | [DELIVERY_PLAN.md](DELIVERY_PLAN.md) |
+| Current evidence and release gates | [TEST_PLAN.md](TEST_PLAN.md) |
+| Product rules and round/economy intent | [GDD](Lift-Operator_GDD.md), [Game Play Map](Game%20Play%20Map.md), [Game Economy](Game%20Economy.md) |
+| Long-lived engineering practices | [TESTING_STRATEGY.md](TESTING_STRATEGY.md), [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) |
 
-`IMPLEMENTATION_PLAN.md` and `REFACTOR_PLAN.md` are retained as historical records. `TEST_PLAN.md` remains the live checklist. Where a delivery document conflicts with `IMPLEMENTATION_HANDOFF.md`, the handoff takes precedence; product intent still comes from the GDD, Game Play Map, and Game Economy.
-
-## Status vocabulary
-
-All specifications use the following terms:
-
-- **Implemented:** present and reachable in the current build.
-- **Partial:** present, but incomplete, inconsistent, or not sufficiently verified.
-- **Disabled:** implemented but not exposed in normal play.
-- **Target:** approved design direction that is not yet guaranteed by the engine.
-- **Planned:** a possible future addition that is not part of the current stabilization scope.
-- **Retired:** retained only for historical context.
+Historical handoffs and completed plans remain in the repository for context, but are not current work authority.
 
 ## Current project phase
 
 The game is a playable 20-round build with the first 13 rounds covered by the accelerated playtest campaign, canonical balance data, compact simulation reports, and a stabilized core loop.
 
-The completed stabilization/balance programme remains recorded in `IMPLEMENTATION_HANDOFF.md`:
+The historical stabilization/balance programme remains in `IMPLEMENTATION_HANDOFF.md` for context. It is not the
+current delivery plan.
 
-1. Close remaining correctness, containment, canonical-data, and mechanic-test gaps.
-2. Add deterministic batch simulation, action replay, compact aggregation, and reproducibility checks.
-3. Build round-specific competent profiles before changing late-round pressure.
-4. Use bounded code-driven search for Round 2 and Rounds 7–11/13.
-5. Verify economy feasibility, promote only the first gated candidate, then run human outlier testing.
-
-Audio is cleared for desktop Chromium/WebKit playtesting: the event-bus-compatible browser service, menu/gameplay context handling, Leaderboard controls, local licensed asset register, attribution, gameplay producers, lifecycle cleanup, and focused browser tests are in place. Real-device decode/device handling and mobile/first-gesture/suspended-context validation remain playtest follow-up checks. The authoritative status and gap list are in `IMPLEMENTATION_HANDOFF.md` Section 15. Audio does not add mechanics, expose PSI, or change simulation outcomes.
+The current delivery is Service Zoning playtest readiness: validate direct-service behavior, Workshop comprehension,
+large-fleet layouts, reproducible diagnostics, and the first R14-R20 tuning evidence. Audio is cleared for desktop
+Chromium/WebKit playtesting; real-device/mobile audio checks are follow-up acceptance work. See `DELIVERY_PLAN.md`.
 
 ## Local development and tests
 

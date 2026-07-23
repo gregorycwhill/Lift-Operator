@@ -80,6 +80,24 @@ window.renderDebugMenu = function() {
     };
     quickGroup.appendChild(autoBtn);
 
+    if (Config.debugMode && window.Game.EndlessOperations) {
+        const endlessBtn = document.createElement('button');
+        endlessBtn.className = 'btn btn-purple btn-small';
+        endlessBtn.innerText = '♾️ Start Endless Alpha';
+        endlessBtn.title = 'Start a deterministic, pre-checked generated operation';
+        endlessBtn.onclick = () => {
+            const operation = window.startEndlessOperation(Registry.seed);
+            if (operation) {
+                const overlay = document.getElementById('debugOverlay');
+                if (overlay) overlay.style.display = 'none';
+                if (typeof ui.showToast === 'function') ui.showToast(`Endless alpha: ${operation.definition?.templateRound || Registry.stats.round}`);
+            } else if (typeof ui.showToast === 'function') {
+                ui.showToast('No valid Endless alpha operation was generated.');
+            }
+        };
+        quickGroup.appendChild(endlessBtn);
+    }
+
     container.appendChild(quickGroup);
     
     // Telemetry Console Section

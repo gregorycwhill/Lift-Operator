@@ -2,7 +2,8 @@
 
 **Objective:** Produce trustworthy evidence that the engine is correct, deterministic, resilient to accidental misuse, and suitable for balance iteration.
 
-`IMPLEMENTATION_HANDOFF.md` supplies the implementation-ready test inventory, seed partitions, replay contract, robustness gates, exact commands to add, and completion criteria. This document defines the enduring testing principles and layers.
+`TEST_PLAN.md` supplies the active test inventory and release evidence. This document defines the enduring testing
+principles and layers; historical test detail remains in `IMPLEMENTATION_HANDOFF.md`.
 
 ## 1. What testing must distinguish
 

@@ -148,19 +148,27 @@ const AutomationWorkshop = {
         document.getElementById('zoneUpperInput').value = lift.serviceUpper;
         document.getElementById('zoneLowerInput').max = Config.numFloors - 1;
         document.getElementById('zoneUpperInput').max = Config.numFloors - 1;
-        document.getElementById('zoneCoverageStatus').innerText = `Covers ${lift.serviceLower === 0 ? 'G' : `Floor ${lift.serviceLower}`}–${lift.serviceUpper}. Guests outside this band wait for another lift.`;
+        const report = window.Registry?.getServiceZoneReport?.();
+        const uncovered = report?.uncoveredFloors?.length || 0;
+        const overlaps = report?.overlapFloors?.length || 0;
+        document.getElementById('zoneCoverageStatus').innerText = `Covers ${lift.serviceLower === 0 ? 'G' : `Floor ${lift.serviceLower}`}–${lift.serviceUpper}. ${uncovered} floor(s) have no lift; ${overlaps} floor(s) overlap. Guests outside this band wait for another lift.`;
     },
 
     applyZone: function() {
         const select = document.getElementById('zoneLiftSelect');
         const lift = window.Registry?.lifts?.[Number(select?.value)];
         if (!lift) return;
-        let lower = Math.max(0, Math.min(Config.numFloors - 1, Number(document.getElementById('zoneLowerInput').value)));
-        let upper = Math.max(0, Math.min(Config.numFloors - 1, Number(document.getElementById('zoneUpperInput').value)));
-        if (!Number.isFinite(lower) || !Number.isFinite(upper) || lower > upper) {
+        const range = window.Registry?.validateServiceRange?.(
+            document.getElementById('zoneLowerInput').value,
+            document.getElementById('zoneUpperInput').value,
+            Config.numFloors
+        );
+        if (!range?.valid) {
             window.UI?.showToast?.('Choose a valid lower and upper floor.');
             return;
         }
+        const lower = range.lower;
+        const upper = range.upper;
         lift.serviceLower = Math.floor(lower);
         lift.serviceUpper = Math.floor(upper);
         window.UI?.showToast?.(`Lift ${lift.id + 1} zone set to ${lower === 0 ? 'G' : lower}–${upper}.`);

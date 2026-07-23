@@ -2,7 +2,7 @@
 
 **Document role:** Product vision and design intent  
 **Current phase:** Playable advanced prototype entering stabilization  
-**Campaign scope:** 13 rounds  
+**Campaign scope:** 20 rounds; R14–R20 traffic tuning remains subject to playtest evidence.
 
 **Implementation addendum (19 July 2026):** The playable structural campaign now includes Rounds 14-20. Their
 direct single-lift Service Zoning foundation is implemented; traffic tuning and late-round playtesting remain open.
@@ -319,7 +319,9 @@ Current stabilization excludes:
 - Mod/plugin APIs.
 - Major visual redesign.
 
-The approved audio workstream is a post-stabilization feedback improvement, not a theme system or new mechanic. Its implementation boundary, attribution requirements, and acceptance tests are maintained in `IMPLEMENTATION_HANDOFF.md` Section 15.
+Audio is a post-stabilization feedback improvement, not a theme system or new mechanic. Its current delivery boundary
+and acceptance tests are maintained in `DELIVERY_PLAN.md` and `TEST_PLAN.md`; attribution is recorded under
+`assets/audio/`.
 
 These may return after the core progression, economy, configuration, testing, and execution-containment model are stable.
 

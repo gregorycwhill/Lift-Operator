@@ -1,10 +1,11 @@
 # Lift Operator — Implementation Handoff Plan
 
-**Authority:** Primary implementation plan for the next development agent  
+**Status:** Historical decision and implementation record; not current delivery authority.
+**Use instead:** `DOCUMENTATION.md`, `ROADMAP.md`, `DELIVERY_PLAN.md`, and `TEST_PLAN.md`.
 **Baseline commit:** `f10f135` (`Add round orientation and clarify player feedback`)  
 **Baseline balance:** `0.2.2-round-2-accessibility`  
 **Prepared:** 18 July 2026  
-**Scope:** Stabilization completion, trustworthy executable simulation, replay, automated balance search, economy feasibility, and campaign-wide satisficing balance.  
+**Original scope:** Stabilization completion, trustworthy executable simulation, replay, automated balance search, economy feasibility, and campaign-wide satisficing balance.
 **Out of scope:** New rounds, hazards, guest types, power-ups, themes, online services, player-facing telemetry, and adversarial security hardening.
 
 ## 1. Product intent that must not be reinterpreted
@@ -966,11 +967,10 @@ Testing gaps:
 - Production mapping availability is now asserted against the manifest; legacy files are not used as evidence for
   current audio wiring.
 
-## 16. Planned R14–R20 extension and Service Zoning (design only)
+## 16. Historical R14–R20 and Service Zoning proposal
 
-This is a future implementation programme. No R14–R20 runtime rounds or Service Zoning behavior is currently
-implemented. The design authority is `Game Play Map.md`; this section defines the delivery boundary and evidence
-required before any extension is promoted.
+This proposal predates the implemented R14–R20 structural foundation. Its later implementation-status addendum records
+what was built; the active delivery boundary and evidence now live in `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
 ### 16.1 Structural scope
 

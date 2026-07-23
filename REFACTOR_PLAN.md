@@ -2,7 +2,7 @@
 
 The original structural refactor is complete enough to support stabilization, but the architecture is not yet fully modular or data-driven.
 
-This file is retained as a historical pointer. Active architectural work is defined in `STABILIZATION_PLAN.md`.
+This file is retained as a historical pointer. Active architectural work is defined in `DELIVERY_PLAN.md`.
 
 ## Achievements of the original refactor
 

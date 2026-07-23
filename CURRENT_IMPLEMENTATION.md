@@ -1,8 +1,9 @@
 # Current Implementation Baseline
 
-**Baseline date:** 18 July 2026
-**Purpose:** Describe observable implementation, not desired balance.  
-**Authority:** The code remains authoritative where this document is incomplete.
+**Snapshot date:** 18 July 2026, with later appended implementation notes.
+**Status:** Historical technical context; not a current plan or source of delivery status.
+**Use instead:** Code and focused tests for current behavior; `DELIVERY_PLAN.md` for current scope; `TEST_PLAN.md` for
+evidence. This snapshot is retained because it explains prior architectural decisions.
 
 This document prevents target design changes from being confused with current behaviour. Values described here may be intentionally replaced during stabilization.
 
@@ -250,7 +251,7 @@ Custom scripts still execute using `new Function`, but generated source is now s
 9. Imported blueprints still need explicit origin/consent behavior, and custom automation needs deadline isolation to guarantee UI responsiveness.
 10. UTF-8 text is inconsistently represented in first-party source files.
 
-These are addressed by `IMPLEMENTATION_HANDOFF.md`; `STABILIZATION_PLAN.md` remains supporting rationale.
+These are historical findings. Current scope and evidence are maintained in `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
 ## Implemented ordinary-death retry behaviour
 
@@ -353,8 +354,7 @@ non-restarting PSI pressure updates, fallback pulse suppression, identity-aware 
 coverage, hysteresis, explicit teardown, and production-flow coverage for spawner, hazard, shop, and core lifecycle
 transitions are implemented. The local test server now supplies audio-specific MIME types and teardown bounds pending
 Web Audio closure. The focused Chromium and WebKit audio suites both pass 22/22 after moving Playwright output to the
-OS temp directory. Remaining gaps are listed in `IMPLEMENTATION_HANDOFF.md` Section 15.6: complete modal
-pause/source-overlap acceptance and mobile/real-device validation. The
+OS temp directory. Remaining device acceptance work is listed in `TEST_PLAN.md`. The
 semantic event contract is covered by focused browser tests and remains simulation-neutral.
 
 ## All-Sweep balance matrix

@@ -1,6 +1,7 @@
 # Lift Operator — Stabilization Plan
 
-`IMPLEMENTATION_HANDOFF.md` is the active implementation authority. This document retains the stabilization rationale and historical gates.
+This is historical stabilization rationale and prior gates. Current work authority is `DELIVERY_PLAN.md`; historical
+decisions remain in `IMPLEMENTATION_HANDOFF.md`.
 
 **Objective:** Make the existing game reliable, data-driven, testable, and resilient enough for systematic balance iteration.  
 **Scope:** Bug fixes, intent/behaviour alignment, configuration centralization, testing rigor, access gating, and script containment.  

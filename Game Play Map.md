@@ -18,7 +18,8 @@ Values are divided into:
 - **Initial tuning candidates:** starting numbers to test, not final balance.
 - **Success measures:** evidence used to decide whether tuning worked.
 
-The approved structured version of this map should eventually generate the round section of `config.js`. Until generation exists, discrepancies must be recorded in `CURRENT_IMPLEMENTATION.md`.
+The approved structured version of this map should eventually generate the round section of `config.js`. Canonical
+numbers live in `design/game-balance.v1.json`; current delivery evidence belongs in `TEST_PLAN.md`.
 
 ## 2. Campaign rhythm
 
@@ -495,7 +496,10 @@ It should not primarily increase raw hazard frequency.
 
 ### Planned audio feedback
 
-Audio is a feedback layer, not a new mechanic or difficulty lever. The planned soundscape uses one adaptive gameplay loop whose layers and tempo respond internally to pressure, while menus and modal pauses use quiet neutral music and victory uses a separate fanfare. Each power-up and hazard receives a distinct, learnable effect. It must never change guest, lift, hazard, RNG, or timer behaviour. The detailed implementation and Safari/mobile test requirements are in `IMPLEMENTATION_HANDOFF.md` Section 15.
+Audio is a feedback layer, not a new mechanic or difficulty lever. It uses one adaptive gameplay loop whose layers and
+tempo respond internally to pressure, while menus and modal pauses use quiet neutral music and victory uses a separate
+fanfare. Each power-up and hazard receives a distinct, learnable effect. It must never change guest, lift, hazard,
+RNG, or timer behaviour. Remaining device acceptance work is listed in `TEST_PLAN.md`.
 
 ## 8. Target success bands
 

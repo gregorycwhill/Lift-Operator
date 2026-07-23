@@ -1,6 +1,7 @@
 # Round Orientation and Interface Clarity Plan
 
-**Status:** Implemented at baseline commit `f10f135`; retained as an observable-behavior contract. Remaining work is governed by `IMPLEMENTATION_HANDOFF.md`.
+**Status:** Historical observable-behavior contract implemented at baseline commit `f10f135`. Current work is governed
+by `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
 ## Objective
 

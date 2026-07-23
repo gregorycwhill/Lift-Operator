@@ -1,6 +1,7 @@
 # End-to-End Satisficing Balance Plan
 
-**Status:** Design rationale retained by `IMPLEMENTATION_HANDOFF.md`. When thresholds, commands, sequence, replay, reporting, or stopping rules differ, the handoff is authoritative.
+**Status:** Historical balance rationale. Current thresholds, commands, sequence, replay, reporting, and stopping rules
+live in `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
 ## Objective
 

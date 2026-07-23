@@ -179,7 +179,7 @@ window.createRoundStats = function() {
         happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
         defenestrationsThisRound: 0, totalWaitTimeServed: 0,
         lateralTransfers: 0, doubleDeckerServed: 0, guestsSpawned: 0, livesLost: 0,
-        journeyTimes: []
+        journeyTimes: [], zoneRefusals: 0, uncoveredRoutes: 0
     };
 };
 
@@ -205,7 +205,11 @@ window.resetAttemptTelemetry = function() {
     }
 };
 
-window.getRoundDefinition = function(round) {
+window.getRoundDefinition = function(round, operation = null) {
+    operation = operation || Registry.activeOperation || null;
+    if (operation && typeof operation === 'object' && Number.isInteger(operation.floors) && Number.isInteger(operation.lifts)) {
+        return { ...operation, round: Number.isInteger(operation.round) ? operation.round : 14 };
+    }
     const supportedRound = Math.max(1, Math.min(20, parseInt(round) || 1));
     const configured = Config.GAME_DATA.rounds[supportedRound];
     const liftOverride = Number(Config[`liftsR${supportedRound}`]);
@@ -232,7 +236,7 @@ window.createLiftState = function(id) {
 };
 
 window.createRoundState = function(round, seed, options = {}) {
-    const definition = window.getRoundDefinition(round);
+    const definition = window.getRoundDefinition(round, options.operation || null);
     const seedTool = window.Game.Seed;
     seedTool.set(seed);
     window.Game.AutomationSeed.set((parseInt(seed) || 1) ^ 0x5f3759df);
@@ -297,6 +301,7 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.sunsetActive = roundState.sunsetActive;
     Registry.sunsetEndTime = roundState.sunsetEndTime;
     Registry.gymFloor = roundState.gymFloor;
+    Registry.activeOperation = options.operation || null;
     window.resetAttemptTelemetry();
 };
 
@@ -306,6 +311,7 @@ window.initializeRound = function(round, options = {}) {
     Registry.roundCountdownActive = false;
     document.getElementById('roundCountdown')?.classList.add('hidden');
     window.clearAttemptInventory();
+    Registry.activeOperation = options.operation || null;
     const state = window.createRoundState(round, Registry.seed, options);
     window.applyRoundState(state, options);
     window.Game.Audio?.publish('round_initialized', { round: state.definition.round });
@@ -416,6 +422,15 @@ window.advanceToRound = function(targetRound) {
         return;
     }
     window.skipToRound(targetRound);
+};
+
+window.startEndlessOperation = function(seed = Registry.seed) {
+    if (!Config.debugMode || !window.Game.EndlessOperations) return null;
+    const operation = window.Game.EndlessOperations.createPrechecked(seed);
+    if (!operation) return null;
+    Registry.seed = operation.seed;
+    Registry.points = Math.max(Registry.points, 99999);
+    return window.initializeRound(operation.round, { operation, seed: operation.seed, showBriefing: false });
 };
 
 window.resetGame = function() {

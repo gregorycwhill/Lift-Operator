@@ -561,6 +561,18 @@ window.animationTick = function(timestamp) {
                             window.canGuestBoardLift(lift, g, f, isStinky, maxCap)
                         );
 
+                        if (boardableGuestIndex === -1 && Registry.isZoningEnabled?.()) {
+                            const zoneGuests = Registry.floors[f].waitingGuests.filter(g =>
+                                Registry.canLiftDirectlyServe(lift, f, g.dest)
+                            );
+                            if (Registry.floors[f].waitingGuests.length > 0 && zoneGuests.length < Registry.floors[f].waitingGuests.length) {
+                                const routeCovered = Registry.lifts.some(other =>
+                                    other.id !== lift.id && Registry.canLiftDirectlyServe(other, f, Registry.floors[f].waitingGuests[0].dest)
+                                );
+                                window.Game.BalanceTelemetry?.recordZoneRefusal(routeCovered);
+                            }
+                        }
+
                         if (boardableGuestIndex === -1 && isDouble && Registry.floors[f+1]) {
                             targetFloorToBoard = f + 1;
                             boardableGuestIndex = Registry.floors[f+1].waitingGuests.findIndex(g =>

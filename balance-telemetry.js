@@ -22,6 +22,8 @@ window.Game.BalanceTelemetry = {
         this.systemGuestSeconds = 0;
         this.productiveLiftSeconds = 0;
         this.availableLiftSeconds = 0;
+        this.zoneRefusals = 0;
+        this.uncoveredRoutes = 0;
     },
 
     recordSpawn(count = 1) {
@@ -31,6 +33,13 @@ window.Game.BalanceTelemetry = {
     recordLifeLoss(now, livesLost, cause = 'guest') {
         this.lifeLossEvents.push({ now, livesLost, cause });
         Registry.roundStats.livesLost += livesLost;
+    },
+
+    recordZoneRefusal(routeCovered = false) {
+        this.zoneRefusals++;
+        if (!routeCovered) this.uncoveredRoutes++;
+        Registry.roundStats.zoneRefusals = (Registry.roundStats.zoneRefusals || 0) + 1;
+        if (!routeCovered) Registry.roundStats.uncoveredRoutes = (Registry.roundStats.uncoveredRoutes || 0) + 1;
     },
 
     shiftTime(durationMs) {
@@ -146,6 +155,11 @@ window.Game.BalanceTelemetry = {
             littlesLawEstimate,
             littlesLawResidual: averageSystemGuests - littlesLawEstimate
         };
+        const zoneReport = Registry.getServiceZoneReport?.();
+        sample.zoneRefusals = this.zoneRefusals;
+        sample.uncoveredRouteCount = zoneReport?.uncoveredRoutes?.length || 0;
+        sample.overlapFloorCount = zoneReport?.overlapFloors?.length || 0;
+        sample.uncoveredFloorCount = zoneReport?.uncoveredFloors?.length || 0;
         this.samples.push(sample);
         return sample;
     },
@@ -155,6 +169,10 @@ window.Game.BalanceTelemetry = {
             balanceVersion: Config.balanceVersion,
             round: Registry.stats.round,
             seed: Registry.seed,
+            operation: Registry.activeOperation || null,
+            zoning: Registry.getServiceZoneReport?.() || null,
+            zoneRefusals: this.zoneRefusals,
+            uncoveredRoutes: this.uncoveredRoutes,
             summary: this.summary,
             samples: this.samples
         }));

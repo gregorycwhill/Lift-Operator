@@ -2,11 +2,14 @@
 
 ## 1. Objective
 
-`IMPLEMENTATION_HANDOFF.md` is the implementation authority for the next phase, including exact metrics, seed sets, replay format, executable search, reporting caps, thresholds, commands, and stopping rules. This document remains the design-to-data workflow and human-playtest protocol.
+`DELIVERY_PLAN.md` defines current implementation scope and `TEST_PLAN.md` defines current evidence. This document
+remains the enduring design-to-data workflow and human-playtest protocol.
 
 Create a short, repeatable loop in which design changes can be proposed in documentation, validated, converted into configuration, exercised by the unchanged engine, and evaluated through simulation and human play.
 
-`E2E_BALANCE_PLAN.md` explains the campaign-wide satisficing rationale. `IMPLEMENTATION_HANDOFF.md` defines the active delivery sequence. The first pass satisfices across all rounds with coarse changes; fine-grained optimisation is reserved for human-identified outliers.
+`E2E_BALANCE_PLAN.md` explains the campaign-wide satisficing rationale. The active delivery sequence lives in
+`DELIVERY_PLAN.md`. The first pass satisfices across all rounds with coarse changes; fine-grained optimisation is
+reserved for human-identified outliers.
 
 ```text
 Design hypothesis
@@ -312,7 +315,9 @@ These values are recorded for simulation and developer analysis only. They are n
 
 VIP losses are weighted by lives lost rather than counted as one defenestration. Round 12 records projected time to death but has no Survival Index because it has no remaining-time success boundary.
 
-PSI may additionally be supplied to the planned audio controller as an internal, read-only music-control signal. That use must not render PSI, expose it to automation, persist it in player saves, alter simulation timing/RNG, or feed back into balance decisions. The full audio boundary and tests are in `IMPLEMENTATION_HANDOFF.md` Section 15.
+PSI may additionally be supplied to the audio controller as an internal, read-only music-control signal. That use must
+not render PSI, expose it to automation, persist it in player saves, alter simulation timing/RNG, or feed back into
+balance decisions. Current audio acceptance work is in `TEST_PLAN.md`.
 
 ### Automation
 

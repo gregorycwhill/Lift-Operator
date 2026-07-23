@@ -94,6 +94,48 @@ const Registry = {
         if (!this.isZoningEnabled()) return true;
         return this.isFloorInLiftZone(lift, originFloor) && this.isFloorInLiftZone(lift, destinationFloor);
     },
+    validateServiceRange: function(lower, upper, floorCount = Config.numFloors) {
+        const lowerText = String(lower ?? '').trim();
+        const upperText = String(upper ?? '').trim();
+        const parsedLower = Number(lower);
+        const parsedUpper = Number(upper);
+        const maxFloor = Math.max(0, Number(floorCount) - 1);
+        return {
+            valid: lowerText !== '' && upperText !== '' && Number.isInteger(parsedLower) && Number.isInteger(parsedUpper) &&
+                parsedLower >= 0 && parsedUpper >= 0 && parsedLower <= parsedUpper &&
+                parsedUpper <= maxFloor,
+            lower: Number.isInteger(parsedLower) ? Math.max(0, Math.min(maxFloor, parsedLower)) : 0,
+            upper: Number.isInteger(parsedUpper) ? Math.max(0, Math.min(maxFloor, parsedUpper)) : maxFloor,
+            maxFloor
+        };
+    },
+    getServiceZoneReport: function(floorCount = Config.numFloors) {
+        const maxFloor = Math.max(0, Number(floorCount) - 1);
+        const floors = Array.from({ length: maxFloor + 1 }, (_, floor) => floor);
+        const zones = Registry.lifts.map(lift => {
+            const range = this.validateServiceRange(lift.serviceLower, lift.serviceUpper, floorCount);
+            return { liftId: lift.id, lower: range.lower, upper: range.upper, valid: range.valid };
+        });
+        const coverage = floors.map(floor => zones.filter(zone => zone.valid && floor >= zone.lower && floor <= zone.upper).length);
+        const uncoveredFloors = floors.filter(floor => coverage[floor] === 0);
+        const overlapFloors = floors.filter(floor => coverage[floor] > 1);
+        const uncoveredRoutes = [];
+        floors.forEach(origin => floors.forEach(destination => {
+            if (!zones.some(zone => zone.valid && origin >= zone.lower && origin <= zone.upper && destination >= zone.lower && destination <= zone.upper)) {
+                uncoveredRoutes.push([origin, destination]);
+            }
+        }));
+        return {
+            enabled: this.isZoningEnabled(),
+            floorCount,
+            zones,
+            coverage,
+            uncoveredFloors,
+            overlapFloors,
+            uncoveredRoutes,
+            configuration: zones.map(zone => [zone.lower, zone.upper])
+        };
+    },
     isFloorClaimedByOther: function(floor, myLiftId) {
         return Registry.lifts.some(l => l.id !== myLiftId && l.targetFloor === floor && l.jamTimer <= 0 && this.isFloorInLiftZone(l, floor));
     },

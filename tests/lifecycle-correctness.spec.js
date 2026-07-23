@@ -693,6 +693,71 @@ test('R14-R20 expose scale definitions and direct single-lift zoning', async ({ 
     });
 });
 
+test('Service Zoning reports coverage, overlap, and reproducible direct-route gaps', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(14, { showBriefing: false });
+        Registry.lifts[0].serviceLower = 0;
+        Registry.lifts[0].serviceUpper = 10;
+        Registry.lifts.forEach(lift => {
+            lift.serviceLower = 0;
+            lift.serviceUpper = 10;
+        });
+        Registry.lifts[1].serviceLower = 10;
+        Registry.lifts[1].serviceUpper = 19;
+        const report = Registry.getServiceZoneReport();
+        return {
+            gCovered: report.coverage[0],
+            overlapAtTen: report.coverage[10],
+            uncoveredFloors: report.uncoveredFloors,
+            hasGap: report.uncoveredRoutes.some(route => route[0] === 0 && route[1] === 19),
+            configuration: report.configuration.slice(0, 2),
+            invalidBlank: Registry.validateServiceRange('', 10).valid,
+            invalidReversed: Registry.validateServiceRange(10, 2).valid
+        };
+    });
+
+    expect(result).toEqual({
+        gCovered: 4,
+        overlapAtTen: 5,
+            uncoveredFloors: [],
+        hasGap: true,
+        configuration: [[0, 10], [10, 19]],
+        invalidBlank: false,
+        invalidReversed: false
+    });
+});
+
+test('Endless alpha generates deterministic pre-checked operations and can enter play', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        const first = Game.EndlessOperations.createPrechecked(24680);
+        const second = Game.EndlessOperations.createPrechecked(24680);
+        const state = startEndlessOperation(24680);
+        return {
+            identical: JSON.stringify(first) === JSON.stringify(second),
+            valid: Game.EndlessOperations.validate(first),
+            prechecked: first.prechecked,
+            stateRound: state.definition.round,
+            floors: state.definition.floors,
+            lifts: state.definition.lifts,
+            activeMode: Registry.activeOperation.mode
+        };
+    });
+
+    expect(result).toEqual({
+        identical: true,
+        valid: true,
+        prechecked: true,
+        stateRound: expect.any(Number),
+        floors: expect.any(Number),
+        lifts: expect.any(Number),
+        activeMode: 'endless-alpha'
+    });
+    expect(result.floors).toBeGreaterThanOrEqual(20);
+    expect(result.floors).toBeLessThanOrEqual(30);
+    expect(result.lifts).toBeGreaterThanOrEqual(5);
+});
+
 test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
     const result = await page.evaluate(() => {
         const capacities = [1, 2, 3, 4].map(round => {

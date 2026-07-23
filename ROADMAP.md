@@ -1,104 +1,82 @@
 # Lift Operator Product Roadmap
 
-`IMPLEMENTATION_HANDOFF.md` is the implementation authority for completing Stages 2–5. This roadmap remains the high-level product sequence.
+**Purpose:** Product outcomes and sequence. This is not an implementation checklist.
+**Current delivery:** `DELIVERY_PLAN.md` — proposed `0.3.0-network-campaign-preview`
 
-The roadmap is organized by gates, not by feature quantity. The game already has sufficient mechanics for a complete campaign.
+## Product north star
 
-## Stage 1 — Documentation true-up
+Lift Operator begins as a fast arcade lift game and develops into an operational strategy puzzle. Each important round
+creates a diagnosable bottleneck: players learn why a familiar tactic failed, adapt lift roles/automation/loadout, and
+master the same seeded traffic through understanding rather than grinding.
 
-**Status:** Completed initial rewrite
+## Now — Prove the network campaign
 
-- Separate implemented baseline from target design.
-- Establish one 13-round campaign scope.
-- Define arcade-to-strategy progression.
-- Define problem–solution–mastery round design.
-- Define target economy and retry principles.
-- Document lightweight obfuscation and execution-containment intent honestly.
+**Outcome:** The existing R14–R20 Service Zoning foundation becomes understandable and reliable enough for human
+playtesting.
 
-**Gate:** Every major document has one responsibility and uses shared status language.
+- Direct single-lift service bands are consistent across play, simulation, and automation.
+- Players can see coverage, understand refusals, and recover from a bad zoning decision.
+- Large fleets and tall buildings remain usable.
+- Telemetry and replay reports identify the real failure mode before traffic tuning begins.
+- R9 rooftop and R13 affordability evidence closes the known late-campaign playtest questions.
 
-## Stage 2 — Stabilization
+**Gate:** A player can explain a zoning failure, reproduce it with a seed/configuration, and choose a credible next
+strategy. See `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
-**Status:** Substantially complete
+## Next — Tune the extended campaign
 
-- Fix review, shop, pause, resume, retry, and reset defects.
-- Correct average-wait and payout accounting.
-- Introduce explicit lifecycle states.
-- Create one round-state factory.
-- Make rounds 1–13 initialize consistently.
+**Outcome:** R14–R20 form a coherent second arc about fleet architecture, resilience, and Workshop advantage.
 
-**Gate:** Critical campaign flow completes deterministically without duplicate state transitions or currency mutations.
+- Tune traffic only after direct-service correctness, responsive UI, and telemetry gates pass.
+- Validate viable manual/hybrid, built-in-plus-loadout, and custom Workshop solution classes where practical.
+- Use the intended progression: local zones, VIP/Rooftop coverage, recovery redundancy, Checkout concentration,
+multi-exception fleets, then 30-floor network mastery.
 
-The critical gate is passing. Remaining work is secondary overlay hardening and an explicit lifecycle-state model.
+**Gate:** Human failure diagnoses match round intent, and balance changes are reproducible through canonical data,
+fixed seeds, compact reports, and recorded playtests.
 
-## Stage 3 — Data-driven balance foundation
+## Later — Campaign polish and accessibility
 
-**Status:** In progress
+**Outcome:** The complete campaign is clear, satisfying, and robust across supported devices.
 
-- Create versioned machine-readable design data.
-- Validate and generate executable configuration.
-- Remove legacy duplicate parameters.
-- Add balance version to telemetry.
-- Isolate simulator state and random streams.
+- Improve briefing, Review, automation visualization, and accessibility from observed playtest failures.
+- Complete mobile/Safari audio acceptance and responsive layout polish.
+- Resolve remaining campaign balance questions, including Round 2 leverage, late-round strategy separation, and economy
+  inflation, using evidence rather than broad retuning.
 
-**Gate:** Round and economy tuning requires data changes only, not engine edits.
+## Later — Endless operations
 
-Canonical JSON, validation, generation, runtime loading, payout/unlock data, and stale-artifact CI checks are implemented. Remaining compatibility consumers can be removed incrementally without competing numerical sources.
+**Outcome:** Players who complete or outgrow the authored campaign can continue into fresh, fair operational challenges
+without losing the game’s diagnosable-problem design.
 
-## Stage 4 — Testing, access gating, and containment
+Two approaches remain open:
 
-**Status:** In progress
+1. **Curated expansion:** ship a large catalogue of pre-checked rounds and seeds. This gives the strongest authored
+   pacing and simplest balance evidence, but finite variety.
+2. **Procedural operations:** generate round layouts, traffic, events, and constraints in-game from a seed. This offers
+   greater replayability, but requires much stronger feasibility, fairness, and reproducibility controls.
 
-- Replace self-confirming regression checks.
-- Add reproducible unit, state-machine, simulation, economy, and E2E suites.
-- Move custom automation off the main thread or into a constrained interpreter.
-- Version and validate blueprint imports.
-- Separate production and development entry points.
+The preferred investigation path is a hybrid: deterministic generation from constrained templates, followed by offline
+simulation and acceptance checks before a generated operation is offered to a player. Each operation must expose its
+seed, balance version, objective, and difficulty envelope; it must be replayable, diagnosable, and reject invalid or
+unwinnable configurations. Runtime generation must not bypass canonical balance validation or introduce opaque random
+difficulty spikes.
 
-**Gate:** Tests provide independent evidence; malformed inputs and accidental automation errors cannot freeze or corrupt the game; curious source inspection remains possible.
+**Gate:** A generated or catalogue operation has a recorded intent, reproducible seed/configuration, supported strategy
+profile, unattended baseline, and clear player-facing objective before it is promoted into endless play.
 
-Production behaviour, deterministic simulation, lifecycle, Monkey, manifest validation, pure mechanic rules, an onboarding golden comparison, and campaign economy scenarios are covered. Worker isolation, broader golden strategy comparisons, and richer economy telemetry remain open.
+## Deferred
 
-## Stage 5 — Campaign balance
+- Guest transfers, multi-lift journeys, and G-hub routing.
+- New mechanics, power-ups, hazards, guest types, themes, online services, and player-facing telemetry.
+- Round 20+ advanced sensors or player-constructed survival forecasting.
+- Endless operations implementation until the network campaign and its balance evidence are stable.
 
-**Status:** Infrastructure established; execution blocked on replay/batch/search hardening and round-specific strong profiles. Rounds 3–6 and Endurance are provisionally Contested, Round 2 is Underloaded, and Rounds 7–11/13 are Overloaded.
+These are not commitments. Reconsider them only after the network campaign is validated and balanced.
 
-Tune by act:
+## Product design references
 
-1. Rounds 1–3: arcade pace and first tactical wall.
-2. Rounds 4–6: automation roles and jam recovery.
-3. Rounds 7–9: traffic topology and timed combinations.
-4. Rounds 10–11: customization and mixed-weight mastery.
-5. Rounds 12–13: resource and optimization capstones.
-
-Each act is frozen before tuning the next.
-
-**Gate:** Human failure diagnosis matches round intent and economy targets remain viable across player profiles.
-
-Every accepted campaign balance must also preserve the engagement floor: unattended all-Sweep fails from Round 2 onward, while the intended active strategy materially improves survival and pressure metrics.
-
-## Stage 6 — Experience polish
-
-Only after balance:
-
-- Improve briefing and review diagnostics.
-- Improve automation visualization.
-- Refine audio and visual feedback.
-- Accessibility and responsive layout.
-- Tutorial clarity.
-
-**Gate:** Players can understand the operational state and explain their failures without developer telemetry.
-
-## Deferred opportunities
-
-These are not commitments:
-
-- Open Plan as post-campaign experimental content.
-- Additional buildings or rounds.
-- Profiles and themes.
-- Online leaderboards.
-- Modding/plugin systems.
-- New power-ups, hazards, or guest types.
-- Round 20+ advanced automation sensors and player-constructed survival forecasting.
-
-They should be reconsidered only after the 13-round campaign is stable and balanced.
+- `Lift-Operator_GDD.md` — product vision and rules.
+- `Game Play Map.md` — round learning arc and intended structural problems.
+- `Game Economy.md` — earning, spending, retry, and progression intent.
+- `Automation_Workshop_Spec.md` — Workshop player experience and containment boundary.
