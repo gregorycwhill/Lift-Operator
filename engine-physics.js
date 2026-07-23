@@ -102,6 +102,8 @@ window.gameTick = function(timestamp) {
     Registry.lifts.forEach((lift, i) => {
         // Fix for "ghost" jammed border: Ensure isJammed is initialized
         if (typeof lift.isJammed === 'undefined') lift.isJammed = false;
+        const wasJamActive = lift.jamTimer > 0 || lift.isJammed;
+        const wasStinkActive = lift.stinkTimer > 0;
 
         const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
         
@@ -112,6 +114,8 @@ window.gameTick = function(timestamp) {
             if (lift.jamTimer > 0) lift.jamTimer--;
             // Only decrement stink if not jammed? No, let stink fade.
             if (lift.stinkTimer > 0) lift.stinkTimer--;
+            if (wasJamActive && lift.jamTimer <= 0 && !lift.isJammed) window.Game.Audio?.publish('hazard_ended', { id: 'jam', liftId: lift.id });
+            if (wasStinkActive && lift.stinkTimer <= 0) window.Game.Audio?.publish('hazard_ended', { id: 'stink', liftId: lift.id });
             updateLiftVisualState(lift, i);
             return; // Skip rest of movement logic for this lift
         }
@@ -123,6 +127,8 @@ window.gameTick = function(timestamp) {
         if (lift.musakTimer > 0) lift.musakTimer--;
         if (lift.doubleDeckerTimer > 0) lift.doubleDeckerTimer--;
         else lift.isDoubleDecker = false;
+        if (wasJamActive && lift.jamTimer <= 0 && !lift.isJammed) window.Game.Audio?.publish('hazard_ended', { id: 'jam', liftId: lift.id });
+        if (wasStinkActive && lift.stinkTimer <= 0) window.Game.Audio?.publish('hazard_ended', { id: 'stink', liftId: lift.id });
 
         if (typeof PowerUps !== 'undefined') {
             const effectiveCapacity = PowerUps.getLiftCapacity(i);
@@ -204,6 +210,9 @@ window.gameTick = function(timestamp) {
             
             const oldStatus = g.status;
             g.status = window.getGuestStatusForWait(now - g.spawnTime);
+            if (g.status !== oldStatus && (g.status === GuestStatus.ANNOYED || g.status === GuestStatus.CRITICAL)) {
+                window.Game.Audio?.publish('guest_urgency', { id: g.id, guestType: g.isVip ? 'vip' : (g.type || 'guest'), status: g.status, floor: floorIdx });
+            }
             
             if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('error', { id: 'rage' });
@@ -235,6 +244,9 @@ window.gameTick = function(timestamp) {
             
             const oldStatus = p.status;
             p.status = window.getGuestStatusForWait(now - p.spawnTime);
+            if (p.status !== oldStatus && (p.status === GuestStatus.ANNOYED || p.status === GuestStatus.CRITICAL)) {
+                window.Game.Audio?.publish('guest_urgency', { id: p.id, guestType: p.isVip ? 'vip' : (p.type || 'guest'), status: p.status, liftId: lift.id });
+            }
             if (p.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
                 const livesLost = p.isVip ? Config.vipPenalty : 1;
                 Registry.stats.lives -= livesLost;
@@ -574,6 +586,7 @@ window.animationTick = function(timestamp) {
                     }
 
                     if (!performedAction) {
+                        if (Registry.floors[f].waitingGuests.length > 0) window.Game.Audio?.publish('guest_refused', { liftId: lift.id, floor: f, reason: 'no-compatible-guest' });
                         lift.state = 'DOORS_CLOSING';
                         lift.stateProgress = 0;
                     }

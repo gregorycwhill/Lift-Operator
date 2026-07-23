@@ -21,7 +21,9 @@ window.Game = window.Game || {};
         scripts: [],
         cache: new Map(), // scriptId -> compiled Function
         maxScriptLength: 12000,
-        executionDeadlineMs: 50,
+        // Worker startup/compilation is part of the deadline in browsers. Keep
+        // this bounded, but allow normal startup under an audio-enabled page.
+        executionDeadlineMs: 250,
         pendingWorkers: new Map(),
         forbiddenSource: /\b(?:while|for|do|window|document|globalThis|localStorage|sessionStorage|fetch|XMLHttpRequest|WebSocket|eval|Function|constructor|import)\b/,
 

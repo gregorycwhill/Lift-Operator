@@ -208,7 +208,7 @@ reproducibility checks, replay hashing, compact summaries, named strategy profil
 economy candidate experiments. Custom automation runs in a deadline-terminated worker, and imported blueprints
 require schema/version/checksum validation plus explicit consent.
 
-The full 54-test gate and complete 13-round Monkey campaign pass. Canonical promotion remains intentionally blocked:
+The full 91-test gate and Round 13 Monkey playtest-boundary campaign pass. Canonical promotion remains intentionally blocked:
 Round 2 has no feasible candidate satisfying both the all-Sweep failure invariant and low-intervention hybrid
 success, and human campaign evidence has not yet been collected. Provisional economy bands are owner-accepted for
 now; Round 10 custom automation is optional but must provide measurable advantage.
@@ -220,7 +220,7 @@ The project contains:
 - Simulation baseline scripts.
 - A reproducible Playwright autonomous-pilot lifecycle suite.
 
-The Playwright suite invokes the obfuscated manifest gateway, launches UNIT_01 through the visible Debug modal, completes all 13 accelerated rounds, verifies the human-intervention kill switch, and verifies ordinary-death rollback. With the real five-second countdown on every round, the current full Monkey campaign passes in approximately 7.6 minutes and the complete 50-test gate in approximately 8.4 minutes on the development machine.
+The Playwright suite invokes the obfuscated manifest gateway, launches UNIT_01 through the visible Debug modal, reaches the Round 13 playtest boundary, verifies the human-intervention kill switch, and verifies ordinary-death rollback. With the real five-second countdown on every round, the current Monkey boundary campaign passes in approximately 8.3 minutes and the complete 91-test gate in approximately 9.6 minutes on the development machine.
 
 The older in-browser scorecard remains useful diagnostically but is not yet authoritative because several checks:
 
@@ -334,13 +334,28 @@ Telemetry is included in isolated simulator results and can be exported through 
 
 ## Audio status and approved direction
 
-The current build now has an `AudioEventBus`-compatible browser service in `audio.js`, menu/gameplay context handling,
-Leaderboard mute/music/SFX controls, and checked-in manifest/attribution. The selected title loop plus provisional
-gameplay base, pressure layer, victory fanfare, and elevator-door cue are imported; procedural fallback remains active.
+Audio is partially implemented. The current build has an `AudioEventBus`-compatible browser service in `audio.js`,
+menu/gameplay context handling, Leaderboard mute/music/SFX controls, a checked-in asset register, manifest, and
+attribution. The local set includes the title loop, gameplay base and pressure layers, rooftop loop, victory fanfare,
+elevator-door cue, every reviewed power-up and hazard effect, VIP arrival, guest urgency/refusal, purchase, and UI
+error effects. Procedural fallback remains active for missing or unsupported files.
 
-The remaining audio work is in `IMPLEMENTATION_HANDOFF.md` Section 15: complete asset review, replace remaining
-fallback tones, and complete unique per-power-up/hazard mappings plus Safari/mobile coverage. PSI may drive
-internal music layers and tempo, but remains unavailable to player UI, automation, saved state, and balance decisions.
+The verified register now has a local file for every listed source row, with licence and attribution evidence recorded.
+Gameplay publishes semantic audio events for VIP arrival, rooftop lifecycle, hazard start/end, guest urgency/refusal,
+boarding/alighting, lift arrival, power-up use, purchases, UI errors, and victory; the audio service owns asset
+resolution and fallback. PSI may drive internal music layers and tempo, but remains unavailable to player UI,
+automation, saved state, and balance decisions.
+
+The audio review register is now normalized in `assets/audio/audio-review.csv`. Verified local imports include the
+CC-BY 3.0 Rocket Launch mapped to Turbo, plus CC0 Rooftop, Musak, TARDIS, Wide Doors, and Stink assets. Their source
+and attribution records are in the manifest and `assets/audio/ATTRIBUTION.md`. Rooftop lifecycle protection,
+non-restarting PSI pressure updates, fallback pulse suppression, identity-aware throttling, production mapping
+coverage, hysteresis, explicit teardown, and production-flow coverage for spawner, hazard, shop, and core lifecycle
+transitions are implemented. The local test server now supplies audio-specific MIME types and teardown bounds pending
+Web Audio closure. The focused Chromium and WebKit audio suites both pass 22/22 after moving Playwright output to the
+OS temp directory. Remaining gaps are listed in `IMPLEMENTATION_HANDOFF.md` Section 15.6: complete modal
+pause/source-overlap acceptance and mobile/real-device validation. The
+semantic event contract is covered by focused browser tests and remains simulation-neutral.
 
 ## All-Sweep balance matrix
 

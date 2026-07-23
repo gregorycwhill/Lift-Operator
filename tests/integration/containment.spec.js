@@ -55,7 +55,7 @@ test('custom automation applies only validated worker actions', async ({ page })
         const script = { id: 'worker-action', name: 'Worker Action', compiledJS: 'Building.setTarget(2); lift.sweepDirection = -1;', author: 'Pilot 1' };
         vm.execute(lift, script.id);
         vm.executeIsolated(lift, script, script.id);
-        await new Promise(resolve => setTimeout(resolve, 80));
+        await new Promise(resolve => setTimeout(resolve, 500));
         return { target: lift.targetFloor, direction: lift.sweepDirection, ticks: Registry.customScriptTicks };
     });
     expect(result.target).toBe(2);

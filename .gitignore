@@ -10,6 +10,7 @@ Archive*/
 node_modules/
 test-results/
 playwright-report/
+.playwright-output/
 
 # Ignore OS files
 .DS_Store

@@ -1,31 +1,238 @@
 {
-  "schemaVersion": 1,
-  "status": "provisional-gameplay-assets-imported",
-  "notes": "Gameplay and SFX mappings are provisional. Procedural fallback remains enabled for failed or unsupported assets.",
+  "schemaVersion": 2,
+  "status": "partially-implemented-gameplay-assets-imported",
+  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Procedural fallback remains enabled for missing or unsupported assets.",
   "assets": {
-    "menu-somewhere-in-the-elevator": {
+    "menu": {
       "file": "assets/audio/menu-somewhere-in-the-elevator.ogg",
       "source": "https://opengameart.org/content/somewhere-in-the-elevator",
       "author": "Peachtea@You're Perfect Studio",
-      "license": "CC-BY 4.0 (verify packaged license before redistribution)",
-      "modification": "None; looped playback only"
+      "license": "CC-BY 4.0",
+      "modification": "None; looped playback only",
+      "attribution": "Somewhere in the Elevator by Peachtea@You're Perfect Studio"
     },
-    "gameplay-chiploop": { "file": "assets/audio/gameplay-chiploop.mp3", "source": "https://opengameart.org/content/chiploop", "author": "iamoneabe", "license": "CC0", "modification": "None; looped playback only" },
-    "gameplay-pressure-chip-bit-danger": { "file": "assets/audio/gameplay-pressure-chip-bit-danger.mp3", "source": "https://opengameart.org/content/chip-bit-danger", "author": "Sudocolon", "license": "CC0", "modification": "None; looped playback only" },
-    "victory": { "file": "assets/audio/victory.mp3", "source": "https://opengameart.org/content/victory", "author": "celestialghost8", "license": "CC0", "modification": "None" },
-    "elevator-door": { "file": "assets/audio/elevator-door.wav", "source": "https://opengameart.org/content/elevatordoor", "author": "PagDev", "license": "CC0", "modification": "None"
+    "base": {
+      "file": "assets/audio/gameplay-chiploop.mp3",
+      "source": "https://opengameart.org/content/chiploop",
+      "author": "iamoneabe",
+      "license": "CC0",
+      "modification": "None; looped playback only",
+      "attribution": ""
     },
-    "sfx-pack-001": { "file": "assets/audio/sfx/", "source": "https://opengameart.org/content/8-bit-sound-effect-pack-vol-001", "author": "Deva (@Shades)", "license": "CC0", "modification": "Renamed selected WAV files; no audio edits" }
+    "pressure": {
+      "file": "assets/audio/gameplay-pressure-chip-bit-danger.mp3",
+      "source": "https://opengameart.org/content/chip-bit-danger",
+      "author": "Sudocolon",
+      "license": "CC0",
+      "modification": "None; looped playback only",
+      "attribution": ""
+    },
+    "rooftop": {
+      "file": "assets/audio/gameplay-rooftop-trance.mp3",
+      "source": "https://opengameart.org/content/trance-boss-battle",
+      "author": "MintoDog",
+      "license": "CC0",
+      "modification": "None; loopable MP3 retained",
+      "attribution": ""
+    },
+    "victory": {
+      "file": "assets/audio/victory.mp3",
+      "source": "https://opengameart.org/content/victory",
+      "author": "celestialghost8",
+      "license": "CC0",
+      "modification": "None",
+      "attribution": ""
+    },
+    "door": {
+      "file": "assets/audio/elevator-door.wav",
+      "source": "https://opengameart.org/content/elevatordoor",
+      "author": "PagDev",
+      "license": "CC0",
+      "modification": "None",
+      "attribution": ""
+    },
+    "turbo": {
+      "file": "assets/audio/sfx/powerup-rocket-launch.wav",
+      "source": "https://opengameart.org/content/rocket-launch-0",
+      "author": "dklon",
+      "license": "CC-BY 3.0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": "Rocket Launch by dklon"
+    },
+    "musak": {
+      "file": "assets/audio/sfx/musak-electronic-jazz.mp3",
+      "source": "https://opengameart.org/content/electronic-jazz-chromatic",
+      "author": "Pro Sensory / Alex McCulloch",
+      "license": "CC0",
+      "modification": "None; downloaded MP3 retained",
+      "attribution": "Attribution appreciated: Alex McCulloch"
+    },
+    "tardis": {
+      "file": "assets/audio/sfx/tardis-air-whoosh.wav",
+      "source": "https://opengameart.org/content/air-whoosh",
+      "author": "pyranostudios",
+      "license": "CC0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": ""
+    },
+    "doors": {
+      "file": "assets/audio/sfx/wide-doors-old-elevator.mp3",
+      "source": "https://opengameart.org/content/old-elevator-door",
+      "author": "sinny",
+      "license": "CC0",
+      "modification": "None; downloaded MP3 retained",
+      "attribution": ""
+    },
+    "stink": {
+      "file": "assets/audio/sfx/hazard-gastric-distress.wav",
+      "source": "https://opengameart.org/content/gastric-distress",
+      "author": "LFA",
+      "license": "CC0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": ""
+    },
+    "freshener": {
+      "file": "assets/audio/sfx/freesound_community-spray-48068.mp3",
+      "source": "https://pixabay.com/sound-effects/film-special-effects-spray-48068/",
+      "author": "Pixabay contributor",
+      "license": "Pixabay Content License",
+      "modification": "None; downloaded MP3 retained",
+      "attribution": "Optional credit: Spray sound effect via Pixabay"
+    },
+    "groupThink": {
+      "file": "assets/audio/sfx/dragon-studio-alien-song-323613.mp3",
+      "source": "https://pixabay.com/sound-effects/film-special-effects-alien-song-323613/",
+      "author": "DRAGON-STUDIO",
+      "license": "Pixabay Content License",
+      "modification": "None; downloaded MP3 retained",
+      "attribution": "Optional credit: Alien Song by DRAGON-STUDIO via Pixabay"
+    },
+    "wrench": {
+      "file": "assets/audio/sfx/powerup-wrench-toolbox.wav",
+      "source": "https://opengameart.org/content/tools-in-plastic-toolbox",
+      "author": "Soundsnap",
+      "license": "GPL-3.0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": "Tools in plastic toolbox by Soundsnap"
+    },
+    "doubleDecker": {
+      "file": "assets/audio/sfx/powerup-double-decker-robot-step.wav",
+      "source": "https://opengameart.org/content/robotic-mechanic-step-sounds",
+      "author": "Lee Barkovich / qubodup",
+      "license": "CC-BY 3.0",
+      "modification": "Selected robot step WAV retained",
+      "attribution": "Robotic mechanic step sounds by Lee Barkovich"
+    },
+    "openPlan": {
+      "file": "assets/audio/sfx/powerup-open-plan-metal.wav",
+      "source": "https://opengameart.org/content/27-metal-audio-samples-sfx",
+      "author": "blacklodgegames",
+      "license": "CC0",
+      "modification": "Selected metal collision WAV retained",
+      "attribution": ""
+    },
+    "jam": {
+      "file": "assets/audio/sfx/hazard-metal-interaction.wav",
+      "source": "https://opengameart.org/content/metal-interactions",
+      "author": "qubodup",
+      "license": "CC0",
+      "modification": "Selected metal interaction WAV retained",
+      "attribution": ""
+    },
+    "vipArrival": {
+      "file": "assets/audio/sfx/event-vip-fanfare.wav",
+      "source": "https://opengameart.org/content/fanfare-2",
+      "author": "Spring Spring",
+      "license": "CC-BY 4.0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": "Spring/Spring Enterprises"
+    },
+    "guestUrgency": {
+      "file": "assets/audio/sfx/guest-urgency-aww.ogg",
+      "source": "https://opengameart.org/content/aww-scream",
+      "author": "bluszcz",
+      "license": "CC-BY 3.0",
+      "modification": "Selected OGG retained",
+      "attribution": "Aww scream by bluszcz"
+    },
+    "guestRefused": {
+      "file": "assets/audio/sfx/guest-refused-alert.wav",
+      "source": "https://opengameart.org/content/alertnotification-sound",
+      "author": "frosty ham",
+      "license": "CC0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": ""
+    },
+    "purchase": {
+      "file": "assets/audio/sfx/ui-purchase-coin.wav",
+      "source": "https://opengameart.org/content/plingy-coin",
+      "author": "Fupi",
+      "license": "CC0",
+      "modification": "None; downloaded WAV retained",
+      "attribution": ""
+    },
+    "uiError": {
+      "file": "assets/audio/sfx/ui-error-failed.mp3",
+      "source": "https://opengameart.org/content/ui-failed-or-error",
+      "author": "ViRiX / David McKee",
+      "license": "CC-BY 3.0",
+      "modification": "None; downloaded MP3 retained",
+      "attribution": "Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix"
+    },
+    "sfx-pack-001": {
+      "file": "assets/audio/sfx/",
+      "source": "https://opengameart.org/content/8-bit-sound-effect-pack-vol-001",
+      "author": "Deva (@Shades)",
+      "license": "CC0",
+      "modification": "Selected WAVs renamed for semantic mappings; no audio edits",
+      "attribution": ""
     }
   },
   "events": {
     "lift_arrived": { "asset": null, "fallback": "ding" },
     "guest_boarded": { "asset": "assets/audio/elevator-door.wav", "fallback": "door" },
     "guest_alighted": { "asset": null, "fallback": "ding" },
-    "powerup_used": { "asset": "assets/audio/sfx/{id}.wav", "fallback": "powerup", "uniquePerPayloadId": true },
-    "hazard_started": { "asset": "assets/audio/sfx/{id}.wav", "fallback": "hazard", "uniquePerPayloadId": true },
+    "powerup_used": {
+      "assetsByPayloadId": {
+        "wrench": "assets/audio/sfx/powerup-wrench-toolbox.wav",
+        "turbo": "assets/audio/sfx/powerup-rocket-launch.wav",
+        "musak": "assets/audio/sfx/musak-electronic-jazz.mp3",
+        "freshener": "assets/audio/sfx/freesound_community-spray-48068.mp3",
+        "tardis": "assets/audio/sfx/tardis-air-whoosh.wav",
+        "doors": "assets/audio/sfx/wide-doors-old-elevator.mp3",
+        "groupThink": "assets/audio/sfx/dragon-studio-alien-song-323613.mp3",
+        "doubleDecker": "assets/audio/sfx/powerup-double-decker-robot-step.wav",
+        "openPlan": "assets/audio/sfx/powerup-open-plan-metal.wav"
+      },
+      "fallback": "powerup",
+      "uniquePerPayloadId": true
+    },
+    "hazard_started": {
+      "assetsByPayloadId": {
+        "jam": "assets/audio/sfx/hazard-metal-interaction.wav",
+        "stink": "assets/audio/sfx/hazard-gastric-distress.wav"
+      },
+      "fallback": "hazard",
+      "uniquePerPayloadId": true
+    },
     "hazard_ended": { "asset": null, "fallback": "ding" },
+    "vip_arrival": { "asset": "assets/audio/sfx/event-vip-fanfare.wav", "fallback": "victory" },
+    "guest_urgency": { "asset": "assets/audio/sfx/guest-urgency-aww.ogg", "fallback": "error" },
+    "guest_refused": { "asset": "assets/audio/sfx/guest-refused-alert.wav", "fallback": "error" },
+    "purchase_confirmed": { "asset": "assets/audio/sfx/ui-purchase-coin.wav", "fallback": "ding" },
+    "ui_error": { "asset": "assets/audio/sfx/ui-error-failed.mp3", "fallback": "error" },
+    "error": { "asset": "assets/audio/sfx/ui-error-failed.mp3", "fallback": "error" },
+    "round_countdown_started": { "asset": null, "role": "context-only" },
+    "round_initialized": { "asset": null, "role": "context-only" },
+    "round_started": { "asset": null, "fallback": "ding" },
+    "round_completed": { "asset": null, "role": "context-only" },
+    "failure": { "asset": "assets/audio/sfx/ui-error-failed.mp3", "fallback": "error" },
+    "retry_started": { "asset": null, "fallback": "ding" },
+    "pause": { "asset": null, "role": "context-only" },
+    "resume": { "asset": null, "role": "context-only" },
+    "reset": { "asset": null, "role": "context-only" },
     "victory": { "asset": "assets/audio/victory.mp3", "fallback": "victory" },
-    "error": { "asset": null, "fallback": "error" }
+    "rooftop_started": { "asset": "assets/audio/gameplay-rooftop-trance.mp3", "role": "loop" },
+    "rooftop_released": { "asset": null, "role": "stop-loop" }
   }
 }

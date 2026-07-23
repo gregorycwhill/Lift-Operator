@@ -833,21 +833,41 @@ being clarified.
 
 Append one row only when a candidate is canonically promoted or a plan-level owner decision changes an acceptance gate. Exploratory candidates belong in generated search summaries, not this log.
 
-## 15. Approved audio implementation plan (in progress)
+## 15. Approved audio implementation plan (partially implemented)
 
 Audio is a post-stabilization feedback workstream. It must preserve the game's 90s arcade/chiptune character while remaining strictly observational: playback must never change engine state, simulation results, RNG, timers, guest or lift behaviour, economy, or automation decisions.
 
 Implementation checkpoint: the event-bus-compatible service, context handling, Leaderboard controls, selected menu
-track, provisional gameplay/pressure loops, victory fanfare, elevator cue, manifest, attribution, and focused browser
-tests are implemented. Final unique power-up/hazard recordings and cross-browser/mobile acceptance remain open.
+track, gameplay/pressure loops, victory fanfare, elevator cue, local asset register, manifest, attribution, and
+focused Chromium browser tests are implemented. The reviewed power-up, hazard, guest, UI, VIP, and rooftop mappings
+are locally imported and gameplay producers publish semantic events for their authoritative transitions. Rooftop
+lifecycle protection, non-restarting PSI pressure updates, fallback pulse suppression, event throttling, and
+production manifest mapping coverage are also implemented. The work
+is not complete: the outstanding risks and acceptance gaps are recorded in Section 15.6.
+
+Audio asset review update: `assets/audio/audio-review.csv` has been normalized into a source-of-truth register with
+explicit `verified`, `pending`, and `blocked` statuses. The locally imported set now includes Rocket Launch (CC-BY
+3.0, mapped to Turbo), and CC0 assets for Rooftop, Musak, TARDIS, Wide Doors, and Stink. Source URLs, authors,
+modification notes, and attribution requirements are recorded in the schema-version-2 manifest and
+`assets/audio/ATTRIBUTION.md`. Pixabay candidates for Freshener and Group Think are licence-verified and locally
+imported. The register now has a local file for every listed source row; GPL/CC-BY attribution requirements are
+recorded in the manifest and credits.
+
+Gameplay wiring update: `engine-spawner.js`, `engine-physics.js`, and `ui-shop.js` now publish VIP/rooftop lifecycle,
+hazard end, urgency, refusal, and purchase events. `audio.js` handles the `ui_error` alias, semantic fallback routing,
+and rooftop loop start/stop. Focused audio coverage now passes 22/22, including rooftop lifecycle, production
+lifecycle, authoritative guest refusal, and state-invariance contract tests for
+the new event catalogue. Smoke, syntax, configuration, and UTF-8 gates also pass.
 
 ### 15.1 Boundary and architecture
 
-1. Replace direct gameplay playback calls with an `AudioEventBus` adapter. Production publishes named, payload-light events; the simulator installs a no-op adapter. The engine must not wait for, inspect, or recover from playback.
-2. Keep source modules responsible only for semantic events (`lift_arrived`, `guest_boarded`, `hazard_jam_started`, `powerup_turbo_used`), not filenames, gain, pitch, or Web Audio details.
-3. Add a browser audio service that owns Web Audio unlock/resume, asset loading, buses, rate limiting, deduplication, context teardown, and menu/gameplay context changes. Do not create one audio context per event.
-4. Add a checked-in asset manifest and attribution record before adding licensed assets. Each record must include stable event ID, filename, source URL, author, license/version, modification note, and required attribution text. Prefer CC0 or CC BY. Do not use NC or ND assets where distribution or modification would be restricted.
-5. Preserve the current helper only as a temporary fallback during migration; do not expand its procedural sound list into the production architecture.
+1. Implemented: production publishes named, payload-light events through the `AudioEventBus` boundary; the simulator installs a no-op adapter. The engine does not wait for, inspect, or recover from playback.
+2. Implemented: source modules publish semantic events (`lift_arrived`, `guest_boarded`, `hazard_started`, `powerup_used`, and the documented guest/UI/event transitions), not filenames, gain, pitch, or Web Audio details.
+3. Partial: the browser audio service owns Web Audio unlock/resume, asset loading, buses, context changes, and basic
+event throttling. Full deduplication and complete context teardown remain open as listed in Section 15.6. Do not
+create one audio context per event.
+4. Implemented: the checked-in asset manifest and attribution record contain source URLs, authors, licences, modification notes, and required attribution text for the reviewed local assets. Prefer CC0 or CC BY. Do not use NC or ND assets where distribution or modification would be restricted.
+5. Partial: procedural fallback remains available for failed or unsupported assets; it must remain bounded and must not grow into a second production sound system.
 
 ### 15.2 Soundscape and event catalogue
 
@@ -878,6 +898,73 @@ PSI is permitted only as an internal read-only control signal for the music serv
 6. Run unit/integration/browser coverage for event routing, reset/teardown, context transitions, asset failure, first gesture, persistence, Chromium, WebKit/Safari, and mobile layouts. Run the full existing panel to prove audio remains simulation-neutral.
 
 Completion requires all listed audio tests to pass, an attribution-complete manifest, graceful no-audio operation, and no regression of deterministic simulation or player-facing telemetry boundaries.
+
+### 15.6 Current implementation gaps
+
+These are active gaps, not abandoned requirements. Items already resolved in the current implementation are recorded
+first so they are not mistaken for outstanding work.
+
+Playtest readiness: the audio workstream is cleared for desktop Chromium/WebKit playtesting. The event boundary,
+production guest identity propagation, lifecycle/source cleanup, modal context switching, asset failure fallback, and
+manifest mapping checks are implemented. Playtesting should still record browser/device, whether audio unlocked after
+the first gesture, whether any console errors appeared, and whether music/effects overlap across victory, retry, and
+pause flows.
+
+Resolved in the current implementation:
+
+- Rooftop music remains active across PSI updates and context refreshes while the rooftop event is active.
+- PSI updates adjust the pressure layer without restarting music, and procedural pulses are limited to no-asset fallback.
+- Urgency/refusal playback has basic bounded throttling.
+- The manifest records production power-up/hazard mappings and the focused test checks those mappings instead of stale
+  provisional filenames.
+- Round start/countdown, pause/resume, failure, retry, reset, and round-completion semantic events are wired and have
+  focused production-transition coverage.
+- Spawner VIP/rooftop transitions, hazard recovery, and shop purchase confirmation are exercised through production
+  functions rather than only by manually publishing event names.
+- PSI hysteresis, decoded-buffer failure status, and explicit audio teardown are implemented and covered.
+- Deterministic failed-fetch/invalid-decode, mute, and context-source cleanup cases are covered; unsupported browser
+  codecs, unavailable devices, and suspended-context recovery remain environment-dependent gaps.
+- The test server now returns audio-specific MIME types (`audio/mpeg`, `audio/ogg`, and `audio/wav`), and teardown
+  bounds a pending `AudioContext.close()` call so Safari/WebKit cleanup cannot block indefinitely.
+- Playwright output now uses the operating-system temporary directory instead of the OneDrive reparse-point
+  `test-results/` directory. This restores normal execution; the focused Chromium and WebKit audio suites both pass
+  22/22.
+- The guest refusal path is covered from a controlled `BOARDING` frame through the production `animationTick` state
+  machine, rather than by manually publishing `guest_refused`.
+- Leaderboard modal acceptance verifies that gameplay music sources are stopped while the menu context is active and
+  gameplay context is restored on close in both Chromium and WebKit.
+- Reset acceptance verifies that a prior round's rooftop and gameplay sources are cleared before retry/round
+  reinitialization in both Chromium and WebKit.
+- Identity-aware urgency throttling acceptance verifies that duplicate same-guest cues are suppressed while distinct
+  guest cues are preserved under concurrent publication.
+
+High priority:
+
+- Keep extending real-flow coverage as new producers are added. VIP, rooftop, hazard, shop, urgency, refusal, UI error,
+  victory, and core lifecycle transitions are now covered through production functions.
+- Complete the context-mix rules and acceptance coverage for retry, victory, and teardown so sources cannot leak or
+  overlap across lifecycle boundaries. Leaderboard modal pause/open/close and reset/retry source cleanup are covered;
+  playtesting should confirm victory and teardown on an audio-capable device.
+- Reset clears prior-round rooftop and gameplay sources before retry/round reinitialization.
+
+Medium priority:
+
+- Identity-aware throttling is covered for duplicate and distinct guest cues; broader high-volume load profiling remains
+  optional acceptance work rather than a known correctness gap.
+
+Testing gaps:
+
+- Test failed fetch/decode, unsupported codecs, unavailable audio devices, suspended contexts, and first-gesture
+  unlock without console-error loops or gameplay failure. Deterministic failed-fetch and invalid-decode cases are
+  covered; codec, device, suspended-context, and first-gesture acceptance remain open.
+- Test independent volume changes while one-shot effects, gameplay music, and rooftop music are active; mute and
+  leaderboard modal source cleanup are covered, but retry/victory/teardown overlap acceptance remains open.
+- Test reset, retry, modal pause, victory, context transitions, and source cleanup for leaks or overlapping tracks.
+- Run the audio acceptance suite on Chromium, WebKit/Safari, and mobile-sized layouts; HTTP asset availability alone
+  is insufficient evidence of successful decoding. Chromium and WebKit suites now pass; mobile-sized interaction and
+  real-device audio acceptance remain playtest follow-up checks, not blockers for desktop playtesting.
+- Production mapping availability is now asserted against the manifest; legacy files are not used as evidence for
+  current audio wiring.
 
 ## 16. Planned R14–R20 extension and Service Zoning (design only)
 

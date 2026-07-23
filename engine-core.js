@@ -106,6 +106,7 @@ window.pauseGame = function() {
     if (!Registry.gameActive) return;
     Registry.gameActive = false;
     Registry.pauseStartTime = Date.now();
+    window.Game.Audio?.publish('pause', { round: Registry.stats.round });
 };
 
 window.resumeGame = function() {
@@ -126,6 +127,7 @@ window.resumeGame = function() {
         Registry.pauseStartTime = 0;
     }
     Registry.gameActive = true;
+    window.Game.Audio?.publish('resume', { round: Registry.stats.round });
 };
 
 window.setLiftTarget = function(liftIndex, targetFloor) {
@@ -191,6 +193,7 @@ window.captureRoundCheckpoint = function(round = Registry.stats.round) {
 
 window.resetAttemptTelemetry = function() {
     Registry.roundStats = window.createRoundStats();
+    Registry.guestSequence = 0;
     Registry.roundEvaluation = null;
     Registry.roundTerminalHandled = false;
     Registry.pendingFailedRetry = null;
@@ -305,6 +308,7 @@ window.initializeRound = function(round, options = {}) {
     window.clearAttemptInventory();
     const state = window.createRoundState(round, Registry.seed, options);
     window.applyRoundState(state, options);
+    window.Game.Audio?.publish('round_initialized', { round: state.definition.round });
     if (!options.preserveCheckpoint) window.captureRoundCheckpoint(state.definition.round);
 
     const ui = GameUI();
@@ -357,6 +361,7 @@ window.handleOrdinaryDeath = function() {
         round: checkpoint.round,
         seed: checkpoint.seed
     };
+    window.Game.Audio?.publish('failure', { round: checkpoint.round, reason: 'ordinary-death' });
 
     const stats = Registry.roundStats;
     const failedEvaluation = {
@@ -383,6 +388,7 @@ window.retryFailedRound = function() {
     if (!pending) return;
     Registry.pendingFailedRetry = null;
     Registry.seed = pending.seed;
+    window.Game.Audio?.publish('retry_started', { round: pending.round });
     window.skipToRound(pending.round, { preserveCheckpoint: true });
 };
 
@@ -391,6 +397,7 @@ window.completeRound = function(reason = 'completed') {
     Registry.roundTerminalHandled = true;
     Registry.gameActive = false;
     Registry.pauseStartTime = 0;
+    window.Game.Audio?.publish('round_completed', { round: Registry.stats.round, reason });
 
     Registry.highestUnlockedRound = Math.max(
         Registry.highestUnlockedRound,
@@ -412,6 +419,7 @@ window.advanceToRound = function(targetRound) {
 };
 
 window.resetGame = function() {
+    window.Game.Audio?.publish('reset', { round: Registry.stats.round });
     if (Config.debugMode) {
         Registry.points = 99999;
         Registry.highestUnlockedRound = 20;

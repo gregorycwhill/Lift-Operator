@@ -59,9 +59,11 @@ window.checkoutCart = function() {
     if (typeof PowerUps === 'undefined') return;
     let totalCost = PowerUps.cart.reduce((sum, item) => sum + PowerUps.catalog[item.id].tiers[item.tier].cost, 0);
     if (Registry.points >= totalCost) {
+        const purchased = PowerUps.cart.slice();
         Registry.points -= totalCost;
-        PowerUps.inventory.push(...PowerUps.cart);
+        PowerUps.inventory.push(...purchased);
         PowerUps.cart = [];
+        purchased.forEach(item => window.Game.Audio?.publish('purchase_confirmed', { id: item.id, tier: item.tier, cost: PowerUps.catalog[item.id].tiers[item.tier].cost }));
         window.updateInventoryUI();
     }
 };

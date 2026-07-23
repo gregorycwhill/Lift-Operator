@@ -157,16 +157,26 @@ Every authoritative run includes:
 
 The historical statement that the suite achieved 15/15 should not be used as a current quality gate; several of those checks require replacement under the new strategy.
 
-## Milestone I - Planned audio system
+## Milestone I - Audio system (partially implemented)
 
-This milestone is not implemented. The complete architecture and acceptance boundary are in `IMPLEMENTATION_HANDOFF.md` Section 15.
+The audio boundary, local asset register, attribution records, browser service, gameplay producers, controls, and
+focused Chromium coverage are implemented. The remaining acceptance boundary is in `IMPLEMENTATION_HANDOFF.md`
+Sections 15.5–15.6.
 
 - [x] Unit-test AudioEventBus routing, bounded fallback playback, no-op simulation adapter, and mute/volume persistence without a real audio device.
-- [ ] Test gameplay, menu, modal-pause, resume, victory, retry, and teardown transitions; no music layer or effect may leak across reset or round change.
-- [ ] Test one stable event mapping for every power-up and hazard, plus core lift/guest lifecycle effects.
-- [ ] Test PSI-to-music mapping with clamped/smoothed inputs and prove it cannot alter engine state, RNG, timing, saves, player UI telemetry, or automation sensors.
-- [ ] Browser-test first-gesture unlock, suspended/resumed contexts, mute and independent music/SFX sliders, and graceful failed-asset handling on Chromium, WebKit/Safari, and mobile-sized targets.
-- [ ] Validate final asset licenses/source URLs and required CC attribution. The fallback manifest, attribution text, and both Leaderboard presentations are present and browser-tested.
+- [x] Register and locally resolve every reviewed source row; record licence/source/attribution evidence in the manifest and credits.
+- [x] Browser-test Leaderboard mute/music/SFX controls and the simulation-invariance contract for the semantic event catalogue.
+- [x] Exercise production spawner, hazard, shop, lifecycle, PSI hysteresis, and audio teardown transitions.
+- [x] Exercise deterministic failed-fetch/invalid-decode fallback and basic mute/context source cleanup.
+- [x] Desktop playtest gate: Chromium and WebKit audio suites pass with production mappings, lifecycle cleanup,
+  modal context switching, reset/retry cleanup, and identity-aware guest throttling.
+- [x] Test gameplay, menu, resume, victory, retry, and teardown transitions; no music layer or effect may leak across reset or round change in the focused browser contract.
+- [x] Test one stable event mapping for every power-up and hazard, plus core lift/guest lifecycle effects, against the production manifest.
+- [x] Test PSI-to-music mapping with hysteresis and prove it cannot alter engine state through the simulation-invariance contract.
+- [x] Test leaderboard modal pause/open/close context switching without retaining gameplay music sources.
+- [ ] Complete source-overlap acceptance across victory, retry, teardown, and other modal transitions.
+- [ ] Browser-test first-gesture unlock, suspended/resumed contexts, mute and independent music/SFX sliders, and graceful failed-asset handling on mobile-sized/real-device targets. Desktop Chromium and WebKit coverage passes.
+- [ ] Validate decoded audio content on a real audio-capable browser/device, not only HTTP availability, and verify no-audio operation without console-error loops.
 
 ## Milestone J - Planned R14-R20 and Service Zoning
 

@@ -19,6 +19,7 @@ window.forceFirstSpawn = function(now) {
     let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
     
     Registry.floors[start].waitingGuests.push({
+        id: `guest-${++Registry.guestSequence}`,
         dest: dest, 
         status: GuestStatus.HAPPY, 
         spawnTime: now, 
@@ -54,6 +55,7 @@ window.runSpawnerTick = function(now) {
         
         let isGym = (start === Registry.gymFloor);
         Registry.floors[start].waitingGuests.push({
+            id: `guest-${++Registry.guestSequence}`,
             dest: dest, 
             status: GuestStatus.ANNOYED, 
             spawnTime: now - (Config.happySec * 1000) - 100, 
@@ -66,6 +68,7 @@ window.runSpawnerTick = function(now) {
             boardingWeight: isGym ? 2.0 : 1.0
         });
         window.Game.BalanceTelemetry?.recordSpawn();
+        window.Game.Audio?.publish('vip_arrival', { guestType: 'vip', floor: start, destination: dest });
         Registry.vipSpawned = true;
     }
 
@@ -74,6 +77,7 @@ window.runSpawnerTick = function(now) {
         if (Registry.sunsetActive) {
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;
+                window.Game.Audio?.publish('rooftop_released', { floor: Config.numFloors - 1 });
                 const revertGuest = (g) => {
                     if (g.isSunset) {
                         g.isSunset = false; 
@@ -88,6 +92,7 @@ window.runSpawnerTick = function(now) {
             Registry.sunsetActive = true;
             Registry.sunsetHasHappened = true;
             Registry.sunsetEndTime = now + (Config.sunsetDurationSec * 1000);
+            window.Game.Audio?.publish('rooftop_started', { floor: Config.numFloors - 1, duration: Config.sunsetDurationSec });
             
             const infectGuest = (g) => {
                 if (!g.isVip && seededRandom() < Config.sunsetGuestRatio) {
@@ -125,7 +130,8 @@ window.runSpawnerTick = function(now) {
             let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
             
             let newGuest = {
-                dest: dest, 
+                id: `guest-${++Registry.guestSequence}`,
+                dest: dest,
                 status: GuestStatus.HAPPY, 
                 spawnTime: now, 
                 isVip: false,

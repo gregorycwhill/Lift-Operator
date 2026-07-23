@@ -35,6 +35,7 @@ const Registry = {
     highestUnlockedRound: 1, 
     gameActive: false, pauseStartTime: 0, lastSpawnTime: 0, floorHeight: 60, 
     fallbackName: "Pilot 1", seed: 1234,
+    guestSequence: 0,
     
     // Auto-Pilot & Regression Telemetry
     autoPilotActive: false,

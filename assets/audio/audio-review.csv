@@ -1,0 +1,23 @@
+effect_name,context,local_asset,source_url,author,license_status,license,attribution_status,notes
+Menu music,menu,menu-somewhere-in-the-elevator.ogg,https://opengameart.org/content/somewhere-in-the-elevator,Peachtea@You're Perfect Studio,verified,"CC0 (also CC-BY 4.0, CC-BY 3.0, OGA-BY 3.0)",required-and-recorded,Existing loop; page offers multiple licence choices and the package keeps attribution.
+Gameplay base,music,gameplay-chiploop.mp3,https://opengameart.org/content/chiploop,iamoneabe,verified,CC0,not-required,Existing loop; no modification.
+Gameplay pressure,music,gameplay-pressure-chip-bit-danger.mp3,https://opengameart.org/content/chip-bit-danger,Sudocolon,verified,CC0,not-required,Existing loop; no modification.
+Victory fanfare,victory,victory.mp3,https://opengameart.org/content/victory,celestialghost8,verified,CC0,not-required,Existing asset; no modification.
+Elevator door,core SFX,elevator-door.wav,https://opengameart.org/content/elevatordoor,PagDev,verified,CC0,not-required,Existing asset; no modification.
+Wrench,power-up,sfx/powerup-wrench-toolbox.wav,https://opengameart.org/content/tools-in-plastic-toolbox,Soundsnap,verified,GPL-3.0,required-and-recorded,Downloaded WAV retained; GPL-3 attribution/source is recorded.
+Freshener,power-up,sfx/freesound_community-spray-48068.mp3,https://pixabay.com/sound-effects/film-special-effects-spray-48068/,Pixabay contributor,verified,Pixabay Content License,optional,Downloaded MP3 retained; licence permits commercial use without attribution.
+Musak,power-up,sfx/musak-electronic-jazz.mp3,https://opengameart.org/content/electronic-jazz-chromatic,Pro Sensory,verified,CC0,optional-credit-recorded,Attribution notice requests Alex McCulloch; downloaded MP3 retained without modification.
+Turbo,power-up,sfx/powerup-rocket-launch.wav,https://opengameart.org/content/rocket-launch-0,dklon,verified,CC-BY 3.0,required-and-recorded,Downloaded WAV retained without modification; credit dklon.
+TARDIS,power-up,sfx/tardis-air-whoosh.wav,https://opengameart.org/content/air-whoosh,pyranostudios,verified,CC0,not-required,Downloaded WAV retained without modification.
+Wide Doors,power-up,sfx/wide-doors-old-elevator.mp3,https://opengameart.org/content/old-elevator-door,sinny,verified,CC0,not-required,Downloaded MP3 retained without modification.
+Group Think,power-up,sfx/dragon-studio-alien-song-323613.mp3,https://pixabay.com/sound-effects/film-special-effects-alien-song-323613/,DRAGON-STUDIO,verified,Pixabay Content License,optional,Downloaded MP3 retained; licence permits commercial use without attribution.
+Double-Decker,power-up,sfx/powerup-double-decker-robot-step.wav,https://opengameart.org/content/robotic-mechanic-step-sounds,Lee Barkovich (submitted by qubodup),verified,CC-BY 3.0,required-and-recorded,Selected robot step WAV retained; credit Lee Barkovich.
+Open Plan,power-up,sfx/powerup-open-plan-metal.wav,https://opengameart.org/content/27-metal-audio-samples-sfx,blacklodgegames,verified,CC0,not-required,Selected metal collision WAV retained.
+Jam,hazard,sfx/hazard-metal-interaction.wav,https://opengameart.org/content/metal-interactions,qubodup,verified,CC0,not-required,Selected metal interaction WAV retained.
+Stink,hazard,sfx/hazard-gastric-distress.wav,https://opengameart.org/content/gastric-distress,LFA,verified,CC0,not-required,Downloaded WAV retained without modification.
+Rooftop party,event,gameplay-rooftop-trance.mp3,https://opengameart.org/content/trance-boss-battle,MintoDog,verified,CC0,not-required,Downloaded loopable MP3 retained without modification.
+VIP arrival,event,sfx/event-vip-fanfare.wav,https://opengameart.org/content/fanfare-2,Spring Spring,verified,CC-BY 4.0,required-and-recorded,Selected WAV retained; credit Spring/Spring Enterprises.
+Guest urgency,guest,sfx/guest-urgency-aww.ogg,https://opengameart.org/content/aww-scream,bluszcz,verified,CC-BY 3.0,required-and-recorded,Selected OGG retained; credit bluszcz.
+Guest refused boarding,guest,sfx/guest-refused-alert.wav,https://opengameart.org/content/alertnotification-sound,frosty ham,verified,CC0,not-required,Downloaded WAV retained.
+Purchase confirmation,UI,sfx/ui-purchase-coin.wav,https://opengameart.org/content/plingy-coin,Fupi,verified,CC0,not-required,Downloaded WAV retained.
+UI error,UI,sfx/ui-error-failed.mp3,https://opengameart.org/content/ui-failed-or-error,ViRiX,verified,CC-BY 3.0,required-and-recorded,Downloaded MP3 retained; credit “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”.

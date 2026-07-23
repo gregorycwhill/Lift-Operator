@@ -25,7 +25,7 @@ The documents have distinct responsibilities:
 
 | Document | Purpose | Authority |
 | --- | --- | --- |
-| [IMPLEMENTATION_HANDOFF.md](IMPLEMENTATION_HANDOFF.md) | Implementation authority: stabilization/balance handoff plus the approved planned audio architecture and acceptance tests | Primary implementation authority |
+| [IMPLEMENTATION_HANDOFF.md](IMPLEMENTATION_HANDOFF.md) | Implementation authority: stabilization/balance handoff plus the approved audio architecture, current status, and acceptance tests | Primary implementation authority |
 | [Lift-Operator_GDD.md](Lift-Operator_GDD.md) | Product vision, player experience, rules, and design principles | Design intent |
 | [CURRENT_IMPLEMENTATION.md](CURRENT_IMPLEMENTATION.md) | What the current code actually does, including known inconsistencies | Implemented baseline |
 | [Game Play Map.md](Game%20Play%20Map.md) | Target round sequence, learning arc, problems, solution spaces, and tuning parameters | Target progression |
@@ -53,7 +53,7 @@ All specifications use the following terms:
 
 ## Current project phase
 
-The game is a playable 13-round playtest build with canonical balance data, compact simulation reports, and a stabilized core loop.
+The game is a playable 20-round build with the first 13 rounds covered by the accelerated playtest campaign, canonical balance data, compact simulation reports, and a stabilized core loop.
 
 The completed stabilization/balance programme remains recorded in `IMPLEMENTATION_HANDOFF.md`:
 
@@ -63,7 +63,7 @@ The completed stabilization/balance programme remains recorded in `IMPLEMENTATIO
 4. Use bounded code-driven search for Round 2 and Rounds 7–11/13.
 5. Verify economy feasibility, promote only the first gated candidate, then run human outlier testing.
 
-The next approved workstream is planned audio: an adaptive layered gameplay loop, quiet neutral menu/modal music, a victory fanfare, unique power-up and hazard effects, compact Leaderboard controls, and attribution. It is a plan only; its scope, boundaries, asset-discovery rules, and test gates are in `IMPLEMENTATION_HANDOFF.md` Section 15. It does not add mechanics, expose PSI, or change simulation outcomes.
+Audio is cleared for desktop Chromium/WebKit playtesting: the event-bus-compatible browser service, menu/gameplay context handling, Leaderboard controls, local licensed asset register, attribution, gameplay producers, lifecycle cleanup, and focused browser tests are in place. Real-device decode/device handling and mobile/first-gesture/suspended-context validation remain playtest follow-up checks. The authoritative status and gap list are in `IMPLEMENTATION_HANDOFF.md` Section 15. Audio does not add mechanics, expose PSI, or change simulation outcomes.
 
 ## Local development and tests
 
@@ -112,7 +112,7 @@ npm.cmd run balance:matrix
 
 Balance violations are reported as tuning evidence; `npm.cmd test` verifies report integrity without pretending that currently unmet balance goals are correctness failures.
 
-The suite verifies the complete accelerated 13-round campaign, the human-intervention kill switch, ordinary-death rollback, single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. Its first complete local campaign run passed in approximately 6.6 minutes.
+The suite verifies that the accelerated campaign reaches the Round 13 playtest boundary, the human-intervention kill switch, ordinary-death rollback, single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. The current complete local gate passes 91/91 tests in approximately 9.6 minutes, including the 8.3-minute campaign test.
 
 ## Project security philosophy
 
@@ -129,7 +129,7 @@ The project protects the experience from accidents, not the source from curious 
 The obfuscation is therefore fit for the project’s purpose. Strong authentication, anti-cheat, and adversarial security are not goals.
 # Stabilization status
 
-The current implementation passes the full automated gate, including the 13-round Monkey campaign. Developer
+The current implementation passes the full automated gate, including the Round 13 Monkey playtest-boundary campaign. Developer
 simulation and balance tooling is available through `npm.cmd run sim:matrix`, `sim:repro`, `balance:search`,
 `balance:search:late`, `economy:search`, and `audit:completion`.
 
