@@ -1,6 +1,9 @@
 # Automation Workshop Specification
 
 **Purpose:** Define the educational experience, current implementation boundary, target execution model, and reliability requirements for player automation.
+**Document status:** Active feature specification; implementation status is tracked below.  
+**Owner class:** Product and engineering  
+**Last reviewed:** 25 July 2026
 
 ## 1. Player purpose
 

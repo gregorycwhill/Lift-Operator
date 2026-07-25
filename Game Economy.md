@@ -1,7 +1,9 @@
 # Lift Operator — Target Game Economy
 
-**Document role:** Canonical target earning, spending, retry, and progression design  
-**Status:** Initial economy model for simulation and playtesting  
+**Document role:** Active economy design reference for earning, spending, retry, and progression  
+**Status:** Active design; numerical authority remains `design/game-balance.v1.json`  
+**Owner class:** Product and design  
+**Last reviewed:** 25 July 2026  
 **Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
 
 ## 1. Economy goals

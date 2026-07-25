@@ -1,12 +1,15 @@
 # Lift Operator — Target Game Play Map
 
-**Document role:** Canonical target progression and round-balance specification  
-**Campaign scope:** 13 rounds  
+**Document role:** Target learning arc and candidate round/balance intent  
+**Campaign scope:** 20 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20  
 **Status:** Design candidate for iterative playtesting; not a statement of current implementation  
+**Owner class:** Product and design  
+**Last reviewed:** 25 July 2026  
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
-**Implementation addendum (19 July 2026):** Rounds 14-20 structural shells and direct single-lift Service Zoning
-are now implemented. This document remains authoritative for their intended progression and future tuning.
+**Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
+`design/game-balance.v1.json`; current implementation status belongs in `DELIVERY_PLAN.md`, and acceptance evidence
+belongs in `TEST_PLAN.md`.
 
 ## 1. How to use this document
 

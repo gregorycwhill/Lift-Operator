@@ -1,11 +1,15 @@
 # Lift Operator — Game Design Document
 
 **Document role:** Product vision and design intent  
-**Current phase:** Playable advanced prototype entering stabilization  
+**Status:** Active product design reference  
+**Owner class:** Product and design  
+**Last reviewed:** 25 July 2026  
+**Current phase:** Playable campaign entering structured playtesting  
 **Campaign scope:** 20 rounds; R14–R20 traffic tuning remains subject to playtest evidence.
 
-**Implementation addendum (19 July 2026):** The playable structural campaign now includes Rounds 14-20. Their
-direct single-lift Service Zoning foundation is implemented; traffic tuning and late-round playtesting remain open.
+**Authority boundary:** The playable structural campaign includes Rounds 14-20. This document defines durable player
+experience and rules; current delivery status belongs in `DELIVERY_PLAN.md`, and late-round tuning evidence belongs in
+`TEST_PLAN.md`.
 
 ## 1. High concept
 

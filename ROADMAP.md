@@ -1,7 +1,10 @@
 # Lift Operator Product Roadmap
 
 **Purpose:** Product outcomes and sequence. This is not an implementation checklist.
-**Current delivery:** `DELIVERY_PLAN.md` — proposed `0.3.0-network-campaign-preview`
+**Status:** Active product roadmap  
+**Owner class:** Product  
+**Last reviewed:** 25 July 2026  
+**Current delivery:** `DELIVERY_PLAN.md` — `0.3.0-network-campaign-preview` playtest release
 
 ## Product north star
 
@@ -147,3 +150,4 @@ These are not commitments. Reconsider them only after the network campaign is va
 - `Game Play Map.md` — round learning arc and intended structural problems.
 - `Game Economy.md` — earning, spending, retry, and progression intent.
 - `Automation_Workshop_Spec.md` — Workshop player experience and containment boundary.
+- `docs/archive/PLAYTEST_ARCHIVE.md` — timestamped/verbatim playtest evidence, including reconstructed chat feedback.

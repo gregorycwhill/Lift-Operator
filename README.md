@@ -1,5 +1,9 @@
 # Lift Operator
 
+**Status:** Active project entry point  
+**Owner class:** Product and engineering  
+**Last reviewed:** 25 July 2026
+
 Lift Operator is a browser-based elevator management and automation game. It begins as a fast arcade game about routing lifts under time pressure, then develops into a strategy puzzle about traffic analysis, scarce power-ups, automation selection, and custom routing logic.
 
 Live build: https://gregorycwhill.github.io/Lift-Operator/
@@ -31,6 +35,7 @@ rules that keep current plans separate from history.
 | Current evidence and release gates | [TEST_PLAN.md](TEST_PLAN.md) |
 | Product rules and round/economy intent | [GDD](Lift-Operator_GDD.md), [Game Play Map](Game%20Play%20Map.md), [Game Economy](Game%20Economy.md) |
 | Long-lived engineering practices | [TESTING_STRATEGY.md](TESTING_STRATEGY.md), [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) |
+| Playtester verbatims and historical observations | [Playtest archive](docs/archive/PLAYTEST_ARCHIVE.md) |
 
 Historical handoffs and completed plans remain in the repository for context, but are not current work authority.
 
@@ -38,12 +43,13 @@ Historical handoffs and completed plans remain in the repository for context, bu
 
 The game is a playable 20-round build with the first 13 rounds covered by the accelerated playtest campaign, canonical balance data, compact simulation reports, and a stabilized core loop.
 
-The historical stabilization/balance programme remains in `IMPLEMENTATION_HANDOFF.md` for context. It is not the
-current delivery plan.
+Historical stabilization, balance, implementation, and playtest material remains in `docs/archive/` for context. It is
+not current delivery authority.
 
-The current delivery is Service Zoning playtest readiness: validate direct-service behavior, Workshop comprehension,
-large-fleet layouts, reproducible diagnostics, and the first R14-R20 tuning evidence. Audio is cleared for desktop
-Chromium/WebKit playtesting; real-device/mobile audio checks are follow-up acceptance work. See `DELIVERY_PLAN.md`.
+The current delivery is the `0.3.0-network-campaign-preview` playtest release: validate direct-service behavior,
+Workshop comprehension, large-fleet layouts, reproducible diagnostics, audio continuity, and the first R14-R20 tuning
+evidence. Audio is cleared for desktop Chromium/WebKit playtesting; real-device/mobile audio checks are follow-up
+acceptance work. See `DELIVERY_PLAN.md` and `docs/archive/PLAYTEST_ARCHIVE.md`.
 
 ## Local development and tests
 
@@ -92,7 +98,9 @@ npm.cmd run balance:matrix
 
 Balance violations are reported as tuning evidence; `npm.cmd test` verifies report integrity without pretending that currently unmet balance goals are correctness failures.
 
-The suite verifies that the accelerated campaign reaches the Round 13 playtest boundary, the human-intervention kill switch, ordinary-death rollback, single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. The current complete local gate passes 91/91 tests in approximately 9.6 minutes, including the 8.3-minute campaign test.
+The suite verifies the accelerated campaign boundary, the human-intervention kill switch, ordinary-death rollback,
+single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. The latest complete local
+gate is recorded in `TEST_PLAN.md`; update that record whenever the test count changes.
 
 ## Project security philosophy
 

@@ -1,5 +1,8 @@
 # Refactor Plan Archive
 
+**Status:** Historical completed phase plan; not current delivery authority.  
+**Superseded by:** `DELIVERY_PLAN.md` and current code.
+
 The original structural refactor is complete enough to support stabilization, but the architecture is not yet fully modular or data-driven.
 
 This file is retained as a historical pointer. Active architectural work is defined in `DELIVERY_PLAN.md`.

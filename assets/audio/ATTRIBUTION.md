@@ -1,5 +1,9 @@
 # Audio attribution
 
+**Status:** Active licensing and attribution record  
+**Owner class:** Product and engineering  
+**Last reviewed:** 25 July 2026
+
 The title/menu context uses:
 
 - “Somewhere in the Elevator” by Peachtea@You're Perfect Studio

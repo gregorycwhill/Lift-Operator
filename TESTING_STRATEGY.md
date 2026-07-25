@@ -1,9 +1,13 @@
 # Lift Operator Testing Strategy
 
+**Status:** Active enduring test strategy  
+**Owner class:** Engineering and playtest  
+**Last reviewed:** 25 July 2026
+
 **Objective:** Produce trustworthy evidence that the engine is correct, deterministic, resilient to accidental misuse, and suitable for balance iteration.
 
 `TEST_PLAN.md` supplies the active test inventory and release evidence. This document defines the enduring testing
-principles and layers; historical test detail remains in `IMPLEMENTATION_HANDOFF.md`.
+principles and layers; historical test detail remains in `docs/archive/IMPLEMENTATION_HANDOFF.md`.
 
 ## 1. What testing must distinguish
 

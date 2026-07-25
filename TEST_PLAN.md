@@ -1,6 +1,8 @@
 # Current Test Plan — Service Zoning and Playtest Evidence
 
-**Status:** Active test plan for `DELIVERY_PLAN.md`
+**Status:** Active acceptance plan for the `0.3.0-network-campaign-preview` playtest release  
+**Owner class:** Engineering and playtest  
+**Last reviewed:** 25 July 2026  
 **Testing principles:** `TESTING_STRATEGY.md`
 **Product scope:** `ROADMAP.md` and the product design documents
 
@@ -19,11 +21,17 @@ The release is green only when the following evidence is complete:
   the normal campaign.
 - A pushed release commit, generated artifacts, documentation snapshot, seed pack, and test report are available.
 
-## Release baseline
+## Current evidence state
 
-The current baseline passed `npm.cmd test` on 23 July 2026: validation, economy, reports, unit, mechanics,
-integration, and 91 Playwright tests. The long UNIT_01 test reaches the Round 13 playtest boundary; it is not a claim
-that Round 13 completes the 20-round campaign.
+**Implementation baseline:** `872b8f8` — `Prepare economy and audio continuity playtest build` (25 July 2026).  
+**Latest full automated gate:** `npm.cmd test` passed with 96 Playwright tests, plus syntax, documentation, config,
+balance, economy, report, UTF-8, unit, mechanics, and integration checks.  
+**Release state:** Playtest-ready, not promoted. The remaining gate is human/device acceptance and evidence-led tuning,
+not a claim that every release criterion below has passed.
+
+Automated implementation evidence exists for the zoning foundation, diagnostics, Endless debug entry, economy/audio
+follow-up, and regression coverage. The unchecked items below are the remaining release-acceptance evidence or areas
+that need an explicit evidence record before promotion.
 
 Run before merging a material change:
 
@@ -43,7 +51,7 @@ npx.cmd playwright test tests/audio.spec.js
 
 ## Current evidence matrix
 
-### A. Direct-service zoning correctness
+### A. Direct-service zoning correctness still requiring explicit acceptance evidence
 
 - [ ] Unit-test range normalization, inclusive endpoints, G inclusion, invalid input, and overlap detection.
 - [ ] Test the same `canLiftDirectlyServe` result through live boarding, simulation, built-in automation, custom
@@ -52,14 +60,14 @@ npx.cmd playwright test tests/audio.spec.js
 - [ ] Test zoning alongside capacity, direction, VIP, Rooftop, Gym Bro, jam, stink, patience, Turbo, and Double-Decker.
 - [ ] Test reset/retry/warp/import persistence and prevention of manual or automation bypass.
 
-### B. Workshop and responsive UI
+### B. Workshop and responsive UI still requiring acceptance evidence
 
 - [ ] Browser-test Workshop edits, coverage preview, invalid-range feedback, overlap warnings, and saved configuration.
 - [ ] Render 20/25/30 floors with 5–10 lifts at desktop, tablet, mobile, and large-fleet horizontal-scroll layouts.
 - [ ] Verify zone labels, selected shafts, sticky floor references, and refusal text remain readable without unbounded DOM
   growth.
 
-### C. Simulation, telemetry, and tuning safeguards
+### C. Simulation, telemetry, and tuning safeguards still requiring acceptance evidence
 
 - [ ] Record deterministic zone-refusal, uncovered-route, overlap-utilization, empty-travel, and restrictive-idle
   metrics in compact reports/replays.

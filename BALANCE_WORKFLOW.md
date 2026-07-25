@@ -1,5 +1,9 @@
 # Balance Workflow
 
+**Status:** Active enduring process reference  
+**Owner class:** Product, design, and engineering  
+**Last reviewed:** 25 July 2026
+
 ## 1. Objective
 
 `DELIVERY_PLAN.md` defines current implementation scope and `TEST_PLAN.md` defines current evidence. This document
@@ -7,9 +11,9 @@ remains the enduring design-to-data workflow and human-playtest protocol.
 
 Create a short, repeatable loop in which design changes can be proposed in documentation, validated, converted into configuration, exercised by the unchanged engine, and evaluated through simulation and human play.
 
-`E2E_BALANCE_PLAN.md` explains the campaign-wide satisficing rationale. The active delivery sequence lives in
-`DELIVERY_PLAN.md`. The first pass satisfices across all rounds with coarse changes; fine-grained optimisation is
-reserved for human-identified outliers.
+The historical `docs/archive/E2E_BALANCE_PLAN.md` explains the campaign-wide satisficing rationale. The active delivery
+sequence lives in `DELIVERY_PLAN.md`. The first pass satisfices across all rounds with coarse changes; fine-grained
+optimisation is reserved for human-identified outliers.
 
 ```text
 Design hypothesis

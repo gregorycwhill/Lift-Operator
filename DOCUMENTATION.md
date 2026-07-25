@@ -1,5 +1,9 @@
 # Lift Operator Documentation Guide
 
+**Status:** Active documentation governance reference  
+**Owner class:** Product and engineering  
+**Last reviewed:** 25 July 2026
+
 ## Purpose
 
 This guide prevents planning drift. A document has one job, one status, and one owner class. Do not use a historical
@@ -13,6 +17,8 @@ plan as current work authority just because it contains useful detail.
 | What outcome comes next and why? | `ROADMAP.md` | A product phase starts, finishes, or is reprioritized |
 | What are we implementing now? | `DELIVERY_PLAN.md` | A delivery slice changes scope, risk, or acceptance criteria |
 | What proves the current slice works? | `TEST_PLAN.md` | Tests, playtest protocol, or release gate changes |
+| What did playtesters actually say? | `docs/archive/PLAYTEST_ARCHIVE.md` | A playtester message or its disposition is recorded |
+| What audio assets may ship and how are they credited? | `assets/audio/ATTRIBUTION.md` | An audio source, licence, or local asset changes |
 | What does the code currently expose? | Code, `package.json`, generated balance data, and focused tests | Code is always primary; write a short baseline note only for material behavior |
 | How do balance and quality practices work? | `BALANCE_WORKFLOW.md`, `TESTING_STRATEGY.md` | Enduring process changes |
 
@@ -21,10 +27,19 @@ change. Markdown describes intent and evidence, never a competing numeric source
 
 ## Historical documents
 
-`IMPLEMENTATION_HANDOFF.md`, `CURRENT_IMPLEMENTATION.md`, `STABILIZATION_PLAN.md`,
-`IMPLEMENTATION_PLAN.md`, `REFACTOR_PLAN.md`, and `ORIENTATION_IMPLEMENTATION_PLAN.md` preserve prior decisions and
-implementation context. They are not active work queues. Git history is the detailed change log; do not keep completed
-checklists alive indefinitely.
+`docs/archive/` preserves prior decisions, implementation context, and retrospective playtest evidence. Completed plans
+are not active work queues. Git history is the detailed change log; do not keep completed checklists alive indefinitely.
+
+The playtest archive is an active evidence record, not a work queue. New entries should include the transcript timestamp
+when available and explicitly mark unrecoverable timestamps.
+
+| Archived document | Retained for | Superseded by |
+| --- | --- | --- |
+| `CURRENT_IMPLEMENTATION.md` | 18 July technical snapshot and later appended history | Code, focused tests, `DELIVERY_PLAN.md`, `TEST_PLAN.md` |
+| `E2E_BALANCE_PLAN.md` | Historic satisficing-balance rationale | `BALANCE_WORKFLOW.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md` |
+| `IMPLEMENTATION_HANDOFF.md` | Historic implementation decisions and handoff record | This guide, roadmap, delivery plan, test plan |
+| `IMPLEMENTATION_PLAN.md`, `REFACTOR_PLAN.md`, `STABILIZATION_PLAN.md`, `ORIENTATION_IMPLEMENTATION_PLAN.md` | Completed phase plans | Current delivery/test plans and code |
+| `PLAYTEST_ARCHIVE.md` | Verbatim and retrospective playtest evidence | No replacement; append new evidence here |
 
 ## Status vocabulary
 

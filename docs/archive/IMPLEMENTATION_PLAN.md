@@ -1,8 +1,11 @@
 # Implementation Plan Archive
 
+**Status:** Historical completed phase plan; not current delivery authority.  
+**Superseded by:** `DOCUMENTATION.md`, `ROADMAP.md`, `DELIVERY_PLAN.md`, and `TEST_PLAN.md`.
+
 This file previously contained a phase plan that mixed completed work, proposed work, and optimistic status claims.
 
-It is retained at this path to avoid breaking links, but it is no longer the active implementation plan.
+It is retained in `docs/archive/` for historical context; it is no longer the active implementation plan.
 
 Use `DOCUMENTATION.md` for the current document map, `ROADMAP.md` for product stages, `DELIVERY_PLAN.md` for active
 engineering work, and `TEST_PLAN.md` for evidence requirements.

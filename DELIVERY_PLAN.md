@@ -1,13 +1,30 @@
-# Current Delivery Plan — Service Zoning Playtest Readiness
+# Current Playtest Release — Service Zoning Campaign Preview
 
-**Status:** Next release proposal  
+**Status:** Active playtest release  
 **Release target:** `0.3.0-network-campaign-preview`  
 **Owner class:** Product and engineering  
+**Last reviewed:** 25 July 2026  
 **Scope boundary:** Promote the implemented R14–R20 direct-service zoning foundation into a diagnosable, playable,
 and testable campaign slice. This plan does not add transfers, a G hub, new hazards, or new power-ups.
 
-**Implementation checkpoint:** The first vertical slice is implemented and is ready for structured playtesting. The
-remaining release work is human/device evidence, R14–R20 balance tuning, and promotion of any accepted balance changes.
+## Current state
+
+**Implementation:** Delivered in playtest build `872b8f8` (25 July 2026).  
+**Automated baseline:** The latest full gate passed with 96 Playwright tests; see `TEST_PLAN.md`.  
+**Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
+only where evidence supports it, and a release decision with a recorded test/device/seed pack.
+
+## Acceptance work now
+
+- Run the structured R9, R13, R14, and R15-R20 combination-round sessions with browser/device, seed, loadout,
+  zoning configuration, observed failure cause, and player explanation recorded in the playtest archive.
+- Confirm real-device audio behaviour: first gesture, menu/pressure continuity, SFX duration, Musak duration, modal
+  toggling, and no unwanted door/distress sounds.
+- Verify top-floor rocket placement and R19/R20 responsive framing at supported viewports.
+- Review zoning telemetry against declared strategy profiles, then promote only conservative canonical balance changes
+  supported by reproducible evidence.
+- Record the final release decision, generated-artifact freshness, test count, supported device matrix, seed pack, and
+  tag before calling this release promoted.
 
 ## Release outcome
 
@@ -20,20 +37,23 @@ The release is ambitious because it closes the loop from product design through 
 responsive UI, simulation evidence, deployment, and human playtest. It is bounded because transfers, a G hub, new
 mechanics, and a fully open-ended generator remain outside the release gate.
 
-## Development scope
+## Delivered implementation scope
 
-### Must ship
+### Delivered foundation
 
-- Complete the shared Service Zoning model: canonical range state, normalization, inclusive G handling, overlap and
+- Completed the shared Service Zoning model: canonical range state, normalization, inclusive G handling, overlap and
   uncovered-route analysis, persistence, import validation, and one `canLiftDirectlyServe` decision path.
-- Integrate the predicate across live boarding, simulation, built-in automation, custom automation, manual targeting,
+- Integrated the predicate across live boarding, simulation, built-in automation, custom automation, manual targeting,
   refusal messaging, and Review diagnostics.
-- Finish Workshop configuration UX: range editing, coverage preview, warnings, readable in-play zone labels, and
+- Finished Workshop configuration UX: range editing, coverage preview, warnings, readable in-play zone labels, and
   recovery guidance when a lift is unavailable or a route is uncovered.
-- Complete 20/25/30-floor rendering and 5–10 lift presentation, including responsive desktop/tablet/mobile behavior,
+- Completed 20/25/30-floor rendering and 5–10 lift presentation, including responsive desktop/tablet/mobile behavior,
   fleet scrolling, sticky floor references, bounded DOM updates, and clear shaft selection.
-- Add deterministic zoning metrics and replay identity: refusals, uncovered routes, overlap utilization, empty travel,
+- Added deterministic zoning metrics and replay identity: refusals, uncovered routes, overlap utilization, empty travel,
   restrictive-zone idle time, zoning configuration, and failure classification.
+
+### Pending release-promotion evidence
+
 - Validate and conservatively tune R14–R20 one parameter family at a time after structural evidence passes. Preserve
   viable manual/hybrid, built-in-plus-loadout, and custom Workshop strategies where practical.
 - Close the known R9 rooftop and R13 affordability/manageability playtest gates, or record explicit owner decisions to
@@ -41,11 +61,11 @@ mechanics, and a fully open-ended generator remain outside the release gate.
 - Complete release documentation, generated-balance freshness, attribution/audio status, and a reproducible release
   command path.
 
-### Ambitious alpha slice
+### Delivered Endless Operations alpha
 
-- Build a constrained offline Endless Operations generator from approved templates and seeded parameters.
-- Validate generated operations through simulation, feasibility thresholds, strategy profiles, and replay identity.
-- Expose a small pre-checked challenge catalogue or debug-only Endless Operations entry point for playtesting.
+- Built a constrained offline Endless Operations generator from approved templates and seeded parameters.
+- Validated generated operations through simulation, feasibility thresholds, strategy profiles, and replay identity.
+- Exposed a debug-only entry point that starts a pre-checked playable operation.
 - Do not expose arbitrary runtime generation to the normal campaign until generated fairness and failure diagnosis are
   demonstrated.
 
@@ -59,7 +79,8 @@ mechanics, and a fully open-ended generator remain outside the release gate.
 ## Release workflow
 
 1. Work directly on `master` for this project; keep scope changes documented here and preserve a clean, reviewable commit history.
-2. Implement in vertical slices: zoning core, Workshop/UI, diagnostics, R14–R20 tuning, then Endless alpha.
+2. For a future scope extension, create a new vertical-slice plan rather than reopening this completed implementation
+   sequence.
 3. Keep canonical numerical changes in `design/game-balance.v1.json`; regenerate and validate artifacts in the same
    change.
 4. Run the fast checks after each slice and the complete release gate before merge.
@@ -77,19 +98,19 @@ mechanics, and a fully open-ended generator remain outside the release gate.
 - **Broader playtest:** compare authored R1–R13 baseline, zoning introduction, late-round combinations, and Endless
   alpha challenges. No balance promotion occurs from anecdotal feedback alone; record the hypothesis and evidence.
 
-## Current foundation
+## Delivered foundation detail
 
 Players can configure direct lift service bands, understand coverage gaps and refusals, and play the structural
 R14–R20 rounds without silent routing failures. Developers can reproduce a zoning failure from a seed, configuration,
 and compact telemetry report before tuning traffic.
 
-## Starting point
+## Pre-delivery foundation
 
 The current build already has R14–R20 factory definitions, 20/25/30-floor layouts, 5–10 lift rendering, inclusive
 service ranges, live boarding enforcement, manual/automation target enforcement, and Workshop lower/upper controls.
 This slice is about validation, observability, usability, and conservative tuning—not rebuilding that foundation.
 
-## Workstreams
+## Historical implementation workstreams
 
 ### 1. Direct-service correctness
 
@@ -122,7 +143,7 @@ This slice is about validation, observability, usability, and conservative tunin
 - Record browser/device, seed, balance version, loadout, zoning configuration, and observed failure reason for each
   session.
 
-## Sequence
+## Historical implementation sequence
 
 1. Establish production-path zoning tests and compact telemetry/replay fields.
 2. Improve Workshop/refusal/Review explanations and verify responsive large-fleet layouts.
@@ -130,7 +151,7 @@ This slice is about validation, observability, usability, and conservative tunin
 4. Conduct human playtests for R9, R13, and the zoning introduction/combination rounds.
 5. Tune one parameter family at a time in canonical balance data only after the prior evidence is reviewed.
 
-## Exit criteria
+## Release-promotion criteria
 
 - No direct-service bypass exists in live play, simulation, or automation.
 - Coverage gaps and refusal causes are visible and reproducible.
