@@ -57,7 +57,16 @@ window.updateWorkshopScriptList = function() {
  */
 window.openWorkshopModal = function() {
     const engine = (typeof GameEngine === 'function') ? GameEngine() : (window.Game && window.Game.Engine);
+    const overlay = document.getElementById('workshopOverlay');
+    if (overlay && overlay.style.display === 'flex') {
+        overlay.style.display = 'none';
+        window.Game.Audio?.setContext('gameplay');
+        engine?.resume?.();
+        return;
+    }
     if (engine && typeof engine.pause === 'function') engine.pause();
+    window.Game.Audio?.setContext('menu');
+    window.openModalExclusive('workshopOverlay');
 
     if (typeof AutomationWorkshop !== 'undefined') {
         AutomationWorkshop.show();

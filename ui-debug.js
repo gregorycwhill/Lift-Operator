@@ -196,7 +196,8 @@ window.refreshDebugVisibility = function() {
 
 window.openDebugModal = function() {
     if (!Config.debugMode) return;
+    GameEngine().pause();
+    window.Game.Audio?.setContext('menu');
     window.renderDebugMenu();
-    const overlay = document.getElementById('debugOverlay');
-    if (overlay) overlay.style.display = 'flex';
+    window.openModalExclusive('debugOverlay');
 };

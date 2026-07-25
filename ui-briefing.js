@@ -43,7 +43,7 @@ window.showRoundModal = function(round) {
         btn.className = 'btn btn-green btn-large btn-full-width';
     } 
     else if (round === 2) { title.innerText = `Round 2: Automations Unlocked (${rank})`; instructions.innerText = "Manual control is tough! Activate 'Sweep' to let the lift manage itself."; }
-    else if (round === 3) { title.innerText = `Round 3: Rush Hour (${rank})`; instructions.innerText = "Management approved a second lift! The spawn rate is climbing."; }
+    else if (round === 3) { title.innerText = `Round 3: Rush Hour (${rank})`; instructions.innerText = "Management approved a second lift! Room Service carts carry heavier deliveries and need extra lift capacity. The spawn rate is climbing."; }
     else if (round === 4) { title.innerText = `Round 4: Triage (${rank})`; instructions.innerText = "New automation: 'Priority Sweep'. It ignores everyone else to save Critical (Red) guests."; }
     else if (round === 5) { title.innerText = `Round 5: Democracy (${rank})`; instructions.innerText = "Three lifts! 'Voting' automations added. They act as express trains to the floor with the most votes."; }
     else if (round === 6) { title.innerText = `Round 6: The Wild Card (${rank})`; instructions.innerText = "WARNING: Management added 5 more floors. Elevators now have a chance to randomly jam in the shaft."; }
@@ -53,7 +53,7 @@ window.showRoundModal = function(round) {
     else if (round === 10) { title.innerText = `Round 10: Sandbox Unlocked (${rank})`; instructions.innerText = "You can now write Custom Scripts in the Automation Workshop to handle the intense passenger loads!"; }
     else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
     else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. You have the usual 20 lives. Keep operating until the 20th defenestration, earn as many points as you can, then advance to the final round."; }
-    else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity is DOUBLED. Every passenger makes the climb significantly slower."; }
+    else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity slows loaded climbs, so keep lifts light and use your power-ups carefully."; }
     else if (round >= 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "High-density traffic detected. Use every automation and script at your disposal!"; }
 
     let shopDiv = document.getElementById('shopContainer');
@@ -86,7 +86,8 @@ window.showRoundModal = function(round) {
         Achievements.renderTrophyWorkshop();
     }
 
-    document.getElementById('roundModalOverlay').style.display = 'flex';
+    window.Game.Audio?.setContext('menu');
+    window.openModalExclusive('roundModalOverlay');
 };
 
 /**
@@ -134,5 +135,6 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     const listEl = document.getElementById('reviewAchievementsList');
     listEl.innerHTML = evaluation.log.map(msg => `<li>${msg}</li>`).join('');
     
-    document.getElementById('roundReviewOverlay').style.display = 'flex';
+    window.Game.Audio?.setContext('menu');
+    window.openModalExclusive('roundReviewOverlay');
 };

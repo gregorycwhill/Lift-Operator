@@ -29,7 +29,10 @@ const PowerUps = {
         if (this.timers.stinkImmunity > 0) this.timers.stinkImmunity--;
         if (this.timers.globalAngerPause > 0) this.timers.globalAngerPause--;
         if (this.timers.globalTurbo > 0) this.timers.globalTurbo--;
-        if (this.timers.globalTardis > 0) this.timers.globalTardis--;
+        if (this.timers.globalTardis > 0) {
+            this.timers.globalTardis--;
+            if (this.timers.globalTardis === 0) Registry.lifts.forEach(lift => { lift.tardisExpiryExodus = true; });
+        }
         if (this.timers.wideDoors > 0) {
             this.timers.wideDoors--;
             if (this.timers.wideDoors <= 0) {
@@ -295,7 +298,7 @@ const PowerUps = {
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].cost, desc: `Bronze: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration * 60; // ticks
+                      Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration;
                       Registry.lifts[liftId].isDoubleDecker = true;
                       PowerUps.showEffectOnLift(liftId, '🚡'); 
                       PowerUps.announceLiftCapacity(liftId);
@@ -303,7 +306,7 @@ const PowerUps = {
                 },
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].cost, desc: `Silver: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration * 60; // ticks
+                      Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration;
                       Registry.lifts[liftId].isDoubleDecker = true;
                       PowerUps.showEffectOnLift(liftId, '🚡'); 
                       PowerUps.announceLiftCapacity(liftId);
@@ -312,7 +315,7 @@ const PowerUps = {
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].cost, desc: `Gold: ALL lifts gain double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration}s.`, target: 'instant', 
                   execute: () => { 
                       Registry.lifts.forEach(l => {
-                          l.doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration * 60;
+                          l.doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration;
                           l.isDoubleDecker = true;
                           PowerUps.showEffectOnLift(l.id, '🚡');
                           PowerUps.announceLiftCapacity(l.id);
@@ -326,20 +329,20 @@ const PowerUps = {
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[0].cost, desc: `Bronze: One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration * 60; 
+                      Registry.lifts[liftId].openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration;
                       PowerUps.showEffectOnLift(liftId, '↔️'); 
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[1].cost, desc: `Silver: One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration * 60; 
+                      Registry.lifts[liftId].openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration;
                       PowerUps.showEffectOnLift(liftId, '↔️'); 
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[2].cost, desc: `Gold: ALL lifts allow lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration}s.`, target: 'instant', 
                   execute: () => { 
                       Registry.lifts.forEach(l => {
-                          l.openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration * 60;
+                          l.openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration;
                           PowerUps.showEffectOnLift(l.id, '↔️');
                       });
                   } 
@@ -361,6 +364,10 @@ const PowerUps = {
         const ability = this.catalog[powerUpId].tiers[tierIndex];
         
         if (ability.target === 'instant') {
+            if (this.isGlobalPowerUpActive(powerUpId)) {
+                window.showToast?.('That power-up is already active on every lift.');
+                return;
+            }
             if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: powerUpId, tier: tierIndex });
             ability.execute(null, null);
             this.consumeFromInventory(powerUpId, tierIndex);
@@ -394,6 +401,11 @@ const PowerUps = {
         const abilityId = this.activeTargeting.id;
         const lift = Registry.lifts[liftId];
 
+        if (this.isLiftPowerUpActive(abilityId, lift)) {
+            window.showToast?.('That power-up is already active on this lift.');
+            return false;
+        }
+
         if (abilityId === 'wrench' && lift.jamTimer <= 0) {
             this.flashScreen('rgba(231, 76, 60, 0.4)'); 
             return false;
@@ -412,6 +424,26 @@ const PowerUps = {
         if (typeof resumeGame === 'function') resumeGame();
         
         return true; 
+    },
+
+    isLiftPowerUpActive: function(powerUpId, lift) {
+        if (!lift) return false;
+        const global = this.timers;
+        return ({
+            freshener: lift.freshenerTimer > 0 || global.stinkImmunity > 0,
+            musak: lift.musakTimer > 0 || global.globalAngerPause > 0,
+            turbo: lift.turboTimer > 0 || global.globalTurbo > 0,
+            tardis: lift.tardisTimer > 0 || global.globalTardis > 0,
+            doubleDecker: lift.doubleDeckerTimer > 0 || lift.isDoubleDecker,
+            openPlan: lift.openPlanTimer > 0
+        })[powerUpId] === true;
+    },
+
+    isGlobalPowerUpActive: function(powerUpId) {
+        if (['freshener', 'musak', 'turbo', 'tardis', 'doubleDecker', 'openPlan'].includes(powerUpId)) {
+            return Registry.lifts.length > 0 && Registry.lifts.every(lift => this.isLiftPowerUpActive(powerUpId, lift));
+        }
+        return false;
     },
 
     cancelTargeting: function() {

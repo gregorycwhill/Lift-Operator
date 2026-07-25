@@ -225,7 +225,7 @@ window.createLiftState = function(id) {
         id, targetFloor: 0, pos: 0, passengers: [],
         lastActionTime: 0, automation: 'manual', sweepDirection: 1,
         manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0,
-        tardisTimer: 0, turboTimer: 0, freshenerTimer: 0,
+        tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
         sardineScored: false, isDoubleDecker: false,
         state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,

@@ -19,6 +19,14 @@ window.showToast = function(message) {
     setTimeout(() => { toast.classList.remove("show"); }, 3500);
 };
 
+window.openModalExclusive = function(id) {
+    ['roundModalOverlay', 'roundReviewOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
+        .filter(otherId => otherId !== id)
+        .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
+    const overlay = document.getElementById(id);
+    if (overlay) overlay.style.display = 'flex';
+};
+
 window.startRoundCountdown = function(seconds = 5) {
     if (window.Game.Audio) window.Game.Audio.setContext('gameplay');
     if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
@@ -271,10 +279,9 @@ window.initializeUI = function() {
 
     // DEBUG CONTROLS
     bind("openDebugBtn", () => {
-        if (typeof engine.pause === "function") engine.pause();
-        if (typeof ui.renderDebugMenu === "function") ui.renderDebugMenu();
-        const debugOverlay = document.getElementById("debugOverlay");
-        if (debugOverlay) debugOverlay.style.display = "flex";
+        const overlay = document.getElementById('debugOverlay');
+        if (overlay && overlay.style.display === 'flex') { overlay.style.display = 'none'; window.Game.Audio?.setContext('gameplay'); engine.resume?.(); }
+        else if (typeof ui.openDebugModal === 'function') ui.openDebugModal();
     });
 
     bind("closeDebugBtn", () => {
@@ -295,6 +302,7 @@ window.initializeUI = function() {
         } else if (typeof engine.resume === "function") {
             engine.resume();
         }
+        window.Game.Audio?.setContext('gameplay');
     });
 
     bind("jumpRoundBtn", () => {
@@ -323,6 +331,7 @@ window.initializeUI = function() {
         const scOverlay = document.getElementById("testScorecardOverlay");
         if (scOverlay) scOverlay.style.display = "none";
         if (typeof engine.resume === "function") engine.resume();
+        window.Game.Audio?.setContext('gameplay');
     });
 
     bind("rerunTestsBtn", () => {
@@ -412,7 +421,7 @@ window.UI = window.UI || {};
     "checkoutCart", "updateInventoryUI", "renderShop", "updateLocksUI",
     "updateWorkshopScriptList", "openWorkshopModal", "showRoundModal",
     "showRoundReview", "showToast", "shareLeaderboard", "shareGame",
-    "showLeaderboard", "renderDebugMenu", "processNextManifestItem", "initializeUI",
+    "showLeaderboard", "renderDebugMenu", "openDebugModal", "processNextManifestItem", "initializeUI",
     "buildWorld", "draw", "updateLiftAutomationUI", "updateLiftVisualState",
     "triggerDefenestration", "updateScoreboardUI", "getGuestText",
     "startRoundCountdown"

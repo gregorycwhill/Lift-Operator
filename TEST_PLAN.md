@@ -81,8 +81,10 @@ npx.cmd playwright test tests/audio.spec.js
 
 - [ ] Test first-gesture unlock, suspended/resumed context, and no-console-error fallback on an audio-capable Chromium
   device and Safari/iOS device.
-- [ ] Verify independent music/SFX controls and no audible source overlap through victory, retry, teardown, and mobile
-  modal flows.
+- [ ] Verify authoritative menu, Dream Raid, Orbital Colossus, Jazz Chromatic, power-up, guest-served, defenestration,
+  and shop-selection mappings; confirm elevator-door and guest-distress sounds remain silent.
+- [ ] Verify independent music/SFX controls, menu track restart-from-beginning, modal exclusivity/toggle behaviour, and
+  no audible source overlap through victory, retry, teardown, and mobile modal flows.
 
 ### F. Endless Operations alpha
 
@@ -108,3 +110,12 @@ npx.cmd playwright test tests/audio.spec.js
 When a delivery slice completes, replace its checklist with a short dated completion note: commit, command results,
 playtest evidence, accepted decisions, and remaining follow-up. Detailed historical checklists belong in Git history and
 historical handoff documents, not this active plan.
+
+### Automated implementation checkpoint — 25 July 2026
+
+- Syntax, config, documentation, and focused mechanics gates passed after the audio/playtest remediation.
+- Deterministic balance matrix, early comparator evidence, and campaign envelope were regenerated for balance version
+  `0.2.7-audio-playtest-remediation`.
+- Remaining items are intentionally human/device checks: audible asset identity and durations, modal audio restart,
+  top-floor rocket icon duplication, Round 9/13 balance feel, R19/R20 viewport framing, and targeted TARDIS/rooftop
+  state observations.

@@ -82,6 +82,7 @@ const AutomationWorkshop = {
 
             if (ui && typeof ui.buildWorld === "function") ui.buildWorld(); 
             if (engine && typeof engine.resume === "function") engine.resume();
+            window.Game.Audio?.setContext('gameplay');
         });
 
         document.getElementById("scriptSelect")?.addEventListener("change", (e) => {

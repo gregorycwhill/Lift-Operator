@@ -6,9 +6,17 @@ The title/menu context uses:
   ([OpenGameArt source](https://opengameart.org/content/somewhere-in-the-elevator)), CC-BY 4.0 attribution.
   The OGG file is stored as `assets/audio/menu-somewhere-in-the-elevator.ogg` and is looped without modification.
 
-The gameplay loop and SFX currently use procedural Web Audio fallback tones authored in `audio.js`.
+The gameplay loop and SFX use the locally imported assets below, with procedural Web Audio fallback tones authored in
+`audio.js` where no asset is intentionally assigned.
 
 Additional provisional CC0 assets:
+
+- “Dream Raid (Cinematic Action Soundtrack)” by Matthew Pablo
+  ([source](https://opengameart.org/content/dream-raid-cinematic-action-soundtrack)), CC-BY 3.0. The full-version MP3
+  is stored as `assets/audio/gameplay-dream-raid.mp3`; credit Matthew Pablo.
+- “Space Boss Battle Theme” by Matthew Pablo
+  ([source](https://opengameart.org/content/space-boss-battle-theme)), CC-BY 3.0. The MP3 is stored as
+  `assets/audio/gameplay-orbital-colossus.mp3`; credit Matthew Pablo.
 
 - “Chiploop” by iamoneabe ([source](https://opengameart.org/content/chiploop)), gameplay base loop.
 - “Chip Bit Danger” by Sudocolon ([source](https://opengameart.org/content/chip-bit-danger)), pressure layer.
@@ -19,8 +27,8 @@ Additional provisional CC0 assets:
   semantic mappings; no audio edits were made.
 - “Rocket Launch” by dklon ([source](https://opengameart.org/content/rocket-launch-0)), CC-BY 3.0. The local WAV is
   stored as `assets/audio/sfx/powerup-rocket-launch.wav` without modification. Credit dklon in distributed builds.
-- “Electronic Jazz (Chromatic)” by Pro Sensory/Alex McCulloch ([source](https://opengameart.org/content/electronic-jazz-chromatic)),
-  CC0. Attribution is appreciated; the local MP3 is `assets/audio/sfx/musak-electronic-jazz.mp3`.
+- “Jazz Chromatic” by Pro Sensory/Alex McCulloch ([source](https://opengameart.org/content/jazz-chromatic)), CC0.
+  Attribution is appreciated; the local MP3 is `assets/audio/sfx/musak-electronic-jazz.mp3`.
 - “Trance Boss Battle” by MintoDog ([source](https://opengameart.org/content/trance-boss-battle)), CC0. The local
   loop is `assets/audio/gameplay-rooftop-trance.mp3`.
 - “Air Whoosh” by pyranostudios ([source](https://opengameart.org/content/air-whoosh)), CC0. The local WAV is

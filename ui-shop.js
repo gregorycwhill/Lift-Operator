@@ -39,6 +39,7 @@ window.addToCart = function(id, tier) {
 
     if (Registry.points >= currentCartTotal + puCost) {
         PowerUps.cart.push({ id: id, tier: tier });
+        window.Game.Audio?.publish('shop_item_selected', { id, tier, cost: puCost });
         window.renderShop();
     }
 };

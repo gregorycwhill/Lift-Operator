@@ -277,6 +277,8 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     if (!car) return;
 
     car.classList.toggle('jammed', lift.jamTimer > 0 || lift.isJammed);
+    const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+    car.classList.toggle('capacity-full', Registry.getLiftWeight(lift) >= capacity);
 
     const gymBroCount = lift.passengers.filter(p => p.isGymBro).length;
     let isStinky = lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold;
@@ -435,7 +437,7 @@ window.draw = function() {
             if (lift.musakTimer > 0) activeIcons.push({type: 'emoji', val: '🎵'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0) activeIcons.push({type: 'emoji', val: '🚪'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) activeIcons.push({type: 'emoji', val: '🔧'});
-            if (lift.isJammed) activeIcons.push({type: 'jam', val: '⚠️'});
+            if (lift.jamTimer > 0 || lift.isJammed) activeIcons.push({type: 'jam', val: '⚠️'});
             
             // Render active effects
             if (lift.effects) {
@@ -444,7 +446,8 @@ window.draw = function() {
                 });
             }
 
-            if (activeIcons.length > 0) {
+            const uniqueIcons = activeIcons.filter((icon, iconIndex, icons) => icons.findIndex(other => other.val === icon.val) === iconIndex);
+            if (uniqueIcons.length > 0) {
                 if (!iconsDiv) {
                     iconsDiv = document.createElement('div');
                     iconsDiv.className = 'lift-icons';
@@ -460,11 +463,11 @@ window.draw = function() {
                     car.appendChild(iconsDiv);
                 }
                 
-                const iconKey = activeIcons.map(ic => ic.val).join('');
+                const iconKey = uniqueIcons.map(ic => ic.val).join('');
                 if (iconsDiv.dataset.iconKey !== iconKey) {
                     iconsDiv.dataset.iconKey = iconKey;
                     iconsDiv.innerHTML = '';
-                    activeIcons.forEach(ic => {
+                    uniqueIcons.forEach(ic => {
                         const span = document.createElement('span');
                         if (ic.type === 'jam') span.className = 'jammed-alert';
                         span.innerText = ic.val;

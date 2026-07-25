@@ -121,7 +121,10 @@ window.gameTick = function(timestamp) {
         }
 
         if (lift.stinkTimer > 0) lift.stinkTimer--;
-        if (lift.tardisTimer > 0) lift.tardisTimer--;
+        if (lift.tardisTimer > 0) {
+            lift.tardisTimer--;
+            if (lift.tardisTimer === 0) lift.tardisExpiryExodus = true;
+        }
         if (lift.turboTimer > 0) lift.turboTimer--; 
         if (lift.freshenerTimer > 0) lift.freshenerTimer--;
         if (lift.musakTimer > 0) lift.musakTimer--;
@@ -215,7 +218,7 @@ window.gameTick = function(timestamp) {
             }
             
             if (g.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
-                if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('error', { id: 'rage' });
+                window.Game.Audio?.publish('guest_defenestrated', { id: g.id, floor: floorIdx });
                 const livesLost = g.isVip ? Config.vipPenalty : 1;
                 Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
@@ -248,6 +251,7 @@ window.gameTick = function(timestamp) {
                 window.Game.Audio?.publish('guest_urgency', { id: p.id, guestType: p.isVip ? 'vip' : (p.type || 'guest'), status: p.status, liftId: lift.id });
             }
             if (p.status === GuestStatus.RAGE && oldStatus !== GuestStatus.RAGE) {
+                window.Game.Audio?.publish('guest_defenestrated', { id: p.id, liftId: lift.id });
                 const livesLost = p.isVip ? Config.vipPenalty : 1;
                 Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
@@ -516,13 +520,12 @@ window.animationTick = function(timestamp) {
                 if (lift.stateProgress >= 1) {
                     let performedAction = false;
                     const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
-                    let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
+                    let forceExodus = lift.tardisExpiryExodus || (isStinky && lift.passengers.some(p => !p.isGymBro));
                     
                     const indexToDrop = lift.passengers.findIndex(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
                     
                     if (indexToDrop !== -1) {
                         const p = lift.passengers.splice(indexToDrop, 1)[0];
-                        window.Game.Audio?.publish('guest_alighted', { id: p.type || 'guest', liftId: lift.id, floor: f });
                         const exitF = (isDouble && p.dest === f + 1) ? f + 1 : f;
                         
                         if (!forceExodus || p.dest === exitF) {
@@ -533,6 +536,7 @@ window.animationTick = function(timestamp) {
                             } else {
                                 Registry.stats.served++;
                                 Registry.roundStats.servedThisRound++; 
+                                window.Game.Audio?.publish('guest_served', { id: p.id, liftId: lift.id, floor: exitF });
                                 if (isDouble) {
                                     Registry.roundStats.doubleDeckerServed++;
                                 }
@@ -548,7 +552,10 @@ window.animationTick = function(timestamp) {
                             p.isFarter = false; 
                             Registry.floors[f].waitingGuests.push(p);
                         }
-                        if (lift.passengers.length === 0) lift.sardineScored = false;
+                        if (lift.passengers.length === 0) {
+                            lift.sardineScored = false;
+                            lift.tardisExpiryExodus = false;
+                        }
                         
                         performedAction = true;
                         lift.stateProgress = 0;

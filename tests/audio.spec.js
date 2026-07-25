@@ -273,7 +273,7 @@ test('guest refusal is emitted from a controlled boarding frame', async ({ page 
 });
 
 test('failed audio fetch is recorded without blocking the game', async ({ page }) => {
-    await page.route('**/assets/audio/gameplay-chiploop.mp3', route => route.abort());
+    await page.route('**/assets/audio/gameplay-dream-raid.mp3', route => route.abort());
     await page.goto(GAME_URL);
     await page.waitForTimeout(500);
     const result = await page.evaluate(() => ({
@@ -286,7 +286,7 @@ test('failed audio fetch is recorded without blocking the game', async ({ page }
 });
 
 test('invalid audio data is recorded as a decode failure without blocking the game', async ({ page }) => {
-    await page.route('**/assets/audio/gameplay-pressure-chip-bit-danger.mp3', route => route.fulfill({
+    await page.route('**/assets/audio/gameplay-orbital-colossus.mp3', route => route.fulfill({
         status: 200,
         contentType: 'audio/mpeg',
         body: 'not-a-valid-audio-file'

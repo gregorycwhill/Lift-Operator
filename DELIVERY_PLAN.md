@@ -58,13 +58,13 @@ mechanics, and a fully open-ended generator remain outside the release gate.
 
 ## Release workflow
 
-1. Create a release branch from the tested baseline and keep scope changes documented here.
+1. Work directly on `master` for this project; keep scope changes documented here and preserve a clean, reviewable commit history.
 2. Implement in vertical slices: zoning core, Workshop/UI, diagnostics, R14–R20 tuning, then Endless alpha.
 3. Keep canonical numerical changes in `design/game-balance.v1.json`; regenerate and validate artifacts in the same
    change.
 4. Run the fast checks after each slice and the complete release gate before merge.
-5. Push the release branch, review the diff and generated assets, merge/promote only after the release gate is green,
-   and deploy the static GitHub Pages build.
+5. Review the diff and generated assets, run the release gate, then commit and push `master` for the GitHub Pages
+   playtest build.
 6. Tag the release with the balance version, commit, test counts, supported browser/device matrix, and playtest seed
    pack.
 
@@ -158,6 +158,26 @@ Still required before release promotion:
 - Real-device audio checks and responsive viewport evidence.
 - Review of zoning telemetry against declared strategy profiles, followed by conservative balance changes if needed.
 - Release branch push, generated-artifact review, deployment, and a tagged playtest build.
+
+## Implementation checkpoint — 25 July 2026 — audio/playtest remediation
+
+Implemented on `master` for the next human playtest pass:
+
+- Imported and wired the CSV-authoritative Dream Raid and Orbital Colossus gameplay tracks and Jazz Chromatic Musak.
+- Menu music now restarts from the beginning whenever a briefing, review, leaderboard, Debug, or Workshop modal opens;
+  those primary modals are mutually exclusive and their buttons toggle the current modal closed.
+- Disabled elevator-door and guest-distress playback per the CSV `NO SOUND` decisions. Added the preferred placeholder
+  beep for guest served and defenestration events, plus shop-item selection feedback.
+- Prevented repeated timed power-ups on an already affected lift, deduplicated lift effect icons, added visible jam and
+  capacity-full states, and made Infinite Capacity expiry unload passengers at the next stop.
+- Restored Party guests to green/HAPPY when the rooftop event ends. Gym Bros remain exempt from stink refusal.
+- Added the approved Round 3 Room Service explanation; Round 9 now has 50% more lift capacity and 20% lower spawn
+  rates; Round 13 has 50% lower spawn rates and 20% lower gravity.
+- Regenerated balance artifacts and refreshed deterministic balance evidence for version `0.2.7-audio-playtest-remediation`.
+
+The build is ready for structured playtesting. Human evidence remains required for audio playback on target devices,
+modal transitions, rocket rendering on the top floor, Round 9/13 feel, R19/R20 responsive framing, and the new expiry/
+party-state behaviours.
 
 ## Deferred decisions
 

@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.6-playtest-remediation
+// Balance version: 0.2.7-audio-playtest-remediation
 window.GameBalanceData = {
-  "balanceVersion": "0.2.6-playtest-remediation",
+  "balanceVersion": "0.2.7-audio-playtest-remediation",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -473,8 +473,9 @@ window.GameBalanceData = {
     "9": {
       "floors": 15,
       "lifts": 5,
-      "spawnStart": 1.25,
-      "spawnEnd": 2,
+      "liftCapacity": 15,
+      "spawnStart": 1,
+      "spawnEnd": 1.6,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -505,10 +506,10 @@ window.GameBalanceData = {
     "13": {
       "floors": 15,
       "lifts": 4,
-      "spawnStart": 1.2,
-      "spawnEnd": 1.4,
+      "spawnStart": 0.6,
+      "spawnEnd": 0.7,
       "objective": "PEDAL_SURVIVAL",
-      "gravityScalar": 1.4
+      "gravityScalar": 1.12
     },
     "14": {
       "floors": 20,

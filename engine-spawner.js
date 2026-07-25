@@ -82,7 +82,9 @@ window.runSpawnerTick = function(now) {
                     if (g.isSunset) {
                         g.isSunset = false; 
                         g.dest = g.originalDest;
-                        if (g.isPartying) { g.isPartying = false; g.spawnTime = now; }
+                        g.isPartying = false;
+                        g.status = GuestStatus.HAPPY;
+                        g.spawnTime = now;
                     }
                 };
                 Registry.floors.forEach(f => f.waitingGuests.forEach(revertGuest));

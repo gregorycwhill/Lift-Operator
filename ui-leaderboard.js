@@ -145,5 +145,5 @@ window.showLeaderboard = function(titleText) {
         }
     }
     
-    document.getElementById('leaderboardOverlay').style.display = 'flex';
+    window.openModalExclusive('leaderboardOverlay');
 };

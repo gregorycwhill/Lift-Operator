@@ -777,7 +777,7 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     ]);
     expect(result.r2SpawnStart).toBe(0.4);
     expect(result.r2SpawnEnd).toBe(0.468);
-    expect(result.version).toBe('0.2.6-playtest-remediation');
+    expect(result.version).toBe('0.2.7-audio-playtest-remediation');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -1034,14 +1034,15 @@ test('rooftop event has a long seeded schedule and releases guests to their orig
     expect(result.released).toEqual({ active: false, dest: 3, partying: false });
 });
 
-test('Round 13 candidate increases Endurance payout and reduces its spawn curve by 20%', async ({ page }) => {
+test('Round 13 playtest tuning halves spawn rates and reduces gravity by 20%', async ({ page }) => {
     const result = await page.evaluate(() => ({
         enduranceMultiplier: Config.GAME_DATA.payouts.endurance.creditMultiplier,
         spawnStart: Config.GAME_DATA.rounds[13].spawnStart,
-        spawnEnd: Config.GAME_DATA.rounds[13].spawnEnd
+        spawnEnd: Config.GAME_DATA.rounds[13].spawnEnd,
+        gravityScalar: Config.GAME_DATA.rounds[13].gravityScalar
     }));
 
-    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 1.2, spawnEnd: 1.4 });
+    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 0.6, spawnEnd: 0.7, gravityScalar: 1.12 });
 });
 
 test('round countdown freezes play while allowing automation setup and transient capacity cues', async ({ page }) => {
