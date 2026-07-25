@@ -38,14 +38,14 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 | 12 | 1234 | died | 161s | 0 | 117 | - | - | 75 | 44.8s | COMPARATOR_REQUIRED |
 | 12 | 3141 | died | 150s | 0 | 105 | - | - | 71 | 37.4s | COMPARATOR_REQUIRED |
 | 12 | 6060 | died | 161s | 0 | 116 | - | - | 73 | 52.2s | COMPARATOR_REQUIRED |
-| 13 | 1234 | survived | 180s | 18 | 105 | - | - | 10 | 28.0s | VIOLATION_SURVIVED |
-| 13 | 3141 | survived | 180s | 7 | 83 | 114s | 0.62 | 18 | 42.0s | VIOLATION_SURVIVED |
-| 13 | 6060 | died | 180s | 0 | 72 | 76s | 0.29 | 21 | 48.7s | MEETS_ALL_SWEEP_FLOOR |
+| 13 | 1234 | survived | 180s | 6 | 123 | 57s | 0.48 | 25 | 46.6s | VIOLATION_SURVIVED |
+| 13 | 3141 | died | 156s | 0 | 84 | 54s | 0.00 | 43 | 52.5s | MEETS_ALL_SWEEP_FLOOR |
+| 13 | 6060 | died | 135s | 0 | 65 | 46s | 0.00 | 35 | 51.6s | MEETS_ALL_SWEEP_FLOOR |
 
 ## Current findings
 
-- Hard invariant violations: 10
-- Runs meeting the all-Sweep failure floor: 23
+- Hard invariant violations: 9
+- Runs meeting the all-Sweep failure floor: 24
 - Round 12 runs awaiting a competent-strategy comparator: 3
 
 A violation is a measured balance finding, not a test-runner failure. Parameter tuning should reduce violations without silently regenerating acceptance criteria.

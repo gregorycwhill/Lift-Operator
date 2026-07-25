@@ -467,8 +467,8 @@
     "13": {
       "floors": 15,
       "lifts": 4,
-      "spawnStart": 0.6,
-      "spawnEnd": 0.7,
+      "spawnStart": 0.9,
+      "spawnEnd": 1.05,
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.12
     },

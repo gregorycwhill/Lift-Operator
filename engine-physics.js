@@ -269,7 +269,10 @@ window.gameTick = function(timestamp) {
         }
     });
     
-    window.Game.BalanceTelemetry?.sample(now);
+    const balanceSample = window.Game.BalanceTelemetry?.sample(now);
+    if (balanceSample && window.Game.Audio?.setPsi) {
+        window.Game.Audio.setPsi(balanceSample.projectedSurvivalIndex ?? 1);
+    }
 
     if (Registry.stats.lives <= 0) {
         Registry.stats.lives = 0;

@@ -51,7 +51,7 @@ window.showRoundModal = function(round) {
     else if (round === 8) { title.innerText = `Round 8: VIP Arrival (${rank})`; instructions.innerText = "A VIP demands an entirely empty lift. If they are left waiting, it will cost us 10 lives. Watch for the Star!"; }
     else if (round === 9) { title.innerText = `Round 9: Happy Hour & Hazards (${rank})`; instructions.innerText = "The Rooftop bar opens! Watch out for Farts. Stinky lifts force evacuations and block boarding. Adapt!"; }
     else if (round === 10) { title.innerText = `Round 10: Sandbox Unlocked (${rank})`; instructions.innerText = "You can now write Custom Scripts in the Automation Workshop to handle the intense passenger loads!"; }
-    else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
+    else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and immune to stink, but if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
     else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. You have the usual 20 lives. Keep operating until the 20th defenestration, earn as many points as you can, then advance to the final round."; }
     else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity slows loaded climbs, so keep lifts light and use your power-ups carefully."; }
     else if (round >= 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "High-density traffic detected. Use every automation and script at your disposal!"; }
@@ -100,7 +100,9 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     const outcome = document.getElementById('reviewOutcomeMessage');
     const continueButton = document.getElementById('continueToBriefingBtn');
     const failed = reason === 'failed';
-    const destinationRound = failed ? completedRound : Math.min(13, completedRound + 1);
+    const authoredRounds = Object.keys(Config.GAME_DATA.rounds || {}).map(Number).filter(Number.isInteger);
+    const finalAuthoredRound = authoredRounds.length ? Math.max(...authoredRounds) : completedRound;
+    const destinationRound = failed ? completedRound : Math.min(finalAuthoredRound, completedRound + 1);
     const destinationHasShop = Object.values(Config.GAME_DATA.shopUnlocks || {})
         .some(tiers => tiers.some(unlockRound => unlockRound <= destinationRound));
     if (heading) heading.innerText = failed
@@ -108,10 +110,10 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
         : `You Did It! Round ${completedRound} Complete!`;
     if (outcome) outcome.innerText = failed
         ? `Your Round ${completedRound} checkpoint is safe. Review the results, revise your plan, and try the same round again.`
-        : `Excellent work — Round ${completedRound} is won and Round ${Math.min(13, completedRound + 1)} is unlocked!`;
+        : `Excellent work — Round ${completedRound} is won and Round ${destinationRound} is unlocked!`;
     if (continueButton) continueButton.innerText = failed
         ? destinationHasShop ? `Supply Closet & Retry Round ${completedRound}` : `Retry Round ${completedRound}`
-        : completedRound >= 13
+        : completedRound >= finalAuthoredRound
             ? 'Finish Campaign'
             : destinationHasShop
                 ? `Supply Closet & Continue to Round ${completedRound + 1}`

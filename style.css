@@ -275,6 +275,7 @@ body {
 
 /* Status Colors & Guest Modifiers */
 .happy { background: #2ecc71; }
+.checkout-ground { background: #16a085; color: #fff; border: 1px solid #0e6655; }
 .annoyed { background: #f1c40f; color: #333; }
 .critical { background: #e74c3c; animation: pulse 1s infinite; }
 .rage { background: #000; animation: shake 0.5s infinite; }
@@ -458,7 +459,7 @@ body {
     left: 50%;
     transform: translateX(-50%);
     z-index: 8500;
-    pointer-events: none;
+    pointer-events: auto;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -471,6 +472,10 @@ body {
     box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
 }
 .round-countdown strong { color: #f1c40f; font-size: 2rem; line-height: 1; }
+.round-countdown-skip { border: 0; border-radius: 999px; padding: 6px 10px; background: #f1c40f; color: #2c3e50; font-weight: 800; cursor: pointer; }
+.round-countdown-skip:hover, .round-countdown-skip:focus-visible { background: #f7dc6f; outline: 3px solid #fff; }
+.compact-modal { max-width: 420px; text-align: center; }
+.modal-help { color: #d5dbdb; font-size: 0.9rem; }
 
 .capacity-float {
     position: absolute;

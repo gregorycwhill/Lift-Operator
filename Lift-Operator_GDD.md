@@ -127,7 +127,9 @@ Ordinary failure performs a complete attempt rollback:
 - Remove every runtime consequence of the failed attempt.
 - Preserve the round and seed so the player can apply what they learned.
 
-Purchases are therefore provisional until the round is completed. The only carryover from a failed attempt is player knowledge.
+Purchases are provisional until the round is completed. Credits earned across successful rounds carry forward, while a
+failed attempt restores the pre-round Credit checkpoint and clears the attempt loadout. The player keeps the knowledge
+gained from the failed attempt.
 
 Round 12 is the deliberate exception: death is its completion condition. The attempt, spending, score, and payout commit when the last of the normal 20 lives is lost, and the campaign automatically advances.
 

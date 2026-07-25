@@ -336,6 +336,22 @@ test('leaderboard modal swaps music context without retaining gameplay sources',
     expect(resumed.context).toBe('gameplay');
 });
 
+test('leaderboard button toggles its modal and menu music retains a position', async ({ page }) => {
+    await page.goto(GAME_URL);
+    await page.waitForTimeout(500);
+    await page.click('#leaderboardBtn');
+    const opened = await page.evaluate(() => {
+        const audio = window.Game.Audio;
+        audio.setContext('menu');
+        return { visible: document.getElementById('leaderboardOverlay').style.display === 'flex', position: audio.getStatus().menuPositionSec };
+    });
+    await page.click('#leaderboardBtn');
+    const closed = await page.evaluate(() => ({ visible: document.getElementById('leaderboardOverlay').style.display === 'flex', context: window.Game.Audio.getStatus().context }));
+    expect(opened.visible).toBe(true);
+    expect(opened.position).toBeGreaterThanOrEqual(0);
+    expect(closed).toEqual({ visible: false, context: 'gameplay' });
+});
+
 test('leaderboard exposes compact audio controls and attribution', async ({ page }) => {
     await page.goto(GAME_URL);
     await page.click('#leaderboardBtn');

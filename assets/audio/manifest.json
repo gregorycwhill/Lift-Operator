@@ -190,7 +190,7 @@
   },
   "events": {
     "lift_arrived": { "asset": null, "fallback": "ding" },
-    "guest_boarded": { "asset": null, "role": "no-sound" },
+    "guest_boarded": { "asset": null, "fallback": "ding", "role": "short-beep" },
     "guest_alighted": { "asset": null, "role": "context-only" },
     "guest_served": { "asset": null, "fallback": "ding" },
     "guest_defenestrated": { "asset": null, "fallback": "error" },

@@ -73,6 +73,7 @@ npx.cmd playwright test tests/audio.spec.js
 - [ ] R9 rooftop release: readable buildup, substantial but manageable return wave, no deadlock or invalid destination.
 - [ ] R13: intended mechanics, deodoriser, and rockets are affordable; pressure is manageable; stink remains optional
   emergency discretion.
+- [ ] Confirm Round 13’s revised 25% spawn-pressure reduction remains challenging but practical.
 - [ ] R14: players can configure a workable first zoning scheme and explain a direct-service refusal.
 - [ ] R15–R20: record at least one reproducible failure diagnosis per structural combination before tuning spawn rates.
 - [ ] Record browser/device, seed, balance version, loadout, zone configuration, outcome, and player explanation.
@@ -83,8 +84,18 @@ npx.cmd playwright test tests/audio.spec.js
   device and Safari/iOS device.
 - [ ] Verify authoritative menu, Dream Raid, Orbital Colossus, Jazz Chromatic, power-up, guest-served, defenestration,
   and shop-selection mappings; confirm elevator-door and guest-distress sounds remain silent.
-- [ ] Verify independent music/SFX controls, menu track restart-from-beginning, modal exclusivity/toggle behaviour, and
-  no audible source overlap through victory, retry, teardown, and mobile modal flows.
+- [ ] Verify independent music/SFX controls, menu track resume-from-position, modal exclusivity/toggle behaviour, and no
+  audible source overlap through victory, retry, teardown, and mobile modal flows.
+- [ ] Time every canonical power-up in gameplay; confirm one-shot SFX stop at five seconds while Musak lasts for its full
+  effect duration and active icons remain attached to the lift.
+
+### Economy and interaction follow-up
+
+- [ ] Confirm Credits earned in one successful round are visible and spendable in the next.
+- [ ] Confirm the no-purchase confirmation appears only when Credits remain and can be cancelled without starting play.
+- [ ] Confirm the countdown `Start now` control works only from the timer area and starts the round exactly once.
+- [ ] Verify Gym Bros board compatible stinky lifts and remain unaffected by stink acceleration/evacuation.
+- [ ] Verify “Finish Campaign” appears only after the final configured authored round.
 
 ### F. Endless Operations alpha
 
@@ -119,3 +130,11 @@ historical handoff documents, not this active plan.
 - Remaining items are intentionally human/device checks: audible asset identity and durations, modal audio restart,
   top-floor rocket icon duplication, Round 9/13 balance feel, R19/R20 viewport framing, and targeted TARDIS/rooftop
   state observations.
+
+### Automated implementation checkpoint — 25 July 2026 — economy/audio continuity follow-up
+
+- Focused regression coverage passed for Credit carry-forward/confirmation, countdown skip, modal toggling, and menu
+  music position state.
+- Canonical balance artifacts are regenerated after the Round 13 25% spawn-pressure adjustment.
+- Human/device checks remain open for perceived audio timing, Gym Bro boarding in live play, pressure-track continuity,
+  and rocket placement at multiple floors.

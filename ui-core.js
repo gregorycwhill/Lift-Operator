@@ -405,6 +405,7 @@ window.draw = function() {
                         if (p.isPartying) classList += ' partying';
                         if (p.isGymBro) classList += ' swol';
                         if (p.isRoomService) classList += ' room-service';
+                        if (p.isCheckout && p.dest === 0) classList += ' checkout-ground';
                         guest.className = classList;
                         guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
                         
@@ -420,6 +421,7 @@ window.draw = function() {
                         if (p.isPartying) classList += ' partying';
                         if (p.isGymBro) classList += ' swol';
                         if (p.isRoomService) classList += ' room-service';
+                        if (p.isCheckout && p.dest === 0) classList += ' checkout-ground';
                         guest.className = classList;
                         guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
                         car.appendChild(guest);
@@ -435,6 +437,8 @@ window.draw = function() {
             if (lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0)) activeIcons.push({type: 'emoji', val: '🚀'});
             if (lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0)) activeIcons.push({type: 'emoji', val: '🌲'});
             if (lift.musakTimer > 0) activeIcons.push({type: 'emoji', val: '🎵'});
+            if (lift.doubleDeckerTimer > 0 || lift.isDoubleDecker) activeIcons.push({type: 'emoji', val: '⚡'});
+            if (lift.openPlanTimer > 0) activeIcons.push({type: 'emoji', val: '↔️'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0) activeIcons.push({type: 'emoji', val: '🚪'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) activeIcons.push({type: 'emoji', val: '🔧'});
             if (lift.jamTimer > 0 || lift.isJammed) activeIcons.push({type: 'jam', val: '⚠️'});
@@ -503,6 +507,7 @@ window.draw = function() {
                     if (g.isPartying) classList += ' partying';
                     if (g.isGymBro) classList += ' swol';
                     if (g.isRoomService) classList += ' room-service';
+                    if (g.isCheckout && g.dest === 0) classList += ' checkout-ground';
                     guest.className = classList;
                     guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(g) : window.getGuestText(g);
                     lobby.appendChild(guest);

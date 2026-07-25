@@ -66,6 +66,11 @@ const PowerUps = {
             lift.effects.push({ icon, startTime: now, duration: 1500 });
         }
 
+        // Timed power-ups are rendered by the lift itself for their full active
+        // duration. Keep the effect state for simulation/tests, but do not create
+        // a second free-floating animation for them.
+        if (['🚀', '🌌', '🌲', '🎵', '⚡', '↔️'].includes(icon)) return;
+
         const world = document.getElementById('world');
         const car = document.getElementById(`lift-el-${liftId}`);
         if (world && car) {
@@ -368,7 +373,7 @@ const PowerUps = {
                 window.showToast?.('That power-up is already active on every lift.');
                 return;
             }
-            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: powerUpId, tier: tierIndex });
+            if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: powerUpId, tier: tierIndex, duration: window.Config.GAME_DATA.powerups[powerUpId].tiers[tierIndex].duration });
             ability.execute(null, null);
             this.consumeFromInventory(powerUpId, tierIndex);
             this.flashScreen('rgba(46, 204, 113, 0.6)'); 
@@ -412,7 +417,7 @@ const PowerUps = {
         }
 
         const ability = this.catalog[abilityId].tiers[this.activeTargeting.tier];
-        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: abilityId, tier: this.activeTargeting.tier });
+        if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('powerup_used', { id: abilityId, tier: this.activeTargeting.tier, duration: window.Config.GAME_DATA.powerups[abilityId].tiers[this.activeTargeting.tier].duration });
         ability.execute(liftId, floorId);
         
         this.flashScreen('rgba(46, 204, 113, 0.6)'); 

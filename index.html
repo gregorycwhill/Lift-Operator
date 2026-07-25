@@ -137,7 +137,18 @@
 
         <div id="roundCountdown" class="round-countdown hidden" aria-live="assertive">
             <span id="roundCountdownLabel">Get Ready</span>
+            <button id="roundCountdownSkip" class="round-countdown-skip" type="button" title="Start the round now">[×] Start now</button>
             <strong id="roundCountdownValue">5</strong>
+        </div>
+
+        <div class="overlay" id="roundStartConfirmOverlay">
+            <div class="modal-content compact-modal">
+                <h2>Start without power-ups?</h2>
+                <p id="roundStartConfirmText">You have unused Credits. Start this round without spending any?</p>
+                <p class="modal-help">Credits carry forward between rounds.</p>
+                <button id="confirmRoundStartBtn" class="btn btn-green btn-full-width">Start Round</button>
+                <button id="cancelRoundStartBtn" class="btn btn-gray btn-full-width btn-margin-top">Return to Supply Closet</button>
+            </div>
         </div>
 
         <div class="overlay" id="workshopOverlay">

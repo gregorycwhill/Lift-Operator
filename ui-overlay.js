@@ -20,7 +20,7 @@ window.showToast = function(message) {
 };
 
 window.openModalExclusive = function(id) {
-    ['roundModalOverlay', 'roundReviewOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
+    ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
     const overlay = document.getElementById(id);
@@ -60,6 +60,8 @@ window.startRoundCountdown = function(seconds = 5) {
         if (typeof engine.resume === 'function') engine.resume();
         if (typeof ui.draw === 'function') ui.draw();
     };
+    const skip = document.getElementById('roundCountdownSkip');
+    if (skip) skip.onclick = begin;
 
     if (remaining === 0) {
         begin();
@@ -210,7 +212,7 @@ window.initializeUI = function() {
     };
 
     // ROUND START CONTROLS
-    bind("startRoundBtn", () => {
+    const beginSelectedRound = () => {
         if (typeof ui.checkoutCart === "function") ui.checkoutCart();
 
         if (Registry.stats.round === 1) {
@@ -229,6 +231,28 @@ window.initializeUI = function() {
         if (roundOverlay) roundOverlay.style.display = "none";
         
         window.startRoundCountdown(Math.max(5, Registry.lifts.length * 3));
+    };
+    window.beginSelectedRound = beginSelectedRound;
+
+    bind("startRoundBtn", () => {
+        const hasUnspentCredits = Number(Registry.points) > 0;
+        const hasPurchases = typeof PowerUps !== 'undefined' && PowerUps.cart.length > 0;
+        if (hasUnspentCredits && !hasPurchases && !Registry.autoPilotActive) {
+            const message = document.getElementById('roundStartConfirmText');
+            if (message) message.textContent = `You have ${Registry.points} unused Credits. Start this round without spending any?`;
+            window.openModalExclusive('roundStartConfirmOverlay');
+            return;
+        }
+        beginSelectedRound();
+    });
+
+    bind('confirmRoundStartBtn', () => {
+        document.getElementById('roundStartConfirmOverlay')?.style.setProperty('display', 'none');
+        beginSelectedRound();
+    });
+    bind('cancelRoundStartBtn', () => {
+        document.getElementById('roundStartConfirmOverlay')?.style.setProperty('display', 'none');
+        window.openModalExclusive('roundModalOverlay');
     });
 
     bind("continueToBriefingBtn", () => {
@@ -248,7 +272,13 @@ window.initializeUI = function() {
 
     // LEADERBOARD CONTROLS
     bind("leaderboardBtn", () => {
-        if (typeof ui.showLeaderboard === "function") ui.showLeaderboard("Paused");
+        const overlay = document.getElementById('leaderboardOverlay');
+        if (overlay && overlay.style.display === 'flex') {
+            overlay.style.display = 'none';
+            window.Game.Audio?.setContext('gameplay');
+            engine.resume?.();
+            ui.draw?.();
+        } else if (typeof ui.showLeaderboard === "function") ui.showLeaderboard("Paused");
     });
 
     bind("closeLbBtn", () => {

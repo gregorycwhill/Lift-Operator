@@ -15,13 +15,13 @@ window.Game.Audio = (function () {
         hazard: { sweep: [180, 80], type: 'sawtooth', duration: 0.22, volume: 0.12 }
     };
     const eventMap = {
-        lift_arrived: 'ding',
+        lift_arrived: 'ding', guest_boarded: 'ding',
         powerup_used: 'powerup', hazard_started: 'hazard', hazard_ended: 'ding',
         victory: 'victory', vip_arrival: 'vipArrival',
         guest_refused: 'guestRefused', purchase_confirmed: 'purchase', ui_error: 'uiError', error: 'uiError',
         guest_served: 'ding', guest_defenestrated: 'defenestration', shop_item_selected: 'purchase', round_started: 'ding', failure: 'uiError', retry_started: 'ding'
     };
-    let context = null, masterGain = null, musicGain = null, sfxGain = null, menuBuffer = null, menuSource = null, rooftopSource = null, pressureLayerGain = null;
+    let context = null, masterGain = null, musicGain = null, sfxGain = null, menuBuffer = null, menuSource = null, menuSourceStartedAt = 0, menuOffset = 0, rooftopSource = null, pressureLayerGain = null, musakSource = null, musakStopTimer = null;
     const buffers = {}, failedAssets = new Map(), musicSources = [];
     const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-dream-raid.mp3', pressure: 'assets/audio/gameplay-orbital-colossus.mp3', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-toolbox.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-gastric-distress.wav', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', guestRefused: 'assets/audio/sfx/guest-refused-alert.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
     let initialized = false, currentContext = 'menu', psi = 1, pressureBand = 'calm', musicTimer = null, rooftopActive = false, acceptedEventCount = 0;
@@ -78,29 +78,39 @@ window.Game.Audio = (function () {
         menuBuffer = buffers.menu || null;
         if (currentContext === 'menu' || currentContext === 'gameplay') startMusic();
     }
-    function stopMenuTrack() {
-        if (menuSource) { try { menuSource.stop(); } catch (_) {} menuSource.disconnect(); menuSource = null; }
+    function stopMenuTrack(preservePosition = true) {
+        if (menuSource) {
+            if (preservePosition && menuBuffer && context) menuOffset = (context.currentTime - menuSourceStartedAt) % menuBuffer.duration;
+            try { menuSource.stop(); } catch (_) {} menuSource.disconnect(); menuSource = null;
+        }
     }
     function stopMusicTracks() { while (musicSources.length) { const source = musicSources.pop(); try { source.stop(); } catch (_) {} source.disconnect(); } pressureLayerGain = null; }
+    function stopMusak() { if (musakStopTimer) clearTimeout(musakStopTimer); musakStopTimer = null; if (musakSource) { try { musakSource.stop(); } catch (_) {} musakSource.disconnect(); musakSource = null; } }
     function stopRooftopMusic() { if (rooftopSource) { try { rooftopSource.stop(); } catch (_) {} rooftopSource.disconnect(); rooftopSource = null; } }
     function startRooftopMusic() {
         if (!rooftopActive || currentContext !== 'gameplay' || !initialized || !buffers.rooftop || rooftopSource || settings.muted) return;
         rooftopSource = context.createBufferSource(); rooftopSource.buffer = buffers.rooftop; rooftopSource.loop = true;
         rooftopSource.connect(musicGain); rooftopSource.start();
     }
-    function playBuffer(name, destination = sfxGain, volume = 1) {
+    function playBuffer(name, destination = sfxGain, volume = 1, options = {}) {
         if (!initialized || !buffers[name] || settings.muted) return false;
-        const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; gain.gain.value = volume; source.connect(gain); gain.connect(destination); source.start(); return true;
+        const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; source.loop = !!options.loop; gain.gain.value = volume; source.connect(gain); gain.connect(destination); source.start();
+        const durationMs = Number.isFinite(options.durationMs) ? options.durationMs : 5000;
+        if (!options.loop || Number.isFinite(options.durationMs)) {
+            const stopMs = Math.min(durationMs, Math.max(1, buffers[name].duration * 1000));
+            setTimeout(() => { try { source.stop(); } catch (_) {} }, stopMs);
+        }
+        return true;
     }
     function startMusic() {
         if (musicTimer) clearInterval(musicTimer);
         stopMenuTrack(); stopMusicTracks(); stopRooftopMusic();
         if (currentContext === 'menu' && menuBuffer && initialized && !settings.muted) {
             menuSource = context.createBufferSource(); menuSource.buffer = menuBuffer; menuSource.loop = true;
-            menuSource.connect(musicGain); menuSource.start();
+            menuSource.connect(musicGain); menuSource.start(0, menuOffset); menuSourceStartedAt = context.currentTime - menuOffset;
         }
         if (currentContext === 'gameplay' && initialized && !settings.muted) {
-            [['base', 0.22], ['pressure', Math.max(0, Math.min(0.32, (1 - psi) * 0.32))]].forEach(([name, volume]) => { if (!buffers[name]) return; const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; gain.gain.value = volume; source.loop = true; source.connect(gain); gain.connect(musicGain); source.start(); musicSources.push(source); if (name === 'pressure') pressureLayerGain = gain; });
+            [['base', 0.22], ['pressure', Math.max(0, Math.min(0.32, (1 - psi) * 0.32))]].forEach(([name, volume]) => { if (!buffers[name]) return; const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; source.loop = true; gain.gain.value = name === 'pressure' ? 0 : volume; source.connect(gain); gain.connect(musicGain); source.start(); musicSources.push(source); if (name === 'pressure') { pressureLayerGain = gain; gain.gain.setTargetAtTime(pressureBand === 'pressure' ? volume : 0, context.currentTime, 0.35); } });
         }
         startRooftopMusic();
         // A quiet procedural fallback is only needed when no decoded gameplay layer is available.
@@ -108,17 +118,17 @@ window.Game.Audio = (function () {
         musicTimer = setInterval(pulse, 2600);
     }
     function setContext(next) { currentContext = next || 'menu'; init(); if (initialized) startMusic(); emit('context_changed', { context: currentContext }); }
-    function setPsi(value) { const numeric = Number(value); if (!Number.isFinite(numeric)) return; psi = Math.max(0, Math.min(2, numeric)); if (pressureBand === 'calm' && psi < 0.60) pressureBand = 'pressure'; else if (pressureBand === 'pressure' && psi > 0.70) pressureBand = 'calm'; if (pressureLayerGain && context) pressureLayerGain.gain.setTargetAtTime(Math.max(0, Math.min(0.32, (1 - psi) * 0.32)), context.currentTime, 0.12); }
+    function setPsi(value) { const numeric = Number(value); if (!Number.isFinite(numeric)) return; psi = Math.max(0, Math.min(2, numeric)); if (pressureBand === 'calm' && psi < 0.60) pressureBand = 'pressure'; else if (pressureBand === 'pressure' && psi > 0.70) pressureBand = 'calm'; if (pressureLayerGain && context) pressureLayerGain.gain.setTargetAtTime(pressureBand === 'pressure' ? Math.max(0, Math.min(0.32, (1 - psi) * 0.32)) : 0, context.currentTime, 0.35); }
     function play(name) { init(); if (!playBuffer(name === 'door' ? 'door' : name)) tone(name); emit('effect_played', { name }); }
     function on(name, handler) { if (typeof handler !== 'function') return () => {}; const list = listeners.get(name) || []; list.push(handler); listeners.set(name, list); return () => listeners.set(name, list.filter(fn => fn !== handler)); }
-    function publish(name, payload = {}) { init(); if (name === 'rooftop_started') { rooftopActive = true; startRooftopMusic(); } if (name === 'rooftop_released') { rooftopActive = false; stopRooftopMusic(); } if (name === 'reset') { rooftopActive = false; startMusic(); } const mapped = eventMap[name]; const eventNow = Date.now(); const eventKey = `${name}:${payload.id || ''}:${payload.liftId ?? ''}:${payload.floor ?? ''}:${payload.status || ''}`; const lastEvent = lastPlayedEventAt.get(eventKey) || 0; const throttled = eventCooldownMs[name] && eventNow - lastEvent < eventCooldownMs[name]; const asset = name === 'powerup_used' ? payload.id : name === 'hazard_started' ? payload.id : name === 'victory' ? 'victory' : mapped && buffers[mapped] ? mapped : null; const fallback = fallbackMap[mapped] || mapped; if (!throttled) { if (asset && !playBuffer(asset)) { if (fallback) tone(fallback, sfxGain, payload.id || name); } else if (!asset && fallback) tone(fallback, sfxGain, payload.id || name); lastPlayedEventAt.set(eventKey, eventNow); acceptedEventCount++; } emit(name, payload); }
-    function setMuted(value) { settings.muted = !!value; applyVolumes(); if (settings.muted) { stopMenuTrack(); stopMusicTracks(); stopRooftopMusic(); } else if (initialized) startMusic(); persist(); }
+    function publish(name, payload = {}) { init(); if (name === 'rooftop_started') { rooftopActive = true; startRooftopMusic(); } if (name === 'rooftop_released') { rooftopActive = false; stopRooftopMusic(); } if (name === 'reset') { rooftopActive = false; startMusic(); } if (name === 'powerup_used' && payload.id === 'musak') { stopMusak(); if (buffers.musak && initialized && !settings.muted) { musakSource = context.createBufferSource(); musakSource.buffer = buffers.musak; musakSource.loop = true; musakSource.connect(sfxGain); musakSource.start(); musakStopTimer = setTimeout(stopMusak, Math.max(1, Number(payload.duration) || 5000) * 1000); } } const mapped = eventMap[name]; const eventNow = Date.now(); const eventKey = `${name}:${payload.id || ''}:${payload.liftId ?? ''}:${payload.floor ?? ''}:${payload.status || ''}`; const lastEvent = lastPlayedEventAt.get(eventKey) || 0; const throttled = eventCooldownMs[name] && eventNow - lastEvent < eventCooldownMs[name]; const asset = name === 'powerup_used' && payload.id === 'musak' ? null : name === 'powerup_used' ? payload.id : name === 'hazard_started' ? payload.id : name === 'victory' ? 'victory' : mapped && buffers[mapped] ? mapped : null; const fallback = name === 'powerup_used' && payload.id === 'musak' ? null : fallbackMap[mapped] || mapped; if (!throttled) { if (asset && playBuffer(asset, sfxGain, 1, { durationMs: 5000 })) {} else if (asset) { if (fallback) tone(fallback, sfxGain, payload.id || name); } else if (fallback) tone(fallback, sfxGain, payload.id || name); lastPlayedEventAt.set(eventKey, eventNow); acceptedEventCount++; } emit(name, payload); }
+    function setMuted(value) { settings.muted = !!value; applyVolumes(); if (settings.muted) { stopMenuTrack(); stopMusicTracks(); stopRooftopMusic(); stopMusak(); } else if (initialized) startMusic(); persist(); }
     function setVolume(kind, value) { const n = Math.max(0, Math.min(1, Number(value) || 0)); if (kind === 'music') settings.music = n; else if (kind === 'sfx') settings.sfx = n; applyVolumes(); persist(); }
     function getSettings() { return { ...settings }; }
     async function teardown() {
         if (musicTimer) clearInterval(musicTimer);
         musicTimer = null;
-        stopMenuTrack(); stopMusicTracks(); stopRooftopMusic();
+        stopMenuTrack(false); stopMusicTracks(); stopRooftopMusic(); stopMusak();
         if (context) {
             // Safari/WebKit can leave close() pending when an AudioContext has never fully resumed.
             // Cleanup must not block a round reset, page shutdown, or browser test indefinitely.
@@ -129,11 +139,11 @@ window.Game.Audio = (function () {
         }
         context = null; masterGain = null; musicGain = null; sfxGain = null; menuBuffer = null;
         Object.keys(buffers).forEach(name => delete buffers[name]);
-        failedAssets.clear(); lastPlayedEventAt.clear(); acceptedEventCount = 0; initialized = false; rooftopActive = false; pressureBand = 'calm';
+        failedAssets.clear(); lastPlayedEventAt.clear(); acceptedEventCount = 0; initialized = false; rooftopActive = false; pressureBand = 'calm'; menuOffset = 0;
     }
     ['pointerdown', 'keydown', 'touchstart'].forEach(type => document.addEventListener(type, init, { once: true, passive: true }));
 
-    function getStatus() { return { initialized, context: currentContext, rooftopActive, rooftopSourceActive: !!rooftopSource, menuSourceActive: !!menuSource, musicSourceCount: musicSources.length, pressureBand, acceptedEventCount, menuLoaded: !!buffers.menu, baseLoaded: !!buffers.base, pressureLoaded: !!buffers.pressure, rooftopLoaded: !!buffers.rooftop, victoryLoaded: !!buffers.victory, doorLoaded: !!buffers.door, loadedAssetCount: Object.keys(buffers).length, failedAssetCount: failedAssets.size, muted: settings.muted }; }
+    function getStatus() { return { initialized, context: currentContext, rooftopActive, rooftopSourceActive: !!rooftopSource, menuSourceActive: !!menuSource, menuPositionSec: menuOffset, musicSourceCount: musicSources.length, pressureBand, acceptedEventCount, menuLoaded: !!buffers.menu, baseLoaded: !!buffers.base, pressureLoaded: !!buffers.pressure, rooftopLoaded: !!buffers.rooftop, victoryLoaded: !!buffers.victory, doorLoaded: !!buffers.door, loadedAssetCount: Object.keys(buffers).length, failedAssetCount: failedAssets.size, muted: settings.muted }; }
     return { init, play, publish, on, setContext, setPsi, setMuted, setVolume, teardown, getSettings, getStatus };
 })();
 

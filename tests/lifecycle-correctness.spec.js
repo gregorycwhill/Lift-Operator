@@ -326,6 +326,21 @@ test('checkout commits a cart only once', async ({ page }) => {
     expect(result.inventoryCount).toBe(1);
 });
 
+test('credits carry forward and empty-cart starts request confirmation', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.points = 12;
+        PowerUps.cart = [];
+        initializeRound(2, { showBriefing: true });
+        document.getElementById('startRoundBtn').click();
+        return {
+            carried: Registry.points,
+            confirmationVisible: document.getElementById('roundStartConfirmOverlay').style.display === 'flex',
+            briefingVisible: document.getElementById('roundModalOverlay').style.display === 'flex'
+        };
+    });
+    expect(result).toEqual({ carried: 12, confirmationVisible: true, briefingVisible: false });
+});
+
 test('pause and resume preserve guest and scheduled-event ages', async ({ page }) => {
     const result = await page.evaluate(() => {
         const originalNow = Date.now;
@@ -1034,7 +1049,7 @@ test('rooftop event has a long seeded schedule and releases guests to their orig
     expect(result.released).toEqual({ active: false, dest: 3, partying: false });
 });
 
-test('Round 13 playtest tuning halves spawn rates and reduces gravity by 20%', async ({ page }) => {
+test('Round 13 playtest tuning reduces spawn pressure by 25% and gravity by 20%', async ({ page }) => {
     const result = await page.evaluate(() => ({
         enduranceMultiplier: Config.GAME_DATA.payouts.endurance.creditMultiplier,
         spawnStart: Config.GAME_DATA.rounds[13].spawnStart,
@@ -1042,7 +1057,7 @@ test('Round 13 playtest tuning halves spawn rates and reduces gravity by 20%', a
         gravityScalar: Config.GAME_DATA.rounds[13].gravityScalar
     }));
 
-    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 0.6, spawnEnd: 0.7, gravityScalar: 1.12 });
+    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 0.9, spawnEnd: 1.05, gravityScalar: 1.12 });
 });
 
 test('round countdown freezes play while allowing automation setup and transient capacity cues', async ({ page }) => {
@@ -1079,6 +1094,18 @@ test('round countdown freezes play while allowing automation setup and transient
     expect(started.countdown).toBe(false);
     expect(started.timeLeft).toBe(180);
     expect(started.guests).toBeGreaterThan(0);
+});
+
+test('countdown start-now control begins the round immediately', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(2, { showBriefing: false });
+        startRoundCountdown(10);
+        document.getElementById('roundCountdownSkip').click();
+        return { countdown: Registry.roundCountdownActive, active: Registry.gameActive, timer: Registry.roundCountdownTimer };
+    });
+    expect(result.countdown).toBe(false);
+    expect(result.active).toBe(true);
+    expect(result.timer).toBe(null);
 });
 
 test('automation teaching cues extend to custom and shared script discovery', async ({ page }) => {

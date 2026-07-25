@@ -164,8 +164,8 @@ Still required before release promotion:
 Implemented on `master` for the next human playtest pass:
 
 - Imported and wired the CSV-authoritative Dream Raid and Orbital Colossus gameplay tracks and Jazz Chromatic Musak.
-- Menu music now restarts from the beginning whenever a briefing, review, leaderboard, Debug, or Workshop modal opens;
-  those primary modals are mutually exclusive and their buttons toggle the current modal closed.
+- Menu music is managed across briefing, review, leaderboard, Debug, and Workshop modal transitions; those primary
+  modals are mutually exclusive and their buttons toggle the current modal closed.
 - Disabled elevator-door and guest-distress playback per the CSV `NO SOUND` decisions. Added the preferred placeholder
   beep for guest served and defenestration events, plus shop-item selection feedback.
 - Prevented repeated timed power-ups on an already affected lift, deduplicated lift effect icons, added visible jam and
@@ -178,6 +178,27 @@ Implemented on `master` for the next human playtest pass:
 The build is ready for structured playtesting. Human evidence remains required for audio playback on target devices,
 modal transitions, rocket rendering on the top floor, Round 9/13 feel, R19/R20 responsive framing, and the new expiry/
 party-state behaviours.
+
+## Implementation checkpoint — 25 July 2026 — economy and audio continuity follow-up
+
+Implemented for the next playtest pass:
+
+- Credits now carry forward across successful rounds and the Supply Closet explains this. Starting a round with unused
+  Credits and no purchases asks for confirmation before proceeding.
+- The opening countdown has a visible `Start now` control limited to the timer area.
+- Menu music resumes from its previous position; one-shot SFX are capped at five seconds, while Musak runs for its
+  canonical power-up duration. Pressure music now fades in and remains active while the game is under pressure.
+- Leaderboard, Debug, and Workshop buttons toggle their current modal. Guest boarding uses the short beep, with ordinary
+  elevator-door sounds still silent except for Wide Doors.
+- Gym Bros retain immunity to all stink effects, checkout suitcases have improved contrast, and timed power-up icons are
+  rendered on the lift for the full active effect without free-floating rocket duplicates.
+- Round 13 now uses the approved 25% spawn-pressure reduction while retaining the 20% gravity reduction.
+- Campaign review text now derives the final authored round from canonical round data; “Finish Campaign” is reserved for
+  the final authored round.
+
+The remaining acceptance work is timing and feel: confirm exact power-up durations on device, verify pressure/music
+continuity, reproduce Gym Bro boarding and top-floor rocket placement, and assess Round 13 difficulty and Round 14’s
+intentional credit-saving strategy.
 
 ## Deferred decisions
 

@@ -128,7 +128,7 @@ window.renderShop = function() {
 
     const header = document.createElement('h3');
     header.className = 'shop-header';
-    header.textContent = 'Supply Closet (Credits: ';
+    header.textContent = 'Supply Closet (Credits carry forward: ';
     const pointsSpan = document.createElement('span');
     pointsSpan.className = pointsClass;
     pointsSpan.textContent = remainingPoints;

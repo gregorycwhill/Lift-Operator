@@ -15,6 +15,6 @@ Balance version: `0.2.7-audio-playtest-remediation`
 | 10 | OVERLOADED | 0/3 | 0/3 | 122s | 129s | 1.62 | 0.84 | 1.94 | 0.78 |
 | 11 | UNPROVEN | 0/3 | 0/3 | 112s | 105s | 1.82 | 0.88 | 2.08 | 0.94 |
 | 12 | CONTESTED | 0/3 | 0/3 | 157s | 278s | 1.44 | 0.72 | 2.00 | 0.72 |
-| 13 | UNDERLOADED | 2/3 | 3/3 | 180s | 180s | 0.66 | 0.48 | 1.42 | 0.18 |
+| 13 | UNDERLOADED | 1/3 | 3/3 | 157s | 180s | 0.98 | 0.57 | 1.75 | 0.41 |
 
 The strong result is the best per-seed outcome from an auditable portfolio: an omniscient direct dispatcher and a featured-policy profile with a declared round-appropriate loadout. Where the portfolio does not outperform Sweep, the round remains Unproven rather than being tuned around weak comparator evidence.
