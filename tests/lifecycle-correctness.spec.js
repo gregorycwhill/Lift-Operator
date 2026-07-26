@@ -742,6 +742,90 @@ test('Service Zoning reports coverage, overlap, and reproducible direct-route ga
     });
 });
 
+test('automation-native zoning scales, assigns, overrides, and preserves existing passengers', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(14, { showBriefing: false });
+        const VM = window.Game.Automation;
+        const low = VM.getScript('zoned-low');
+        const high = VM.getScript('zoned-high');
+        const scaled = [20, 25, 30].map(floorCount => ({
+            floorCount,
+            low: VM.resolveServiceZone(low.serviceZone, floorCount),
+            high: VM.resolveServiceZone(high.serviceZone, floorCount)
+        }));
+
+        const lift = Registry.lifts[0];
+        setLiftAutomation(0, 'zoned-low');
+        const assigned = {
+            mode: lift.servicePolicy.mode,
+            lower: lift.serviceLower,
+            upper: lift.serviceUpper,
+            active: lift.servicePolicy.active
+        };
+
+        Registry.gameActive = true;
+        setLiftTarget(0, Config.numFloors - 1);
+        const override = {
+            target: lift.targetFloor,
+            manualOverride: lift.manualOverride
+        };
+
+        lift.passengers = [{ dest: Config.numFloors - 1 }];
+        const passengerTarget = Registry.findSweepTarget(lift, 1);
+        const bridge = VM.getBuildingBridge(lift);
+        bridge.setTarget(Config.numFloors - 1);
+        const existingPassengerTarget = lift.targetFloor;
+
+        setLiftAutomation(0, 'manual');
+        const reset = {
+            mode: lift.servicePolicy.mode,
+            lower: lift.serviceLower,
+            upper: lift.serviceUpper,
+            active: lift.servicePolicy.active
+        };
+
+        return { scaled, assigned, override, passengerTarget, existingPassengerTarget, reset };
+    });
+
+    expect(result.scaled).toEqual([
+        { floorCount: 20, low: { mode: 'low', lower: 0, upper: 10, active: true }, high: { mode: 'high', lower: 10, upper: 19, active: true } },
+        { floorCount: 25, low: { mode: 'low', lower: 0, upper: 12, active: true }, high: { mode: 'high', lower: 12, upper: 24, active: true } },
+        { floorCount: 30, low: { mode: 'low', lower: 0, upper: 15, active: true }, high: { mode: 'high', lower: 15, upper: 29, active: true } }
+    ]);
+    expect(result.assigned).toEqual({ mode: 'low', lower: 0, upper: 10, active: true });
+    expect(result.override).toEqual({ target: 19, manualOverride: true });
+    expect(result.passengerTarget).toBe(19);
+    expect(result.existingPassengerTarget).toBe(19);
+    expect(result.reset).toEqual({ mode: 'none', lower: 0, upper: 19, active: false });
+});
+
+test('Service Zone Blockly metadata and Round 14 policy discovery are available', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(14, { showBriefing: false });
+        const VM = window.Game.Automation;
+        const customData = {
+            blocks: { blocks: [
+                { type: 'service_zone', fields: { MODE: 'CUSTOM', LOWER: '3', UPPER: '12' } }
+            ] }
+        };
+        const custom = VM.extractServiceZone(customData);
+        const names = [...document.querySelectorAll('.shaft select option')].map(option => option.textContent);
+        return {
+            custom,
+            zoningPanelHasLiftSelector: Boolean(document.getElementById('zoneLiftSelect')),
+            policyBlock: typeof Blockly.Blocks.service_zone !== 'undefined',
+            lowVisible: names.includes('Zoned Low [G–10]'),
+            highVisible: names.includes('Zoned High [10–19]')
+        };
+    });
+
+    expect(result.custom).toEqual({ mode: 'custom', lower: 3, upper: 12 });
+    expect(result.zoningPanelHasLiftSelector).toBe(false);
+    expect(result.policyBlock).toBe(true);
+    expect(result.lowVisible).toBe(true);
+    expect(result.highVisible).toBe(true);
+});
+
 test('Endless alpha generates deterministic pre-checked operations and can enter play', async ({ page }) => {
     const result = await page.evaluate(() => {
         Config.debugMode = true;

@@ -49,6 +49,42 @@ Custom automation is the strategic culmination of the game, not an unrestricted 
 - A mandatory event-hat/root block.
 - A visual Think block in the current block set.
 
+## 2.1 Service Zoning policy extension
+
+Service Zoning is a saved policy capability, not a separate lift configuration workflow. The player creates or copies
+an automation, adds a Service Zone block, saves it, and assigns the resulting automation to one or more lifts through
+the normal in-game automation menu.
+
+### Built-in policies
+
+Round 14 unlocks two scalable read-only examples:
+
+- **Zoned Low:** serves from G through the calculated midpoint floor.
+- **Zoned High:** serves from the calculated midpoint floor through the highest floor.
+
+The midpoint is shared by both policies, giving one floor of overlap. For a building with floors 0 through `maxFloor`,
+the pivot is `ceil(maxFloor / 2)`, so Low is `0..pivot` and High is `pivot..maxFloor`. Existing unzoned built-ins
+remain available; zoning is optional and is initiated by assigning a Zoned policy to a lift.
+
+### Blockly and policy metadata
+
+The Service Zone block is declarative and saved as policy metadata. It supports three modes:
+
+- **Low** — scalable lower-band preset.
+- **High** — scalable upper-band preset.
+- **Custom** — explicit lower and upper floors controlled by the contextual Workshop parameter panel.
+
+The contextual panel edits the selected block’s parameters. It does not select a lift or mutate a live lift directly.
+The saved Blockly representation remains the editable source; generated code is only an execution cache.
+
+When a policy is assigned to a lift, its resolved service zone applies for as long as that policy is active. Changing
+to Manual or an unzoned policy restores full-building service. A manual target may temporarily move the lift outside
+its zone, but incompatible new guests still cannot board and the Zoned routine resumes after the manual override.
+Passengers already onboard are allowed to complete their destinations before the new zone governs future service.
+
+Zoning metadata must survive save, copy, import, and blueprint sharing. Existing scripts without zone metadata migrate
+as unzoned policies.
+
 ## 3. Workshop unlock
 
 Target campaign unlock: Round 10.

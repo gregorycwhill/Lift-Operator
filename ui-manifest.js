@@ -200,7 +200,8 @@ window.processNextManifestItem = function() {
                             blocklyData: decompressedBlockly,
                             compiledJS: "",
                             version: bData.version || "1.0",
-                            origin: "external"
+                            origin: "external",
+                            serviceZone: bData.serviceZone || window.Game.Automation?.extractServiceZone?.(decompressedBlockly) || null
                         };
 
                         if (VM) {

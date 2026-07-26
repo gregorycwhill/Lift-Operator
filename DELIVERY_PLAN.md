@@ -14,6 +14,50 @@ and testable campaign slice. This plan does not add transfers, a G hub, new haza
 **Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
 only where evidence supports it, and a release decision with a recorded test/device/seed pack.
 
+## Next implementation slice — automation-native Service Zoning
+
+**Status:** Planned implementation slice following the current zoning playtest feedback.<br>
+**Design authority:** `ROADMAP.md` and `Automation_Workshop_Spec.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Objective
+
+Move Service Zoning from the current Workshop lift-selector workflow into saved automation policies, so the player
+constructs, saves, copies, and deploys zoning through the established Workshop philosophy.
+
+### Agreed behaviour
+
+- Round 14 unlocks zoning. Existing non-zoned built-ins remain available at all times.
+- Add scalable read-only `Zoned Low` and `Zoned High` built-ins. Their bands share one midpoint floor as an overlap.
+- Add a declarative Service Zone Blockly block with Low, High, and Custom modes.
+- Custom lower/upper values are edited through a contextual block-parameter panel, not a lift selector.
+- Assigning a Zoned automation applies its resolved band to the lift for as long as that routine is active.
+- Manual override may move a lift outside its band temporarily; incompatible guests still cannot board, and the Zoned
+  routine resumes when the override completes.
+- Existing passengers complete their current destinations when a new zone is assigned.
+- Manual or unzoned automation restores full-building service.
+- Zone metadata survives save, copy, import, and blueprint sharing; scripts without metadata remain unzoned.
+
+### Implementation sequence
+
+1. Define and validate the policy metadata schema, including scalable Low/High presets and Custom ranges.
+2. Add Blockly serialization, code-generation/runtime extraction, migration for existing scripts, and blueprint support.
+3. Replace the live lift-selector zoning controls with contextual parameters for the selected Service Zone block.
+4. Resolve policy metadata on automation assignment and preserve the existing engine-level direct-service predicate.
+5. Implement manual-override resumption and safe handling of passengers already onboard.
+6. Add Round 14 unlocks, built-in policy entries, readable automation-menu zone labels, and Welcome copy.
+7. Add telemetry/replay identity for policy ID, policy revision, resolved zone, and resulting coverage.
+8. Run focused tests, the full gate, and structured Round 14–20 playtesting.
+
+### Exit criteria
+
+- No lift can have a zoning band except through its active automation policy.
+- Low and High policies scale correctly across 20-, 25-, and 30-floor buildings with one-floor overlap.
+- A saved/copied/imported/shared policy retains its zoning metadata.
+- Manual overrides, existing passengers, boarding refusal, automation, simulation, and telemetry remain consistent.
+- The Workshop no longer offers a lift-selection zoning workflow.
+- Round 14 Welcome copy explains that zoning is optional and encourages copying/adapting a policy in Workshop.
+
 ## Acceptance work now
 
 - Run the structured R9, R13, R14, and R15-R20 combination-round sessions with browser/device, seed, loadout,

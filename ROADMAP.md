@@ -26,6 +26,11 @@ playtesting.
 **Gate:** A player can explain a zoning failure, reproduce it with a seed/configuration, and choose a credible next
 strategy. See `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
+**Accepted product direction:** Service Zoning is authored through saved Workshop policies. Round 14 introduces the
+scalable `Zoned Low` and `Zoned High` built-ins, while all existing built-ins remain available. Players can copy a
+policy, adjust its Service Zone block, save a custom variant, and deploy it through the normal in-game automation menu.
+The Workshop does not select individual lifts for zoning.
+
 ## Next — Tune the extended campaign
 
 **Outcome:** R14–R20 form a coherent second arc about fleet architecture, resilience, and Workshop advantage.
@@ -38,16 +43,7 @@ multi-exception fleets, then 30-floor network mastery.
 **Gate:** Human failure diagnoses match round intent, and balance changes are reproducible through canonical data,
 fixed seeds, compact reports, and recorded playtests.
 
-## Later — Campaign polish and accessibility
-
-**Outcome:** The complete campaign is clear, satisfying, and robust across supported devices.
-
-- Improve briefing, Review, automation visualization, and accessibility from observed playtest failures.
-- Complete mobile/Safari audio acceptance and responsive layout polish.
-- Resolve remaining campaign balance questions, including Round 2 leverage, late-round strategy separation, and economy
-  inflation, using evidence rather than broad retuning.
-
-## Later — Counterweight Pairs puzzle arc
+## Later — Counterweight Pairs and Open Plan puzzle arc
 
 **Outcome:** Introduce a deliberately puzzle-themed round in which familiar lift controls operate a mechanically
 coupled system. The challenge comes from anticipating consequences across a pair, not from learning a new control
@@ -114,6 +110,31 @@ turns a frustrating consequence into a learned strategic opportunity without wea
 partner, and describe why Open Plan is useful after experiencing the coupled-load problem. The round is not ready for
 implementation planning until its teaching beat, failure recovery expectations, and traffic envelope are playtested.
 
+Open Plan is deliberately introduced after the introductory Counterweight Pairs round. This keeps the first puzzle
+focused on learning the coupled-lift consequence, then gives players a later tool that solves the passenger-distribution
+problem they have already experienced.
+
+## Later — Mobile edition
+
+**Outcome:** A stripped-back, phone-first version makes the core lift-routing game readable and enjoyable on a modern
+mobile screen without carrying over desktop-only complexity.
+
+The mobile edition is a distinct product slice, not merely responsive styling:
+
+- No Workshop or player-authored automation.
+- No wide 4+ lift presentation.
+- No buildings taller than 15 stories.
+- Floor and lift layouts fit within a phone viewport without requiring desktop-scale horizontal fleet management.
+- Core manual routing, loadouts, power-ups, guest rules, and authored-round learning remain legible and coherent.
+
+The mobile scope must decide whether the full authored campaign is adapted or a curated mobile campaign is selected.
+It must also define whether mobile shares progression and saves with the desktop build. Those decisions belong in the
+future mobile delivery plan, not in the current implementation plan.
+
+**Gate:** A representative phone playtest shows that players can understand and complete the mobile campaign slice
+without Workshop, wide fleets, or buildings above 15 stories, with acceptable touch targeting and no essential round
+depending on removed desktop systems.
+
 ## Later — Endless operations
 
 **Outcome:** Players who complete or outgrow the authored campaign can continue into fresh, fair operational challenges
@@ -135,12 +156,25 @@ difficulty spikes.
 **Gate:** A generated or catalogue operation has a recorded intent, reproducible seed/configuration, supported strategy
 profile, unattended baseline, and clear player-facing objective before it is promoted into endless play.
 
+Endless Operations is intentionally sequenced after the mobile edition. The endless format should build on a validated
+authored campaign and a settled understanding of the game’s mobile and desktop presentation constraints, rather than
+becoming the next source of unbounded content before the core product shape is stable.
+
+## Cross-cutting polish and accessibility
+
+These are supporting activities across the roadmap rather than a separate release gate:
+
+- Improve briefing, Review, automation visualization, and accessibility from observed playtest failures.
+- Complete mobile/Safari audio acceptance and responsive layout polish as each supported product slice is prepared.
+- Resolve remaining campaign balance questions, including Round 2 leverage, late-round strategy separation, and economy
+  inflation, using evidence rather than broad retuning.
+
 ## Deferred
 
 - Guest transfers, multi-lift journeys, and G-hub routing.
 - New mechanics, power-ups, hazards, guest types, themes, online services, and player-facing telemetry.
 - Round 20+ advanced sensors or player-constructed survival forecasting.
-- Endless operations implementation until the network campaign and its balance evidence are stable.
+- Endless operations implementation until the network campaign, puzzle arc, and mobile edition are stable.
 
 These are not commitments. Reconsider them only after the network campaign is validated and balanced.
 

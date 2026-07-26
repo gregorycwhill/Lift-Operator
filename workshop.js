@@ -5,6 +5,11 @@
 const jsGen = javascript.javascriptGenerator;
 
 const liftOperatorBlocks = [
+    { "type": "service_zone", "message0": "Service Zone %1 from %2 to %3", "args0": [
+        { "type": "field_dropdown", "name": "MODE", "options": [["LOW", "LOW"], ["HIGH", "HIGH"], ["CUSTOM", "CUSTOM"]] },
+        { "type": "field_number", "name": "LOWER", "value": 0, "min": 0, "precision": 1 },
+        { "type": "field_number", "name": "UPPER", "value": 0, "min": 0, "precision": 1 }
+    ], "previousStatement": null, "nextStatement": null, "colour": 45 },
     { "type": "set_target_floor", "message0": "Set Target Floor to %1", "args0": [{ "type": "input_value", "name": "FLOOR", "check": "Number" }], "previousStatement": null, "nextStatement": null, "colour": 355 },
     { "type": "set_sweep_direction", "message0": "Set Sweep Direction to %1", "args0": [{ "type": "field_dropdown", "name": "DIRECTION", "options": [ [ "UP", "1" ], [ "DOWN", "-1" ] ] }], "previousStatement": null, "nextStatement": null, "colour": 355 },
     { "type": "my_floor", "message0": "My Current Floor", "output": "Number", "colour": 230 },
@@ -26,6 +31,9 @@ const liftOperatorBlocks = [
 
 if (typeof Blockly !== "undefined") Blockly.defineBlocksWithJsonArray(liftOperatorBlocks);
 
+jsGen.forBlock["service_zone"] = function(block) {
+    return `// Service Zone ${block.getFieldValue("MODE")} ${block.getFieldValue("LOWER")}..${block.getFieldValue("UPPER")}\n`;
+};
 jsGen.forBlock["set_target_floor"] = function(block, generator) { 
     return `Building.setTarget(${generator.valueToCode(block, "FLOOR", javascript.Order.NONE) || "0"});\n`; 
 };
@@ -49,6 +57,7 @@ jsGen.forBlock["constant_none"] = function() { return ["-1", javascript.Order.AT
 
 const toolboxXML = `
 <xml id="toolbox" style="display: none">
+  <category name="Service Policy" colour="45"><block type="service_zone"></block></category>
   <category name="Lift Actions" colour="355"><block type="set_target_floor"></block><block type="set_sweep_direction"></block></category>
   <category name="Lift Telemetry" colour="230"><block type="my_floor"></block><block type="my_free_space"></block><block type="is_empty"></block><block type="is_full"></block><block type="my_direction"></block><block type="my_sweep_direction"></block></category>
   <category name="Building Sensors" colour="290"><block type="nearest_target"></block><block type="find_sweep_target"></block><block type="waiting_guests_on_floor"></block><block type="is_floor_claimed"></block></category>
@@ -63,6 +72,12 @@ const AutomationWorkshop = {
     workspace: null,
     currentScriptId: null,
     initialized: false,
+
+    getToolboxXml: function() {
+        const zoningUnlocked = Boolean(window.Config?.debugMode) || Number(window.Registry?.highestUnlockedRound || 1) >= 14;
+        if (zoningUnlocked) return toolboxXML;
+        return toolboxXML.replace(/\s*<category name="Service Policy"[\s\S]*?<\/category>/, '');
+    },
 
     init: function() {
         if (typeof Blockly === "undefined") return;
@@ -106,7 +121,6 @@ const AutomationWorkshop = {
 
         document.getElementById("shareScriptBtn")?.addEventListener("click", () => this.shareCurrentScript());
 
-        document.getElementById("zoneLiftSelect")?.addEventListener("change", () => this.refreshZoneControls());
         document.getElementById("applyZoneBtn")?.addEventListener("click", () => this.applyZone());
     },
 
@@ -134,47 +148,57 @@ const AutomationWorkshop = {
 
     refreshZoneControls: function() {
         const panel = document.getElementById('zoningControls');
-        const lifts = window.Registry?.lifts || [];
-        const enabled = Boolean(window.Registry?.isZoningEnabled?.());
         if (!panel) return;
-        panel.classList.toggle('hidden', !enabled || lifts.length === 0);
-        if (!enabled || lifts.length === 0) return;
-        const select = document.getElementById('zoneLiftSelect');
-        if (!select) return;
-        const previous = select.value;
-        select.innerHTML = lifts.map((lift, index) => `<option value="${index}">Lift ${index + 1}</option>`).join('');
-        select.value = previous && Number(previous) < lifts.length ? previous : '0';
-        const lift = lifts[Number(select.value)];
-        document.getElementById('zoneLowerInput').value = lift.serviceLower;
-        document.getElementById('zoneUpperInput').value = lift.serviceUpper;
-        document.getElementById('zoneLowerInput').max = Config.numFloors - 1;
-        document.getElementById('zoneUpperInput').max = Config.numFloors - 1;
-        const report = window.Registry?.getServiceZoneReport?.();
-        const uncovered = report?.uncoveredFloors?.length || 0;
-        const overlaps = report?.overlapFloors?.length || 0;
-        document.getElementById('zoneCoverageStatus').innerText = `Covers ${lift.serviceLower === 0 ? 'G' : `Floor ${lift.serviceLower}`}–${lift.serviceUpper}. ${uncovered} floor(s) have no lift; ${overlaps} floor(s) overlap. Guests outside this band wait for another lift.`;
+        const block = this.workspace?.getSelected?.();
+        const enabled = Boolean(window.Registry?.isZoningEnabled?.());
+        const selected = enabled && block?.type === 'service_zone';
+        panel.classList.toggle('hidden', !selected);
+        if (!selected) return;
+        const mode = document.getElementById('zoneModeSelect');
+        const lower = document.getElementById('zoneLowerInput');
+        const upper = document.getElementById('zoneUpperInput');
+        const currentScript = this.getVM()?.scripts?.find(script => script.id === this.currentScriptId);
+        const readOnly = currentScript?.author === 'System' || currentScript?.author !== ((window.Registry && window.Registry.playerName) || 'Pilot 1');
+        const apply = document.getElementById('applyZoneBtn');
+        if (mode) mode.disabled = readOnly;
+        if (lower) lower.disabled = readOnly;
+        if (upper) upper.disabled = readOnly;
+        if (apply) apply.disabled = readOnly;
+        if (mode) mode.value = block.getFieldValue('MODE') || 'CUSTOM';
+        if (lower) { lower.value = block.getFieldValue('LOWER') || 0; lower.max = Config.numFloors - 1; }
+        if (upper) { upper.value = block.getFieldValue('UPPER') || 0; upper.max = Config.numFloors - 1; }
+        const resolved = window.Game.Automation?.resolveServiceZone?.({
+            mode: String(block.getFieldValue('MODE') || 'CUSTOM').toLowerCase(),
+            lower: Number(block.getFieldValue('LOWER')),
+            upper: Number(block.getFieldValue('UPPER'))
+        }, Config.numFloors);
+        const label = resolved?.lower === 0 ? 'G' : `Floor ${resolved?.lower}`;
+        const end = resolved?.upper === 0 ? 'G' : `Floor ${resolved?.upper}`;
+        const status = document.getElementById('zoneCoverageStatus');
+        if (status) status.innerText = resolved?.active
+            ? `Selected policy band: ${label}–${end}. This band applies to any lift running the saved automation.`
+            : 'Choose a valid custom range or a scalable Low/High preset.';
     },
 
     applyZone: function() {
-        const select = document.getElementById('zoneLiftSelect');
-        const lift = window.Registry?.lifts?.[Number(select?.value)];
-        if (!lift) return;
-        const range = window.Registry?.validateServiceRange?.(
-            document.getElementById('zoneLowerInput').value,
-            document.getElementById('zoneUpperInput').value,
-            Config.numFloors
-        );
-        if (!range?.valid) {
-            window.UI?.showToast?.('Choose a valid lower and upper floor.');
-            return;
+        const block = this.workspace?.getSelected?.();
+        if (!block || block.type !== 'service_zone') return;
+        const mode = String(document.getElementById('zoneModeSelect')?.value || 'CUSTOM').toUpperCase();
+        const lowerInput = document.getElementById('zoneLowerInput')?.value;
+        const upperInput = document.getElementById('zoneUpperInput')?.value;
+        if (mode === 'CUSTOM') {
+            const range = window.Registry?.validateServiceRange?.(lowerInput, upperInput, Config.numFloors);
+            if (!range?.valid) {
+                window.UI?.showToast?.('Choose a valid lower and upper floor.');
+                return;
+            }
+            block.setFieldValue(String(range.lower), 'LOWER');
+            block.setFieldValue(String(range.upper), 'UPPER');
         }
-        const lower = range.lower;
-        const upper = range.upper;
-        lift.serviceLower = Math.floor(lower);
-        lift.serviceUpper = Math.floor(upper);
-        window.UI?.showToast?.(`Lift ${lift.id + 1} zone set to ${lower === 0 ? 'G' : lower}–${upper}.`);
+        block.setFieldValue(mode, 'MODE');
         this.refreshZoneControls();
-        (typeof GameUI === 'function' ? GameUI() : window.UI)?.buildWorld?.();
+        window.UI?.showToast?.('Service Zone policy updated. Save the automation to deploy it later.');
+        this.refreshZoneControls();
     },
 
     saveCurrentScript: function() {
@@ -194,6 +218,16 @@ const AutomationWorkshop = {
 
         if (this.workspace) {
             currentObj.blocklyData = Blockly.serialization.workspaces.save(this.workspace);
+            currentObj.serviceZone = VM.extractServiceZone(currentObj.blocklyData);
+            if (currentObj.serviceZone?.mode === 'custom') {
+                const range = window.Registry?.validateServiceRange?.(currentObj.serviceZone.lower, currentObj.serviceZone.upper, Config.numFloors);
+                if (!range?.valid) {
+                    if (typeof showToast === 'function') showToast('Service Zone needs a valid lower and upper floor.');
+                    return;
+                }
+                currentObj.serviceZone.lower = range.lower;
+                currentObj.serviceZone.upper = range.upper;
+            }
             const generatedSource = jsGen.workspaceToCode(this.workspace);
             const validation = VM.validateSource(generatedSource);
             if (!validation.valid) {
@@ -223,7 +257,8 @@ const AutomationWorkshop = {
             date: new Date().toLocaleDateString(),
             version: "1.0",
             blocklyData: null,
-            compiledJS: ""
+            compiledJS: "",
+            serviceZone: null
         };
 
         VM.scripts.push(newScriptObj);
@@ -257,7 +292,8 @@ const AutomationWorkshop = {
             date: new Date().toLocaleDateString(),
             version: srcScript.version || "1.0",
             blocklyData: srcScript.blocklyData ? JSON.parse(JSON.stringify(srcScript.blocklyData)) : null,
-            compiledJS: srcScript.compiledJS
+            compiledJS: srcScript.compiledJS,
+            serviceZone: srcScript.serviceZone ? JSON.parse(JSON.stringify(srcScript.serviceZone)) : null
         };
 
         VM.scripts.push(copiedScript);
@@ -301,7 +337,7 @@ const AutomationWorkshop = {
 
         if (!this.workspace && overlay && overlay.style.display === "flex") {
             this.workspace = Blockly.inject("blocklyDiv", {
-                toolbox: isReadOnly ? undefined : toolboxXML,
+                toolbox: isReadOnly ? undefined : this.getToolboxXml(),
                 readOnly: isReadOnly,
                 trashcan: !isReadOnly,
                 scrollbars: true,
@@ -312,6 +348,7 @@ const AutomationWorkshop = {
             this.workspace.addChangeListener(() => {
                 const terminalBox = document.getElementById("policyInput");
                 if (terminalBox) terminalBox.value = jsGen.workspaceToCode(this.workspace);
+                this.refreshZoneControls();
             });
         }
 
@@ -393,7 +430,8 @@ const AutomationWorkshop = {
             date: script.date,
             version: script.version || "1.0",
             xml: LZString.compressToEncodedURIComponent(JSON.stringify(script.blocklyData)),
-            compiledJS: script.compiledJS
+            compiledJS: script.compiledJS,
+            serviceZone: script.serviceZone || null
         };
         blueprint.checksum = window.Game.Blueprints.checksum(blueprint);
         const payload = {

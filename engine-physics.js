@@ -595,7 +595,7 @@ window.animationTick = function(timestamp) {
                             parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
                             if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
                                 const guestToBoard = Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1)[0];
-                                if (lift.passengers.length === 0 && (lift.automation === 'sweep' || lift.automation === 'priority-sweep')) {
+                                if (lift.passengers.length === 0 && ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(lift.automation)) {
                                     lift.sweepDirection = guestToBoard.dest > targetFloorToBoard ? 1 : -1;
                                 }
                                 lift.passengers.push(guestToBoard);
@@ -654,6 +654,10 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
         VM.execute(lift, 'sys_voting');
     } else if (lift.automation === 'weighted-voting') {
         VM.execute(lift, 'sys_weighted');
+    } else if (lift.automation === 'zoned-low') {
+        VM.execute(lift, 'sys_zoned_low');
+    } else if (lift.automation === 'zoned-high') {
+        VM.execute(lift, 'sys_zoned_high');
     } else if (lift.automation.startsWith('custom_')) {
         VM.execute(lift, lift.automation);
     }

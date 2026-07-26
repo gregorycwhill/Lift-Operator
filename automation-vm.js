@@ -10,11 +10,24 @@ window.Game = window.Game || {};
     const DEFAULT_PRIORITY_JSON = {"blocks":{"languageVersion":0,"blocks":[{"type":"controls_if","x":20,"y":20,"extraState":{"hasElse":true},"inputs":{"IF0":{"block":{"type":"logic_compare","fields":{"OP":"NEQ"},"inputs":{"A":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"critical"}}},"B":{"block":{"type":"constant_none"}}}}},"DO0":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"critical"}}}}}},"ELSE":{"block":{"type":"set_target_floor","inputs":{"FLOOR":{"block":{"type":"nearest_target","fields":{"TARGET_TYPE":"any_waiting"}}}}}}}}]}};
     const DEFAULT_INTERNAL_JSON = {"blocks":{"languageVersion":0,"blocks":[{"type":"set_target_floor","x":20,"y":20,"inputs":{"FLOOR":{"block":{"type":"math_number","fields":{"NUM":0}}}}}]}};
 
+    const withServiceZoneBlock = (base, mode) => {
+        const data = JSON.parse(JSON.stringify(base));
+        data.blocks.blocks.push({
+            type: 'service_zone',
+            fields: { MODE: mode, LOWER: '0', UPPER: '0' },
+            x: 20,
+            y: 260
+        });
+        return data;
+    };
+
     const SYSTEM_SCRIPTS = [
         { id: 'sys_sweep', name: "Sweep", description: "Simple pickup and dropoff routing.", author: "System", version: "1.0", blocklyData: DEFAULT_SWEEP_JSON, compiledJS: "if (!lift.sweepDirection) lift.sweepDirection = 1; let target = Building.findSweepTarget(lift.sweepDirection, false); if (target === -1) { lift.sweepDirection *= -1; target = Building.findSweepTarget(lift.sweepDirection, false); } if (target !== -1) Building.setTarget(target);" },
         { id: 'sys_priority', name: "Priority Sweep", description: "Prioritizes angry guests along the route.", author: "System", version: "1.0", blocklyData: DEFAULT_PRIORITY_JSON, compiledJS: "if (!lift.sweepDirection) lift.sweepDirection = 1; let target = Building.findSweepTarget(lift.sweepDirection, true); if (target === -1) { target = Building.findSweepTarget(lift.sweepDirection, false); } if (target === -1) { lift.sweepDirection *= -1; target = Building.findSweepTarget(lift.sweepDirection, true); if (target === -1) target = Building.findSweepTarget(lift.sweepDirection, false); } if (target !== -1) Building.setTarget(target);" },
         { id: 'sys_voting', name: "Voting", description: "Guests vote on the next stop.", author: "System", version: "1.0", blocklyData: DEFAULT_INTERNAL_JSON, compiledJS: "let best = Building.getBestFloor(false); if (best !== -1) Building.setTarget(best);" },
-        { id: 'sys_weighted', name: "Weighted Voting", description: "Weight based on patience levels.", author: "System", version: "1.0", blocklyData: DEFAULT_INTERNAL_JSON, compiledJS: "let best = Building.getBestFloor(true); if (best !== -1) Building.setTarget(best);" }
+        { id: 'sys_weighted', name: "Weighted Voting", description: "Weight based on patience levels.", author: "System", version: "1.0", blocklyData: DEFAULT_INTERNAL_JSON, compiledJS: "let best = Building.getBestFloor(true); if (best !== -1) Building.setTarget(best);" },
+        { id: 'sys_zoned_low', name: "Zoned Low", description: "Sweep policy for the scalable lower service band.", author: "System", version: "1.0", serviceZone: { mode: 'low' }, blocklyData: withServiceZoneBlock(DEFAULT_SWEEP_JSON, 'LOW'), compiledJS: "if (!lift.sweepDirection) lift.sweepDirection = 1; let target = Building.findSweepTarget(lift.sweepDirection, false); if (target === -1) { lift.sweepDirection *= -1; target = Building.findSweepTarget(lift.sweepDirection, false); } if (target !== -1) Building.setTarget(target);" },
+        { id: 'sys_zoned_high', name: "Zoned High", description: "Sweep policy for the scalable upper service band.", author: "System", version: "1.0", serviceZone: { mode: 'high' }, blocklyData: withServiceZoneBlock(DEFAULT_SWEEP_JSON, 'HIGH'), compiledJS: "if (!lift.sweepDirection) lift.sweepDirection = 1; let target = Building.findSweepTarget(lift.sweepDirection, false); if (target === -1) { lift.sweepDirection *= -1; target = Building.findSweepTarget(lift.sweepDirection, false); } if (target !== -1) Building.setTarget(target);" }
     ];
 
     const AutomationVM = {
@@ -69,6 +82,96 @@ window.Game = window.Game || {};
             this.scripts = [...SYSTEM_SCRIPTS, ...customScripts];
         },
 
+        getScript: function(identifier) {
+            if (!identifier) return null;
+            const aliases = {
+                'sweep': 'sys_sweep',
+                'priority-sweep': 'sys_priority',
+                'voting': 'sys_voting',
+                'weighted-voting': 'sys_weighted',
+                'zoned-low': 'sys_zoned_low',
+                'zoned-high': 'sys_zoned_high'
+            };
+            const raw = String(identifier);
+            const id = aliases[raw] || raw.replace(/^custom_/, '');
+            return this.scripts.find(script => script.id === id) || null;
+        },
+
+        normalizeServiceZone: function(metadata) {
+            if (!metadata || typeof metadata !== 'object') return null;
+            const mode = String(metadata.mode || 'none').toLowerCase();
+            if (!['low', 'high', 'custom'].includes(mode)) return null;
+            const normalized = { mode };
+            if (mode === 'custom') {
+                const lower = Number(metadata.lower);
+                const upper = Number(metadata.upper);
+                if (!Number.isInteger(lower) || !Number.isInteger(upper)) return null;
+                normalized.lower = lower;
+                normalized.upper = upper;
+            }
+            return normalized;
+        },
+
+        resolveServiceZone: function(metadata, floorCount) {
+            const maxFloor = Math.max(0, Number(floorCount) - 1);
+            const zone = this.normalizeServiceZone(metadata);
+            if (!zone) return { mode: 'none', lower: 0, upper: maxFloor, active: false };
+            if (zone.mode === 'low' || zone.mode === 'high') {
+                const pivot = Math.min(maxFloor, Math.ceil(maxFloor / 2));
+                return zone.mode === 'low'
+                    ? { mode: 'low', lower: 0, upper: pivot, active: true }
+                    : { mode: 'high', lower: pivot, upper: maxFloor, active: true };
+            }
+            if (zone.lower < 0 || zone.upper < zone.lower || zone.upper > maxFloor) {
+                return { mode: 'none', lower: 0, upper: maxFloor, active: false };
+            }
+            return { mode: 'custom', lower: zone.lower, upper: zone.upper, active: true };
+        },
+
+        getServiceZoneLabel: function(metadata, floorCount) {
+            const resolved = this.resolveServiceZone(metadata, floorCount);
+            if (!resolved.active) return 'Full building';
+            const floorLabel = floor => floor === 0 ? 'G' : String(floor);
+            return `${floorLabel(resolved.lower)}–${floorLabel(resolved.upper)}`;
+        },
+
+        applyPolicyToLift: function(lift, identifier) {
+            const script = this.getScript(identifier);
+            const zoningEnabled = typeof window.Registry?.isZoningEnabled === 'function' && window.Registry.isZoningEnabled();
+            const resolved = zoningEnabled
+                ? this.resolveServiceZone(script?.serviceZone, window.Config.numFloors)
+                : { mode: 'none', lower: 0, upper: Math.max(0, window.Config.numFloors - 1), active: false };
+            lift.servicePolicy = {
+                id: script?.id || null,
+                version: script?.version || null,
+                mode: resolved.mode,
+                active: resolved.active,
+                lower: resolved.lower,
+                upper: resolved.upper
+            };
+            lift.serviceLower = resolved.lower;
+            lift.serviceUpper = resolved.upper;
+            return resolved;
+        },
+
+        extractServiceZone: function(blocklyData) {
+            let found = null;
+            const visit = block => {
+                if (!block || found) return;
+                if (block.type === 'service_zone') {
+                    const mode = String(block.fields?.MODE || 'CUSTOM').toLowerCase();
+                    found = mode === 'low' || mode === 'high'
+                        ? { mode }
+                        : { mode: 'custom', lower: Number(block.fields?.LOWER), upper: Number(block.fields?.UPPER) };
+                    return;
+                }
+                Object.values(block.inputs || {}).forEach(input => visit(input.block));
+                if (block.next) visit(block.next);
+            };
+            (blocklyData?.blocks?.blocks || []).forEach(visit);
+            return found;
+        },
+
         /**
          * Save user scripts back to local storage.
          */
@@ -85,7 +188,7 @@ window.Game = window.Game || {};
         execute: function(lift, scriptIdentifier) {
             // Identifier can be "sys_sweep" or "custom_12345"
             const id = scriptIdentifier.replace('custom_', '');
-            const script = this.scripts.find(s => s.id === id);
+            const script = this.getScript(id);
             
             if (!script || !script.compiledJS) return;
 
@@ -166,7 +269,8 @@ window.Game = window.Game || {};
                     setTarget: floor => {
                         const lower = Number.isInteger(snapshot.lift.serviceLower) ? snapshot.lift.serviceLower : 0;
                         const upper = Number.isInteger(snapshot.lift.serviceUpper) ? snapshot.lift.serviceUpper : snapshot.floorCount - 1;
-                        if (Number.isInteger(floor) && floor >= lower && floor <= upper && floor >= 0 && floor < snapshot.floorCount) actions.targetFloor = floor;
+                        const existingPassenger = snapshot.lift.passengers.some(passenger => passenger.dest === floor);
+                        if (Number.isInteger(floor) && (existingPassenger || (floor >= lower && floor <= upper)) && floor >= 0 && floor < snapshot.floorCount) actions.targetFloor = floor;
                     },
                     getFloor: () => snapshot.floor, getPhysicalDirection: () => snapshot.direction,
                     getCapacity: () => snapshot.capacity, getEffectiveCapacity: () => snapshot.capacity,
@@ -238,8 +342,9 @@ window.Game = window.Game || {};
                     let f = parseInt(floor);
                     const isDouble = lift.isDoubleDecker || (lift.doubleDeckerTimer && lift.doubleDeckerTimer > 0);
                     const maxAllowed = isDouble ? (window.Config.numFloors - 2) : (window.Config.numFloors - 1);
+                    const existingPassenger = lift.passengers.some(passenger => passenger.dest === f);
                     const inZone = !R.isZoningEnabled || !R.isZoningEnabled() || R.isFloorInLiftZone(lift, f);
-                    if (!isNaN(f) && f >= 0 && f <= maxAllowed && inZone) {
+                    if (!isNaN(f) && f >= 0 && f <= maxAllowed && (inZone || existingPassenger)) {
                         lift.targetFloor = f;
                     }
                 },

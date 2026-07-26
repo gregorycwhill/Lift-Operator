@@ -54,7 +54,7 @@ window.showRoundModal = function(round) {
     else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and immune to stink, but if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
     else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. You have the usual 20 lives. Keep operating until the 20th defenestration, earn as many points as you can, then advance to the final round."; }
     else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity slows loaded climbs, so keep lifts light and use your power-ups carefully."; }
-    else if (round >= 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "High-density traffic detected. Use every automation and script at your disposal!"; }
+    else if (round >= 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "Service Zoning is now unlocked. Try 'Zoned Low' or 'Zoned High' from a lift's automation menu, then copy and adapt a policy in the Workshop. Zoning is optional: keep an unzoned or overlapping lift for trips between bands because transfers are not supported."; }
 
     let shopDiv = document.getElementById('shopContainer');
     if (!shopDiv && btn) {

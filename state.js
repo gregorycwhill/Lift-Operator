@@ -114,7 +114,15 @@ const Registry = {
         const floors = Array.from({ length: maxFloor + 1 }, (_, floor) => floor);
         const zones = Registry.lifts.map(lift => {
             const range = this.validateServiceRange(lift.serviceLower, lift.serviceUpper, floorCount);
-            return { liftId: lift.id, lower: range.lower, upper: range.upper, valid: range.valid };
+            return {
+                liftId: lift.id,
+                policyId: lift.servicePolicy?.id || null,
+                policyVersion: lift.servicePolicy?.version || null,
+                policyMode: lift.servicePolicy?.mode || 'none',
+                lower: range.lower,
+                upper: range.upper,
+                valid: range.valid
+            };
         });
         const coverage = floors.map(floor => zones.filter(zone => zone.valid && floor >= zone.lower && floor <= zone.upper).length);
         const uncoveredFloors = floors.filter(floor => coverage[floor] === 0);
@@ -157,10 +165,16 @@ const Registry = {
         const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
         const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
 
+        const existingOutsideZone = lift.passengers.find(passenger => !this.isFloorInLiftZone(lift, passenger.dest));
+        if (existingOutsideZone) return existingOutsideZone.dest;
+
         for (let checkF = currentFloor + dir; checkF >= 0 && checkF <= maxF; checkF += dir) {
             if (!this.isFloorInLiftZone(lift, checkF)) continue;
             // Dropoff check: passengers always want to get off
-            if (lift.passengers.some(p => p.dest === checkF && this.isFloorInLiftZone(lift, p.dest))) return checkF;
+            // Existing passengers must still be delivered if a new Zoned policy
+            // is assigned while they are onboard. The zone gates new boarding;
+            // it does not strand an already accepted journey.
+            if (lift.passengers.some(p => p.dest === checkF)) return checkF;
             
             // Pickup check: stop if we have room and there is a valid guest
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {
@@ -199,10 +213,13 @@ const Registry = {
         const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
         const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
 
+        const existingOutsideZone = lift.passengers.find(passenger => !this.isFloorInLiftZone(lift, passenger.dest));
+        if (existingOutsideZone) return existingOutsideZone.dest;
+
         for (let f = 0; f <= maxF; f++) {
             if (!this.isFloorInLiftZone(lift, f)) continue;
             let score = 0;
-            lift.passengers.forEach(p => { if (p.dest === f && this.isFloorInLiftZone(lift, p.dest)) score += getVal(p); });
+            lift.passengers.forEach(p => { if (p.dest === f) score += getVal(p); });
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {
                 Registry.floors[f].waitingGuests.forEach(g => {
                     if ((!isStinky || g.isGymBro) && this.canLiftDirectlyServe(lift, f, g.dest)) score += getVal(g);

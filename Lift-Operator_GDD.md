@@ -206,16 +206,18 @@ Built-in automations are not simple upgrades. They represent different operation
 - **Voting:** Concentrated demand response.
 - **Weighted Voting:** Urgency-aware demand response.
 - **Custom:** Player-designed routing for a known traffic problem.
-- **Service Zoning:** Workshop-configured direct service bands assigning each lift an inclusive floor range.
+- **Service Zoning:** Saved Workshop policies with scalable or custom direct-service bands that apply while assigned to
+  a lift.
 
 No built-in automation should complete a campaign round unattended. A round should reward active supervision, selecting or combining policies, and intervening according to traffic structure. Player-authored custom automation may eventually achieve unattended mastery and qualify for Hands-Free recognition.
 
 Custom automation is the long-term strategic progression. A better script should reduce emergency spending and manual intervention rather than merely increase a score counter.
 
-Service Zoning is a later scale-oriented Workshop progression. A zoned lift accepts a guest only when both the current
-floor and destination are within its configured range. G is included as an ordinary serviced floor, not as a transfer
-hub; this mirrors real lift behavior and supports Room Service and Checkout journeys that use the lobby. Transfers,
-G-hub routing, and arbitrary multi-lift passenger journeys remain deferred.
+Service Zoning is a later scale-oriented Workshop progression unlocked at Round 14. Zoned Low and Zoned High are
+scalable built-in policy examples; players can copy them or create a Custom Service Zone block in Workshop. A zoned
+lift accepts a guest only when both the current floor and destination are within its configured range. G is included as
+an ordinary serviced floor, not as a transfer hub; this mirrors real lift behavior and supports Room Service and Checkout
+journeys that use the lobby. Transfers, G-hub routing, and arbitrary multi-lift passenger journeys remain deferred.
 
 ## 8. Power-ups
 

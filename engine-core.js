@@ -139,7 +139,8 @@ window.setLiftTarget = function(liftIndex, targetFloor) {
     
     if (Registry.lifts[liftIndex]) {
         const lift = Registry.lifts[liftIndex];
-        if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.isFloorInLiftZone(lift, targetFloor)) {
+        const isActiveZonedPolicy = Boolean(lift.servicePolicy?.active);
+        if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.isFloorInLiftZone(lift, targetFloor) && !isActiveZonedPolicy) {
             if (window.Game.Audio) window.Game.Audio.publish('ui_error', { reason: 'floor-outside-zone' });
             if (typeof GameUI === 'function') GameUI().showToast?.(`Lift ${liftIndex + 1} is zoned for ${lift.serviceLower === 0 ? 'G' : lift.serviceLower}–${lift.serviceUpper}.`);
             return;
@@ -156,8 +157,11 @@ window.setLiftTarget = function(liftIndex, targetFloor) {
 
 window.setLiftAutomation = function(liftIndex, mode) {
     if (Registry.lifts[liftIndex]) {
-        Registry.lifts[liftIndex].automation = mode;
-        if (mode !== 'manual') Registry.lifts[liftIndex].manualOverride = false;
+        const lift = Registry.lifts[liftIndex];
+        lift.automation = mode;
+        if (mode !== 'manual') lift.manualOverride = false;
+        const VM = window.Game.Automation;
+        if (VM?.applyPolicyToLift) VM.applyPolicyToLift(lift, mode);
 
         const ui = GameUI();
         if (typeof ui.updateLiftAutomationUI === 'function') {
@@ -230,6 +234,7 @@ window.createLiftState = function(id) {
         sardineScored: false, isDoubleDecker: false,
         state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,
         lastEffectiveCapacity: Config.liftCapacity,
+        servicePolicy: { id: null, version: null, mode: 'none', active: false, lower: 0, upper: Math.max(0, Config.numFloors - 1) },
         serviceLower: 0,
         serviceUpper: Math.max(0, Config.numFloors - 1)
     };

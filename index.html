@@ -179,13 +179,13 @@
                             <div class="meta-margin">Date: <span id="scriptDateSpan" class="workshop-meta-val"></span></div>
                         </div>
 
-                        <section id="zoningControls" class="zoning-controls hidden" aria-label="Lift service zoning">
-                            <h3>Service Zoning</h3>
-                            <p class="workshop-help">Set the inclusive direct-service band for a lift. G is floor 0; transfers are not supported.</p>
-                            <label>Lift <select id="zoneLiftSelect" class="workshop-select"></select></label>
+                        <section id="zoningControls" class="zoning-controls hidden" aria-label="Service Zone block parameters">
+                            <h3>Service Zone block</h3>
+                            <p class="workshop-help">Select a Service Zone block in Blockly. Its saved band applies to any lift running this automation. G is floor 0; transfers are not supported.</p>
+                            <label>Mode <select id="zoneModeSelect" class="workshop-select"><option value="LOW">Low</option><option value="HIGH">High</option><option value="CUSTOM">Custom</option></select></label>
                             <label>Lower floor <input id="zoneLowerInput" type="number" min="0" step="1" class="workshop-input"></label>
                             <label>Upper floor <input id="zoneUpperInput" type="number" min="0" step="1" class="workshop-input"></label>
-                            <button id="applyZoneBtn" class="btn btn-blue btn-small">Apply zone</button>
+                            <button id="applyZoneBtn" class="btn btn-blue btn-small">Apply block parameters</button>
                             <p id="zoneCoverageStatus" class="workshop-help"></p>
                         </section>
                         

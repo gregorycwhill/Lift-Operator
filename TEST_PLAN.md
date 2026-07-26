@@ -33,6 +33,35 @@ Automated implementation evidence exists for the zoning foundation, diagnostics,
 follow-up, and regression coverage. The unchecked items below are the remaining release-acceptance evidence or areas
 that need an explicit evidence record before promotion.
 
+## Planned acceptance — automation-native Service Zoning
+
+The following matrix applies to the next implementation slice described in `DELIVERY_PLAN.md`.
+
+### Policy and Blockly
+
+- [ ] Service Zone block supports Low, High, and Custom modes and serializes with the saved Blockly policy.
+- [ ] Low and High resolve to the correct midpoint-overlap bands on 20-, 25-, and 30-floor buildings.
+- [ ] Custom ranges reject blank, reversed, fractional, negative, and out-of-bounds values.
+- [ ] Save, copy, import, and blueprint sharing preserve zone metadata; older scripts migrate as unzoned.
+
+### Assignment and runtime behaviour
+
+- [ ] Assigning a Zoned policy applies its resolved band to the selected lift; assigning Manual or an unzoned policy
+  restores full-building service.
+- [ ] Manual override can move outside the band temporarily, refuses incompatible boarding, and returns to the Zoned
+  routine after the override completes.
+- [ ] Existing passengers complete their current destinations when a new zone is assigned.
+- [ ] The existing direct-service rule remains authoritative across live boarding, built-in/custom automation,
+  simulation, manual targeting, refusal messaging, and Review diagnostics.
+
+### Product flow and observability
+
+- [ ] Round 14 unlocks the Zoned Low and Zoned High built-ins while leaving all existing built-ins available.
+- [ ] The Workshop has no lift-selector zoning workflow; the parameter panel edits only the selected Service Zone block.
+- [ ] In-game automation menus display policy name and resolved zone clearly.
+- [ ] Welcome copy explains zoning as optional, warns that transfers are unavailable, and encourages Workshop adaptation.
+- [ ] Telemetry and replay identity include policy ID/revision, resolved zone, and resulting coverage.
+
 Run before merging a material change:
 
 ```powershell

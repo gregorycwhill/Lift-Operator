@@ -29,19 +29,23 @@ window.updateWorkshopScriptList = function() {
         sharedScriptsGroup.label = 'Shared with Me';
         
         let currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+        const reachedRound = Math.max(Registry.highestUnlockedRound || 1, Registry.stats.round || 1);
+        const isZoningUnlocked = Config.debugMode || reachedRound >= 14;
         
         VM.scripts.forEach(s => {
+            if (s.serviceZone && !isZoningUnlocked) return;
             const opt = document.createElement('option');
             opt.value = `custom_${s.id}`;
+            const zoneLabel = s.serviceZone ? ` [${VM.getServiceZoneLabel?.(s.serviceZone, Config.numFloors) || 'zoned'}]` : '';
             
             if (s.author === 'System') {
-                opt.textContent = s.name;
+                opt.textContent = `${s.name}${zoneLabel}`;
                 builtInsGroup.appendChild(opt);
             } else if (s.author === currentPlayer) {
-                opt.textContent = s.name;
+                opt.textContent = `${s.name}${zoneLabel}`;
                 myScriptsGroup.appendChild(opt);
             } else {
-                opt.textContent = `${s.name} (by ${s.author})`;
+                opt.textContent = `${s.name}${zoneLabel} (by ${s.author})`;
                 sharedScriptsGroup.appendChild(opt);
             }
         });

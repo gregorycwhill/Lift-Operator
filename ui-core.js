@@ -95,6 +95,7 @@ window.buildWorld = function() {
     const isPriorityUnlocked = Config.debugMode || reachedRound >= automationUnlocks.priority;
     const isVotingUnlocked = Config.debugMode || reachedRound >= automationUnlocks.voting;
     const areCustomScriptsUnlocked = Config.debugMode || reachedRound >= automationUnlocks.custom;
+    const isZoningUnlocked = Config.debugMode || reachedRound >= 14;
     
     const builtIns = [];
     const myScripts = [];
@@ -113,14 +114,19 @@ window.buildWorld = function() {
                 else if (script.id === 'sys_priority') { engineVal = 'priority-sweep'; isUnlocked = isPriorityUnlocked; }
                 else if (script.id === 'sys_voting') { engineVal = 'voting'; isUnlocked = isVotingUnlocked; }
                 else if (script.id === 'sys_weighted') { engineVal = 'weighted-voting'; isUnlocked = isVotingUnlocked; }
-                
+                else if (script.id === 'sys_zoned_low') { engineVal = 'zoned-low'; isUnlocked = isZoningUnlocked; }
+                else if (script.id === 'sys_zoned_high') { engineVal = 'zoned-high'; isUnlocked = isZoningUnlocked; }
+
                 if (isUnlocked) {
-                    builtIns.push({ value: engineVal, name: script.name });
+                    const zoneLabel = script.serviceZone ? ` [${VM.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
+                    builtIns.push({ value: engineVal, name: `${script.name}${zoneLabel}` });
                 }
-            } else if (script.author === currentPlayer && areCustomScriptsUnlocked) {
-                myScripts.push({ value: `custom_${script.id}`, name: script.name });
-            } else if (areCustomScriptsUnlocked) {
-                sharedScripts.push({ value: `custom_${script.id}`, name: `${script.name} (by ${script.author})` });
+            } else if (script.author === currentPlayer && areCustomScriptsUnlocked && (!script.serviceZone || isZoningUnlocked)) {
+                const zoneLabel = script.serviceZone ? ` [${VM.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
+                myScripts.push({ value: `custom_${script.id}`, name: `${script.name}${zoneLabel}` });
+            } else if (areCustomScriptsUnlocked && (!script.serviceZone || isZoningUnlocked)) {
+                const zoneLabel = script.serviceZone ? ` [${VM.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
+                sharedScripts.push({ value: `custom_${script.id}`, name: `${script.name}${zoneLabel} (by ${script.author})` });
             }
         });
     }
@@ -197,6 +203,7 @@ window.buildWorld = function() {
         if (lift.automation === 'priority-sweep') extraClass = 'priority-sweep-mode';
         if (lift.automation === 'voting') extraClass = 'voting-mode';
         if (lift.automation === 'weighted-voting') extraClass = 'weighted-voting-mode';
+        if (lift.automation === 'zoned-low' || lift.automation === 'zoned-high') extraClass = 'zoned-mode';
         if (lift.automation.startsWith('custom_')) extraClass = 'custom-mode';
         
         if (lift.isJammed) extraClass += ' jammed';

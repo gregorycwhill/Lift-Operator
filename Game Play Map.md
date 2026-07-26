@@ -455,7 +455,9 @@ direct-service band for each lift.
 - Including G reflects real lift operation and is especially useful for Room Service and Checkout traffic, which often
   begins or ends at the ground/lobby floor.
 - If a guest’s origin or destination is outside a lift’s zone, that lift refuses boarding with a plain explanation.
-- Workshop edits show covered floors, uncovered floors, and whether any direct origin-to-destination route is absent.
+- Round 14 introduces the optional Zoned Low and Zoned High built-in policies; all existing built-ins remain available.
+- Workshop policies can be copied and adapted with a Service Zone block, then assigned from the normal in-game lift menu.
+- Workshop edits to a Service Zone block show covered floors, uncovered floors, and whether any direct origin-to-destination route is absent.
 - Overlapping zones provide resilience; disjoint zones reduce empty travel but are vulnerable when a lift jams.
 
 | Round | Title | Floors | Lifts | Structural challenge | Zoning/Workshop lesson |
