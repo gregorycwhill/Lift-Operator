@@ -93,7 +93,10 @@ library of built-in, player-authored, and shared automations usable across large
 - The player chooses one automation in a horizontal basement/lobby dock, or selects one or more lift targets first.
 - Policy and target selection are independent, so either order is valid and no lift changes policy merely because it
   was selected.
-- The next required selection flashes: lift controllers after policy-first, or the automation carousel after lift-first.
+- Carousel navigation previews an automation only; clicking its text commits it as the selected policy. Library entries
+  commit when clicked.
+- The next required selection flashes: lift controllers after explicit policy selection, or the automation carousel
+  after lift-first.
 - Apply is dimmed until both a policy and one or more lift targets are explicitly selected, then becomes the committing
   action.
 - The controller row occupies a fixed-width basement level beneath Ground and is marked by a non-interactive `⚙⇅`

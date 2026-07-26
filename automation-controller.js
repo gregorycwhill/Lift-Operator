@@ -84,7 +84,7 @@ window.Game = window.Game || {};
 
         renderDock({ autoLobby, controlRow }) {
             const catalog = this.getCatalog();
-            const state = { policy: Registry.automationControllerSelectedPolicy || 'manual', policyExplicit: Registry.automationControllerSelectedPolicy && Registry.automationControllerSelectedPolicy !== 'manual', lifts: new Set(), library: null };
+            const state = { policy: Registry.automationControllerSelectedPolicy || 'manual', previewPolicy: Registry.automationControllerSelectedPolicy || 'manual', policyExplicit: Registry.automationControllerSelectedPolicy && Registry.automationControllerSelectedPolicy !== 'manual', lifts: new Set(), library: null };
             autoLobby.classList.add('automation-dock-host');
             autoLobby.innerHTML = '';
             controlRow.dataset.automationController = 'dock';
@@ -131,19 +131,28 @@ window.Game = window.Game || {};
                 });
             };
             const updatePolicy = shouldArm => {
-                const index = Math.max(0, policies.findIndex(item => item.value === state.policy));
+                const index = Math.max(0, policies.findIndex(item => item.value === state.previewPolicy));
                 state.carouselIndex = index === -1 ? 0 : index;
                 const item = policies[state.carouselIndex] || policies[0];
                 if (!item) return;
-                state.policy = item.value; Registry.automationControllerSelectedPolicy = item.value;
-                card.dataset.policy = item.value; card.textContent = item.name; card.classList.add('selected');
+                state.previewPolicy = item.value;
+                card.dataset.policy = item.value; card.textContent = item.name;
+                card.classList.toggle('selected', state.policyExplicit && state.policy === item.value);
+                card.classList.toggle('automation-policy-preview', !state.policyExplicit || state.policy !== item.value);
+                card.dataset.selectedPolicy = state.policy;
                 indicator.textContent = `${state.carouselIndex + 1}/${policies.length}`;
                 if (shouldArm) window.Game.UI?.showToast?.(state.lifts.size ? 'Automation selected. Apply when ready.' : 'Choose lift(s), then Apply.');
                 refreshGuidance();
             };
-            card.addEventListener('click', event => { event.stopPropagation(); state.policyExplicit = true; updatePolicy(true); });
-            previous.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.policy = policies[state.carouselIndex].value; state.policyExplicit = true; updatePolicy(true); });
-            next.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.policy = policies[state.carouselIndex].value; state.policyExplicit = true; updatePolicy(true); });
+            const commitPreview = () => {
+                state.policy = state.previewPolicy;
+                state.policyExplicit = true;
+                Registry.automationControllerSelectedPolicy = state.policy;
+                updatePolicy(true);
+            };
+            card.addEventListener('click', event => { event.stopPropagation(); commitPreview(); });
+            previous.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; updatePolicy(false); });
+            next.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; updatePolicy(false); });
             viewport.append(card); carousel.append(previous, viewport, next, indicator); dock.appendChild(carousel);
 
             const actions = document.createElement('div'); actions.className = 'automation-dock-actions';
@@ -165,7 +174,7 @@ window.Game = window.Game || {};
 
             applyButton.addEventListener('click', event => { event.stopPropagation(); const result = this.assign(state.policy, [...state.lifts]); if (!result.ok) return window.Game.UI?.showToast?.(result.reason); state.lifts.clear(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); refreshGuidance(); window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`); });
             clearButton.addEventListener('click', event => { event.stopPropagation(); state.lifts.clear(); state.policyExplicit = false; statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); refreshGuidance(); });
-            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, () => { state.policyExplicit = true; updatePolicy(true); }, pinned); });
+            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, item => { state.previewPolicy = item.value; state.policy = item.value; state.policyExplicit = true; Registry.automationControllerSelectedPolicy = state.policy; updatePolicy(true); }, pinned); });
             refreshGuidance();
         },
 
@@ -177,7 +186,7 @@ window.Game = window.Game || {};
             const close = document.createElement('button'); close.type = 'button'; close.className = 'btn btn-gray btn-small'; close.textContent = 'Close'; close.onclick = () => overlay.remove(); header.appendChild(close); panel.appendChild(header);
             const search = document.createElement('input'); search.type = 'search'; search.placeholder = 'Search automations'; search.className = 'automation-library-search'; panel.appendChild(search);
             const list = document.createElement('div'); list.className = 'automation-library-list'; panel.appendChild(list);
-            const draw = () => { list.innerHTML = ''; const query = search.value.trim().toLowerCase(); catalog.filter(item => !query || `${item.name} ${item.group} ${item.author}`.toLowerCase().includes(query)).forEach(item => { const button = document.createElement('button'); button.type = 'button'; button.className = 'automation-library-item'; button.innerHTML = `<span>${item.name}</span><small>${item.group}</small>`; button.onclick = () => { state.policy = item.value; Registry.automationControllerSelectedPolicy = item.value; updatePolicyName(); pinned.querySelectorAll('.automation-policy-btn').forEach(b => b.classList.toggle('selected', b.dataset.policy === item.value)); overlay.remove(); }; list.appendChild(button); }); };
+            const draw = () => { list.innerHTML = ''; const query = search.value.trim().toLowerCase(); catalog.filter(item => !query || `${item.name} ${item.group} ${item.author}`.toLowerCase().includes(query)).forEach(item => { const button = document.createElement('button'); button.type = 'button'; button.className = 'automation-library-item'; button.innerHTML = `<span>${item.name}</span><small>${item.group}</small>`; button.onclick = () => { updatePolicyName(item); overlay.remove(); }; list.appendChild(button); }); };
             search.addEventListener('input', draw); draw(); overlay.appendChild(panel); document.body.appendChild(overlay); search.focus();
         },
 

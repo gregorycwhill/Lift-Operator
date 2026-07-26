@@ -1068,6 +1068,10 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
         const statuses = [...document.querySelectorAll('.automation-status')];
         const before = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        const previewBeforeCommit = document.querySelector('.automation-carousel-card')?.textContent || '';
+        const explicitBeforeCommit = document.querySelector('.automation-dock')?.dataset.policyExplicit === 'true';
+        const hintBeforeCommit = document.querySelectorAll('.automation-status.automation-target-hint').length;
+        document.querySelector('.automation-carousel-card')?.click();
         const hintAfterPolicy = document.querySelectorAll('.automation-status.automation-target-hint').length;
         const applyBeforeTargets = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
         statuses.slice(0, 2).forEach(status => status.click());
@@ -1079,6 +1083,9 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
             statusCount: statuses.length,
             before,
             afterSelection,
+            previewBeforeCommit,
+            explicitBeforeCommit,
+            hintBeforeCommit,
             hintAfterPolicy,
             applyBeforeTargets,
             applyAfterTargets,
@@ -1093,6 +1100,9 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
     expect(result.variant).toBe('dock');
     expect(result.statusCount).toBeGreaterThan(1);
     expect(result.afterSelection).toEqual(result.before);
+    expect(result.previewBeforeCommit).toContain('Sweep');
+    expect(result.explicitBeforeCommit).toBe(false);
+    expect(result.hintBeforeCommit).toBe(0);
     expect(result.hintAfterPolicy).toBe(result.statusCount);
     expect(result.applyBeforeTargets).toBe(true);
     expect(result.applyAfterTargets).toBe(false);
@@ -1118,13 +1128,16 @@ test('Automation Dock supports selecting lifts before the automation', async ({ 
         const disabledBeforePolicy = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         const targetsStillSelected = document.querySelectorAll('.automation-status.selected').length;
+        const stillWaitingForCommit = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        document.querySelector('.automation-carousel-card')?.click();
         const readyAfterPolicy = !document.querySelector('.automation-dock-actions .btn-green')?.disabled;
         document.querySelector('.automation-dock-actions .btn-green')?.click();
-        return { policyHint, disabledBeforePolicy, targetsStillSelected, readyAfterPolicy, applied: Registry.lifts.map(lift => lift.automation) };
+        return { policyHint, disabledBeforePolicy, targetsStillSelected, stillWaitingForCommit, readyAfterPolicy, applied: Registry.lifts.map(lift => lift.automation) };
     });
     expect(result.policyHint).toBe(true);
     expect(result.disabledBeforePolicy).toBe(true);
     expect(result.targetsStillSelected).toBe(2);
+    expect(result.stillWaitingForCommit).toBe(true);
     expect(result.readyAfterPolicy).toBe(true);
     expect(result.applied.slice(0, 2)).toEqual(['sweep', 'sweep']);
 });
@@ -1139,6 +1152,7 @@ test('Automation Dock guidance expires after ten seconds without clearing select
         buildWorld();
         Game.AutomationController.setVariant('dock');
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        document.querySelector('.automation-carousel-card')?.click();
         const flashingBefore = document.querySelectorAll('.automation-status.automation-target-hint').length;
         await new Promise(resolve => setTimeout(resolve, 10100));
         return {

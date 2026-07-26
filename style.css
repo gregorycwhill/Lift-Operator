@@ -233,6 +233,7 @@ body {
 .automation-dock-pinned { display: none; }
 .automation-policy-btn { border: 1px solid #95a5a6; background: #fff; border-radius: 4px; padding: 3px 5px; white-space: nowrap; font-size: 10px; cursor: pointer; }
 .automation-policy-btn.selected, .automation-status.selected { background: #3498db; color: #fff; border-color: #21618c; }
+.automation-carousel-card.automation-policy-preview { opacity: .78; }
 .automation-dock-actions { display: flex; gap: 2px; align-items: center; flex: 0 0 auto; }
 .automation-dock-actions .btn { padding: 3px 5px; font-size: 10px; }
 .automation-dock-actions .btn-green:disabled { opacity: .38; filter: grayscale(1); box-shadow: none; cursor: not-allowed; }
