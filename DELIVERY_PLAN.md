@@ -125,6 +125,8 @@ playtest rather than new engine rules.
   retained policy selection, and post-apply target clearing.
 - Added lifecycle cleanup and regression coverage for selection-before-Apply, batch assignment, library discovery,
   and variant switching. Human comparison and responsive visual acceptance remain open.
+- Refined the prototype after first visual review: the row now uses a compact vanilla-JS carousel without a native
+  policy scrollbar or verbose status labels, and armed policies pulse the lift targets as a next-step cue.
 
 ## Completed implementation slice — automation-native Service Zoning
 

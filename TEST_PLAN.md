@@ -50,6 +50,8 @@ The release is green only when the following evidence is complete:
   changes lift automation.
 - [x] Apply changes every selected lift exactly once, clears target selection, retains the selected policy, and reports
   the count changed.
+- [x] The compact carousel removes the native policy scrollbar, preserves the automation-row height, and flashes lift
+  targets after a policy is armed.
 - [ ] Empty Apply and invalid Apply leave all lift automation unchanged and give accessible feedback.
 - [ ] Lift status accurately updates after dock assignment, legacy assignment, manual assignment, reset, retry, round
   initialization, and imported/deleted-script recovery.

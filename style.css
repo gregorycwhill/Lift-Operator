@@ -221,17 +221,22 @@ body {
 .shaft:hover { background: #e0e6e9; }
 
 /* Swappable automation controller prototype. The legacy selectors remain the default. */
-.automation-dock-host { display: block; overflow: visible; padding: 2px 4px; }
-.automation-dock { width: 100%; box-sizing: border-box; font-size: 10px; line-height: 1.1; }
-.automation-dock-title { font-weight: 700; color: #34495e; }
-.automation-dock-policy { display: block; color: #53616d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.automation-dock-pinned, .automation-dock-actions { display: flex; gap: 3px; align-items: center; }
-.automation-dock-pinned { overflow-x: auto; padding: 2px 0; }
-.automation-policy-btn { border: 1px solid #95a5a6; background: #fff; border-radius: 4px; padding: 2px 4px; white-space: nowrap; font-size: 10px; cursor: pointer; }
+.automation-dock-host { display: flex; overflow: visible; padding: 1px 3px; }
+.automation-dock { width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 4px; font-size: 10px; line-height: 1.1; }
+.automation-carousel { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 1 1 auto; }
+.automation-carousel-viewport { min-width: 0; flex: 1 1 auto; }
+.automation-carousel-card { width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.automation-carousel-arrow { width: 18px; height: 24px; padding: 0; border: 1px solid #95a5a6; border-radius: 4px; background: #fff; color: #34495e; font-size: 18px; line-height: 18px; cursor: pointer; }
+.automation-carousel-indicator { min-width: 25px; color: #53616d; text-align: center; font-size: 9px; }
+.automation-dock-pinned { display: none; }
+.automation-policy-btn { border: 1px solid #95a5a6; background: #fff; border-radius: 4px; padding: 3px 5px; white-space: nowrap; font-size: 10px; cursor: pointer; }
 .automation-policy-btn.selected, .automation-status.selected { background: #3498db; color: #fff; border-color: #21618c; }
-.automation-dock-actions .btn { padding: 2px 5px; font-size: 10px; }
+.automation-dock-actions { display: flex; gap: 2px; align-items: center; flex: 0 0 auto; }
+.automation-dock-actions .btn { padding: 3px 5px; font-size: 10px; }
 .automation-status-row { display: contents; }
 .automation-status { width: 100%; height: 36px; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.automation-status.automation-target-hint { animation: automationTargetHint 0.75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -3px; }
+@keyframes automationTargetHint { from { background: #fff; } to { background: #f9e79f; } }
 .automation-library-overlay { position: fixed; inset: 0; z-index: 1200; background: rgba(0,0,0,.35); display: flex; align-items: flex-end; justify-content: flex-start; padding: 12px; box-sizing: border-box; }
 .automation-library { width: min(380px, calc(100vw - 24px)); max-height: 70vh; overflow: auto; background: #fff; border: 2px solid #34495e; border-radius: 8px; padding: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.35); }
 .automation-library-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -239,7 +244,7 @@ body {
 .automation-library-list { display: grid; gap: 4px; }
 .automation-library-item { display: flex; justify-content: space-between; text-align: left; gap: 8px; padding: 7px; border: 1px solid #ccd4da; border-radius: 4px; background: #f8fafb; cursor: pointer; }
 .automation-library-item small { color: #53616d; }
-@media (max-width: 700px) { .automation-dock-host { width: var(--lobby-width); } .automation-policy-btn { font-size: 9px; } }
+@media (max-width: 700px) { .automation-dock-host { width: var(--lobby-width); } .automation-policy-btn { font-size: 9px; } .automation-dock-actions .btn { padding-left: 3px; padding-right: 3px; } }
 
 /* Entities */
 .lift { 

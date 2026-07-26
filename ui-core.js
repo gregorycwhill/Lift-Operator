@@ -265,8 +265,10 @@ window.updateLiftAutomationUI = function(liftIndex, mode) {
     if (automationSelects && automationSelects[liftIndex]) {
         automationSelects[liftIndex].value = mode;
     }
-    if (window.Game.AutomationController?.getVariant() === 'dock' && typeof window.buildWorld === 'function') {
-        window.buildWorld();
+    if (window.Game.AutomationController?.getVariant() === 'dock') {
+        const status = document.querySelector(`.automation-status[data-lift-index="${liftIndex}"]`);
+        const policy = window.Game.AutomationController.getPolicy?.(mode);
+        if (status) status.textContent = `L${Number(liftIndex) + 1}: ${policy?.name || mode}`;
     }
 };
 

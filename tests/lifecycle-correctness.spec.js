@@ -1067,7 +1067,8 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
         Game.AutomationController.setVariant('dock');
         const statuses = [...document.querySelectorAll('.automation-status')];
         const before = Registry.lifts.map(lift => lift.automation);
-        document.querySelector('.automation-policy-btn[data-policy="sweep"]')?.click();
+        document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        const hintAfterPolicy = document.querySelectorAll('.automation-status.automation-target-hint').length;
         statuses.slice(0, 2).forEach(status => status.click());
         const afterSelection = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-dock-actions .btn-green')?.click();
@@ -1076,17 +1077,23 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
             statusCount: statuses.length,
             before,
             afterSelection,
+            hintAfterPolicy,
             afterApply: Registry.lifts.map(lift => lift.automation),
             selectedAfterApply: document.querySelectorAll('.automation-status.selected').length,
-            retainedPolicy: document.querySelector('.automation-dock-policy')?.textContent || ''
+            retainedPolicy: document.querySelector('.automation-carousel-card')?.textContent || '',
+            hasVerboseTitle: Boolean(document.querySelector('.automation-dock-title, .automation-dock-policy')),
+            policyStripDisplay: document.querySelector('.automation-dock-pinned') ? getComputedStyle(document.querySelector('.automation-dock-pinned')).display : 'none'
         };
     });
     expect(result.variant).toBe('dock');
     expect(result.statusCount).toBeGreaterThan(1);
     expect(result.afterSelection).toEqual(result.before);
+    expect(result.hintAfterPolicy).toBe(result.statusCount);
     expect(result.afterApply.slice(0, 2)).toEqual(['sweep', 'sweep']);
     expect(result.selectedAfterApply).toBe(0);
     expect(result.retainedPolicy).toContain('Sweep');
+    expect(result.hasVerboseTitle).toBe(false);
+    expect(result.policyStripDisplay).toBe('none');
 });
 
 test('Automation Dock library selects a policy without assigning it', async ({ page }) => {
@@ -1102,7 +1109,7 @@ test('Automation Dock library selects a policy without assigning it', async ({ p
         const libraryOpen = Boolean(document.querySelector('.automation-library-overlay'));
         const sweep = [...document.querySelectorAll('.automation-library-item')].find(button => button.textContent.includes('Sweep'));
         sweep?.click();
-        return { before, after: Registry.lifts.map(lift => lift.automation), libraryOpen, selected: document.querySelector('.automation-dock-policy')?.textContent || '' };
+        return { before, after: Registry.lifts.map(lift => lift.automation), libraryOpen, selected: document.querySelector('.automation-carousel-card')?.textContent || '' };
     });
     expect(result.libraryOpen).toBe(true);
     expect(result.after).toEqual(result.before);

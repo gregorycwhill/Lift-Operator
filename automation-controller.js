@@ -90,32 +90,36 @@ window.Game = window.Game || {};
             controlRow.dataset.automationController = 'dock';
 
             const dock = document.createElement('div');
-            dock.className = 'automation-dock';
+            dock.className = 'automation-dock automation-dock-compact';
             dock.setAttribute('aria-label', 'Automation Dock');
-            const title = document.createElement('div');
-            title.className = 'automation-dock-title';
-            title.textContent = 'Deploy automation';
-            dock.appendChild(title);
-
-            const policyName = document.createElement('span');
-            policyName.className = 'automation-dock-policy';
-            const updatePolicyName = () => { policyName.textContent = `Selected: ${this.getPolicy(state.policy)?.name || 'Manual'}`; };
-            updatePolicyName();
-            dock.appendChild(policyName);
-
-            const pinned = document.createElement('div');
-            pinned.className = 'automation-dock-pinned';
-            catalog.filter(item => item.pinned).forEach(item => {
-                const button = document.createElement('button');
-                button.type = 'button'; button.className = 'automation-policy-btn'; button.textContent = item.name;
-                button.dataset.policy = item.value;
-                button.addEventListener('click', event => {
-                    event.stopPropagation(); state.policy = item.value; Registry.automationControllerSelectedPolicy = item.value; updatePolicyName();
-                    pinned.querySelectorAll('.automation-policy-btn').forEach(b => b.classList.toggle('selected', b === button));
-                });
-                pinned.appendChild(button);
-            });
-            dock.appendChild(pinned);
+            const policies = catalog.filter(item => item.pinned);
+            const carousel = document.createElement('div'); carousel.className = 'automation-carousel';
+            const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'automation-carousel-arrow'; previous.textContent = '‹'; previous.setAttribute('aria-label', 'Previous automation');
+            const next = document.createElement('button'); next.type = 'button'; next.className = 'automation-carousel-arrow'; next.textContent = '›'; next.setAttribute('aria-label', 'Next automation');
+            const viewport = document.createElement('div'); viewport.className = 'automation-carousel-viewport';
+            const card = document.createElement('button'); card.type = 'button'; card.className = 'automation-policy-btn automation-carousel-card';
+            const indicator = document.createElement('span'); indicator.className = 'automation-carousel-indicator';
+            const pinned = document.createElement('div'); pinned.className = 'automation-dock-pinned';
+            const updatePolicy = shouldArm => {
+                const index = Math.max(0, policies.findIndex(item => item.value === state.policy));
+                state.carouselIndex = index === -1 ? 0 : index;
+                const item = policies[state.carouselIndex] || policies[0];
+                if (!item) return;
+                state.policy = item.value; Registry.automationControllerSelectedPolicy = item.value;
+                card.dataset.policy = item.value; card.textContent = item.name; card.classList.add('selected');
+                indicator.textContent = `${state.carouselIndex + 1}/${policies.length}`;
+                if (shouldArm) armTargets();
+            };
+            const armTargets = () => {
+                dock.classList.add('automation-policy-armed');
+                controlRow.querySelectorAll('.automation-status').forEach(status => status.classList.add('automation-target-hint'));
+                window.Game.UI?.showToast?.('Choose lift(s), then Apply.');
+            };
+            card.addEventListener('click', event => { event.stopPropagation(); armTargets(); });
+            previous.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.policy = policies[state.carouselIndex].value; updatePolicy(true); });
+            next.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.policy = policies[state.carouselIndex].value; updatePolicy(true); });
+            viewport.append(card); carousel.append(previous, viewport, next, indicator); dock.appendChild(carousel);
+            updatePolicy(false);
 
             const actions = document.createElement('div'); actions.className = 'automation-dock-actions';
             const libraryButton = document.createElement('button'); libraryButton.type = 'button'; libraryButton.className = 'btn btn-gray btn-small'; libraryButton.textContent = 'Library';
@@ -128,14 +132,14 @@ window.Game = window.Game || {};
                 const status = document.createElement('button'); status.type = 'button'; status.className = 'automation-status'; status.dataset.liftIndex = index;
                 status.textContent = `L${index + 1}: ${this.getPolicy(lift.automation)?.name || lift.automation}`;
                 status.setAttribute('aria-pressed', 'false');
-                status.addEventListener('click', event => { event.stopPropagation(); state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index); status.classList.toggle('selected', state.lifts.has(index)); status.setAttribute('aria-pressed', String(state.lifts.has(index))); });
+                status.addEventListener('click', event => { event.stopPropagation(); state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index); status.classList.toggle('selected', state.lifts.has(index)); status.classList.remove('automation-target-hint'); status.setAttribute('aria-pressed', String(state.lifts.has(index))); });
                 statusRow.appendChild(status);
             });
             controlRow.appendChild(statusRow);
 
-            applyButton.addEventListener('click', event => { event.stopPropagation(); const result = this.assign(state.policy, [...state.lifts]); if (!result.ok) return window.Game.UI?.showToast?.(result.reason); state.lifts.clear(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected'); button.setAttribute('aria-pressed', 'false'); }); window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`); });
-            clearButton.addEventListener('click', event => { event.stopPropagation(); state.lifts.clear(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected'); button.setAttribute('aria-pressed', 'false'); }); });
-            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, updatePolicyName, pinned); });
+            applyButton.addEventListener('click', event => { event.stopPropagation(); const result = this.assign(state.policy, [...state.lifts]); if (!result.ok) return window.Game.UI?.showToast?.(result.reason); state.lifts.clear(); dock.classList.remove('automation-policy-armed'); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`); });
+            clearButton.addEventListener('click', event => { event.stopPropagation(); state.lifts.clear(); dock.classList.remove('automation-policy-armed'); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); });
+            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, () => updatePolicy(true), pinned); });
         },
 
         openLibrary(state, catalog, updatePolicyName, pinned) {
