@@ -83,7 +83,7 @@ window.buildWorld = function() {
     }
 
     const controlRow = document.createElement('div');
-    controlRow.className = 'floor';
+    controlRow.className = 'floor automation-control-row';
     controlRow.style.height = '40px';
     controlRow.style.background = '#e8ecf1';
     controlRow.style.borderTop = '2px solid #333';
@@ -93,7 +93,9 @@ window.buildWorld = function() {
     autoLabel.style.border = 'none';
     autoLabel.style.fontSize = '12px';
     autoLabel.style.color = '#555';
-    autoLabel.innerText = 'AUTO';
+    autoLabel.innerText = '⚙⇅';
+    autoLabel.setAttribute('aria-label', 'Basement automation controls');
+    autoLabel.title = 'Basement automation controls';
     controlRow.appendChild(autoLabel);
 
     const autoLobby = document.createElement('div');

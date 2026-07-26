@@ -92,6 +92,20 @@ window.Game = window.Game || {};
             const dock = document.createElement('div');
             dock.className = 'automation-dock automation-dock-compact';
             dock.setAttribute('aria-label', 'Automation Dock');
+            let guidanceTimer = null;
+            let guidanceActive = false;
+            const clearGuidance = () => {
+                if (guidanceTimer) clearTimeout(guidanceTimer);
+                guidanceTimer = null;
+                guidanceActive = false;
+                dock.classList.remove('automation-policy-hint', 'automation-target-hint-active');
+                controlRow.querySelectorAll('.automation-status').forEach(status => status.classList.remove('automation-target-hint'));
+            };
+            const startGuidance = () => {
+                if (guidanceActive) return;
+                guidanceActive = true;
+                guidanceTimer = setTimeout(clearGuidance, 10000);
+            };
             const policies = catalog.filter(item => item.pinned);
             const carousel = document.createElement('div'); carousel.className = 'automation-carousel';
             const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'automation-carousel-arrow'; previous.textContent = '‹'; previous.setAttribute('aria-label', 'Previous automation');
@@ -102,12 +116,18 @@ window.Game = window.Game || {};
             const pinned = document.createElement('div'); pinned.className = 'automation-dock-pinned';
             const refreshGuidance = () => {
                 const ready = state.policyExplicit && state.lifts.size > 0;
+                dock.dataset.policyExplicit = String(state.policyExplicit);
+                dock.dataset.selectedLiftCount = String(state.lifts.size);
                 applyButton.disabled = !ready;
                 dock.classList.toggle('automation-ready', ready);
-                dock.classList.toggle('automation-policy-hint', !state.policyExplicit && state.lifts.size > 0);
-                dock.classList.toggle('automation-target-hint-active', state.policyExplicit && state.lifts.size === 0);
+                const needsPolicy = !state.policyExplicit && state.lifts.size > 0;
+                const needsTargets = state.policyExplicit && state.lifts.size === 0;
+                if (needsPolicy || needsTargets) startGuidance();
+                else clearGuidance();
+                dock.classList.toggle('automation-policy-hint', guidanceActive && needsPolicy);
+                dock.classList.toggle('automation-target-hint-active', guidanceActive && needsTargets);
                 controlRow.querySelectorAll('.automation-status').forEach(status => {
-                    status.classList.toggle('automation-target-hint', state.policyExplicit && state.lifts.size === 0);
+                    status.classList.toggle('automation-target-hint', guidanceActive && needsTargets);
                 });
             };
             const updatePolicy = shouldArm => {

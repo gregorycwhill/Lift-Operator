@@ -96,6 +96,8 @@ library of built-in, player-authored, and shared automations usable across large
 - The next required selection flashes: lift controllers after policy-first, or the automation carousel after lift-first.
 - Apply is dimmed until both a policy and one or more lift targets are explicitly selected, then becomes the committing
   action.
+- The controller row occupies a fixed-width basement level beneath Ground and is marked by a non-interactive `⚙⇅`
+  badge. Guidance expires after ten seconds without clearing either selection.
 - Lift controls show their current assignment as status, including Manual and resolved Service Zone labels. They do not
   expose independent policy pickers.
 - A pinned section keeps Manual plus currently unlocked built-in policies visible by default. The complete custom/shared

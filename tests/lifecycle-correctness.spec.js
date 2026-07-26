@@ -1086,7 +1086,8 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
             selectedAfterApply: document.querySelectorAll('.automation-status.selected').length,
             retainedPolicy: document.querySelector('.automation-carousel-card')?.textContent || '',
             hasVerboseTitle: Boolean(document.querySelector('.automation-dock-title, .automation-dock-policy')),
-            policyStripDisplay: document.querySelector('.automation-dock-pinned') ? getComputedStyle(document.querySelector('.automation-dock-pinned')).display : 'none'
+            policyStripDisplay: document.querySelector('.automation-dock-pinned') ? getComputedStyle(document.querySelector('.automation-dock-pinned')).display : 'none',
+            basementMarker: document.querySelector('.automation-control-row > .label')?.textContent || ''
         };
     });
     expect(result.variant).toBe('dock');
@@ -1100,6 +1101,7 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
     expect(result.retainedPolicy).toContain('Sweep');
     expect(result.hasVerboseTitle).toBe(false);
     expect(result.policyStripDisplay).toBe('none');
+    expect(result.basementMarker).toContain('⚙⇅');
 });
 
 test('Automation Dock supports selecting lifts before the automation', async ({ page }) => {
@@ -1125,6 +1127,31 @@ test('Automation Dock supports selecting lifts before the automation', async ({ 
     expect(result.targetsStillSelected).toBe(2);
     expect(result.readyAfterPolicy).toBe(true);
     expect(result.applied.slice(0, 2)).toEqual(['sweep', 'sweep']);
+});
+
+test('Automation Dock guidance expires after ten seconds without clearing selections', async ({ page }) => {
+    test.setTimeout(30000);
+    const result = await page.evaluate(async () => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        const flashingBefore = document.querySelectorAll('.automation-status.automation-target-hint').length;
+        await new Promise(resolve => setTimeout(resolve, 10100));
+        return {
+            flashingBefore,
+            flashingAfter: document.querySelectorAll('.automation-status.automation-target-hint').length,
+            policyStillExplicit: document.querySelector('.automation-dock')?.dataset.policyExplicit === 'true',
+            applyDisabled: document.querySelector('.automation-dock-actions .btn-green')?.disabled
+        };
+    });
+    expect(result.flashingBefore).toBe(2);
+    expect(result.flashingAfter).toBe(0);
+    expect(result.policyStillExplicit).toBe(true);
+    expect(result.applyDisabled).toBe(true);
 });
 
 test('Automation Dock library selects a policy without assigning it', async ({ page }) => {

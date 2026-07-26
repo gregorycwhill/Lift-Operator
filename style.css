@@ -221,7 +221,9 @@ body {
 .shaft:hover { background: #e0e6e9; }
 
 /* Swappable automation controller prototype. The legacy selectors remain the default. */
-.automation-dock-host { display: flex; overflow: visible; padding: 1px 3px; }
+.automation-dock-host { display: flex; flex: 0 0 var(--lobby-width); width: var(--lobby-width); overflow: visible; padding: 1px 3px; }
+.automation-control-row > .label { flex: 0 0 var(--label-width); }
+.automation-control-row > .lobby { flex: 0 0 var(--lobby-width); }
 .automation-dock { width: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 4px; font-size: 10px; line-height: 1.1; }
 .automation-carousel { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 1 1 auto; }
 .automation-carousel-viewport { min-width: 0; flex: 1 1 auto; }
@@ -237,7 +239,7 @@ body {
 .automation-dock.automation-ready .btn-green:not(:disabled) { box-shadow: 0 0 7px rgba(46, 204, 113, .95); animation: automationApplyGlow 1s ease-in-out infinite alternate; }
 .automation-dock.automation-policy-hint .automation-carousel-card { animation: automationPolicyHint .75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -2px; }
 .automation-status-row { display: contents; }
-.automation-status { width: 100%; height: 36px; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.automation-status { flex: 0 0 var(--shaft-width); width: var(--shaft-width); height: 36px; box-sizing: border-box; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 .automation-status.automation-target-hint { animation: automationTargetHint 0.75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -3px; }
 @keyframes automationTargetHint { from { background: #fff; } to { background: #f9e79f; } }
 @keyframes automationApplyGlow { from { box-shadow: 0 0 4px rgba(46, 204, 113, .55); } to { box-shadow: 0 0 10px rgba(46, 204, 113, 1); } }

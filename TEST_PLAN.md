@@ -50,6 +50,7 @@ The release is green only when the following evidence is complete:
   changes lift automation.
 - [x] Both entry paths are valid: policy-first flashes lift targets, and lift-first flashes the automation carousel;
   existing selections persist while making the second selection.
+- [x] Guidance flashes for ten seconds, then stops without clearing the explicit policy or target selections.
 - [x] Apply changes every selected lift exactly once, clears target selection, retains the selected policy, and reports
   the count changed.
 - [x] The compact carousel removes the native policy scrollbar, preserves the automation-row height, and flashes lift
