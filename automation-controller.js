@@ -12,12 +12,39 @@ window.Game = window.Game || {};
             return Registry.automationControllerVariant === 'dock' ? 'dock' : 'legacy';
         },
 
+        getPinStorageKey() {
+            const player = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+            return `liftOp_v2_automationPins_${player}`;
+        },
+
+        getSavedPins() {
+            const raw = window.Game.Storage.get(this.getPinStorageKey(), '');
+            if (!raw) return null;
+            try {
+                const pins = JSON.parse(raw);
+                return Array.isArray(pins) ? pins.filter(value => typeof value === 'string') : null;
+            } catch (error) {
+                return null;
+            }
+        },
+
+        setPinned(value, pinned) {
+            const existing = this.getSavedPins() || this.getCatalog().filter(item => item.pinned).map(item => item.value);
+            const pins = new Set(existing);
+            if (value === 'manual') pins.add(value);
+            else if (pinned) pins.add(value);
+            else pins.delete(value);
+            window.Game.Storage.set(this.getPinStorageKey(), JSON.stringify([...pins]));
+        },
+
         getCatalog() {
             const unlocks = Config.GAME_DATA.automationUnlocks || {};
             const reachedRound = Math.max(Registry.highestUnlockedRound || 1, Registry.stats.round || 1);
             const debug = Boolean(Config.debugMode);
             const vm = window.Game.Automation;
             const currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+            const savedPins = this.getSavedPins();
+            const isPinned = (value, group) => value === 'manual' || group === 'Built-in' && (savedPins === null || savedPins.includes(value)) || group !== 'Built-in' && savedPins !== null && savedPins.includes(value);
             const catalog = [{ value: 'manual', name: 'Manual', group: 'Built-in', author: 'System', pinned: true }];
             const systemValues = {
                 sys_sweep: ['sweep', unlocks.sweep],
@@ -35,7 +62,7 @@ window.Game = window.Game || {};
                 if (script.author === 'System' && system) {
                     if (debug || reachedRound >= system[1]) {
                         const zone = script.serviceZone ? ` [${vm.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
-                        catalog.push({ value: system[0], name: `${script.name}${zone}`, group: 'Built-in', author: 'System', pinned: true });
+                        catalog.push({ value: system[0], name: `${script.name}${zone}`, group: 'Built-in', author: 'System', pinned: isPinned(system[0], 'Built-in') });
                     }
                 } else if (customUnlocked && zoneVisible) {
                     const zone = script.serviceZone ? ` [${vm.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
@@ -45,7 +72,7 @@ window.Game = window.Game || {};
                         name: `${script.name}${zone}`,
                         group: mine ? 'My Automations' : 'Shared with Me',
                         author: script.author,
-                        pinned: false
+                        pinned: isPinned(`custom_${script.id}`, mine ? 'My Automations' : 'Shared with Me')
                     });
                 }
             });
@@ -70,7 +97,7 @@ window.Game = window.Game || {};
         setVariant(variant) {
             const next = variant === 'dock' && Config.debugMode ? 'dock' : 'legacy';
             Registry.automationControllerVariant = next;
-            document.querySelector('.automation-library-overlay')?.remove();
+            this.closeLibrary();
             if (typeof window.buildWorld === 'function') window.buildWorld();
             const selector = document.getElementById('automationControllerVariant');
             if (selector) selector.value = next;
@@ -106,7 +133,7 @@ window.Game = window.Game || {};
                 guidanceActive = true;
                 guidanceTimer = setTimeout(clearGuidance, 10000);
             };
-            const policies = catalog.filter(item => item.pinned);
+            let policies = catalog.filter(item => item.pinned);
             const carousel = document.createElement('div'); carousel.className = 'automation-carousel';
             const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'automation-carousel-arrow'; previous.textContent = '‹'; previous.setAttribute('aria-label', 'Previous automation');
             const next = document.createElement('button'); next.type = 'button'; next.className = 'automation-carousel-arrow'; next.textContent = '›'; next.setAttribute('aria-label', 'Next automation');
@@ -164,7 +191,7 @@ window.Game = window.Game || {};
             const statusRow = document.createElement('div'); statusRow.className = 'automation-status-row';
             Registry.lifts.forEach((lift, index) => {
                 const status = document.createElement('button'); status.type = 'button'; status.className = 'automation-status'; status.dataset.liftIndex = index;
-                status.textContent = `L${index + 1}: ${this.getPolicy(lift.automation)?.name || lift.automation}`;
+                status.textContent = `${this.getPolicy(lift.automation)?.name || lift.automation}`;
                 status.setAttribute('aria-pressed', 'false');
                 status.addEventListener('click', event => { event.stopPropagation(); state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index); status.classList.toggle('selected', state.lifts.has(index)); status.setAttribute('aria-pressed', String(state.lifts.has(index))); refreshGuidance(); });
                 statusRow.appendChild(status);
@@ -174,20 +201,59 @@ window.Game = window.Game || {};
 
             applyButton.addEventListener('click', event => { event.stopPropagation(); const result = this.assign(state.policy, [...state.lifts]); if (!result.ok) return window.Game.UI?.showToast?.(result.reason); state.lifts.clear(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); refreshGuidance(); window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`); });
             clearButton.addEventListener('click', event => { event.stopPropagation(); state.lifts.clear(); state.policyExplicit = false; statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); refreshGuidance(); });
-            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, item => { state.previewPolicy = item.value; state.policy = item.value; state.policyExplicit = true; Registry.automationControllerSelectedPolicy = state.policy; updatePolicy(true); }, pinned); });
+            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, item => { state.previewPolicy = item.value; state.policy = item.value; state.policyExplicit = true; Registry.automationControllerSelectedPolicy = state.policy; updatePolicy(true); }, pinned, () => { policies = catalog.filter(item => item.pinned); updatePolicy(false); }); });
             refreshGuidance();
         },
 
-        openLibrary(state, catalog, updatePolicyName, pinned) {
-            document.querySelector('.automation-library-overlay')?.remove();
+        closeLibrary() {
+            this.libraryOverlay?.remove();
+            this.libraryOverlay = null;
+        },
+
+        openLibrary(state, catalog, updatePolicyName, pinned, onPinChanged) {
+            if (this.libraryOverlay) {
+                this.closeLibrary();
+                return;
+            }
             const overlay = document.createElement('div'); overlay.className = 'automation-library-overlay'; overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-label', 'Automation library');
             const panel = document.createElement('div'); panel.className = 'automation-library';
             const header = document.createElement('div'); header.className = 'automation-library-header'; header.innerHTML = '<strong>Automation library</strong>';
-            const close = document.createElement('button'); close.type = 'button'; close.className = 'btn btn-gray btn-small'; close.textContent = 'Close'; close.onclick = () => overlay.remove(); header.appendChild(close); panel.appendChild(header);
+            const close = document.createElement('button'); close.type = 'button'; close.className = 'btn btn-gray btn-small automation-library-toggle'; close.textContent = 'Library'; close.setAttribute('aria-label', 'Close automation library'); close.onclick = () => this.closeLibrary(); header.appendChild(close); panel.appendChild(header);
             const search = document.createElement('input'); search.type = 'search'; search.placeholder = 'Search automations'; search.className = 'automation-library-search'; panel.appendChild(search);
             const list = document.createElement('div'); list.className = 'automation-library-list'; panel.appendChild(list);
-            const draw = () => { list.innerHTML = ''; const query = search.value.trim().toLowerCase(); catalog.filter(item => !query || `${item.name} ${item.group} ${item.author}`.toLowerCase().includes(query)).forEach(item => { const button = document.createElement('button'); button.type = 'button'; button.className = 'automation-library-item'; button.innerHTML = `<span>${item.name}</span><small>${item.group}</small>`; button.onclick = () => { updatePolicyName(item); overlay.remove(); }; list.appendChild(button); }); };
-            search.addEventListener('input', draw); draw(); overlay.appendChild(panel); document.body.appendChild(overlay); search.focus();
+            const groups = [
+                { key: 'Built-in', label: 'Built-in' },
+                { key: 'My Automations', label: 'Custom' },
+                { key: 'Shared with Me', label: 'Shared with Me' }
+            ];
+            let expandedGroup = 'Built-in';
+            const draw = () => {
+                list.innerHTML = '';
+                const query = search.value.trim().toLowerCase();
+                groups.forEach(group => {
+                    const items = catalog.filter(item => item.group === group.key && (!query || `${item.name} ${item.group} ${item.author}`.toLowerCase().includes(query)));
+                    if (query && items.length) expandedGroup = group.key;
+                    const section = document.createElement('section'); section.className = 'automation-library-group';
+                    const heading = document.createElement('button'); heading.type = 'button'; heading.className = 'automation-library-group-toggle'; heading.setAttribute('aria-expanded', String(expandedGroup === group.key));
+                    heading.innerHTML = `<span>${group.label}</span><span class="automation-library-chevron">${expandedGroup === group.key ? '▾' : '▸'}</span>`;
+                    heading.onclick = () => { expandedGroup = expandedGroup === group.key ? null : group.key; draw(); };
+                    section.appendChild(heading);
+                    if (expandedGroup === group.key) {
+                        const itemsEl = document.createElement('div'); itemsEl.className = 'automation-library-items';
+                        if (!items.length) { const empty = document.createElement('div'); empty.className = 'automation-library-empty'; empty.textContent = query ? 'No matching automations' : 'No automations yet'; itemsEl.appendChild(empty); }
+                        items.forEach(item => {
+                            const row = document.createElement('div'); row.className = 'automation-library-item';
+                            const select = document.createElement('button'); select.type = 'button'; select.className = 'automation-library-select'; select.innerHTML = `<span>${item.name}</span><small>${item.author === 'System' ? '' : item.author}</small>`; select.onclick = () => { updatePolicyName(item); this.closeLibrary(); };
+                            const pinLabel = document.createElement('label'); pinLabel.className = 'automation-library-pin'; pinLabel.title = item.value === 'manual' ? 'Manual is always pinned' : 'Show in carousel';
+                            const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = item.pinned; checkbox.disabled = item.value === 'manual'; checkbox.setAttribute('aria-label', `Pin ${item.name} in carousel`); checkbox.onclick = event => { event.stopPropagation(); this.setPinned(item.value, checkbox.checked); item.pinned = checkbox.checked; onPinChanged?.(); };
+                            pinLabel.append(checkbox, document.createTextNode(' Pin')); row.append(select, pinLabel); itemsEl.appendChild(row);
+                        });
+                        section.appendChild(itemsEl);
+                    }
+                    list.appendChild(section);
+                });
+            };
+            search.addEventListener('input', draw); draw(); overlay.appendChild(panel); document.body.appendChild(overlay); this.libraryOverlay = overlay; search.focus();
         },
 
         applyTeachingCue() { return null; }

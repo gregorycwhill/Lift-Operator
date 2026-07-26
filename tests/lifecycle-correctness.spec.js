@@ -1179,13 +1179,47 @@ test('Automation Dock library selects a policy without assigning it', async ({ p
         const before = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-dock-actions .btn-gray')?.click();
         const libraryOpen = Boolean(document.querySelector('.automation-library-overlay'));
-        const sweep = [...document.querySelectorAll('.automation-library-item')].find(button => button.textContent.includes('Sweep'));
+        const sweep = [...document.querySelectorAll('.automation-library-select')].find(button => button.textContent.includes('Sweep'));
         sweep?.click();
         return { before, after: Registry.lifts.map(lift => lift.automation), libraryOpen, selected: document.querySelector('.automation-carousel-card')?.textContent || '' };
     });
     expect(result.libraryOpen).toBe(true);
     expect(result.after).toEqual(result.before);
     expect(result.selected).toContain('Sweep');
+});
+
+test('Automation library toggles, groups automations, persists pins, and closes with other modals', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.playerName = 'Library Toggle Test';
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0)];
+        localStorage.removeItem(Game.AutomationController.getPinStorageKey());
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        document.querySelector('.automation-dock-actions .btn-gray')?.click();
+        const opened = Boolean(document.querySelector('.automation-library-overlay'));
+        const groups = [...document.querySelectorAll('.automation-library-group-toggle')].map(button => button.textContent.trim());
+        const sweepPin = [...document.querySelectorAll('.automation-library-pin input')].find(input => input.getAttribute('aria-label')?.includes('Sweep'));
+        const beforePolicy = Registry.automationControllerSelectedPolicy;
+        sweepPin?.click();
+        const pinPersisted = Game.AutomationController.getCatalog().find(item => item.value === 'sweep')?.pinned === false;
+        const policyAfterPin = Registry.automationControllerSelectedPolicy;
+        document.querySelector('.automation-library-toggle')?.click();
+        const closedByToggle = !document.querySelector('.automation-library-overlay');
+        document.querySelector('.automation-dock-actions .btn-gray')?.click();
+        openModalExclusive('debugOverlay');
+        const closedByModal = !document.querySelector('.automation-library-overlay');
+        return { opened, groups, pinPersisted, beforePolicy, policyAfterPin, closedByToggle, closedByModal };
+    });
+    expect(result.opened).toBe(true);
+    expect(result.groups).toEqual(['Built-in▾', 'Custom▸', 'Shared with Me▸']);
+    expect(result.pinPersisted).toBe(true);
+    expect(result.beforePolicy).toBe('manual');
+    expect(result.policyAfterPin).toBe('manual');
+    expect(result.closedByToggle).toBe(true);
+    expect(result.closedByModal).toBe(true);
 });
 
 test('switching Automation Dock variants removes stale controller UI and restores legacy selectors', async ({ page }) => {

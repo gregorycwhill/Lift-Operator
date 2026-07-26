@@ -20,6 +20,7 @@ window.showToast = function(message) {
 };
 
 window.openModalExclusive = function(id) {
+    window.Game.AutomationController?.closeLibrary?.();
     ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });

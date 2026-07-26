@@ -60,14 +60,14 @@ The release is green only when the following evidence is complete:
 - [ ] Empty Apply and invalid Apply leave all lift automation unchanged and give accessible feedback.
 - [ ] Lift status accurately updates after dock assignment, legacy assignment, manual assignment, reset, retry, round
   initialization, and imported/deleted-script recovery.
-- [ ] The fixed pinned set contains Manual plus currently unlocked built-ins, is keyboard/touch operable, and changes
-  correctly as progression unlocks new built-ins.
-- [ ] No player-managed pin controls or persistent pin state are exposed in the first prototype.
+- [ ] The carousel shows persistent player pins, with Manual and currently unlocked built-ins pinned by default, and
+  changes correctly as progression unlocks new built-ins.
 
 ### Library and discovery
 
-- [ ] The library overlay groups Built-ins, My Automations, and Shared with Me; it supports search across the complete
-  currently legal catalog.
+- [x] The Library toggles from its Dock button, uses Built-in, Custom, and Shared with Me accordion groups, persists
+  pin checkbox changes, and closes when another modal opens.
+- [ ] The Library supports search across the complete currently legal catalog and remains keyboard/touch operable.
 - [x] Selecting an entry closes or returns from the overlay without assigning it until Apply.
 - [ ] Long custom/shared names, authors, zone labels, empty groups, and a collection larger than the pinned strip remain
   readable and operable.

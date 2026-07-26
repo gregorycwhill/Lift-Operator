@@ -39,7 +39,8 @@ Automation Dock in the basement/lobby space. The player selects one policy, sele
 explicitly applies it as a batch. The dock provides pinned shortcuts; a separate library overlay holds the growing
 custom and shared collection. This is a desktop campaign interface and remains outside the later phone-first edition.
 The existing selector controller stays available as the stable playtest variant while new controller variants are
-explored through Debug on GitHub Pages.
+explored through Debug on GitHub Pages. Pin choices persist per player; Manual and unlocked built-ins are pinned by
+default, while Custom and Shared with Me automations are curated through a scrollable accordion Library.
 
 ## Next — Tune the extended campaign
 

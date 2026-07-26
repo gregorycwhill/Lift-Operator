@@ -66,9 +66,9 @@ Zoning, persistence, sharing, and engine assignment semantics must remain unchan
    automation carousel after lift-first.
 5. An explicit Apply action becomes enabled only when both a policy and one or more lift targets are selected, then
    assigns the selected policy to every selected lift.
-4. The lift row displays compact assignment status only. Manual remains an assignable policy.
-5. Manual and currently unlocked built-ins are pinned in the dock; the complete custom/shared collection opens in a
-   searchable overlay.
+6. The lift row displays compact assignment status only. Manual remains an assignable policy.
+7. The carousel shows persistent player pins. Manual and currently unlocked built-ins are pinned by default; the
+   complete Custom and Shared with Me collections are managed in a vertically scrolling accordion Library.
 
 The first dock iteration should retain the chosen policy after Apply, clear the target-lift selection after a successful
 batch, and announce the number of lifts changed. These are deliberate, easily swappable interaction defaults for
@@ -99,8 +99,9 @@ playtest rather than new engine rules.
 3. Introduce the controller host, `legacy` adapter, Debug selector, and variant lifecycle cleanup.
 4. Implement the dock: selected-policy card, fixed Manual/unlocked-built-in pinned strip, target-lift chips/status,
    explicit Apply control, clear/cancel action, and assignment result feedback.
-5. Implement the searchable library overlay with Built-ins, My Automations, and Shared with Me sections. Selecting an
-   entry returns to the dock without changing lifts until Apply.
+5. Implement the searchable accordion library with Built-in, Custom, and Shared with Me sections, persistent pin
+   checkboxes, and Library-toggle/modal cleanup. Selecting an entry returns to the dock without changing lifts until
+   Apply.
 6. Move teaching cues and status refresh from direct `.shaft select` queries to the adapter contract.
 7. Add visual/responsive treatment for one through eight lifts and ensure compact late-fleet layout remains intact.
 8. Exercise Debug variant switching mid-round, during countdown, with an open library, and after a reset/retry.
@@ -110,7 +111,7 @@ playtest rather than new engine rules.
 
 - No change to `setLiftAutomation`, policy execution, Service Zone enforcement, script storage, import/share format, or
   unlock progression.
-- No drag-and-drop, automatic paint-mode assignment, controller preference persistence, player-managed pinning, mobile
+- No drag-and-drop, automatic paint-mode assignment, controller preference persistence, mobile
   adaptation, or Workshop redesign in this slice.
 - No removal of the legacy controller until structured playtest evidence accepts a successor.
 

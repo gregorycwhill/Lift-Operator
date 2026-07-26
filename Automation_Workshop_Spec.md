@@ -103,10 +103,11 @@ library of built-in, player-authored, and shared automations usable across large
   badge. Guidance expires after ten seconds without clearing either selection.
 - Lift controls show their current assignment as status, including Manual and resolved Service Zone labels. They do not
   expose independent policy pickers.
-- A pinned section keeps Manual plus currently unlocked built-in policies visible by default. The complete custom/shared
-  collection is opened in a separate searchable library overlay.
-- Player-managed pinning is deferred until the controller interaction itself has been accepted through playtesting;
-  the first prototype has no pin persistence or pin-editing controls.
+- The carousel shows the player's pinned policies. Manual and currently unlocked built-ins are pinned by default;
+  pin choices persist per player and can be changed from the Library.
+- The Library is a vertically scrolling accordion with Built-in, Custom, and Shared with Me groups. Pinning changes
+  carousel membership only; it never selects or applies an automation.
+- Clicking Library toggles the panel closed, and opening any other modal closes it.
 - Manual is a first-class assignable policy and clears automation/policy constraints exactly as it does today.
 - Unlock, ownership, shared-script, policy-version, and Service Zone rules remain authoritative regardless of which
   controller variant renders them.
