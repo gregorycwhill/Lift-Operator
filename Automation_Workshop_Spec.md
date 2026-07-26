@@ -111,15 +111,14 @@ library of built-in, player-authored, and shared automations usable across large
   carousel membership only; it never selects or applies an automation.
 - Clicking Library toggles the panel closed, and opening any other modal closes it.
 - Manual is a first-class assignable policy and clears automation/policy constraints exactly as it does today.
-- Unlock, ownership, shared-script, policy-version, and Service Zone rules remain authoritative regardless of which
-  controller variant renders them.
+- Unlock, ownership, shared-script, policy-version, and Service Zone rules remain authoritative regardless of how the
+  Dock renders them.
 
-### Variant and compatibility policy
+### Permanent controller policy
 
-Controller variants are presentation adapters over one assignment contract. The legacy select-menu controller remains
-the production default, while the implemented Automation Dock prototype is selected through Debug-only configuration
-on GitHub Pages. Variants must not duplicate policy discovery, unlock logic, assignment rules, or persistent state.
-Removing an unaccepted variant must therefore be a UI-only change. Human playtest acceptance of the Dock is still open.
+The Automation Dock is the sole in-game deployment surface. It owns presentation and interaction only; policy discovery,
+unlock logic, assignment rules, and persistent state remain canonical in the shared automation services. There is no
+Debug-only controller switch or alternate in-game selector.
 
 ## 3. Workshop unlock
 

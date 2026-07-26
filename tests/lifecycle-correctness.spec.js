@@ -809,7 +809,7 @@ test('Service Zone Blockly metadata and Round 14 policy discovery are available'
             ] }
         };
         const custom = VM.extractServiceZone(customData);
-        const names = [...document.querySelectorAll('.shaft select option')].map(option => option.textContent);
+        const names = Game.AutomationController.getCatalog().map(item => item.name);
         return {
             custom,
             zoningPanelHasLiftSelector: Boolean(document.getElementById('zoneLiftSelect')),
@@ -1048,7 +1048,7 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
         Registry.highestUnlockedRound = value;
         Config.debugMode = false;
         buildWorld();
-        return [...document.querySelectorAll('.shaft select option')].map(option => option.value);
+        return Game.AutomationController.getCatalog().map(item => item.value);
     }, round);
 
     expect(await optionsAtRound(1)).toEqual(['manual']);
@@ -1057,14 +1057,13 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
     expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
 });
 
-test('Automation Dock is an explicit multi-lift apply workflow behind Debug', async ({ page }) => {
+test('Automation Dock is the permanent explicit multi-lift apply workflow', async ({ page }) => {
     const result = await page.evaluate(() => {
         Config.debugMode = true;
         Registry.stats.round = 5;
         Registry.highestUnlockedRound = 5;
         Registry.lifts = [createLiftState(0), createLiftState(1)];
         buildWorld();
-        Game.AutomationController.setVariant('dock');
         const statuses = [...document.querySelectorAll('.automation-status')];
         const before = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
@@ -1079,7 +1078,7 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
         const afterSelection = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-dock-actions .btn-green')?.click();
         return {
-            variant: Game.AutomationController.getVariant(),
+            dock: Boolean(document.querySelector('[data-automation-controller="dock"]')),
             statusCount: statuses.length,
             before,
             afterSelection,
@@ -1099,7 +1098,7 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
             basementMarker: document.querySelector('.automation-control-row > .label')?.textContent || ''
         };
     });
-    expect(result.variant).toBe('dock');
+    expect(result.dock).toBe(true);
     expect(result.statusCount).toBeGreaterThan(1);
     expect(result.afterSelection).toEqual(result.before);
     expect(result.previewBeforeCommit).toContain('Sweep');
@@ -1125,7 +1124,6 @@ test('Automation Dock supports selecting lifts before the automation', async ({ 
         Registry.highestUnlockedRound = 5;
         Registry.lifts = [createLiftState(0), createLiftState(1)];
         buildWorld();
-        Game.AutomationController.setVariant('dock');
         const statuses = [...document.querySelectorAll('.automation-status')];
         statuses.slice(0, 2).forEach(status => status.click());
         const policyHint = Boolean(document.querySelector('.automation-dock.automation-policy-hint'));
@@ -1155,7 +1153,6 @@ test('Automation carousel browsing never arms a remembered or committed policy',
         Registry.automationControllerSelectedPolicy = 'sweep';
         Registry.automationControllerPreviewPolicy = 'sweep';
         buildWorld();
-        Game.AutomationController.setVariant('dock');
         const initialFlashing = document.querySelectorAll('.automation-status.automation-target-hint').length;
         const initialApplyDisabled = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
@@ -1180,7 +1177,6 @@ test('Automation Dock guidance expires after ten seconds without clearing select
         Registry.highestUnlockedRound = 5;
         Registry.lifts = [createLiftState(0), createLiftState(1)];
         buildWorld();
-        Game.AutomationController.setVariant('dock');
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         document.querySelector('.automation-carousel-card')?.click();
         const flashingBefore = document.querySelectorAll('.automation-status.automation-target-hint').length;
@@ -1205,7 +1201,6 @@ test('Automation Dock library selects a policy without assigning it', async ({ p
         Registry.highestUnlockedRound = 5;
         Registry.lifts = [createLiftState(0), createLiftState(1)];
         buildWorld();
-        Game.AutomationController.setVariant('dock');
         const before = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-dock-actions .btn-gray')?.click();
         const libraryOpen = Boolean(document.querySelector('.automation-library-overlay'));
@@ -1227,7 +1222,6 @@ test('Automation library toggles, groups automations, persists pins, and closes 
         Registry.lifts = [createLiftState(0)];
         localStorage.removeItem(Game.AutomationController.getPinStorageKey());
         buildWorld();
-        Game.AutomationController.setVariant('dock');
         document.querySelector('.automation-dock-actions .btn-gray')?.click();
         const opened = Boolean(document.querySelector('.automation-library-overlay'));
         const groups = [...document.querySelectorAll('.automation-library-group-toggle')].map(button => button.textContent.trim());
@@ -1250,25 +1244,6 @@ test('Automation library toggles, groups automations, persists pins, and closes 
     expect(result.policyAfterPin).toBe('manual');
     expect(result.closedByToggle).toBe(true);
     expect(result.closedByModal).toBe(true);
-});
-
-test('switching Automation Dock variants removes stale controller UI and restores legacy selectors', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        Config.debugMode = true;
-        Registry.stats.round = 5;
-        Registry.highestUnlockedRound = 5;
-        Registry.lifts = [createLiftState(0), createLiftState(1)];
-        buildWorld();
-        Game.AutomationController.setVariant('dock');
-        const dock = Boolean(document.querySelector('[data-automation-controller="dock"]'));
-        document.querySelector('.automation-dock-actions .btn-gray')?.click();
-        Game.AutomationController.setVariant('legacy');
-        return { dock, libraryAfterSwitch: Boolean(document.querySelector('.automation-library-overlay')), legacy: Boolean(document.querySelector('[data-automation-controller="legacy"]')), selects: document.querySelectorAll('[data-automation-controller="legacy"] select').length };
-    });
-    expect(result.dock).toBe(true);
-    expect(result.libraryAfterSwitch).toBe(false);
-    expect(result.legacy).toBe(true);
-    expect(result.selects).toBeGreaterThan(0);
 });
 
 test('Debug Warp exposes every configured round', async ({ page }) => {
@@ -1375,11 +1350,14 @@ test('round countdown freezes play while allowing automation setup and transient
     }));
     expect(frozen).toEqual({ active: false, countdown: true, timeLeft: 180, guests: 0 });
 
-    const select = page.locator('.shaft select').first();
-    await expect(select).toHaveClass(/automation-teaching-cue/);
-    await select.selectOption('sweep');
+    const liftController = page.locator('.automation-status').first();
+    await expect(liftController).toHaveClass(/automation-teaching-cue/);
+    await page.evaluate(() => document.querySelector('.automation-status')?.click());
+    await expect(liftController).not.toHaveClass(/automation-teaching-cue/);
+    await page.evaluate(() => document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click());
+    await page.evaluate(() => document.querySelector('.automation-carousel-card')?.click());
+    await page.evaluate(() => document.querySelector('.automation-dock-actions .btn-green')?.click());
     expect(await page.evaluate(() => Registry.lifts[0].automation)).toBe('sweep');
-    await expect(select).not.toHaveClass(/automation-teaching-cue/);
 
     await expect(page.locator('#roundCountdown')).toBeHidden({ timeout: 2500 });
     const started = await page.evaluate(() => ({
@@ -1511,7 +1489,7 @@ test('automation teaching cues extend to custom and shared script discovery', as
         return {
             customCue,
             sharedCue,
-            groups: [...document.querySelectorAll('.shaft select optgroup')].map(group => group.label)
+            groups: [...new Set(Game.AutomationController.getCatalog().map(item => item.group))]
         };
     });
 

@@ -220,7 +220,7 @@ body {
 }
 .shaft:hover { background: #e0e6e9; }
 
-/* Swappable automation controller prototype. The legacy selectors remain the default. */
+/* Permanent in-game Automation Dock. */
 .automation-dock-host { display: flex; flex: 0 0 var(--lobby-width); width: var(--lobby-width); overflow: visible; padding: 1px 3px; }
 .automation-control-row > .label { flex: 0 0 var(--label-width); }
 .automation-control-row > .lobby { flex: 0 0 var(--lobby-width); }

@@ -1,17 +1,11 @@
 // ============================================================================
-// AUTOMATION-CONTROLLER.JS : SWAPPABLE IN-GAME AUTOMATION DEPLOYMENT UI
+// AUTOMATION-CONTROLLER.JS : IN-GAME AUTOMATION DEPLOYMENT UI
 // ============================================================================
 
 window.Game = window.Game || {};
 
 (function () {
     const controller = {
-        variants: { legacy: 'Legacy selectors', dock: 'Automation Dock' },
-
-        getVariant() {
-            return Registry.automationControllerVariant === 'dock' ? 'dock' : 'legacy';
-        },
-
         getPinStorageKey() {
             const player = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
             return `liftOp_v2_automationPins_${player}`;
@@ -92,21 +86,6 @@ window.Game = window.Game || {};
                 else window.setLiftAutomation(index, item.value);
             });
             return { ok: true, policy: item, liftIndexes: targets };
-        },
-
-        setVariant(variant) {
-            const next = variant === 'dock' && Config.debugMode ? 'dock' : 'legacy';
-            Registry.automationControllerVariant = next;
-            this.closeLibrary();
-            if (typeof window.buildWorld === 'function') window.buildWorld();
-            const selector = document.getElementById('automationControllerVariant');
-            if (selector) selector.value = next;
-            return next;
-        },
-
-        renderLegacy({ controlRow }) {
-            // Legacy controls remain owned by ui-core.js for compatibility.
-            controlRow.dataset.automationController = 'legacy';
         },
 
         renderDock({ autoLobby, controlRow }) {

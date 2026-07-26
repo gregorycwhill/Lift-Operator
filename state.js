@@ -53,8 +53,6 @@ const Registry = {
     enduranceSeconds: 0,
     customScriptTicks: 0,
     lastLobbyRenderTime: 0,
-    // Debug-only UI selection; legacy remains the default for normal playtests.
-    automationControllerVariant: 'legacy',
     automationControllerSelectedPolicy: 'manual',
     automationControllerPreviewPolicy: 'manual',
     

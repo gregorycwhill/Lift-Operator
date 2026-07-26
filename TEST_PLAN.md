@@ -31,17 +31,17 @@ The release is green only when the following evidence is complete:
 - [ ] VIP arrival begins from G after a seeded delay, visits a seeded random non-G floor after her room, and exits via G.
 - [ ] A VIP rage-quit on any of the three legs costs exactly 10 lives and ends the event.
 
-## Planned acceptance — swappable Automation Dock controller
+## Permanent Automation Dock acceptance
 
 ### Shared catalog and assignment contract
 
-- [ ] Under identical progression/player/share state, the shared catalog returns the same legal policy set and labels
-  used by the legacy controller, including Manual, built-ins, custom scripts, shared scripts, and resolved zone bands.
+- [ ] Under identical progression/player/share state, the shared catalog returns the legal policy set and labels for
+  Manual, built-ins, custom scripts, shared scripts, and resolved zone bands.
 - [ ] Locked policies, another player's private scripts, deleted scripts, malformed identifiers, and stale selections
   cannot be assigned through either variant.
 - [ ] Assignment service validates every requested lift index and makes no change for an empty/invalid request.
-- [ ] Batch assignment invokes the existing engine API in stable lift-index order and produces the same lift state as
-  assigning each lift with the legacy controller.
+- [ ] Batch assignment invokes the existing engine API in stable lift-index order and produces the canonical lift state
+  for each selected lift.
 - [ ] Manual, unzoned, and zoned policies preserve their current service-policy reset/application semantics.
 
 ### Dock interaction
@@ -61,7 +61,7 @@ The release is green only when the following evidence is complete:
 - [x] The compact carousel removes the native policy scrollbar, preserves the automation-row height, and flashes lift
   targets after a policy is armed.
 - [ ] Empty Apply and invalid Apply leave all lift automation unchanged and give accessible feedback.
-- [ ] Lift status accurately updates after dock assignment, legacy assignment, manual assignment, reset, retry, round
+- [ ] Lift status accurately updates after Dock assignment, manual assignment, reset, retry, round
   initialization, and imported/deleted-script recovery.
 - [ ] The carousel shows persistent player pins, with Manual and currently unlocked built-ins pinned by default, and
   changes correctly as progression unlocks new built-ins.
@@ -74,14 +74,14 @@ The release is green only when the following evidence is complete:
 - [x] Selecting an entry closes or returns from the overlay without assigning it until Apply.
 - [ ] Long custom/shared names, authors, zone labels, empty groups, and a collection larger than the pinned strip remain
   readable and operable.
-- [ ] First-use teaching cues work through the active adapter, acknowledge on successful assignment, and do not leak to
-  hidden legacy controls.
+- [ ] First-use teaching cues work through the Dock, acknowledge on user interaction, and do not leak to removed
+  selector controls.
 
-### Variant lifecycle and regression
+### Controller lifecycle and regression
 
-- [x] Default production controller is `legacy`; Debug can select `legacy` or `dock` on GitHub Pages without a build.
-- [ ] Variant switching while idle, in countdown, and mid-round preserves round state, lift policies, timers, and audio.
-- [x] Switching or reset/retry destroys listeners, selected targets, overlays, and visual cues from the outgoing variant.
+- [x] The production controller is the Automation Dock; no Debug controller selector or legacy selector is exposed.
+- [ ] Mounting, reset/retry, countdown, and mid-round refresh preserve round state, lift policies, timers, audio, and
+  Dock selections without duplicate listeners or stale overlays.
 - [ ] Floor targeting, power-up targeting, Workshop pause, modal toggles, and lift status rendering remain independent of
   the active controller.
 - [ ] Render checks cover one, two, five, and eight lifts at supported desktop widths; the compact R19/R20 layout must
@@ -89,23 +89,23 @@ The release is green only when the following evidence is complete:
 
 ### Human comparison protocol
 
-- [ ] On the same seed/loadout/round, a playtester can assign one policy to one lift and to multiple lifts faster or
-  more confidently with the dock than legacy, while accurately describing what will happen before Apply.
-- [ ] Record accidental assignments, missed Apply affordances, library-discovery failures, policy-label confusion,
-  controller-switching issues, and preference between variants in `docs/archive/PLAYTEST_ARCHIVE.md`.
-- [ ] Keep legacy as the default until repeated playtests show the dock is at least as reliable and more comprehensible
-  for both early rounds and R19/R20 fleets.
+- [ ] On the same seed/loadout/round, a playtester can assign one policy to one lift and to multiple lifts confidently,
+  accurately describing what will happen before Apply.
+- [ ] Record accidental assignments, missed Apply affordances, library-discovery failures, policy-label confusion, and
+  stale-UI issues in `docs/archive/PLAYTEST_ARCHIVE.md`.
+- [ ] Confirm the permanent Dock remains comprehensible for both early rounds and R19/R20 fleets.
 
 ## Current evidence state
 
-The Automation Dock prototype is implemented in the current working tree. Its automated acceptance subset is green;
-human usability comparison, responsive visual inspection, and full-device playtesting remain open.
+The Automation Dock is the permanent production controller. Automated acceptance is green; human usability, responsive
+visual inspection, and full-device playtesting remain open.
 
-**Implementation baseline:** `f9c988c` — `Address latest playtest feedback` (26 July 2026).
-**Latest component automated gate:** lifecycle 73/73, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
-documentation, config, balance, economy, report, and UTF-8 checks all passed. The aggregate `npm.cmd test` reached
-browser test 80/102 without a failure before the environment's 10-minute command limit; the remaining browser suites
-are covered by the completed component runs above.
+**Implementation baseline:** `8dee699` — `Stop automation hints after Apply` (26 July 2026), with the permanent Dock
+promotion currently in the working tree.
+**Latest component automated gate:** lifecycle 79/79, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
+documentation, config, balance, economy, report, and UTF-8 checks all passed. The browser remainder passed 107/107;
+the long Protocol Alpha browser test also passed during the aggregate run before the environment's 10-minute wrapper
+limit interrupted the already-running aggregate command.
 **Release state:** Playtest-ready, not promoted. The remaining gate is human/device acceptance and evidence-led tuning,
 not a claim that every release criterion below has passed.
 
