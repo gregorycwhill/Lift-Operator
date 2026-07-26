@@ -1142,6 +1142,32 @@ test('Automation Dock supports selecting lifts before the automation', async ({ 
     expect(result.applied.slice(0, 2)).toEqual(['sweep', 'sweep']);
 });
 
+test('Automation carousel browsing never arms a remembered or committed policy', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        Registry.automationControllerSelectedPolicy = 'sweep';
+        Registry.automationControllerPreviewPolicy = 'sweep';
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        const initialFlashing = document.querySelectorAll('.automation-status.automation-target-hint').length;
+        const initialApplyDisabled = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        const flashAfterBrowse = document.querySelectorAll('.automation-status.automation-target-hint').length;
+        const explicitAfterBrowse = document.querySelector('.automation-dock')?.dataset.policyExplicit === 'true';
+        document.querySelector('.automation-carousel-card')?.click();
+        const flashAfterCommit = document.querySelectorAll('.automation-status.automation-target-hint').length;
+        return { initialFlashing, initialApplyDisabled, flashAfterBrowse, explicitAfterBrowse, flashAfterCommit };
+    });
+    expect(result.initialFlashing).toBe(0);
+    expect(result.initialApplyDisabled).toBe(true);
+    expect(result.flashAfterBrowse).toBe(0);
+    expect(result.explicitAfterBrowse).toBe(false);
+    expect(result.flashAfterCommit).toBe(2);
+});
+
 test('Automation Dock guidance expires after ten seconds without clearing selections', async ({ page }) => {
     test.setTimeout(30000);
     const result = await page.evaluate(async () => {

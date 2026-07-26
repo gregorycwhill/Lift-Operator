@@ -111,7 +111,7 @@ window.Game = window.Game || {};
 
         renderDock({ autoLobby, controlRow }) {
             const catalog = this.getCatalog();
-            const state = { policy: Registry.automationControllerSelectedPolicy || 'manual', previewPolicy: Registry.automationControllerSelectedPolicy || 'manual', policyExplicit: Registry.automationControllerSelectedPolicy && Registry.automationControllerSelectedPolicy !== 'manual', lifts: new Set(), library: null };
+            const state = { committedPolicy: null, previewPolicy: Registry.automationControllerPreviewPolicy || 'manual', lifts: new Set(), guidance: 'none' };
             autoLobby.classList.add('automation-dock-host');
             autoLobby.innerHTML = '';
             controlRow.dataset.automationController = 'dock';
@@ -120,18 +120,20 @@ window.Game = window.Game || {};
             dock.className = 'automation-dock automation-dock-compact';
             dock.setAttribute('aria-label', 'Automation Dock');
             let guidanceTimer = null;
-            let guidanceActive = false;
             const clearGuidance = () => {
                 if (guidanceTimer) clearTimeout(guidanceTimer);
                 guidanceTimer = null;
-                guidanceActive = false;
-                dock.classList.remove('automation-policy-hint', 'automation-target-hint-active');
-                controlRow.querySelectorAll('.automation-status').forEach(status => status.classList.remove('automation-target-hint'));
+                state.guidance = 'none';
             };
-            const startGuidance = () => {
-                if (guidanceActive) return;
-                guidanceActive = true;
-                guidanceTimer = setTimeout(clearGuidance, 10000);
+            const requestGuidance = type => {
+                clearGuidance();
+                state.guidance = type;
+                guidanceTimer = setTimeout(() => {
+                    guidanceTimer = null;
+                    state.guidance = 'none';
+                    renderInteraction();
+                }, 10000);
+                renderInteraction();
             };
             let policies = catalog.filter(item => item.pinned);
             const carousel = document.createElement('div'); carousel.className = 'automation-carousel';
@@ -141,45 +143,48 @@ window.Game = window.Game || {};
             const card = document.createElement('button'); card.type = 'button'; card.className = 'automation-policy-btn automation-carousel-card';
             const indicator = document.createElement('span'); indicator.className = 'automation-carousel-indicator';
             const pinned = document.createElement('div'); pinned.className = 'automation-dock-pinned';
-            const refreshGuidance = () => {
-                const ready = state.policyExplicit && state.lifts.size > 0;
-                dock.dataset.policyExplicit = String(state.policyExplicit);
+            const renderInteraction = () => {
+                const policyExplicit = Boolean(state.committedPolicy);
+                const ready = policyExplicit && state.lifts.size > 0;
+                dock.dataset.policyExplicit = String(policyExplicit);
                 dock.dataset.selectedLiftCount = String(state.lifts.size);
                 applyButton.disabled = !ready;
                 dock.classList.toggle('automation-ready', ready);
-                const needsPolicy = !state.policyExplicit && state.lifts.size > 0;
-                const needsTargets = state.policyExplicit && state.lifts.size === 0;
-                if (needsPolicy || needsTargets) startGuidance();
-                else clearGuidance();
-                dock.classList.toggle('automation-policy-hint', guidanceActive && needsPolicy);
-                dock.classList.toggle('automation-target-hint-active', guidanceActive && needsTargets);
+                dock.classList.toggle('automation-policy-hint', state.guidance === 'policy');
+                dock.classList.toggle('automation-target-hint-active', state.guidance === 'lifts');
                 controlRow.querySelectorAll('.automation-status').forEach(status => {
-                    status.classList.toggle('automation-target-hint', guidanceActive && needsTargets);
+                    status.classList.toggle('automation-target-hint', state.guidance === 'lifts');
                 });
             };
-            const updatePolicy = shouldArm => {
+            const renderPreview = () => {
                 const index = Math.max(0, policies.findIndex(item => item.value === state.previewPolicy));
                 state.carouselIndex = index === -1 ? 0 : index;
                 const item = policies[state.carouselIndex] || policies[0];
                 if (!item) return;
                 state.previewPolicy = item.value;
+                Registry.automationControllerPreviewPolicy = item.value;
                 card.dataset.policy = item.value; card.textContent = item.name;
-                card.classList.toggle('selected', state.policyExplicit && state.policy === item.value);
-                card.classList.toggle('automation-policy-preview', !state.policyExplicit || state.policy !== item.value);
-                card.dataset.selectedPolicy = state.policy;
+                card.classList.toggle('selected', state.committedPolicy === item.value);
+                card.classList.toggle('automation-policy-preview', state.committedPolicy !== item.value);
+                card.dataset.selectedPolicy = state.committedPolicy || '';
                 indicator.textContent = `${state.carouselIndex + 1}/${policies.length}`;
-                if (shouldArm) window.Game.UI?.showToast?.(state.lifts.size ? 'Automation selected. Apply when ready.' : 'Choose lift(s), then Apply.');
-                refreshGuidance();
+                renderInteraction();
             };
             const commitPreview = () => {
-                state.policy = state.previewPolicy;
-                state.policyExplicit = true;
-                Registry.automationControllerSelectedPolicy = state.policy;
-                updatePolicy(true);
+                state.committedPolicy = state.previewPolicy;
+                Registry.automationControllerSelectedPolicy = state.committedPolicy;
+                window.Game.UI?.showToast?.(state.lifts.size ? 'Automation selected. Apply when ready.' : 'Choose lift(s), then Apply.');
+                if (state.lifts.size) {
+                    clearGuidance();
+                    renderPreview();
+                } else {
+                    renderPreview();
+                    requestGuidance('lifts');
+                }
             };
             card.addEventListener('click', event => { event.stopPropagation(); commitPreview(); });
-            previous.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; updatePolicy(false); });
-            next.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; updatePolicy(false); });
+            previous.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; clearGuidance(); renderPreview(); });
+            next.addEventListener('click', event => { event.stopPropagation(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; clearGuidance(); renderPreview(); });
             viewport.append(card); carousel.append(previous, viewport, next, indicator); dock.appendChild(carousel);
 
             const actions = document.createElement('div'); actions.className = 'automation-dock-actions';
@@ -193,16 +198,22 @@ window.Game = window.Game || {};
                 const status = document.createElement('button'); status.type = 'button'; status.className = 'automation-status'; status.dataset.liftIndex = index;
                 status.textContent = `${this.getPolicy(lift.automation)?.name || lift.automation}`;
                 status.setAttribute('aria-pressed', 'false');
-                status.addEventListener('click', event => { event.stopPropagation(); state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index); status.classList.toggle('selected', state.lifts.has(index)); status.setAttribute('aria-pressed', String(state.lifts.has(index))); refreshGuidance(); });
+                status.addEventListener('click', event => {
+                    event.stopPropagation();
+                    state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index);
+                    status.classList.toggle('selected', state.lifts.has(index));
+                    status.setAttribute('aria-pressed', String(state.lifts.has(index)));
+                    if (!state.committedPolicy && state.lifts.size) requestGuidance('policy');
+                    else { clearGuidance(); renderInteraction(); }
+                });
                 statusRow.appendChild(status);
             });
             controlRow.appendChild(statusRow);
-            updatePolicy(false);
+            renderPreview();
 
-            applyButton.addEventListener('click', event => { event.stopPropagation(); const result = this.assign(state.policy, [...state.lifts]); if (!result.ok) return window.Game.UI?.showToast?.(result.reason); state.lifts.clear(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); refreshGuidance(); window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`); });
-            clearButton.addEventListener('click', event => { event.stopPropagation(); state.lifts.clear(); state.policyExplicit = false; statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); refreshGuidance(); });
-            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, item => { state.previewPolicy = item.value; state.policy = item.value; state.policyExplicit = true; Registry.automationControllerSelectedPolicy = state.policy; updatePolicy(true); }, pinned, () => { policies = catalog.filter(item => item.pinned); updatePolicy(false); }); });
-            refreshGuidance();
+            applyButton.addEventListener('click', event => { event.stopPropagation(); const result = this.assign(state.committedPolicy, [...state.lifts]); if (!result.ok) return window.Game.UI?.showToast?.(result.reason); state.lifts.clear(); clearGuidance(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); renderInteraction(); window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`); });
+            clearButton.addEventListener('click', event => { event.stopPropagation(); state.lifts.clear(); state.committedPolicy = null; clearGuidance(); statusRow.querySelectorAll('.automation-status').forEach(button => { button.classList.remove('selected', 'automation-target-hint'); button.setAttribute('aria-pressed', 'false'); }); renderPreview(); });
+            libraryButton.addEventListener('click', event => { event.stopPropagation(); this.openLibrary(state, catalog, item => { state.previewPolicy = item.value; state.committedPolicy = item.value; Registry.automationControllerSelectedPolicy = state.committedPolicy; window.Game.UI?.showToast?.(state.lifts.size ? 'Automation selected. Apply when ready.' : 'Choose lift(s), then Apply.'); renderPreview(); if (state.lifts.size) clearGuidance(); else requestGuidance('lifts'); }, pinned, () => { policies = catalog.filter(item => item.pinned); clearGuidance(); renderPreview(); }); });
         },
 
         closeLibrary() {

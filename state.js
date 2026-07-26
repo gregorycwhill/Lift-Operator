@@ -56,6 +56,7 @@ const Registry = {
     // Debug-only UI selection; legacy remains the default for normal playtests.
     automationControllerVariant: 'legacy',
     automationControllerSelectedPolicy: 'manual',
+    automationControllerPreviewPolicy: 'manual',
     
     vipSpawned: false, vipTargetTime: 0, vipStage: 0, vipRoomFloor: -1, vipRandomFloor: -1,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,

@@ -52,6 +52,7 @@ The release is green only when the following evidence is complete:
   existing selections persist while making the second selection.
 - [x] Carousel arrows change only the preview; they do not select a policy, start lift flashing, or change the policy
   that Apply would use. Clicking the card commits the preview.
+- [x] A remembered carousel position does not arm a policy or flash lift controllers on Dock mount or carousel browse.
 - [x] Guidance flashes for ten seconds, then stops without clearing the explicit policy or target selections.
 - [x] Apply changes every selected lift exactly once, clears target selection, retains the selected policy, and reports
   the count changed.

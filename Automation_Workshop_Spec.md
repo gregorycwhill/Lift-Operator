@@ -95,6 +95,8 @@ library of built-in, player-authored, and shared automations usable across large
   was selected.
 - Carousel navigation previews an automation only; clicking its text commits it as the selected policy. Library entries
   commit when clicked.
+- The remembered carousel position is a presentation preference, not an active selection. A Dock mount starts with no
+  committed policy and no guidance, even if it previews the previously browsed automation.
 - The next required selection flashes: lift controllers after explicit policy selection, or the automation carousel
   after lift-first.
 - Apply is dimmed until both a policy and one or more lift targets are explicitly selected, then becomes the committing
