@@ -232,6 +232,14 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     car.style.setProperty('--lift-bottom-offset', `${bottomOffset}px`);
     car.style.setProperty('--lift-left', `${layout.baseLeft + index * layout.shaftWidth}px`);
     car.style.setProperty('--lift-anim-speed', animSpeed);
+    const overlay = document.getElementById(`lift-effects-${index}`);
+    if (overlay) {
+        overlay.style.setProperty('--lift-width', `${layout.liftWidth}px`);
+        overlay.style.setProperty('--lift-height', `${liftHeight}px`);
+        overlay.style.setProperty('--lift-pos', `${lift.pos}px`);
+        overlay.style.setProperty('--lift-bottom-offset', `${bottomOffset + liftHeight + 4}px`);
+        overlay.style.setProperty('--lift-left', `${layout.baseLeft + index * layout.shaftWidth}px`);
+    }
 };
 
 window.showLiftCapacity = function(liftId, durationMs = 1800) {
@@ -246,9 +254,10 @@ window.showLiftCapacity = function(liftId, durationMs = 1800) {
     const indicator = document.createElement('div');
     indicator.className = 'capacity-float';
     indicator.dataset.capacityLift = String(liftId);
-    indicator.textContent = `Capacity ${capacity >= 999 ? '∞' : capacity}`;
     const layout = window.getLiftLayoutMetrics();
+    indicator.textContent = `${layout.shaftWidth < 100 ? 'Cap' : 'Capacity'} ${capacity >= 999 ? '∞' : capacity}`;
     indicator.style.left = `${layout.baseLeft + liftId * layout.shaftWidth}px`;
+    indicator.style.width = `${layout.shaftWidth}px`;
     indicator.style.bottom = `${lift.pos + 96}px`;
     world.appendChild(indicator);
     setTimeout(() => indicator.remove(), durationMs);
@@ -285,6 +294,8 @@ window.applyAutomationTeachingCue = function() {
 window.draw = function() {
     const ui = GameUI();
     const topFloorRow = document.getElementById(`floor-row-${Config.numFloors - 1}`);
+    const world = document.getElementById('world');
+    world?.classList.toggle('rooftop-party-board', Boolean(Registry.sunsetActive));
     if (topFloorRow) {
         const topLabel = topFloorRow.querySelector('.label');
         if (Registry.sunsetActive) { 
@@ -351,7 +362,7 @@ window.draw = function() {
 
             // Icons rendering (always check these for now as they are few)
             // Note: We should probably hash these too if performance is still an issue
-            let iconsDiv = car.querySelector('.lift-icons');
+            let iconsDiv = document.getElementById(`lift-effects-${index}`);
             const activeIcons = [];
             if (lift.tardisTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTardis > 0)) activeIcons.push({type: 'emoji', val: '🌌'});
             if (lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0)) activeIcons.push({type: 'emoji', val: '🚀'});
@@ -374,17 +385,19 @@ window.draw = function() {
             if (uniqueIcons.length > 0) {
                 if (!iconsDiv) {
                     iconsDiv = document.createElement('div');
-                    iconsDiv.className = 'lift-icons';
+                    iconsDiv.id = `lift-effects-${index}`;
+                    iconsDiv.className = 'lift-icons lift-effect-overlay';
                     iconsDiv.style.position = 'absolute';
-                    iconsDiv.style.top = '-28px';
-                    iconsDiv.style.left = '0';
-                    iconsDiv.style.width = '100%';
+                    iconsDiv.style.top = 'auto';
+                    iconsDiv.style.left = `${window.getLiftLayoutMetrics().baseLeft + index * window.getLiftLayoutMetrics().shaftWidth}px`;
+                    iconsDiv.style.width = `${window.getLiftLayoutMetrics().liftWidth}px`;
                     iconsDiv.style.textAlign = 'center';
                     iconsDiv.style.fontSize = '22px';
                     iconsDiv.style.zIndex = '100';
                     iconsDiv.style.pointerEvents = 'none';
                     iconsDiv.style.textShadow = '0 2px 5px rgba(0,0,0,0.5)';
-                    car.appendChild(iconsDiv);
+                    world.appendChild(iconsDiv);
+                    updateLiftVisualState(lift, index, car);
                 }
                 
                 const iconKey = uniqueIcons.map(ic => ic.val).join('');

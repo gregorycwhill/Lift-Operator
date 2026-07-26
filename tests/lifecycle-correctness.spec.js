@@ -1471,6 +1471,86 @@ test('VIP follows three seeded journeys from Ground to room to random floor and 
     expect(result.penalty).toBe(10);
 });
 
+test('VIP inter-leg travel waits 10-30 seconds and re-enters at the queue front', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(8, { showBriefing: false });
+        Registry.vipTargetTime = 1;
+        Registry.vipSpawned = false;
+        runSpawnerTick(2);
+        const vip = Registry.floors[0].waitingGuests.find(guest => guest.isVip);
+        const room = vip.dest;
+        Spawner.queueVipNextJourney(vip, room, 1000);
+        const pending = { hasGuest: Registry.vipPendingGuest === vip, floor: Registry.vipPendingFloor, delay: (Registry.vipNextJourneyTime - 1000) / 1000, visible: Registry.floors[room].waitingGuests.includes(vip) };
+        runSpawnerTick(Registry.vipNextJourneyTime - 1);
+        const beforeRelease = Registry.floors[room].waitingGuests.includes(vip);
+        runSpawnerTick(Registry.vipNextJourneyTime + 1);
+        const afterRelease = { first: Registry.floors[room].waitingGuests[0] === vip, pending: Registry.vipPendingGuest };
+        return { pending, beforeRelease, afterRelease };
+    });
+    expect(result.pending.hasGuest).toBe(true);
+    expect(result.pending.delay).toBeGreaterThanOrEqual(10);
+    expect(result.pending.delay).toBeLessThanOrEqual(30);
+    expect(result.pending.visible).toBe(false);
+    expect(result.beforeRelease).toBe(false);
+    expect(result.afterRelease).toEqual({ first: true, pending: null });
+});
+
+test('duplicate targeted power-up is blocked without manual targeting or consumption', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(8, { showBriefing: false });
+        Registry.gameActive = true;
+        Registry.lifts[0].turboTimer = 7;
+        PowerUps.inventory = [{ id: 'turbo', tier: 0 }];
+        PowerUps.primeAbility('turbo', 0);
+        const before = { targeting: !!PowerUps.activeTargeting, inventory: PowerUps.inventory.length, timer: Registry.lifts[0].turboTimer };
+        Game.Engine.setLiftTarget(0, 0);
+        PowerUps.timers.wideDoors = 7;
+        PowerUps.inventory = [{ id: 'doors', tier: 0 }];
+        PowerUps.primeAbility('doors', 0);
+        return { before, after: { targeting: !!PowerUps.activeTargeting, inventory: PowerUps.inventory.length, timer: Registry.lifts[0].turboTimer, manual: Registry.lifts[0].manualOverride }, wideDoors: { timer: PowerUps.timers.wideDoors, inventory: PowerUps.inventory.length } };
+    });
+    expect(result.before).toEqual({ targeting: true, inventory: 1, timer: 7 });
+    expect(result.after).toEqual({ targeting: true, inventory: 1, timer: 7, manual: false });
+    expect(result.wideDoors).toEqual({ timer: 7, inventory: 1 });
+});
+
+test('active effect icons are siblings in a non-interactive overlay at the top floor', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(20, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        lift.pos = (Config.numFloors - 1) * Registry.floorHeight;
+        lift.turboTimer = 5;
+        draw();
+        const car = document.getElementById('lift-el-0');
+        const overlay = document.getElementById('lift-effects-0');
+        return {
+            parentIsWorld: overlay?.parentElement?.id === 'world',
+            carHasOverlay: !!car?.querySelector('.lift-icons'),
+            pointerEvents: overlay?.style.pointerEvents,
+            overlayBottom: overlay ? getComputedStyle(overlay).bottom : '',
+            carHeight: car?.getBoundingClientRect().height,
+            worldHeight: document.getElementById('world')?.getBoundingClientRect().height
+        };
+    });
+    expect(result.parentIsWorld).toBe(true);
+    expect(result.carHasOverlay).toBe(false);
+    expect(result.pointerEvents).toBe('none');
+    expect(result.overlayBottom).toBeTruthy();
+    expect(result.carHeight).toBeGreaterThan(0);
+    expect(result.worldHeight).toBeGreaterThan(0);
+});
+
+test('checkout guests and Gym Bros are mutually exclusive', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(7, { showBriefing: false });
+        Registry.gymFloor = 1;
+        forceFirstSpawn(0);
+        return Registry.floors.flatMap(floor => floor.waitingGuests).map(guest => ({ isCheckout: !!guest.isCheckout, isGymBro: !!guest.isGymBro }));
+    });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.some(guest => guest.isCheckout && guest.isGymBro)).toBe(false);
+});
+
 test('automation teaching cues extend to custom and shared script discovery', async ({ page }) => {
     const result = await page.evaluate(() => {
         const unlockRound = Config.GAME_DATA.automationUnlocks.custom;

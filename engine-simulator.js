@@ -198,8 +198,10 @@ window.Game.Simulator = {
                         PowerUps.primeAbility(item.id, item.tier);
                     } else if (ability) {
                         const targetLift = jammedLift || stinkyLift || [...Registry.lifts].sort((a, b) => b.passengers.length - a.passengers.length)[0];
-                        ability.execute(targetLift.id, Math.round(targetLift.pos / Registry.floorHeight));
-                        PowerUps.consumeFromInventory(item.id, item.tier);
+                        PowerUps.primeAbility(item.id, item.tier);
+                        if (PowerUps.activeTargeting) {
+                            window.setLiftTarget(targetLift.id, Math.round(targetLift.pos / Registry.floorHeight));
+                        }
                     }
                 }
                 lastInterventionSecond = second;

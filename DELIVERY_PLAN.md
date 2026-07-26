@@ -9,8 +9,8 @@ and testable campaign slice. This plan does not add transfers, a G hub, new haza
 
 ## Current state
 
-**Implementation:** Current `master` baseline `8dee699` (26 July 2026), with the permanent Automation Dock promotion
-implemented in the working tree; Service Zoning and the latest playtest remediation are implemented.
+**Implementation:** Current `master` baseline `dc1d6e9` (26 July 2026), with the permanent Automation Dock promotion,
+Service Zoning, and the latest playtest remediation implemented.
 **Automated baseline:** Component gates are recorded in `TEST_PLAN.md`; the aggregate browser command is limited by the
 execution environment rather than an observed test failure.
 **Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
@@ -41,6 +41,79 @@ feedback/audio/lighting, and the three-leg VIP journey.<br>
 - Audio reset and rooftop lifecycle tests confirm no prior-round rooftop track survives a restart.
 - Human playtest confirms the compact layout is readable, the VIP creates three meaningful service opportunities, and the
   Rooftop Party presentation is clear without overwhelming the board.
+
+## Completed remediation slice — power-up targeting and top-floor effect icons
+
+**Status:** Implemented and automated-tested; awaiting human visual playtest.<br>
+**Design authority:** `Lift-Operator_GDD.md` and `Game Play Map.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Objective
+
+Make active power-up effects unambiguously non-repeatable on their affected lift and make roof icons visually remain
+above the car at every floor without influencing, obscuring, or appearing to constrain top-floor movement.
+
+### Locked behaviour
+
+- A player cannot apply a timed lift effect to a lift already affected by that same effect, irrespective of tier.
+  A matching active global effect also makes every affected lift ineligible.
+- The check applies at the authoritative activation boundary, not only in the shop or targeting presentation. No caller
+  may reset or extend an active timer by bypassing the normal target UI.
+- An invalid active-effect target is a handled targeting action: it consumes nothing, performs no lift movement, keeps
+  targeting active so the player can choose another lift, and explains why the lift is unavailable.
+- The same rule governs global effects. In particular, Wide Doors cannot be re-triggered while its timed global effect
+  is active. Reactive or instant effects remain repeatable only where their own gameplay precondition is met.
+- Effect icons stay above the lift car at all floors, including the top. They are a separate non-interactive overlay
+  anchored to the car's simulated position; their dimensions never participate in lift placement, collision, targeting,
+  or floor arrival logic.
+
+### Implementation sequence
+
+1. Define one canonical effect-eligibility service for power-up ID, scope, and optional lift target, derived from the
+   live lift/global timer state.
+2. Route targeted resolution, instant/global activation, inventory affordance, and any programmatic activation path
+   through that service; retain explicit exceptions for reactive/instant effects.
+3. Make a blocked lift click a consumed targeting interaction with clear feedback and no inventory, timer, audio, or
+   manual-target side effect.
+4. Move active lift icons into a dedicated absolute effect-overlay layer, positioned from the lift's rendered/simulated
+   location and allowed to extend above the roof without changing the car's box geometry.
+5. Add deterministic and browser visual regressions, then conduct targeted top-floor and duplicate-application
+   playtesting.
+
+### Exit criteria
+
+- Every timed lift/global effect rejects duplicate use without consuming inventory or resetting its remaining duration.
+- Wide Doors is covered by the same global-effect rule.
+- The car reaches the exact highest-floor target with and without each active icon, while the icon remains above it.
+- No duplicate effect icon, unexpected manual target, stale targeting mode, or leaked overlay remains after accepted or
+  rejected use.
+
+## Latest playtest remediation — 15-item traceability
+
+**Status:** Implemented and automated-tested; awaiting human playtest evidence for visual/audio feel and late-round balance.<br>
+**Design authority:** `ROADMAP.md`, `Lift-Operator_GDD.md`, and `Game Play Map.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+The following numbered decisions are the complete scope. Item 3 is intentionally closed without a code change because
+the existing Round 3 briefing already explains Room Service carts.
+
+1. **Top-floor effect icons:** keep active icons above the car at the highest floor in a non-layout overlay.
+2. **Duplicate power-ups:** reject reapplying an already-active effect at the authoritative activation boundary.
+3. **Room Service teaching:** retain the current Round 3 reminder; no change required.
+4. **Checkout suitcase contrast:** use a warm, high-contrast suitcase treatment against the lobby background.
+5. **Countdown control:** use a small close-style `×` in the countdown panel's top-right; only its control area skips.
+6. **Rooftop audio reset:** stop rooftop music on every round initialization, retry, and reset transition.
+7. **Rooftop presentation:** add subtle board-wide rainbow beams, with reduced-motion support.
+8. **VIP timing:** insert a seeded random 10–30 second pause between each of the VIP's three legs.
+9. **Guest classification:** checkout guests are never Gym Bros; the two roles remain mutually exclusive.
+10. **Fart audio:** cap the stink/fart sound at two seconds.
+11. **R14 zoning teaching:** make the Round 14 briefing explicitly introduce zoning and the Automation Dock/Workshop.
+12. **Late-round cables:** centre lift cables using the actual lift geometry, including compact R20.
+13. **Late-round capacity labels:** use compact `Cap N` labels sized to each lift slot so R20 labels do not overlap.
+14. **VIP queueing:** VIPs remain FIFO and hold the front position once there; behind guests may board an occupied,
+    unsuitable lift while the VIP waits for an empty suitable lift.
+15. **Board jitter:** contain rooftop decoration and reserve scrollbar space so effects cannot create/remove scrollbars or
+    move the board.
 
 ## Promoted implementation slice — permanent Automation Dock controller
 

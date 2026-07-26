@@ -31,6 +31,30 @@ The release is green only when the following evidence is complete:
 - [ ] VIP arrival begins from G after a seeded delay, visits a seeded random non-G floor after her room, and exits via G.
 - [ ] A VIP rage-quit on any of the three legs costs exactly 10 lives and ends the event.
 
+## Latest playtest remediation acceptance — 15-item traceability
+
+- [ ] **1 — Top-floor icons:** active icons remain above every top-floor car and do not change car dimensions, target
+  position, hit testing, or scroll geometry.
+- [ ] **2 — Duplicate effects:** every timed effect rejects a duplicate on the same lift/global scope without consuming
+  inventory, resetting timers, or playing activation audio.
+- [x] **3 — Room Service teaching:** Round 3 already explains that carts carry heavier deliveries and need extra lift
+  capacity; no implementation change is required.
+- [ ] **4 — Suitcase contrast:** checkout guests heading to G display an accessible, legible suitcase treatment.
+- [ ] **5 — Countdown:** only clicking the small top-right `×` skips countdown; keyboard/touch activation remains available.
+- [x] **6 — Rooftop audio:** reset, retry, and round initialization leave no rooftop source playing from the previous round.
+- [ ] **7 — Rooftop beams:** party mode shows subtle board-wide rainbow beams and honours reduced-motion preferences.
+- [x] **8 — VIP timing:** a seeded VIP has three legs and each inter-leg delay is between 10 and 30 seconds; pause/resume
+  preserves the delay.
+- [x] **9 — Guest classification:** no spawned guest has both `isCheckout` and `isGymBro`; Gym Bro stink immunity remains.
+- [ ] **10 — Fart cap:** stink playback stops at two seconds while gameplay stink duration is unchanged.
+- [ ] **11 — Zoning briefing:** Round 14 introduces zoning, names the Dock/Workshop path, and remains accurate as floors
+  scale.
+- [ ] **12 — Cable alignment:** compact R19/R20 cables are centred over their cars.
+- [ ] **13 — Capacity labels:** compact fleets use readable non-overlapping `Cap N` labels with correct accessible text.
+- [ ] **14 — VIP queueing:** VIP does not jump the queue; when first, she prevents preemption for an empty suitable lift,
+  but ordinary guests may use an occupied unsuitable lift while she remains at the front.
+- [ ] **15 — Board stability:** rooftop effects do not create/remove scrollbars or cause vertical/horizontal board jitter.
+
 ## Permanent Automation Dock acceptance
 
 ### Shared catalog and assignment contract
@@ -100,8 +124,20 @@ The release is green only when the following evidence is complete:
 The Automation Dock is the permanent production controller. Automated acceptance is green; human usability, responsive
 visual inspection, and full-device playtesting remain open.
 
-**Implementation baseline:** `8dee699` — `Stop automation hints after Apply` (26 July 2026), with the permanent Dock
-promotion currently in the working tree.
+## Latest remediation test evidence
+
+- `npm run test:syntax`: passed, 61 JavaScript files.
+- `npm run docs:check`: passed, 22 Markdown files.
+- Lifecycle suite: passed, 83/83.
+- Browser suite excluding the known long Protocol Alpha case: passed, 111/111.
+- Aggregate `npm test`: all pre-browser gates, Protocol Alpha, mechanics, integration, and the browser cases reached
+  before the wrapper limit passed; the command timed out at 10 minutes because Protocol Alpha alone takes about eight
+  minutes and the aggregate suite continued beyond the wrapper limit. This is an execution-time limitation, not an
+  observed test failure.
+- Remaining evidence is human: visual confirmation of top-floor icons/cables/capacity labels, rooftop beam subtlety and
+  board stability, countdown affordance, suitcase contrast, audio duration feel, and VIP queueing under live traffic.
+
+**Implementation baseline:** `dc1d6e9` — `Promote Automation Dock to production` (26 July 2026).
 **Latest component automated gate:** lifecycle 79/79, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
 documentation, config, balance, economy, report, and UTF-8 checks all passed. The browser remainder passed 107/107;
 the long Protocol Alpha browser test also passed during the aggregate run before the environment's 10-minute wrapper

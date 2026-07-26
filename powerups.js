@@ -445,10 +445,15 @@ const PowerUps = {
     },
 
     isGlobalPowerUpActive: function(powerUpId) {
-        if (['freshener', 'musak', 'turbo', 'tardis', 'doubleDecker', 'openPlan'].includes(powerUpId)) {
-            return Registry.lifts.length > 0 && Registry.lifts.every(lift => this.isLiftPowerUpActive(powerUpId, lift));
-        }
-        return false;
+        if (powerUpId === 'doors') return this.timers.wideDoors > 0;
+        if (!['freshener', 'musak', 'turbo', 'tardis', 'doubleDecker', 'openPlan'].includes(powerUpId)) return false;
+        const globalTimer = ({
+            freshener: this.timers.stinkImmunity,
+            musak: this.timers.globalAngerPause,
+            turbo: this.timers.globalTurbo,
+            tardis: this.timers.globalTardis
+        })[powerUpId];
+        return globalTimer > 0 || Registry.lifts.some(lift => this.isLiftPowerUpActive(powerUpId, lift));
     },
 
     cancelTargeting: function() {

@@ -132,6 +132,7 @@ window.resumeGame = function() {
         Registry.parentTickTime += duration;
         Registry.lastSpawnTime += duration;
         if (Registry.vipTargetTime > 0) Registry.vipTargetTime += duration;
+        if (Registry.vipNextJourneyTime > 0) Registry.vipNextJourneyTime += duration;
         if (Registry.sunsetTargetTime > 0) Registry.sunsetTargetTime += duration;
         if (Registry.sunsetEndTime > 0) Registry.sunsetEndTime += duration;
         window.Game.BalanceTelemetry?.shiftTime(duration);
@@ -143,7 +144,8 @@ window.resumeGame = function() {
 
 window.setLiftTarget = function(liftIndex, targetFloor) {
     if (typeof PowerUps !== 'undefined' && PowerUps.activeTargeting) {
-        if (PowerUps.resolveTargeting(liftIndex, targetFloor)) return; 
+        PowerUps.resolveTargeting(liftIndex, targetFloor);
+        return;
     }
     
     if (!Registry.gameActive) return;
@@ -275,6 +277,9 @@ window.createRoundState = function(round, seed, options = {}) {
         vipStage: 0,
         vipRoomFloor: -1,
         vipRandomFloor: -1,
+        vipPendingGuest: null,
+        vipPendingFloor: -1,
+        vipNextJourneyTime: 0,
         sunsetHasHappened: false,
         sunsetTargetTime: 0,
         sunsetActive: false,
@@ -321,6 +326,9 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.vipStage = roundState.vipStage || 0;
     Registry.vipRoomFloor = roundState.vipRoomFloor ?? -1;
     Registry.vipRandomFloor = roundState.vipRandomFloor ?? -1;
+    Registry.vipPendingGuest = roundState.vipPendingGuest ?? null;
+    Registry.vipPendingFloor = roundState.vipPendingFloor ?? -1;
+    Registry.vipNextJourneyTime = roundState.vipNextJourneyTime ?? 0;
     Registry.sunsetHasHappened = roundState.sunsetHasHappened;
     Registry.sunsetTargetTime = roundState.sunsetTargetTime;
     Registry.sunsetActive = roundState.sunsetActive;
@@ -336,6 +344,7 @@ window.initializeRound = function(round, options = {}) {
     Registry.roundCountdownActive = false;
     Registry.roundCountdownPaused = false;
     document.getElementById('roundCountdown')?.classList.add('hidden');
+    window.Game.Audio?.publish('rooftop_released', { reason: 'round_initialized', round });
     window.clearAttemptInventory();
     Registry.activeOperation = options.operation || null;
     const state = window.createRoundState(round, Registry.seed, options);

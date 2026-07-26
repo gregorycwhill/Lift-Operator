@@ -157,7 +157,10 @@ body {
     align-items: center; 
     background: #ecf0f1; 
     position: relative; 
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+    overflow-anchor: none;
 }
 #world { 
     position: relative; 
@@ -286,7 +289,8 @@ body {
     position: absolute; 
     top: -1000px; 
     bottom: 100%; 
-    left: 48px; 
+    left: 50%;
+    transform: translateX(-50%);
     width: 4px; 
     background: #7f8c8d; 
     z-index: -1; 
@@ -316,7 +320,7 @@ body {
 
 /* Status Colors & Guest Modifiers */
 .happy { background: #2ecc71; }
-.checkout-ground { background: #16a085; color: #fff; border: 1px solid #0e6655; }
+.checkout-ground { background: #f8d568; color: #5b4300; border: 1px solid #b8860b; }
 .annoyed { background: #f1c40f; color: #333; }
 .critical { background: #e74c3c; animation: pulse 1s infinite; }
 .rage { background: #000; animation: shake 0.5s infinite; }
@@ -352,6 +356,17 @@ body {
     box-shadow: inset 0 0 18px rgba(255, 241, 118, 0.75), inset 0 -12px 24px rgba(52, 152, 219, 0.35);
     animation: rooftopPulse 1.2s infinite alternate;
 }
+.lift-effect-overlay {
+    position: absolute;
+    bottom: calc(var(--lift-pos, 0px) + var(--lift-bottom-offset, 40px));
+    height: 28px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 100;
+    pointer-events: none;
+    overflow: visible;
+}
 .floor.rooftop-party::after {
     content: '✦  ✧  ✦';
     position: absolute;
@@ -368,9 +383,22 @@ body {
     position: absolute;
     inset: 0;
     background: repeating-linear-gradient(110deg, rgba(255, 255, 255, 0.22) 0 8px, transparent 8px 28px);
+    background-size: 220% 100%;
     mix-blend-mode: screen;
+    background-position: 0 0;
     animation: discoSweep 1.4s linear infinite;
     pointer-events: none;
+}
+#world.rooftop-party-board::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: .12;
+    background: repeating-linear-gradient(112deg, rgba(255, 70, 140, .55) 0 22px, transparent 22px 92px, rgba(0, 220, 255, .45) 92px 112px, transparent 112px 182px, rgba(255, 230, 70, .45) 182px 202px, transparent 202px 280px);
+    background-size: 180% 100%;
+    animation: boardDiscoSweep 4s linear infinite;
 }
 
 /* Lift Status */
@@ -522,7 +550,7 @@ body {
     box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35);
 }
 .round-countdown strong { color: #f1c40f; font-size: 2rem; line-height: 1; }
-.round-countdown-skip { border: 0; border-radius: 50%; width: 30px; height: 30px; padding: 0; background: #f1c40f; color: #2c3e50; font-size: 1.35rem; line-height: 1; font-weight: 900; cursor: pointer; }
+.round-countdown-skip { position: absolute; top: 6px; right: 6px; border: 0; border-radius: 50%; width: 20px; height: 20px; padding: 0; background: rgba(44,62,80,.72); color: #fff; font-size: .9rem; line-height: 1; font-weight: 900; cursor: pointer; }
 .round-countdown-skip:hover, .round-countdown-skip:focus-visible { background: #f7dc6f; outline: 3px solid #fff; }
 .compact-modal { max-width: 420px; text-align: center; }
 .modal-help { color: #d5dbdb; font-size: 0.9rem; }
@@ -530,8 +558,8 @@ body {
 .capacity-float {
     position: absolute;
     z-index: 200;
-    width: 110px;
-    padding: 6px 0;
+    width: var(--shaft-width, 110px);
+    padding: 4px 0;
     border-radius: 14px;
     background: #3498db;
     color: white;
@@ -867,12 +895,14 @@ body {
 @keyframes bounce { 0% { transform: translateY(0); } 100% { transform: translateY(-5px); } }
 @keyframes rooftopPulse { 0% { filter: saturate(1); } 100% { filter: saturate(1.45) brightness(1.12); } }
 @keyframes discoLights { 0% { opacity: 0.35; color: #fff176; } 50% { opacity: 1; color: #7df9ff; } 100% { opacity: 0.55; color: #ff9ff3; } }
-@keyframes discoSweep { from { transform: translateX(-18%); } to { transform: translateX(18%); } }
+@keyframes boardDiscoSweep { from { background-position: 0 0; } to { background-position: 100% 0; } }
+@keyframes discoSweep { from { background-position: 0 0; } to { background-position: 100% 0; } }
 
 @media (prefers-reduced-motion: reduce) {
     .floor.rooftop-party,
     .floor.rooftop-party::before,
-    .floor.rooftop-party::after { animation: none; }
+    .floor.rooftop-party::after,
+    #world.rooftop-party-board::before { animation: none; }
 }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 

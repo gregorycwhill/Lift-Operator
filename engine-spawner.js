@@ -15,7 +15,7 @@ window.forceFirstSpawn = function(now) {
         dest = window.getRandomFloor();
         while (dest === start) dest = window.getRandomFloor();
     }
-    let isGym = (start === Registry.gymFloor);
+    let isGym = !isCheckout && (start === Registry.gymFloor);
     let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
     
     Registry.floors[start].waitingGuests.push({
@@ -46,6 +46,20 @@ window.runSpawnerTick = function(now) {
     Registry.stats.currentSpawnChance =
         roundDefinition.spawnStart +
         ((roundDefinition.spawnEnd - roundDefinition.spawnStart) * Math.max(0, Math.min(1, progress)));
+
+    if (Registry.vipPendingGuest && now >= Registry.vipNextJourneyTime) {
+        const vip = Registry.vipPendingGuest;
+        const floor = Registry.vipPendingFloor;
+        Registry.vipPendingGuest = null;
+        Registry.vipPendingFloor = -1;
+        Registry.vipNextJourneyTime = 0;
+        Registry.floors[floor].waitingGuests.unshift(vip);
+        window.Game.BalanceTelemetry?.recordSpawn();
+        window.Game.Audio?.publish('vip_journey', { stage: vip.vipStage, floor, destination: vip.dest });
+        window.showToast?.(vip.vipStage === 2
+            ? `VIP is leaving her room for Floor ${vip.dest}.`
+            : 'VIP is departing. Get her back to Ground.');
+    }
 
     // 2. VIP Event Orchestration
     if (Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
@@ -133,7 +147,7 @@ window.runSpawnerTick = function(now) {
                 while (dest === start) dest = window.getRandomFloor();
             }
             
-            let isGym = (start === Registry.gymFloor);
+            let isGym = !isCheckout && (start === Registry.gymFloor);
             let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
             
             let newGuest = {
@@ -191,9 +205,9 @@ window.Spawner.queueVipNextJourney = function(vip, floor, now) {
         vip.vipStage = 2;
         vip.status = GuestStatus.ANNOYED;
         vip.spawnTime = now - (Config.happySec * 1000) - 100;
-        Registry.floors[floor].waitingGuests.push(vip);
-        window.Game.Audio?.publish('vip_journey', { stage: 2, floor, destination: randomFloor });
-        window.showToast?.(`VIP is leaving her room for Floor ${randomFloor}.`);
+        Registry.vipPendingGuest = vip;
+        Registry.vipPendingFloor = floor;
+        Registry.vipNextJourneyTime = now + (window.getRandomInt(10, 30) * 1000);
         return true;
     }
     if (Registry.vipStage === 2) {
@@ -202,9 +216,9 @@ window.Spawner.queueVipNextJourney = function(vip, floor, now) {
         vip.vipStage = 3;
         vip.status = GuestStatus.ANNOYED;
         vip.spawnTime = now - (Config.happySec * 1000) - 100;
-        Registry.floors[floor].waitingGuests.push(vip);
-        window.Game.Audio?.publish('vip_journey', { stage: 3, floor, destination: 0 });
-        window.showToast?.('VIP is departing. Get her back to Ground.');
+        Registry.vipPendingGuest = vip;
+        Registry.vipPendingFloor = floor;
+        Registry.vipNextJourneyTime = now + (window.getRandomInt(10, 30) * 1000);
         return true;
     }
     Registry.vipStage = 4;
