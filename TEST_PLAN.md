@@ -56,6 +56,8 @@ The release is green only when the following evidence is complete:
 - [x] Guidance flashes for ten seconds, then stops without clearing the explicit policy or target selections.
 - [x] Apply changes every selected lift exactly once, clears target selection, retains the selected policy, and reports
   the count changed.
+- [x] Apply is a terminal transition for the current selection: pending guidance is cancelled, no lift-controller or
+  dock hint remains active afterward, and assignment cannot immediately re-arm flashing.
 - [x] The compact carousel removes the native policy scrollbar, preserves the automation-row height, and flashes lift
   targets after a policy is armed.
 - [ ] Empty Apply and invalid Apply leave all lift automation unchanged and give accessible feedback.

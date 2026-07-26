@@ -1091,6 +1091,8 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
             applyAfterTargets,
             afterApply: Registry.lifts.map(lift => lift.automation),
             selectedAfterApply: document.querySelectorAll('.automation-status.selected').length,
+            hintAfterApply: document.querySelectorAll('.automation-status.automation-target-hint').length,
+            dockGuidanceAfterApply: Boolean(document.querySelector('.automation-dock.automation-policy-hint, .automation-dock.automation-target-hint-active')),
             retainedPolicy: document.querySelector('.automation-carousel-card')?.textContent || '',
             hasVerboseTitle: Boolean(document.querySelector('.automation-dock-title, .automation-dock-policy')),
             policyStripDisplay: document.querySelector('.automation-dock-pinned') ? getComputedStyle(document.querySelector('.automation-dock-pinned')).display : 'none',
@@ -1108,6 +1110,8 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
     expect(result.applyAfterTargets).toBe(false);
     expect(result.afterApply.slice(0, 2)).toEqual(['sweep', 'sweep']);
     expect(result.selectedAfterApply).toBe(0);
+    expect(result.hintAfterApply).toBe(0);
+    expect(result.dockGuidanceAfterApply).toBe(false);
     expect(result.retainedPolicy).toContain('Sweep');
     expect(result.hasVerboseTitle).toBe(false);
     expect(result.policyStripDisplay).toBe('none');

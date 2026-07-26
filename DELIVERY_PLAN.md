@@ -135,6 +135,8 @@ playtest rather than new engine rules.
   and variant switching. Human comparison and responsive visual acceptance remain open.
 - Replaced inferred Dock guidance with explicit session state: preview, committed policy, targets, and guidance intent
   are independent. Browsing cannot arm a policy or start lift flashing.
+- Hardened Apply as a terminal interaction transition: assignment cancels pending guidance, clears all visual hint
+  classes, and cannot re-arm guidance while the batch is being committed.
 - Refined the prototype after first visual review: the row now uses a compact vanilla-JS carousel without a native
   policy scrollbar or verbose status labels, and armed policies pulse the lift targets as a next-step cue.
 - Reframed the controller row as a fixed-width basement level beneath G, marked with the non-interactive `⚙⇅` badge;
