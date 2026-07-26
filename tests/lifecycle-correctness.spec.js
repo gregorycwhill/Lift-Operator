@@ -1069,7 +1069,9 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
         const before = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         const hintAfterPolicy = document.querySelectorAll('.automation-status.automation-target-hint').length;
+        const applyBeforeTargets = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
         statuses.slice(0, 2).forEach(status => status.click());
+        const applyAfterTargets = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
         const afterSelection = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-dock-actions .btn-green')?.click();
         return {
@@ -1078,6 +1080,8 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
             before,
             afterSelection,
             hintAfterPolicy,
+            applyBeforeTargets,
+            applyAfterTargets,
             afterApply: Registry.lifts.map(lift => lift.automation),
             selectedAfterApply: document.querySelectorAll('.automation-status.selected').length,
             retainedPolicy: document.querySelector('.automation-carousel-card')?.textContent || '',
@@ -1089,11 +1093,38 @@ test('Automation Dock is an explicit multi-lift apply workflow behind Debug', as
     expect(result.statusCount).toBeGreaterThan(1);
     expect(result.afterSelection).toEqual(result.before);
     expect(result.hintAfterPolicy).toBe(result.statusCount);
+    expect(result.applyBeforeTargets).toBe(true);
+    expect(result.applyAfterTargets).toBe(false);
     expect(result.afterApply.slice(0, 2)).toEqual(['sweep', 'sweep']);
     expect(result.selectedAfterApply).toBe(0);
     expect(result.retainedPolicy).toContain('Sweep');
     expect(result.hasVerboseTitle).toBe(false);
     expect(result.policyStripDisplay).toBe('none');
+});
+
+test('Automation Dock supports selecting lifts before the automation', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        const statuses = [...document.querySelectorAll('.automation-status')];
+        statuses.slice(0, 2).forEach(status => status.click());
+        const policyHint = Boolean(document.querySelector('.automation-dock.automation-policy-hint'));
+        const disabledBeforePolicy = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        const targetsStillSelected = document.querySelectorAll('.automation-status.selected').length;
+        const readyAfterPolicy = !document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        document.querySelector('.automation-dock-actions .btn-green')?.click();
+        return { policyHint, disabledBeforePolicy, targetsStillSelected, readyAfterPolicy, applied: Registry.lifts.map(lift => lift.automation) };
+    });
+    expect(result.policyHint).toBe(true);
+    expect(result.disabledBeforePolicy).toBe(true);
+    expect(result.targetsStillSelected).toBe(2);
+    expect(result.readyAfterPolicy).toBe(true);
+    expect(result.applied.slice(0, 2)).toEqual(['sweep', 'sweep']);
 });
 
 test('Automation Dock library selects a policy without assigning it', async ({ page }) => {

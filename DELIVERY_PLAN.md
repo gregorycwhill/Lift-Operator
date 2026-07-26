@@ -57,9 +57,13 @@ Zoning, persistence, sharing, and engine assignment semantics must remain unchan
 
 ### Locked interaction model
 
-1. The player chooses one policy from the dock or library.
-2. The player selects one or more lift targets; selection alone makes no assignment.
-3. An explicit Apply action assigns the selected policy to every selected lift.
+1. The player chooses one policy from the dock or library, or selects one or more lift targets first.
+2. Policy selection and lift-target selection are independent; either entry path remains valid and neither selection
+   changes lift automation.
+3. The next required selection is visibly highlighted: lift controllers after policy-first, or the automation carousel
+   after lift-first.
+4. An explicit Apply action becomes enabled only when both a policy and one or more lift targets are selected, then
+   assigns the selected policy to every selected lift.
 4. The lift row displays compact assignment status only. Manual remains an assignable policy.
 5. Manual and currently unlocked built-ins are pinned in the dock; the complete custom/shared collection opens in a
    searchable overlay.

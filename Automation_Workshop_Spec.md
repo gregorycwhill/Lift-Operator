@@ -90,9 +90,12 @@ as unzoned policies.
 The in-game controller is the deployment surface for saved policies, not a second Workshop. It must make a growing
 library of built-in, player-authored, and shared automations usable across large fleets without altering policy content.
 
-- The player chooses one automation in a horizontal basement/lobby dock.
-- The player then selects one or more lift targets and uses an explicit Apply action; no lift changes policy merely
-  because it was selected.
+- The player chooses one automation in a horizontal basement/lobby dock, or selects one or more lift targets first.
+- Policy and target selection are independent, so either order is valid and no lift changes policy merely because it
+  was selected.
+- The next required selection flashes: lift controllers after policy-first, or the automation carousel after lift-first.
+- Apply is dimmed until both a policy and one or more lift targets are explicitly selected, then becomes the committing
+  action.
 - Lift controls show their current assignment as status, including Manual and resolved Service Zone labels. They do not
   expose independent policy pickers.
 - A pinned section keeps Manual plus currently unlocked built-in policies visible by default. The complete custom/shared

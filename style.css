@@ -233,10 +233,15 @@ body {
 .automation-policy-btn.selected, .automation-status.selected { background: #3498db; color: #fff; border-color: #21618c; }
 .automation-dock-actions { display: flex; gap: 2px; align-items: center; flex: 0 0 auto; }
 .automation-dock-actions .btn { padding: 3px 5px; font-size: 10px; }
+.automation-dock-actions .btn-green:disabled { opacity: .38; filter: grayscale(1); box-shadow: none; cursor: not-allowed; }
+.automation-dock.automation-ready .btn-green:not(:disabled) { box-shadow: 0 0 7px rgba(46, 204, 113, .95); animation: automationApplyGlow 1s ease-in-out infinite alternate; }
+.automation-dock.automation-policy-hint .automation-carousel-card { animation: automationPolicyHint .75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -2px; }
 .automation-status-row { display: contents; }
 .automation-status { width: 100%; height: 36px; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 .automation-status.automation-target-hint { animation: automationTargetHint 0.75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -3px; }
 @keyframes automationTargetHint { from { background: #fff; } to { background: #f9e79f; } }
+@keyframes automationApplyGlow { from { box-shadow: 0 0 4px rgba(46, 204, 113, .55); } to { box-shadow: 0 0 10px rgba(46, 204, 113, 1); } }
+@keyframes automationPolicyHint { from { background: #fff; } to { background: #f9e79f; } }
 .automation-library-overlay { position: fixed; inset: 0; z-index: 1200; background: rgba(0,0,0,.35); display: flex; align-items: flex-end; justify-content: flex-start; padding: 12px; box-sizing: border-box; }
 .automation-library { width: min(380px, calc(100vw - 24px)); max-height: 70vh; overflow: auto; background: #fff; border: 2px solid #34495e; border-radius: 8px; padding: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.35); }
 .automation-library-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
