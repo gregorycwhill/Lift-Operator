@@ -49,26 +49,29 @@ window.runSpawnerTick = function(now) {
 
     // 2. VIP Event Orchestration
     if (Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
-        let start = window.getRandomFloor();
-        let dest = window.getRandomFloor();
-        while (dest === start) dest = window.getRandomFloor();
-        
-        let isGym = (start === Registry.gymFloor);
+        const start = 0;
+        const maxFloor = Math.max(1, Config.numFloors - 1);
+        const roomFloor = window.getRandomInt(1, maxFloor);
+        Registry.vipRoomFloor = roomFloor;
+        Registry.vipRandomFloor = -1;
+        Registry.vipStage = 1;
         Registry.floors[start].waitingGuests.push({
             id: `guest-${++Registry.guestSequence}`,
-            dest: dest, 
+            dest: roomFloor,
             status: GuestStatus.ANNOYED, 
             spawnTime: now - (Config.happySec * 1000) - 100, 
             isVip: true, 
             isFarter: false, 
             isSunset: false, 
             isPartying: false, 
-            isGymBro: isGym,
-            isBulky: isGym,
-            boardingWeight: isGym ? 2.0 : 1.0
+            isGymBro: false,
+            isBulky: false,
+            boardingWeight: 1.0,
+            vipStage: 1
         });
         window.Game.BalanceTelemetry?.recordSpawn();
-        window.Game.Audio?.publish('vip_arrival', { guestType: 'vip', floor: start, destination: dest });
+        window.Game.Audio?.publish('vip_arrival', { guestType: 'vip', floor: start, destination: roomFloor, stage: 1 });
+        window.showToast?.(`VIP arrival: escort her from G to Room ${roomFloor}.`);
         Registry.vipSpawned = true;
     }
 
@@ -78,6 +81,7 @@ window.runSpawnerTick = function(now) {
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;
                 window.Game.Audio?.publish('rooftop_released', { floor: Config.numFloors - 1 });
+                window.showToast?.('Rooftop Party over — guests are returning to their rooms.');
                 const revertGuest = (g) => {
                     if (g.isSunset) {
                         g.isSunset = false; 
@@ -95,6 +99,7 @@ window.runSpawnerTick = function(now) {
             Registry.sunsetHasHappened = true;
             Registry.sunsetEndTime = now + (Config.sunsetDurationSec * 1000);
             window.Game.Audio?.publish('rooftop_started', { floor: Config.numFloors - 1, duration: Config.sunsetDurationSec });
+            window.showToast?.('Rooftop Party started — guests are heading upstairs!');
             
             const infectGuest = (g) => {
                 if (!g.isVip && seededRandom() < Config.sunsetGuestRatio) {
@@ -174,6 +179,39 @@ window.runSpawnerTick = function(now) {
 window.Spawner = window.Spawner || {};
 window.Spawner.forceFirstSpawn = window.forceFirstSpawn;
 window.Spawner.runSpawnerTick = window.runSpawnerTick;
+window.Spawner.queueVipNextJourney = function(vip, floor, now) {
+    if (!vip?.isVip || Registry.vipStage >= 4) return false;
+    const maxFloor = Math.max(1, Config.numFloors - 1);
+    if (Registry.vipStage === 1) {
+        let randomFloor = window.getRandomInt(1, maxFloor);
+        while (randomFloor === Registry.vipRoomFloor && maxFloor > 1) randomFloor = window.getRandomInt(1, maxFloor);
+        Registry.vipRandomFloor = randomFloor;
+        Registry.vipStage = 2;
+        vip.dest = randomFloor;
+        vip.vipStage = 2;
+        vip.status = GuestStatus.ANNOYED;
+        vip.spawnTime = now - (Config.happySec * 1000) - 100;
+        Registry.floors[floor].waitingGuests.push(vip);
+        window.Game.Audio?.publish('vip_journey', { stage: 2, floor, destination: randomFloor });
+        window.showToast?.(`VIP is leaving her room for Floor ${randomFloor}.`);
+        return true;
+    }
+    if (Registry.vipStage === 2) {
+        Registry.vipStage = 3;
+        vip.dest = 0;
+        vip.vipStage = 3;
+        vip.status = GuestStatus.ANNOYED;
+        vip.spawnTime = now - (Config.happySec * 1000) - 100;
+        Registry.floors[floor].waitingGuests.push(vip);
+        window.Game.Audio?.publish('vip_journey', { stage: 3, floor, destination: 0 });
+        window.showToast?.('VIP is departing. Get her back to Ground.');
+        return true;
+    }
+    Registry.vipStage = 4;
+    vip.vipStage = 4;
+    window.showToast?.('VIP has completed all three journeys.');
+    return false;
+};
 window.forceFirstSpawn = window.Spawner.forceFirstSpawn;
 window.runSpawnerTick = window.Spawner.runSpawnerTick;
 
@@ -181,3 +219,4 @@ window.Game = window.Game || {};
 window.Game.Spawner = window.Game.Spawner || {};
 window.Game.Spawner.forceFirstSpawn = window.forceFirstSpawn;
 window.Game.Spawner.runSpawnerTick = window.runSpawnerTick;
+window.Game.Spawner.queueVipNextJourney = window.Spawner.queueVipNextJourney;

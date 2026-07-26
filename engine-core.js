@@ -103,6 +103,12 @@ window.handleSharedData = function(encodedStr) {
 };
 
 window.pauseGame = function() {
+    if (Registry.roundCountdownActive) {
+        if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
+        Registry.roundCountdownTimer = null;
+        Registry.roundCountdownPaused = true;
+        return;
+    }
     if (!Registry.gameActive) return;
     Registry.gameActive = false;
     Registry.pauseStartTime = Date.now();
@@ -110,6 +116,11 @@ window.pauseGame = function() {
 };
 
 window.resumeGame = function() {
+    if (Registry.roundCountdownPaused) {
+        Registry.roundCountdownPaused = false;
+        if (typeof window.startRoundCountdown === 'function') window.startRoundCountdown(Math.max(0, Registry.countdownRemaining || 0));
+        return;
+    }
     if (Registry.gameActive) return;
     if (Registry.pauseStartTime > 0) {
         const duration = Date.now() - Registry.pauseStartTime;
@@ -261,6 +272,9 @@ window.createRoundState = function(round, seed, options = {}) {
         floors: Array.from({ length: definition.floors }, () => ({ waitingGuests: [] })),
         vipSpawned: false,
         vipTargetTime: 0,
+        vipStage: 0,
+        vipRoomFloor: -1,
+        vipRandomFloor: -1,
         sunsetHasHappened: false,
         sunsetTargetTime: 0,
         sunsetActive: false,
@@ -269,7 +283,10 @@ window.createRoundState = function(round, seed, options = {}) {
     };
 
     if (definition.round === 8 || definition.vipEvent === true) {
-        state.vipTargetTime = now + (window.getRandomInt(Config.vipSpawnMinSec, Config.vipSpawnMaxSec) * 1000);
+        const minVipDelay = Math.max(10, Math.floor(Config.roundTime * 0.25));
+        const maxVipDelay = Math.max(minVipDelay, Math.floor(Config.roundTime * 0.35));
+        state.vipTargetTime = now + (window.getRandomInt(minVipDelay, maxVipDelay) * 1000);
+        state.vipStage = 0;
     }
     if (definition.round === 9 || definition.rooftopEvent === true) {
         state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
@@ -301,6 +318,9 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.floors = roundState.floors;
     Registry.vipSpawned = roundState.vipSpawned;
     Registry.vipTargetTime = roundState.vipTargetTime;
+    Registry.vipStage = roundState.vipStage || 0;
+    Registry.vipRoomFloor = roundState.vipRoomFloor ?? -1;
+    Registry.vipRandomFloor = roundState.vipRandomFloor ?? -1;
     Registry.sunsetHasHappened = roundState.sunsetHasHappened;
     Registry.sunsetTargetTime = roundState.sunsetTargetTime;
     Registry.sunsetActive = roundState.sunsetActive;
@@ -314,6 +334,7 @@ window.initializeRound = function(round, options = {}) {
     if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
     Registry.roundCountdownTimer = null;
     Registry.roundCountdownActive = false;
+    Registry.roundCountdownPaused = false;
     document.getElementById('roundCountdown')?.classList.add('hidden');
     window.clearAttemptInventory();
     Registry.activeOperation = options.operation || null;

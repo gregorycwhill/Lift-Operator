@@ -45,7 +45,7 @@ const Registry = {
     manualIntervention: false,
     lastAutoDecisionTime: 0,
     roundTerminalHandled: false,
-    roundCountdownActive: false,
+    roundCountdownActive: false, roundCountdownPaused: false,
     roundCountdownTimer: null,
     roundEvaluation: null,
     pendingFailedRetry: null,
@@ -54,7 +54,7 @@ const Registry = {
     customScriptTicks: 0,
     lastLobbyRenderTime: 0,
     
-    vipSpawned: false, vipTargetTime: 0,
+    vipSpawned: false, vipTargetTime: 0, vipStage: 0, vipRoomFloor: -1, vipRandomFloor: -1,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,
     gymFloor: -1,
 

@@ -2,6 +2,15 @@
 // UI-CORE.JS : GRID GENERATION, ACTIVE LIFT RENDERING, & CANVAS MUTATIONS
 // ============================================================================
 
+window.getLiftLayoutMetrics = function() {
+    const compact = Registry.lifts.length >= 8;
+    return {
+        shaftWidth: compact ? 72 : 120,
+        liftWidth: compact ? 68 : 110,
+        baseLeft: 415
+    };
+};
+
 window.buildWorld = function() {
     const ui = GameUI();
     const world = document.getElementById('world');
@@ -9,10 +18,13 @@ window.buildWorld = function() {
     world.innerHTML = ''; 
     
     const FIXED_BOARD_HEIGHT = 600; 
+    const layout = window.getLiftLayoutMetrics();
     Registry.floorHeight = FIXED_BOARD_HEIGHT / Config.numFloors;
     
     // Update CSS Variables
     world.style.setProperty('--floor-height', `${Registry.floorHeight}px`);
+    world.style.setProperty('--shaft-width', `${layout.shaftWidth}px`);
+    world.style.setProperty('--lift-width', `${layout.liftWidth}px`);
     world.style.setProperty('--shaft-count', Registry.lifts.length);
     world.style.height = (FIXED_BOARD_HEIGHT + 40) + 'px'; 
     world.style.gridTemplateRows = `repeat(${Config.numFloors}, var(--floor-height)) 40px`;
@@ -219,7 +231,7 @@ window.buildWorld = function() {
         world.appendChild(car);
     });
     
-    world.style.width = (410 + Registry.lifts.length * 120) + 'px';
+    world.style.width = (410 + Registry.lifts.length * layout.shaftWidth) + 'px';
 
     // Pedal Power Decoration (Roof Top)
     if (Registry.stats.round === 13) {
@@ -314,11 +326,12 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     const isTurbo = lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0);
     const animSpeed = isTurbo ? '0.008s' : '0.016s';
 
-    car.style.setProperty('--lift-width', `${110}px`);
+    const layout = window.getLiftLayoutMetrics();
+    car.style.setProperty('--lift-width', `${layout.liftWidth}px`);
     car.style.setProperty('--lift-height', `${liftHeight}px`);
     car.style.setProperty('--lift-pos', `${lift.pos}px`);
     car.style.setProperty('--lift-bottom-offset', `${bottomOffset}px`);
-    car.style.setProperty('--lift-left', `${415 + index * 120}px`);
+    car.style.setProperty('--lift-left', `${layout.baseLeft + index * layout.shaftWidth}px`);
     car.style.setProperty('--lift-anim-speed', animSpeed);
 };
 
@@ -335,7 +348,8 @@ window.showLiftCapacity = function(liftId, durationMs = 1800) {
     indicator.className = 'capacity-float';
     indicator.dataset.capacityLift = String(liftId);
     indicator.textContent = `Capacity ${capacity >= 999 ? '∞' : capacity}`;
-    indicator.style.left = `${415 + liftId * 120}px`;
+    const layout = window.getLiftLayoutMetrics();
+    indicator.style.left = `${layout.baseLeft + liftId * layout.shaftWidth}px`;
     indicator.style.bottom = `${lift.pos + 96}px`;
     world.appendChild(indicator);
     setTimeout(() => indicator.remove(), durationMs);

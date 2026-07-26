@@ -22,6 +22,9 @@ playtesting.
 - Large fleets and tall buildings remain usable.
 - Telemetry and replay reports identify the real failure mode before traffic tuning begins.
 - R9 rooftop and R13 affordability evidence closes the known late-campaign playtest questions.
+- R19–R20 fit the supported viewport, modal/countdown timing is trustworthy, and late-event audio/visual state resets
+  cleanly.
+- The VIP round becomes a three-leg service challenge, and the Rooftop Party communicates its lifecycle clearly.
 
 **Gate:** A player can explain a zoning failure, reproduce it with a seed/configuration, and choose a credible next
 strategy. See `DELIVERY_PLAN.md` and `TEST_PLAN.md`.

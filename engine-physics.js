@@ -223,6 +223,7 @@ window.gameTick = function(timestamp) {
                 Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
                 window.Game.BalanceTelemetry?.recordLifeLoss(now, livesLost, g.isVip ? 'vip' : 'guest');
+                if (g.isVip) window.showToast?.(`VIP rage-quit. You lose ${livesLost} lives.`);
                 const ui = GameUI();
                 if (typeof ui.triggerDefenestration === 'function') {
                     ui.triggerDefenestration(null, floorIdx, i);
@@ -256,6 +257,7 @@ window.gameTick = function(timestamp) {
                 Registry.stats.lives -= livesLost;
                 Registry.roundStats.defenestrationsThisRound++;
                 window.Game.BalanceTelemetry?.recordLifeLoss(now, livesLost, p.isVip ? 'vip' : 'guest');
+                if (p.isVip) window.showToast?.(`VIP rage-quit. You lose ${livesLost} lives.`);
                 const ui = GameUI();
                 if (typeof ui.triggerDefenestration === 'function') {
                     const currentFloor = Math.round(lift.pos / Registry.floorHeight);
@@ -536,6 +538,8 @@ window.animationTick = function(timestamp) {
                             if (p.isSunset && exitF === Config.numFloors - 1) {
                                 p.isPartying = true;
                                 Registry.floors[exitF].waitingGuests.push(p);
+                            } else if (p.isVip && p.vipStage < 3 && typeof window.Game.Spawner?.queueVipNextJourney === 'function' && window.Game.Spawner.queueVipNextJourney(p, exitF, now)) {
+                                // The VIP's first two destinations are transfers, not completed guests.
                             } else {
                                 Registry.stats.served++;
                                 Registry.roundStats.servedThisRound++; 

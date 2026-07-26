@@ -302,8 +302,9 @@ These figures are a candidate baseline. The current implementation uses 180-seco
 ### Round 8 — VIP Security
 
 **Role in arc:** Constraint and reservation puzzle  
-**New problem:** A VIP needs an empty lift and carries a severe life penalty.  
-**Likely failure:** Automation repeatedly targets the VIP but normal guests occupy the arriving lift.  
+**New problem:** A VIP makes three journeys and carries a severe life penalty at every stage.<br>
+**Likely failure:** Automation repeatedly targets the VIP but normal guests occupy the arriving lift, or the player loses
+track of the VIP after her first trip.
 **Evidence:** The VIP remains waiting while lifts visit the floor unsuccessfully.  
 **Insight:** Some demand requires reserved capacity and explicit exclusion.
 
@@ -471,7 +472,7 @@ direct-service band for each lift.
 | 20 | Grand Hotel Network | 30 | 10 | Full combination of traffic, hazards, and scale | Master direct-service fleet architecture |
 
 The current screen renders approximately seven lifts comfortably. R14–R18 should remain usable within that limit;
-R19–R20 require a deliberate large-fleet layout or horizontal fleet scrolling before those rounds are implemented.
+R19–R20 use a compact large-fleet layout so all eight lifts remain visible on supported desktop widths.
 Every round should retain manual/hybrid, built-in automation plus loadout, and custom Workshop solutions where practical.
 
 ## 7. Hazard tuning principles

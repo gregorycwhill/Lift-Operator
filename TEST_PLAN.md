@@ -21,11 +21,23 @@ The release is green only when the following evidence is complete:
   the normal campaign.
 - A pushed release commit, generated artifacts, documentation snapshot, seed pack, and test report are available.
 
+## Latest playtest remediation acceptance
+
+- [ ] R19 and R20 fit the supported desktop viewport with eight lifts visible and readable.
+- [ ] The countdown skip control is icon-only, keyboard/touch accessible, and starts only from the countdown control.
+- [ ] Round 2 hides the Supply Closet and does not prompt about spending credits; eligible later rounds retain the prompt.
+- [ ] Workshop pauses both active gameplay and pre-round countdowns, including scheduled events and power-up timing.
+- [ ] Rooftop start/end toasts appear, disco lighting is visible, and reset/retry cannot leave rooftop music playing.
+- [ ] VIP arrival begins from G after a seeded delay, visits a seeded random non-G floor after her room, and exits via G.
+- [ ] A VIP rage-quit on any of the three legs costs exactly 10 lives and ends the event.
+
 ## Current evidence state
 
 **Implementation baseline:** `872b8f8` — `Prepare economy and audio continuity playtest build` (25 July 2026).  
-**Latest full automated gate:** `npm.cmd test` passed with 96 Playwright tests, plus syntax, documentation, config,
-balance, economy, report, UTF-8, unit, mechanics, and integration checks.  
+**Latest component automated gate:** lifecycle 73/73, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
+documentation, config, balance, economy, report, and UTF-8 checks all passed. The aggregate `npm.cmd test` reached
+browser test 80/102 without a failure before the environment's 10-minute command limit; the remaining browser suites
+are covered by the completed component runs above.
 **Release state:** Playtest-ready, not promoted. The remaining gate is human/device acceptance and evidence-led tuning,
 not a claim that every release criterion below has passed.
 

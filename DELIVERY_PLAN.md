@@ -14,6 +14,32 @@ and testable campaign slice. This plan does not add transfers, a G hub, new haza
 **Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
 only where evidence supports it, and a release decision with a recorded test/device/seed pack.
 
+## Current playtest remediation slice
+
+**Status:** Implemented; awaiting human playtest following the latest feedback.<br>
+**Scope:** Responsive R19–R20 presentation, countdown and modal timing, Supply Closet comprehension, Rooftop Party
+feedback/audio/lighting, and the three-leg VIP journey.<br>
+**Design authority:** `ROADMAP.md` and `Game Play Map.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Agreed behaviour
+
+- R19 and R20 use a compact eight-lift layout that fits the supported desktop game area without horizontal scrolling.
+- The countdown start-now control is an icon-only `×` affordance with an accessible label and timer-area hit target.
+- The unused-credit confirmation is shown only from Round 3 onward, when the Supply Closet is available.
+- Opening the Workshop pauses active rounds and countdowns; closing it resumes without consuming elapsed game time.
+- Rooftop Party start/end states announce themselves with toasts, stop rooftop audio on release/reset, and use colourful
+  disco lighting with reduced-motion support.
+- One VIP makes three seeded journeys: `G → room → random non-G floor → G`. Rage-quitting on any leg costs 10 lives
+  and ends the VIP event. The first arrival is delayed into active round traffic rather than occurring immediately.
+
+### Exit criteria
+
+- R19/R20, Round 2, countdown, Workshop, Rooftop Party, and VIP regression tests pass.
+- Audio reset and rooftop lifecycle tests confirm no prior-round rooftop track survives a restart.
+- Human playtest confirms the compact layout is readable, the VIP creates three meaningful service opportunities, and the
+  Rooftop Party presentation is clear without overwhelming the board.
+
 ## Next implementation slice — automation-native Service Zoning
 
 **Status:** Planned implementation slice following the current zoning playtest feedback.<br>

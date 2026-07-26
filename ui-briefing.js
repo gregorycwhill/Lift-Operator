@@ -48,7 +48,7 @@ window.showRoundModal = function(round) {
     else if (round === 5) { title.innerText = `Round 5: Democracy (${rank})`; instructions.innerText = "Three lifts! 'Voting' automations added. They act as express trains to the floor with the most votes."; }
     else if (round === 6) { title.innerText = `Round 6: The Wild Card (${rank})`; instructions.innerText = "WARNING: Management added 5 more floors. Elevators now have a chance to randomly jam in the shaft."; }
     else if (round === 7) { title.innerText = `Round 7: Check-out Rush (${rank})`; instructions.innerText = "Check-out time! Half the hotel is trying to leave right now and head to the Ground Floor."; }
-    else if (round === 8) { title.innerText = `Round 8: VIP Arrival (${rank})`; instructions.innerText = "A VIP demands an entirely empty lift. If they are left waiting, it will cost us 10 lives. Watch for the Star!"; }
+    else if (round === 8) { title.innerText = `Round 8: VIP Arrival (${rank})`; instructions.innerText = "A VIP makes three journeys: Ground to her room, on to a random floor, then back to Ground. If she rage-quits at any point, you lose 10 lives. Watch for the Star!"; }
     else if (round === 9) { title.innerText = `Round 9: Happy Hour & Hazards (${rank})`; instructions.innerText = "The Rooftop bar opens! Watch out for Farts. Stinky lifts force evacuations and block boarding. Adapt!"; }
     else if (round === 10) { title.innerText = `Round 10: Sandbox Unlocked (${rank})`; instructions.innerText = "You can now write Custom Scripts in the Automation Workshop to handle the intense passenger loads!"; }
     else if (round === 11) { title.innerText = `Round 11: The Gym Challenge (${rank})`; instructions.innerText = "A new Gym has opened! Gym Bros are double-wide and immune to stink, but if 3 of them get in a lift, the smell will drive everyone else out. Watch out!"; }
@@ -63,7 +63,7 @@ window.showRoundModal = function(round) {
         btn.parentNode.insertBefore(shopDiv, btn);
     }
     
-    const hasShopUnlocks = typeof PowerUps !== 'undefined' && Object.values(Config.GAME_DATA.shopUnlocks || {})
+    const hasShopUnlocks = round >= 3 && typeof PowerUps !== 'undefined' && Object.values(Config.GAME_DATA.shopUnlocks || {})
         .some(tiers => tiers.some(unlockRound => unlockRound <= round));
     if (hasShopUnlocks) {
         if (shopDiv) shopDiv.style.display = 'block';

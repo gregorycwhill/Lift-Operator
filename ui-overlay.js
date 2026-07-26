@@ -32,6 +32,7 @@ window.startRoundCountdown = function(seconds = 5) {
     if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
     Registry.gameActive = false;
     Registry.roundCountdownActive = true;
+    Registry.roundCountdownPaused = false;
     const countdown = document.getElementById('roundCountdown');
     const value = document.getElementById('roundCountdownValue');
     let remaining = Math.max(0, seconds);
@@ -237,7 +238,8 @@ window.initializeUI = function() {
     bind("startRoundBtn", () => {
         const hasUnspentCredits = Number(Registry.points) > 0;
         const hasPurchases = typeof PowerUps !== 'undefined' && PowerUps.cart.length > 0;
-        if (hasUnspentCredits && !hasPurchases && !Registry.autoPilotActive) {
+        const supplyClosetAvailable = Config.debugMode || Registry.stats.round >= 3;
+        if (supplyClosetAvailable && hasUnspentCredits && !hasPurchases && !Registry.autoPilotActive) {
             const message = document.getElementById('roundStartConfirmText');
             if (message) message.textContent = `You have ${Registry.points} unused Credits. Start this round without spending any?`;
             window.openModalExclusive('roundStartConfirmOverlay');

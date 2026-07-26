@@ -326,11 +326,11 @@ test('checkout commits a cart only once', async ({ page }) => {
     expect(result.inventoryCount).toBe(1);
 });
 
-test('credits carry forward and empty-cart starts request confirmation', async ({ page }) => {
+test('credits carry forward and eligible empty-cart starts request confirmation', async ({ page }) => {
     const result = await page.evaluate(() => {
         Registry.points = 12;
         PowerUps.cart = [];
-        initializeRound(2, { showBriefing: true });
+        initializeRound(3, { showBriefing: true });
         document.getElementById('startRoundBtn').click();
         return {
             carried: Registry.points,
@@ -1190,6 +1190,93 @@ test('countdown start-now control begins the round immediately', async ({ page }
     expect(result.countdown).toBe(false);
     expect(result.active).toBe(true);
     expect(result.timer).toBe(null);
+});
+
+test('late-round fleet layout fits the game area and countdown skip is icon-only', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(19, { showBriefing: false });
+        buildWorld();
+        const world = document.getElementById('world');
+        const skip = document.getElementById('roundCountdownSkip');
+        return {
+            worldWidth: world.getBoundingClientRect().width,
+            gameAreaWidth: document.getElementById('game-area').clientWidth,
+            liftCount: Registry.lifts.length,
+            shaftWidth: getComputedStyle(world).getPropertyValue('--shaft-width').trim(),
+            skipText: skip.textContent.trim(),
+            skipLabel: skip.getAttribute('aria-label')
+        };
+    });
+    expect(result.liftCount).toBe(8);
+    expect(result.worldWidth).toBeLessThanOrEqual(result.gameAreaWidth);
+    expect(result.shaftWidth).toBe('72px');
+    expect(result.skipText).toBe('×');
+    expect(result.skipLabel).toBe('Start the round now');
+});
+
+test('Round 2 hides the Supply Closet and does not show the empty-cart credit reminder', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.points = 10;
+        skipToRound(2, { showBriefing: false });
+        showRoundModal(2);
+        document.getElementById('startRoundBtn').click();
+        return {
+            shopDisplay: document.getElementById('shopContainer')?.style.display,
+            confirmationDisplay: document.getElementById('roundStartConfirmOverlay')?.style.display,
+            roundModalDisplay: document.getElementById('roundModalOverlay')?.style.display
+        };
+    });
+    expect(result.shopDisplay).toBe('none');
+    expect(result.confirmationDisplay).not.toBe('flex');
+    expect(result.roundModalDisplay).toBe('none');
+});
+
+test('Workshop pauses and resumes an active countdown without consuming time', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(2, { showBriefing: false });
+        startRoundCountdown(5);
+        openWorkshopModal();
+        const paused = { active: Registry.roundCountdownActive, paused: Registry.roundCountdownPaused, remaining: Registry.countdownRemaining, timer: Registry.roundCountdownTimer };
+        openWorkshopModal();
+        const resumed = { active: Registry.roundCountdownActive, paused: Registry.roundCountdownPaused, remaining: Registry.countdownRemaining, timer: Registry.roundCountdownTimer !== null };
+        if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
+        Registry.roundCountdownTimer = null;
+        return { paused, resumed };
+    });
+    expect(result.paused).toEqual({ active: true, paused: true, remaining: 5, timer: null });
+    expect(result.resumed).toEqual({ active: true, paused: false, remaining: 5, timer: true });
+});
+
+test('VIP follows three seeded journeys from Ground to room to random floor and back', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(8, { showBriefing: false });
+        Registry.vipTargetTime = 1;
+        Registry.vipSpawned = false;
+        Registry.vipStage = 0;
+        Registry.vipRoomFloor = -1;
+        Registry.vipRandomFloor = -1;
+        runSpawnerTick(2);
+        const vip = Registry.floors[0].waitingGuests.find(guest => guest.isVip);
+        const first = { floor: 0, destination: vip?.dest, stage: Registry.vipStage };
+        const room = vip.dest;
+        Spawner.queueVipNextJourney(vip, room, 1000);
+        const second = { floor: room, destination: vip.dest, stage: Registry.vipStage, randomFloor: Registry.vipRandomFloor };
+        const randomFloor = vip.dest;
+        Spawner.queueVipNextJourney(vip, randomFloor, 2000);
+        const third = { floor: randomFloor, destination: vip.dest, stage: Registry.vipStage };
+        return { first, second, third, penalty: Config.vipPenalty };
+    });
+    expect(result.first.floor).toBe(0);
+    expect(result.first.destination).toBeGreaterThan(0);
+    expect(result.first.stage).toBe(1);
+    expect(result.second.floor).toBe(result.first.destination);
+    expect(result.second.destination).toBeGreaterThan(0);
+    expect(result.second.destination).not.toBe(result.second.floor);
+    expect(result.second.stage).toBe(2);
+    expect(result.third.floor).toBe(result.second.destination);
+    expect(result.third.destination).toBe(0);
+    expect(result.third.stage).toBe(3);
+    expect(result.penalty).toBe(10);
 });
 
 test('automation teaching cues extend to custom and shared script discovery', async ({ page }) => {
