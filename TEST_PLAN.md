@@ -2,7 +2,7 @@
 
 **Status:** Active acceptance plan for the `0.3.0-network-campaign-preview` playtest release  
 **Owner class:** Engineering and playtest  
-**Last reviewed:** 25 July 2026  
+**Last reviewed:** 26 July 2026
 **Testing principles:** `TESTING_STRATEGY.md`
 **Product scope:** `ROADMAP.md` and the product design documents
 
@@ -31,9 +31,67 @@ The release is green only when the following evidence is complete:
 - [ ] VIP arrival begins from G after a seeded delay, visits a seeded random non-G floor after her room, and exits via G.
 - [ ] A VIP rage-quit on any of the three legs costs exactly 10 lives and ends the event.
 
+## Planned acceptance — swappable Automation Dock controller
+
+### Shared catalog and assignment contract
+
+- [ ] Under identical progression/player/share state, the shared catalog returns the same legal policy set and labels
+  used by the legacy controller, including Manual, built-ins, custom scripts, shared scripts, and resolved zone bands.
+- [ ] Locked policies, another player's private scripts, deleted scripts, malformed identifiers, and stale selections
+  cannot be assigned through either variant.
+- [ ] Assignment service validates every requested lift index and makes no change for an empty/invalid request.
+- [ ] Batch assignment invokes the existing engine API in stable lift-index order and produces the same lift state as
+  assigning each lift with the legacy controller.
+- [ ] Manual, unzoned, and zoned policies preserve their current service-policy reset/application semantics.
+
+### Dock interaction
+
+- [x] Selecting a policy changes only dock selection; selecting lifts changes only target selection; neither action
+  changes lift automation.
+- [x] Apply changes every selected lift exactly once, clears target selection, retains the selected policy, and reports
+  the count changed.
+- [ ] Empty Apply and invalid Apply leave all lift automation unchanged and give accessible feedback.
+- [ ] Lift status accurately updates after dock assignment, legacy assignment, manual assignment, reset, retry, round
+  initialization, and imported/deleted-script recovery.
+- [ ] The fixed pinned set contains Manual plus currently unlocked built-ins, is keyboard/touch operable, and changes
+  correctly as progression unlocks new built-ins.
+- [ ] No player-managed pin controls or persistent pin state are exposed in the first prototype.
+
+### Library and discovery
+
+- [ ] The library overlay groups Built-ins, My Automations, and Shared with Me; it supports search across the complete
+  currently legal catalog.
+- [x] Selecting an entry closes or returns from the overlay without assigning it until Apply.
+- [ ] Long custom/shared names, authors, zone labels, empty groups, and a collection larger than the pinned strip remain
+  readable and operable.
+- [ ] First-use teaching cues work through the active adapter, acknowledge on successful assignment, and do not leak to
+  hidden legacy controls.
+
+### Variant lifecycle and regression
+
+- [x] Default production controller is `legacy`; Debug can select `legacy` or `dock` on GitHub Pages without a build.
+- [ ] Variant switching while idle, in countdown, and mid-round preserves round state, lift policies, timers, and audio.
+- [x] Switching or reset/retry destroys listeners, selected targets, overlays, and visual cues from the outgoing variant.
+- [ ] Floor targeting, power-up targeting, Workshop pause, modal toggles, and lift status rendering remain independent of
+  the active controller.
+- [ ] Render checks cover one, two, five, and eight lifts at supported desktop widths; the compact R19/R20 layout must
+  remain fully visible.
+
+### Human comparison protocol
+
+- [ ] On the same seed/loadout/round, a playtester can assign one policy to one lift and to multiple lifts faster or
+  more confidently with the dock than legacy, while accurately describing what will happen before Apply.
+- [ ] Record accidental assignments, missed Apply affordances, library-discovery failures, policy-label confusion,
+  controller-switching issues, and preference between variants in `docs/archive/PLAYTEST_ARCHIVE.md`.
+- [ ] Keep legacy as the default until repeated playtests show the dock is at least as reliable and more comprehensible
+  for both early rounds and R19/R20 fleets.
+
 ## Current evidence state
 
-**Implementation baseline:** `872b8f8` — `Prepare economy and audio continuity playtest build` (25 July 2026).  
+The Automation Dock prototype is implemented in the current working tree. Its automated acceptance subset is green;
+human usability comparison, responsive visual inspection, and full-device playtesting remain open.
+
+**Implementation baseline:** `f9c988c` — `Address latest playtest feedback` (26 July 2026).
 **Latest component automated gate:** lifecycle 73/73, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
 documentation, config, balance, economy, report, and UTF-8 checks all passed. The aggregate `npm.cmd test` reached
 browser test 80/102 without a failure before the environment's 10-minute command limit; the remaining browser suites
@@ -45,9 +103,10 @@ Automated implementation evidence exists for the zoning foundation, diagnostics,
 follow-up, and regression coverage. The unchecked items below are the remaining release-acceptance evidence or areas
 that need an explicit evidence record before promotion.
 
-## Planned acceptance — automation-native Service Zoning
+## Implemented coverage — automation-native Service Zoning
 
-The following matrix applies to the next implementation slice described in `DELIVERY_PLAN.md`.
+The following matrix records the production coverage expected of the implemented zoning slice. Remaining unchecked
+items are release-acceptance evidence rather than a statement that the feature is still unplanned.
 
 ### Policy and Blockly
 

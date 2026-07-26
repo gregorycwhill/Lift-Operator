@@ -100,48 +100,20 @@ window.buildWorld = function() {
     autoLobby.className = 'lobby';
     autoLobby.style.border = 'none';
     controlRow.appendChild(autoLobby);
-    
+
+    if (window.Game.AutomationController?.getVariant() === 'dock') {
+        window.Game.AutomationController.renderDock({ autoLobby, controlRow });
+        world.appendChild(controlRow);
+    } else {
+    window.Game.AutomationController?.renderLegacy({ controlRow });
+
     const automationUnlocks = Config.GAME_DATA.automationUnlocks;
     const reachedRound = Math.max(Registry.highestUnlockedRound || 1, Registry.stats.round || 1);
     const isAutoUnlocked = Config.debugMode || reachedRound >= automationUnlocks.sweep;
-    const isPriorityUnlocked = Config.debugMode || reachedRound >= automationUnlocks.priority;
-    const isVotingUnlocked = Config.debugMode || reachedRound >= automationUnlocks.voting;
-    const areCustomScriptsUnlocked = Config.debugMode || reachedRound >= automationUnlocks.custom;
-    const isZoningUnlocked = Config.debugMode || reachedRound >= 14;
-    
-    const builtIns = [];
-    const myScripts = [];
-    const sharedScripts = [];
-    let currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
-
-    const VM = window.Game.Automation || (typeof AutomationVM !== 'undefined' ? AutomationVM : (typeof AutomationWorkshop !== 'undefined' ? AutomationWorkshop : null));
-
-    if (VM && VM.scripts) {
-        VM.scripts.forEach(script => {
-            if (script.author === "System") {
-                let engineVal = 'manual';
-                let isUnlocked = false;
-                
-                if (script.id === 'sys_sweep') { engineVal = 'sweep'; isUnlocked = isAutoUnlocked; }
-                else if (script.id === 'sys_priority') { engineVal = 'priority-sweep'; isUnlocked = isPriorityUnlocked; }
-                else if (script.id === 'sys_voting') { engineVal = 'voting'; isUnlocked = isVotingUnlocked; }
-                else if (script.id === 'sys_weighted') { engineVal = 'weighted-voting'; isUnlocked = isVotingUnlocked; }
-                else if (script.id === 'sys_zoned_low') { engineVal = 'zoned-low'; isUnlocked = isZoningUnlocked; }
-                else if (script.id === 'sys_zoned_high') { engineVal = 'zoned-high'; isUnlocked = isZoningUnlocked; }
-
-                if (isUnlocked) {
-                    const zoneLabel = script.serviceZone ? ` [${VM.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
-                    builtIns.push({ value: engineVal, name: `${script.name}${zoneLabel}` });
-                }
-            } else if (script.author === currentPlayer && areCustomScriptsUnlocked && (!script.serviceZone || isZoningUnlocked)) {
-                const zoneLabel = script.serviceZone ? ` [${VM.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
-                myScripts.push({ value: `custom_${script.id}`, name: `${script.name}${zoneLabel}` });
-            } else if (areCustomScriptsUnlocked && (!script.serviceZone || isZoningUnlocked)) {
-                const zoneLabel = script.serviceZone ? ` [${VM.getServiceZoneLabel?.(script.serviceZone, Config.numFloors) || 'zoned'}]` : '';
-                sharedScripts.push({ value: `custom_${script.id}`, name: `${script.name}${zoneLabel} (by ${script.author})` });
-            }
-        });
-    }
+    const catalog = window.Game.AutomationController?.getCatalog?.() || [{ value: 'manual', name: 'Manual', group: 'Built-in' }];
+    const builtIns = catalog.filter(item => item.group === 'Built-in' && item.value !== 'manual');
+    const myScripts = catalog.filter(item => item.group === 'My Automations');
+    const sharedScripts = catalog.filter(item => item.group === 'Shared with Me');
 
     Registry.lifts.forEach((lift, index) => {
         const shaftContainer = document.createElement('div');
@@ -186,9 +158,12 @@ window.buildWorld = function() {
         addGroup('Shared with Me', sharedScripts);
 
         select.addEventListener('change', () => {
-            const engine = GameEngine();
-            if (typeof engine.setLiftAutomation === 'function') engine.setLiftAutomation(index, select.value);
-            else setLiftAutomation(index, select.value);
+            if (window.Game.AutomationController?.assign) window.Game.AutomationController.assign(select.value, [index]);
+            else {
+                const engine = GameEngine();
+                if (typeof engine.setLiftAutomation === 'function') engine.setLiftAutomation(index, select.value);
+                else setLiftAutomation(index, select.value);
+            }
         });
 
         shaftContainer.appendChild(select);
@@ -205,6 +180,7 @@ window.buildWorld = function() {
             }
         });
     }, 0);
+    }
 
     Registry.lifts.forEach((lift, index) => {
         const car = document.createElement('div');
@@ -285,9 +261,12 @@ window.updateLiftAutomationUI = function(liftIndex, mode) {
         if (mode.startsWith('custom_')) car.classList.add('custom-mode');
     }
 
-    const automationSelects = document.querySelectorAll('.shaft select');
+    const automationSelects = document.querySelectorAll('.floor[data-automation-controller="legacy"] .shaft select');
     if (automationSelects && automationSelects[liftIndex]) {
         automationSelects[liftIndex].value = mode;
+    }
+    if (window.Game.AutomationController?.getVariant() === 'dock' && typeof window.buildWorld === 'function') {
+        window.buildWorld();
     }
 };
 
@@ -369,7 +348,7 @@ window.applyAutomationTeachingCue = function() {
 
     const storageKey = `liftOp_teaching_automation_${cueId}`;
     if (window.Game.Storage.get(storageKey, '0') === '1') return null;
-    const selects = [...document.querySelectorAll('.shaft select:not(:disabled)')];
+    const selects = [...document.querySelectorAll('.floor[data-automation-controller="legacy"] .shaft select:not(:disabled)')];
     selects.forEach(select => {
         select.classList.add('automation-teaching-cue');
         select.dataset.teachingCue = cueId;

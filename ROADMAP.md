@@ -3,7 +3,7 @@
 **Purpose:** Product outcomes and sequence. This is not an implementation checklist.
 **Status:** Active product roadmap  
 **Owner class:** Product  
-**Last reviewed:** 25 July 2026  
+**Last reviewed:** 26 July 2026
 **Current delivery:** `DELIVERY_PLAN.md` — `0.3.0-network-campaign-preview` playtest release
 
 ## Product north star
@@ -33,6 +33,13 @@ strategy. See `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 scalable `Zoned Low` and `Zoned High` built-ins, while all existing built-ins remain available. Players can copy a
 policy, adjust its Service Zone block, save a custom variant, and deploy it through the normal in-game automation menu.
 The Workshop does not select individual lifts for zoning.
+
+**Accepted product direction:** Automation assignment will move from per-lift HTML select menus to an in-world
+Automation Dock in the basement/lobby space. The player selects one policy, selects one or more target lifts, and
+explicitly applies it as a batch. The dock provides pinned shortcuts; a separate library overlay holds the growing
+custom and shared collection. This is a desktop campaign interface and remains outside the later phone-first edition.
+The existing selector controller stays available as the stable playtest variant while new controller variants are
+explored through Debug on GitHub Pages.
 
 ## Next — Tune the extended campaign
 

@@ -4,7 +4,7 @@
 **Campaign scope:** 20 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20  
 **Status:** Design candidate for iterative playtesting; not a statement of current implementation  
 **Owner class:** Product and design  
-**Last reviewed:** 25 July 2026  
+**Last reviewed:** 26 July 2026
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
 **Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
@@ -56,6 +56,11 @@ numbers live in `design/game-balance.v1.json`; current delivery evidence belongs
 Every attempt begins with a visible five-second countdown after the briefing closes. The round timer and guest spawning remain frozen, while lift automation controls are usable. This preserves arcade pressure while giving the player a short orientation and role-assignment window.
 
 Teaching cues are transient rather than permanent HUD elements. When built-in automation first becomes available, its controls pulse in a friendly, colourful way. The same cue system must support first-use discovery of player-authored custom automation and automations shared with the player. Interaction acknowledges a cue so it does not repeatedly nag an established player.
+
+Automation deployment follows a deliberate two-step pattern: choose a policy, select the lift or lifts that should use
+it, then apply. This keeps fleet role changes visible and reversible during the countdown, while preventing an
+accidental click from silently changing a lift's operating policy. Each lift continues to display its assigned policy
+as compact status information.
 
 Lift capacity appears as a floating effect above each lift during the countdown, then disappears. It reappears whenever effective capacity changes, including modifier activation and expiry. Normal play does not carry a permanent capacity label.
 

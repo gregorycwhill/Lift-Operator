@@ -1057,6 +1057,77 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
     expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
 });
 
+test('Automation Dock is an explicit multi-lift apply workflow behind Debug', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        const statuses = [...document.querySelectorAll('.automation-status')];
+        const before = Registry.lifts.map(lift => lift.automation);
+        document.querySelector('.automation-policy-btn[data-policy="sweep"]')?.click();
+        statuses.slice(0, 2).forEach(status => status.click());
+        const afterSelection = Registry.lifts.map(lift => lift.automation);
+        document.querySelector('.automation-dock-actions .btn-green')?.click();
+        return {
+            variant: Game.AutomationController.getVariant(),
+            statusCount: statuses.length,
+            before,
+            afterSelection,
+            afterApply: Registry.lifts.map(lift => lift.automation),
+            selectedAfterApply: document.querySelectorAll('.automation-status.selected').length,
+            retainedPolicy: document.querySelector('.automation-dock-policy')?.textContent || ''
+        };
+    });
+    expect(result.variant).toBe('dock');
+    expect(result.statusCount).toBeGreaterThan(1);
+    expect(result.afterSelection).toEqual(result.before);
+    expect(result.afterApply.slice(0, 2)).toEqual(['sweep', 'sweep']);
+    expect(result.selectedAfterApply).toBe(0);
+    expect(result.retainedPolicy).toContain('Sweep');
+});
+
+test('Automation Dock library selects a policy without assigning it', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        const before = Registry.lifts.map(lift => lift.automation);
+        document.querySelector('.automation-dock-actions .btn-gray')?.click();
+        const libraryOpen = Boolean(document.querySelector('.automation-library-overlay'));
+        const sweep = [...document.querySelectorAll('.automation-library-item')].find(button => button.textContent.includes('Sweep'));
+        sweep?.click();
+        return { before, after: Registry.lifts.map(lift => lift.automation), libraryOpen, selected: document.querySelector('.automation-dock-policy')?.textContent || '' };
+    });
+    expect(result.libraryOpen).toBe(true);
+    expect(result.after).toEqual(result.before);
+    expect(result.selected).toContain('Sweep');
+});
+
+test('switching Automation Dock variants removes stale controller UI and restores legacy selectors', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        buildWorld();
+        Game.AutomationController.setVariant('dock');
+        const dock = Boolean(document.querySelector('[data-automation-controller="dock"]'));
+        document.querySelector('.automation-dock-actions .btn-gray')?.click();
+        Game.AutomationController.setVariant('legacy');
+        return { dock, libraryAfterSwitch: Boolean(document.querySelector('.automation-library-overlay')), legacy: Boolean(document.querySelector('[data-automation-controller="legacy"]')), selects: document.querySelectorAll('[data-automation-controller="legacy"] select').length };
+    });
+    expect(result.dock).toBe(true);
+    expect(result.libraryAfterSwitch).toBe(false);
+    expect(result.legacy).toBe(true);
+    expect(result.selects).toBeGreaterThan(0);
+});
+
 test('Debug Warp exposes every configured round', async ({ page }) => {
     const rounds = await page.evaluate(() => {
         Config.debugMode = true;

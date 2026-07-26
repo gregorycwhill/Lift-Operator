@@ -3,7 +3,7 @@
 **Purpose:** Define the educational experience, current implementation boundary, target execution model, and reliability requirements for player automation.
 **Document status:** Active feature specification; implementation status is tracked below.  
 **Owner class:** Product and engineering  
-**Last reviewed:** 25 July 2026
+**Last reviewed:** 26 July 2026
 
 ## 1. Player purpose
 
@@ -53,7 +53,7 @@ Custom automation is the strategic culmination of the game, not an unrestricted 
 
 Service Zoning is a saved policy capability, not a separate lift configuration workflow. The player creates or copies
 an automation, adds a Service Zone block, saves it, and assigns the resulting automation to one or more lifts through
-the normal in-game automation menu.
+the normal in-game automation controller.
 
 ### Built-in policies
 
@@ -84,6 +84,31 @@ Passengers already onboard are allowed to complete their destinations before the
 
 Zoning metadata must survive save, copy, import, and blueprint sharing. Existing scripts without zone metadata migrate
 as unzoned policies.
+
+## 2.2 In-game Automation Dock
+
+The in-game controller is the deployment surface for saved policies, not a second Workshop. It must make a growing
+library of built-in, player-authored, and shared automations usable across large fleets without altering policy content.
+
+- The player chooses one automation in a horizontal basement/lobby dock.
+- The player then selects one or more lift targets and uses an explicit Apply action; no lift changes policy merely
+  because it was selected.
+- Lift controls show their current assignment as status, including Manual and resolved Service Zone labels. They do not
+  expose independent policy pickers.
+- A pinned section keeps Manual plus currently unlocked built-in policies visible by default. The complete custom/shared
+  collection is opened in a separate searchable library overlay.
+- Player-managed pinning is deferred until the controller interaction itself has been accepted through playtesting;
+  the first prototype has no pin persistence or pin-editing controls.
+- Manual is a first-class assignable policy and clears automation/policy constraints exactly as it does today.
+- Unlock, ownership, shared-script, policy-version, and Service Zone rules remain authoritative regardless of which
+  controller variant renders them.
+
+### Variant and compatibility policy
+
+Controller variants are presentation adapters over one assignment contract. The legacy select-menu controller remains
+the production default, while the implemented Automation Dock prototype is selected through Debug-only configuration
+on GitHub Pages. Variants must not duplicate policy discovery, unlock logic, assignment rules, or persistent state.
+Removing an unaccepted variant must therefore be a UI-only change. Human playtest acceptance of the Dock is still open.
 
 ## 3. Workshop unlock
 

@@ -3,7 +3,7 @@
 **Document role:** Product vision and design intent  
 **Status:** Active product design reference  
 **Owner class:** Product and design  
-**Last reviewed:** 25 July 2026  
+**Last reviewed:** 26 July 2026
 **Current phase:** Playable campaign entering structured playtesting  
 **Campaign scope:** 20 rounds; R14–R20 traffic tuning remains subject to playtest evidence.
 
@@ -39,6 +39,14 @@ Automation reduces repetitive workload but never replaces the operator. From Rou
 The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. A built-in automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
 
 Player-authored custom automation is the deliberate exception. A custom policy may earn a Hands-Free achievement when it completes an eligible advanced round without manual intervention. This rewards the player for translating operational insight into working logic; built-in automations never qualify for Hands-Free.
+
+### Automation deployment experience
+
+Selecting a policy is an operational decision, not form filling. The player uses an in-world basement Automation Dock
+to choose a policy, select one or more lifts, and explicitly deploy it. Lift-side controls report the current assignment
+rather than presenting a dense menu per lift. Built-ins and a compact pinned set remain immediately accessible; the
+complete custom and shared collection belongs in a separate library. This preserves fast tactical reassignment while
+scaling from early single lifts to late-game fleets.
 
 ## 3. Player experience arc
 

@@ -220,6 +220,27 @@ body {
 }
 .shaft:hover { background: #e0e6e9; }
 
+/* Swappable automation controller prototype. The legacy selectors remain the default. */
+.automation-dock-host { display: block; overflow: visible; padding: 2px 4px; }
+.automation-dock { width: 100%; box-sizing: border-box; font-size: 10px; line-height: 1.1; }
+.automation-dock-title { font-weight: 700; color: #34495e; }
+.automation-dock-policy { display: block; color: #53616d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.automation-dock-pinned, .automation-dock-actions { display: flex; gap: 3px; align-items: center; }
+.automation-dock-pinned { overflow-x: auto; padding: 2px 0; }
+.automation-policy-btn { border: 1px solid #95a5a6; background: #fff; border-radius: 4px; padding: 2px 4px; white-space: nowrap; font-size: 10px; cursor: pointer; }
+.automation-policy-btn.selected, .automation-status.selected { background: #3498db; color: #fff; border-color: #21618c; }
+.automation-dock-actions .btn { padding: 2px 5px; font-size: 10px; }
+.automation-status-row { display: contents; }
+.automation-status { width: 100%; height: 36px; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.automation-library-overlay { position: fixed; inset: 0; z-index: 1200; background: rgba(0,0,0,.35); display: flex; align-items: flex-end; justify-content: flex-start; padding: 12px; box-sizing: border-box; }
+.automation-library { width: min(380px, calc(100vw - 24px)); max-height: 70vh; overflow: auto; background: #fff; border: 2px solid #34495e; border-radius: 8px; padding: 10px; box-shadow: 0 8px 30px rgba(0,0,0,.35); }
+.automation-library-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.automation-library-search { width: 100%; box-sizing: border-box; margin-bottom: 8px; padding: 6px; }
+.automation-library-list { display: grid; gap: 4px; }
+.automation-library-item { display: flex; justify-content: space-between; text-align: left; gap: 8px; padding: 7px; border: 1px solid #ccd4da; border-radius: 4px; background: #f8fafb; cursor: pointer; }
+.automation-library-item small { color: #53616d; }
+@media (max-width: 700px) { .automation-dock-host { width: var(--lobby-width); } .automation-policy-btn { font-size: 9px; } }
+
 /* Entities */
 .lift { 
     position: absolute; 

@@ -99,6 +99,22 @@ window.renderDebugMenu = function() {
     }
 
     container.appendChild(quickGroup);
+
+    if (Config.debugMode && window.Game.AutomationController) {
+        const controllerGroup = document.createElement('div');
+        controllerGroup.className = 'debug-row automation-controller-debug';
+        const controllerLabel = document.createElement('span');
+        controllerLabel.textContent = 'Automation controller';
+        const controllerSelect = document.createElement('select');
+        controllerSelect.id = 'automationControllerVariant';
+        Object.entries(window.Game.AutomationController.variants).forEach(([value, label]) => {
+            const option = document.createElement('option'); option.value = value; option.textContent = label; controllerSelect.appendChild(option);
+        });
+        controllerSelect.value = window.Game.AutomationController.getVariant();
+        controllerSelect.addEventListener('change', () => window.Game.AutomationController.setVariant(controllerSelect.value));
+        controllerGroup.append(controllerLabel, controllerSelect);
+        container.appendChild(controllerGroup);
+    }
     
     // Telemetry Console Section
     const consoleHeader = document.createElement('h3');

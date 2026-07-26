@@ -3,14 +3,16 @@
 **Status:** Active playtest release  
 **Release target:** `0.3.0-network-campaign-preview`  
 **Owner class:** Product and engineering  
-**Last reviewed:** 25 July 2026  
+**Last reviewed:** 26 July 2026
 **Scope boundary:** Promote the implemented R14–R20 direct-service zoning foundation into a diagnosable, playable,
 and testable campaign slice. This plan does not add transfers, a G hub, new hazards, or new power-ups.
 
 ## Current state
 
-**Implementation:** Delivered in playtest build `872b8f8` (25 July 2026).  
-**Automated baseline:** The latest full gate passed with 96 Playwright tests; see `TEST_PLAN.md`.  
+**Implementation:** Current `master` baseline `f9c988c` (26 July 2026), with the Automation Dock prototype implemented
+in the working tree; Service Zoning and the latest playtest remediation are implemented.
+**Automated baseline:** Component gates are recorded in `TEST_PLAN.md`; the aggregate browser command is limited by the
+execution environment rather than an observed test failure.
 **Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
 only where evidence supports it, and a release decision with a recorded test/device/seed pack.
 
@@ -40,9 +42,93 @@ feedback/audio/lighting, and the three-leg VIP journey.<br>
 - Human playtest confirms the compact layout is readable, the VIP creates three meaningful service opportunities, and the
   Rooftop Party presentation is clear without overwhelming the board.
 
-## Next implementation slice — automation-native Service Zoning
+## Next implementation slice — swappable Automation Dock controller
 
-**Status:** Planned implementation slice following the current zoning playtest feedback.<br>
+**Status:** Implemented prototype; ready for Debug-mode human playtesting. Legacy controller remains the normal
+playtest default.<br>
+**Design authority:** `ROADMAP.md`, `Lift-Operator_GDD.md`, `Game Play Map.md`, and `Automation_Workshop_Spec.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Objective
+
+Replace the dense per-lift HTML policy selectors with a scalable in-world Automation Dock while preserving the current
+selector as a Debug-switchable fallback. The work is a UI/controller refactor: policy execution, unlocks, Service
+Zoning, persistence, sharing, and engine assignment semantics must remain unchanged.
+
+### Locked interaction model
+
+1. The player chooses one policy from the dock or library.
+2. The player selects one or more lift targets; selection alone makes no assignment.
+3. An explicit Apply action assigns the selected policy to every selected lift.
+4. The lift row displays compact assignment status only. Manual remains an assignable policy.
+5. Manual and currently unlocked built-ins are pinned in the dock; the complete custom/shared collection opens in a
+   searchable overlay.
+
+The first dock iteration should retain the chosen policy after Apply, clear the target-lift selection after a successful
+batch, and announce the number of lifts changed. These are deliberate, easily swappable interaction defaults for
+playtest rather than new engine rules.
+
+### Architecture boundary
+
+- Extract one canonical policy-discovery function from the current menu renderer. It returns only policies currently
+  legal for the player: Manual, unlocked built-ins, eligible player scripts, and eligible shared scripts, with names,
+  source category, ownership, and resolved zone label.
+- Add a UI-independent assignment service accepting `{ policyId, liftIndexes }`. It validates the current catalog and
+  target indexes, calls the existing engine assignment API in deterministic lift-index order, and returns a structured
+  result for UI feedback.
+- Define a controller adapter contract: `mount(slot)`, `render(state)`, `refresh()`, `destroy()`, and selection actions.
+  The adapter may render differently but may not own unlock, policy, or assignment rules.
+- Wrap the existing select row as the `legacy` adapter. Implement the new `dock` adapter independently.
+- Add a controller host in the basement/control-row space. It owns variant selection and replaces its mounted adapter
+  cleanly without rebuilding game state.
+- Add a Debug-menu controller-variant selector and safe query/config override. Production defaults to `legacy`; the
+  selection is session-only unless a later product decision explicitly adds player preference persistence.
+- Namespace dock, library, and lift-status CSS. Do not couple controller layout to shaft/floor click handlers.
+
+### Implementation sequence
+
+1. Characterize the legacy selector's current discovery, unlock, zoning-label, teaching-cue, and refresh behaviour in
+   focused tests before extracting it.
+2. Implement catalog and assignment service with no visible UI change; migrate legacy controls to use both.
+3. Introduce the controller host, `legacy` adapter, Debug selector, and variant lifecycle cleanup.
+4. Implement the dock: selected-policy card, fixed Manual/unlocked-built-in pinned strip, target-lift chips/status,
+   explicit Apply control, clear/cancel action, and assignment result feedback.
+5. Implement the searchable library overlay with Built-ins, My Automations, and Shared with Me sections. Selecting an
+   entry returns to the dock without changing lifts until Apply.
+6. Move teaching cues and status refresh from direct `.shaft select` queries to the adapter contract.
+7. Add visual/responsive treatment for one through eight lifts and ensure compact late-fleet layout remains intact.
+8. Exercise Debug variant switching mid-round, during countdown, with an open library, and after a reset/retry.
+9. Run automated gates, then compare legacy and dock playtests on the same rounds, seed, loadout, and policy set.
+
+### Explicit non-goals
+
+- No change to `setLiftAutomation`, policy execution, Service Zone enforcement, script storage, import/share format, or
+  unlock progression.
+- No drag-and-drop, automatic paint-mode assignment, controller preference persistence, player-managed pinning, mobile
+  adaptation, or Workshop redesign in this slice.
+- No removal of the legacy controller until structured playtest evidence accepts a successor.
+
+### Exit criteria
+
+- Every policy visible in legacy is discoverable in dock/library under the same round, player, and sharing state.
+- Single and batch assignments produce the same engine state as legacy assignment, including Manual and zoned policies.
+- Selection cannot alter a lift; only Apply can. A failed/empty Apply changes no lifts and explains why.
+- Debug can switch variants without duplicated listeners, stale selection, leaked overlays, or a changed round state.
+- Legacy remains the default outside Debug and is regression-tested throughout the experiment.
+- The dock remains readable and operable from one through eight lifts; custom/shared collections remain usable at scale.
+
+### Delivered checkpoint (26 July 2026)
+
+- Added `automation-controller.js` as the swappable controller boundary and shared policy catalog/assignment path.
+- Added the Debug-only Legacy/Dock selector; Legacy remains the default and the choice is session-only.
+- Added fixed pinned policies, multi-lift target selection, explicit Apply/Clear actions, searchable library,
+  retained policy selection, and post-apply target clearing.
+- Added lifecycle cleanup and regression coverage for selection-before-Apply, batch assignment, library discovery,
+  and variant switching. Human comparison and responsive visual acceptance remain open.
+
+## Completed implementation slice — automation-native Service Zoning
+
+**Status:** Implemented on `master`; retained here as the design and delivery record.<br>
 **Design authority:** `ROADMAP.md` and `Automation_Workshop_Spec.md`<br>
 **Test authority:** `TEST_PLAN.md`
 
