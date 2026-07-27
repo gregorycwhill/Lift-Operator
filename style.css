@@ -241,6 +241,8 @@ body {
 .automation-dock-actions .btn { padding: 3px 5px; font-size: 10px; }
 .automation-dock-actions .btn-green:disabled { opacity: .38; filter: grayscale(1); box-shadow: none; cursor: not-allowed; }
 .automation-dock.automation-ready .btn-green:not(:disabled) { box-shadow: 0 0 7px rgba(46, 204, 113, .95); animation: automationApplyGlow 1s ease-in-out infinite alternate; }
+.automation-dock.automation-armed .automation-carousel-card.selected { background: #3498db; color: #fff; border-color: #21618c; box-shadow: 0 0 6px rgba(52, 152, 219, .75); }
+.automation-dock.automation-armed .automation-carousel-card.selected::after { content: ' • Armed'; font-size: 9px; font-weight: 800; }
 .automation-dock.automation-policy-hint .automation-carousel-card { animation: automationPolicyHint .75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -2px; }
 .automation-status-row { display: contents; }
 .automation-status { flex: 0 0 var(--shaft-width); width: var(--shaft-width); height: 36px; box-sizing: border-box; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }

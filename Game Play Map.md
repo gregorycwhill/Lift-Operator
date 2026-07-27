@@ -57,10 +57,11 @@ Every attempt begins with a visible five-second countdown after the briefing clo
 
 Teaching cues are transient rather than permanent HUD elements. When built-in automation first becomes available, its controls pulse in a friendly, colourful way. The same cue system must support first-use discovery of player-authored custom automation and automations shared with the player. Interaction acknowledges a cue so it does not repeatedly nag an established player.
 
-Automation deployment follows a deliberate two-step pattern: choose a policy, select the lift or lifts that should use
-it, then apply. This keeps fleet role changes visible and reversible during the countdown, while preventing an
-accidental click from silently changing a lift's operating policy. Each lift continues to display its assigned policy
-as compact status information.
+Automation deployment follows a deliberate two-step pattern. When disarmed, select one or more lift controllers as a
+batch; then click a carousel policy to arm it and assign it immediately. Alternatively, arm a policy first: lift
+controllers glow for five seconds, and each clicked lift receives the armed policy. The policy remains armed until its
+card is clicked again. Carousel scrolling previews only, and each lift continues to display its assigned policy as
+compact status information.
 
 Lift capacity appears as a floating effect above each lift during the countdown, then disappears. It reappears whenever effective capacity changes, including modifier activation and expiry. Normal play does not carry a permanent capacity label.
 

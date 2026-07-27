@@ -130,22 +130,19 @@ engine assignment semantics remain unchanged.
 ### Locked interaction model
 
 1. The player chooses one policy from the dock or library, or selects one or more lift targets first.
-2. Policy selection and lift-target selection are independent; either entry path remains valid and neither selection
-   changes lift automation.
-3. Carousel navigation previews only; clicking the automation card commits the preview as the selected policy. Library
-   entries commit immediately when clicked.
-   Remembered carousel position is never treated as a committed policy.
-4. The next required selection is visibly highlighted: lift controllers after explicit policy selection, or the
-   automation carousel after lift-first.
-5. An explicit Apply action becomes enabled only when both a policy and one or more lift targets are selected, then
-   assigns the selected policy to every selected lift.
+2. The Dock is disarmed by default. Lift clicks select or deselect a batch; carousel navigation previews only.
+3. Clicking the carousel card arms the preview. Clicking the already armed card disarms it. Library entries arm the
+   chosen policy through the same pathway.
+4. An armed policy causes lift controllers to glow for five seconds as a hint. The armed policy persists after the glow
+   ends, and every clicked lift receives it immediately.
+5. If lifts were selected while disarmed, arming a policy assigns it to the whole batch immediately, clears the batch,
+   and leaves the policy armed. There is no Apply action.
 6. The lift row displays compact assignment status only. Manual remains an assignable policy.
 7. The carousel shows persistent player pins. Manual and currently unlocked built-ins are pinned by default; the
    complete Custom and Shared with Me collections are managed in a vertically scrolling accordion Library.
 
-The first dock iteration should retain the chosen policy after Apply, clear the target-lift selection after a successful
-batch, and announce the number of lifts changed. These are deliberate, easily swappable interaction defaults for
-playtest rather than new engine rules.
+The Dock retains the armed policy after assignment, clears a completed batch, and announces the number of lifts changed.
+These are UI interaction rules only; engine assignment and policy semantics remain unchanged.
 
 ### Architecture boundary
 
@@ -165,11 +162,11 @@ playtest rather than new engine rules.
 
 1. Characterize policy discovery, unlock, zoning-label, teaching-cue, and refresh behaviour in focused tests.
 2. Implement the catalog and assignment service as the sole automation control path.
-3. Implement the Dock: selected-policy card, fixed Manual/unlocked-built-in pinned strip, target-lift chips/status,
-   explicit Apply control, clear/cancel action, and assignment result feedback.
+3. Implement the Dock: preview/armed policy card, fixed Manual/unlocked-built-in pinned strip, disarmed batch target
+   selection, armed five-second lift hint, immediate assignment feedback, and no Apply control.
 4. Implement the searchable accordion library with Built-in, Custom, and Shared with Me sections, persistent pin
-   checkboxes, and Library-toggle/modal cleanup. Selecting an entry returns to the dock without changing lifts until
-   Apply.
+   checkboxes, and Library-toggle/modal cleanup. Selecting an entry returns to the dock armed and assigns any pending
+   batch immediately.
 5. Keep teaching cues and status refresh inside the Dock contract; do not couple controller layout to shaft/floor click
    handlers.
 6. Add visual/responsive treatment for one through eight lifts and ensure compact late-fleet layout remains intact.
@@ -187,25 +184,26 @@ playtest rather than new engine rules.
 
 - Every legal policy is discoverable in Dock/library under the same round, player, and sharing state.
 - Single and batch assignments produce the canonical engine state, including Manual and zoned policies.
-- Selection cannot alter a lift; only Apply can. A failed/empty Apply changes no lifts and explains why.
+- Previewing cannot alter a lift. Armed controller clicks and armed batch confirmation use the canonical assignment
+  service and explain invalid assignments without changing lifts.
 - The product has one controller path, with no variant state, stale selector UI, leaked overlays, or Debug-only dependency.
 - The dock remains readable and operable from one through eight lifts; custom/shared collections remain usable at scale.
 
 ### Delivered checkpoint (26 July 2026)
 
 - Added `automation-controller.js` as the permanent Automation Dock boundary and shared policy catalog/assignment path.
-- Added fixed pinned policies, multi-lift target selection, explicit Apply/Clear actions, searchable library,
-  retained policy selection, and post-apply target clearing.
-- Added lifecycle cleanup and regression coverage for selection-before-Apply, batch assignment, library discovery, and
+- Added fixed pinned policies, multi-lift target selection, armed/disarmed assignment, searchable library, and
+  post-assignment batch clearing.
+- Added lifecycle cleanup and regression coverage for selection-before-arming, batch assignment, library discovery, and
   permanent Dock mounting. Human responsive visual acceptance remains open.
-- Replaced inferred Dock guidance with explicit session state: preview, committed policy, targets, and guidance intent
+- Replaced inferred Dock guidance with explicit session state: preview, armed policy, targets, and guidance intent
   are independent. Browsing cannot arm a policy or start lift flashing.
-- Hardened Apply as a terminal interaction transition: assignment cancels pending guidance, clears all visual hint
-  classes, and cannot re-arm guidance while the batch is being committed.
+- Assignment now cancels pending guidance, clears completed batch selections, and leaves the armed policy available for
+  subsequent lift clicks.
 - Refined the prototype after first visual review: the row now uses a compact vanilla-JS carousel without a native
   policy scrollbar or verbose status labels, and armed policies pulse the lift targets as a next-step cue.
 - Reframed the controller row as a fixed-width basement level beneath G, marked with the non-interactive `⚙⇅` badge;
-  next-step guidance flashes for ten seconds and then expires without clearing selections.
+  armed-lift guidance flashes for five seconds and then expires without disarming the policy.
 - Removed the obsolete legacy selector, Debug controller option, variant state, and selector-specific teaching/status
   branches. The Dock is now the permanent production path.
 

@@ -1057,7 +1057,7 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
     expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
 });
 
-test('Automation Dock is the permanent explicit multi-lift apply workflow', async ({ page }) => {
+test('Automation Dock policy-first assignment is immediate and armed', async ({ page }) => {
     const result = await page.evaluate(() => {
         Config.debugMode = true;
         Registry.stats.round = 5;
@@ -1068,30 +1068,28 @@ test('Automation Dock is the permanent explicit multi-lift apply workflow', asyn
         const before = Registry.lifts.map(lift => lift.automation);
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         const previewBeforeCommit = document.querySelector('.automation-carousel-card')?.textContent || '';
-        const explicitBeforeCommit = document.querySelector('.automation-dock')?.dataset.policyExplicit === 'true';
+        const explicitBeforeCommit = document.querySelector('.automation-dock')?.dataset.armedPolicy || '';
         const hintBeforeCommit = document.querySelectorAll('.automation-status.automation-target-hint').length;
         document.querySelector('.automation-carousel-card')?.click();
         const hintAfterPolicy = document.querySelectorAll('.automation-status.automation-target-hint').length;
-        const applyBeforeTargets = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        const noApply = !document.querySelector('.automation-dock-actions .btn-green');
         statuses.slice(0, 2).forEach(status => status.click());
-        const applyAfterTargets = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
-        const afterSelection = Registry.lifts.map(lift => lift.automation);
-        document.querySelector('.automation-dock-actions .btn-green')?.click();
+        const afterAssignment = Registry.lifts.map(lift => lift.automation);
+        const armedAfterAssignment = document.querySelector('.automation-dock')?.dataset.armedPolicy || '';
+        document.querySelector('.automation-carousel-card')?.click();
         return {
             dock: Boolean(document.querySelector('[data-automation-controller="dock"]')),
             statusCount: statuses.length,
             before,
-            afterSelection,
+            afterAssignment,
             previewBeforeCommit,
             explicitBeforeCommit,
             hintBeforeCommit,
             hintAfterPolicy,
-            applyBeforeTargets,
-            applyAfterTargets,
-            afterApply: Registry.lifts.map(lift => lift.automation),
-            selectedAfterApply: document.querySelectorAll('.automation-status.selected').length,
-            hintAfterApply: document.querySelectorAll('.automation-status.automation-target-hint').length,
-            dockGuidanceAfterApply: Boolean(document.querySelector('.automation-dock.automation-policy-hint, .automation-dock.automation-target-hint-active')),
+            noApply,
+            armedAfterAssignment,
+            disarmedAfterToggle: document.querySelector('.automation-dock')?.dataset.armedPolicy || '',
+            selectedAfterAssignment: document.querySelectorAll('.automation-status.selected').length,
             retainedPolicy: document.querySelector('.automation-carousel-card')?.textContent || '',
             hasVerboseTitle: Boolean(document.querySelector('.automation-dock-title, .automation-dock-policy')),
             policyStripDisplay: document.querySelector('.automation-dock-pinned') ? getComputedStyle(document.querySelector('.automation-dock-pinned')).display : 'none',
@@ -1100,24 +1098,22 @@ test('Automation Dock is the permanent explicit multi-lift apply workflow', asyn
     });
     expect(result.dock).toBe(true);
     expect(result.statusCount).toBeGreaterThan(1);
-    expect(result.afterSelection).toEqual(result.before);
+    expect(result.afterAssignment.slice(0, 2)).toEqual(['sweep', 'sweep']);
     expect(result.previewBeforeCommit).toContain('Sweep');
-    expect(result.explicitBeforeCommit).toBe(false);
+    expect(result.explicitBeforeCommit).toBe('');
     expect(result.hintBeforeCommit).toBe(0);
     expect(result.hintAfterPolicy).toBe(result.statusCount);
-    expect(result.applyBeforeTargets).toBe(true);
-    expect(result.applyAfterTargets).toBe(false);
-    expect(result.afterApply.slice(0, 2)).toEqual(['sweep', 'sweep']);
-    expect(result.selectedAfterApply).toBe(0);
-    expect(result.hintAfterApply).toBe(0);
-    expect(result.dockGuidanceAfterApply).toBe(false);
+    expect(result.noApply).toBe(true);
+    expect(result.armedAfterAssignment).toBe('sweep');
+    expect(result.disarmedAfterToggle).toBe('');
+    expect(result.selectedAfterAssignment).toBe(0);
     expect(result.retainedPolicy).toContain('Sweep');
     expect(result.hasVerboseTitle).toBe(false);
     expect(result.policyStripDisplay).toBe('none');
     expect(result.basementMarker).toContain('⚙⇅');
 });
 
-test('Automation Dock supports selecting lifts before the automation', async ({ page }) => {
+test('Automation Dock assigns a lift-first batch when the policy is armed', async ({ page }) => {
     const result = await page.evaluate(() => {
         Config.debugMode = true;
         Registry.stats.round = 5;
@@ -1127,49 +1123,48 @@ test('Automation Dock supports selecting lifts before the automation', async ({ 
         const statuses = [...document.querySelectorAll('.automation-status')];
         statuses.slice(0, 2).forEach(status => status.click());
         const policyHint = Boolean(document.querySelector('.automation-dock.automation-policy-hint'));
-        const disabledBeforePolicy = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        const disarmedBeforePolicy = document.querySelector('.automation-dock')?.dataset.armedPolicy || '';
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         const targetsStillSelected = document.querySelectorAll('.automation-status.selected').length;
-        const stillWaitingForCommit = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        const stillDisarmed = document.querySelector('.automation-dock')?.dataset.armedPolicy || '';
         document.querySelector('.automation-carousel-card')?.click();
-        const readyAfterPolicy = !document.querySelector('.automation-dock-actions .btn-green')?.disabled;
-        document.querySelector('.automation-dock-actions .btn-green')?.click();
-        return { policyHint, disabledBeforePolicy, targetsStillSelected, stillWaitingForCommit, readyAfterPolicy, applied: Registry.lifts.map(lift => lift.automation) };
+        return { policyHint, disarmedBeforePolicy, targetsStillSelected, stillDisarmed, armedAfterPolicy: document.querySelector('.automation-dock')?.dataset.armedPolicy || '', selectedAfterPolicy: document.querySelectorAll('.automation-status.selected').length, applied: Registry.lifts.map(lift => lift.automation) };
     });
     expect(result.policyHint).toBe(true);
-    expect(result.disabledBeforePolicy).toBe(true);
+    expect(result.disarmedBeforePolicy).toBe('');
     expect(result.targetsStillSelected).toBe(2);
-    expect(result.stillWaitingForCommit).toBe(true);
-    expect(result.readyAfterPolicy).toBe(true);
+    expect(result.stillDisarmed).toBe('');
+    expect(result.armedAfterPolicy).toBe('sweep');
+    expect(result.selectedAfterPolicy).toBe(0);
     expect(result.applied.slice(0, 2)).toEqual(['sweep', 'sweep']);
 });
 
-test('Automation carousel browsing never arms a remembered or committed policy', async ({ page }) => {
+test('Automation carousel browsing previews without arming until the card is clicked', async ({ page }) => {
     const result = await page.evaluate(() => {
         Config.debugMode = true;
         Registry.stats.round = 5;
         Registry.highestUnlockedRound = 5;
         Registry.lifts = [createLiftState(0), createLiftState(1)];
-        Registry.automationControllerSelectedPolicy = 'sweep';
         Registry.automationControllerPreviewPolicy = 'sweep';
         buildWorld();
         const initialFlashing = document.querySelectorAll('.automation-status.automation-target-hint').length;
-        const initialApplyDisabled = document.querySelector('.automation-dock-actions .btn-green')?.disabled;
+        const initialArmed = document.querySelector('.automation-dock')?.dataset.armedPolicy || '';
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         const flashAfterBrowse = document.querySelectorAll('.automation-status.automation-target-hint').length;
-        const explicitAfterBrowse = document.querySelector('.automation-dock')?.dataset.policyExplicit === 'true';
+        const armedAfterBrowse = document.querySelector('.automation-dock')?.dataset.armedPolicy || '';
         document.querySelector('.automation-carousel-card')?.click();
         const flashAfterCommit = document.querySelectorAll('.automation-status.automation-target-hint').length;
-        return { initialFlashing, initialApplyDisabled, flashAfterBrowse, explicitAfterBrowse, flashAfterCommit };
+        return { initialFlashing, initialArmed, flashAfterBrowse, armedAfterBrowse, flashAfterCommit, armedAfterCommit: document.querySelector('.automation-dock')?.dataset.armedPolicy || '' };
     });
     expect(result.initialFlashing).toBe(0);
-    expect(result.initialApplyDisabled).toBe(true);
+    expect(result.initialArmed).toBe('');
     expect(result.flashAfterBrowse).toBe(0);
-    expect(result.explicitAfterBrowse).toBe(false);
+    expect(result.armedAfterBrowse).toBe('');
     expect(result.flashAfterCommit).toBe(2);
+    expect(result.armedAfterCommit).not.toBe('');
 });
 
-test('Automation Dock guidance expires after ten seconds without clearing selections', async ({ page }) => {
+test('Automation Dock armed hint expires after five seconds without disarming', async ({ page }) => {
     test.setTimeout(30000);
     const result = await page.evaluate(async () => {
         Config.debugMode = true;
@@ -1180,18 +1175,16 @@ test('Automation Dock guidance expires after ten seconds without clearing select
         document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
         document.querySelector('.automation-carousel-card')?.click();
         const flashingBefore = document.querySelectorAll('.automation-status.automation-target-hint').length;
-        await new Promise(resolve => setTimeout(resolve, 10100));
+        await new Promise(resolve => setTimeout(resolve, 5100));
         return {
             flashingBefore,
             flashingAfter: document.querySelectorAll('.automation-status.automation-target-hint').length,
-            policyStillExplicit: document.querySelector('.automation-dock')?.dataset.policyExplicit === 'true',
-            applyDisabled: document.querySelector('.automation-dock-actions .btn-green')?.disabled
+            policyStillArmed: document.querySelector('.automation-dock')?.dataset.armedPolicy || ''
         };
     });
     expect(result.flashingBefore).toBe(2);
     expect(result.flashingAfter).toBe(0);
-    expect(result.policyStillExplicit).toBe(true);
-    expect(result.applyDisabled).toBe(true);
+    expect(result.policyStillArmed).not.toBe('');
 });
 
 test('Automation Dock library selects a policy without assigning it', async ({ page }) => {
@@ -1206,11 +1199,33 @@ test('Automation Dock library selects a policy without assigning it', async ({ p
         const libraryOpen = Boolean(document.querySelector('.automation-library-overlay'));
         const sweep = [...document.querySelectorAll('.automation-library-select')].find(button => button.textContent.includes('Sweep'));
         sweep?.click();
-        return { before, after: Registry.lifts.map(lift => lift.automation), libraryOpen, selected: document.querySelector('.automation-carousel-card')?.textContent || '' };
+        return { before, after: Registry.lifts.map(lift => lift.automation), libraryOpen, selected: document.querySelector('.automation-carousel-card')?.textContent || '', armed: document.querySelector('.automation-dock')?.dataset.armedPolicy || '' };
     });
     expect(result.libraryOpen).toBe(true);
     expect(result.after).toEqual(result.before);
     expect(result.selected).toContain('Sweep');
+    expect(result.armed).toBe('sweep');
+});
+
+test('Automation library arms and assigns a pending lift batch', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 5;
+        Registry.highestUnlockedRound = 5;
+        Registry.lifts = [createLiftState(0), createLiftState(1)];
+        buildWorld();
+        [...document.querySelectorAll('.automation-status')].slice(0, 2).forEach(status => status.click());
+        document.querySelector('.automation-dock-actions .btn-gray')?.click();
+        [...document.querySelectorAll('.automation-library-select')].find(button => button.textContent.includes('Sweep'))?.click();
+        return {
+            automation: Registry.lifts.map(lift => lift.automation),
+            selected: document.querySelectorAll('.automation-status.selected').length,
+            armed: document.querySelector('.automation-dock')?.dataset.armedPolicy || ''
+        };
+    });
+    expect(result.automation.slice(0, 2)).toEqual(['sweep', 'sweep']);
+    expect(result.selected).toBe(0);
+    expect(result.armed).toBe('sweep');
 });
 
 test('Automation library toggles, groups automations, persists pins, and closes with other modals', async ({ page }) => {
@@ -1240,8 +1255,8 @@ test('Automation library toggles, groups automations, persists pins, and closes 
     expect(result.opened).toBe(true);
     expect(result.groups).toEqual(['Built-in▾', 'Custom▸', 'Shared with Me▸']);
     expect(result.pinPersisted).toBe(true);
-    expect(result.beforePolicy).toBe('manual');
-    expect(result.policyAfterPin).toBe('manual');
+    expect(result.beforePolicy).toBe(null);
+    expect(result.policyAfterPin).toBe(null);
     expect(result.closedByToggle).toBe(true);
     expect(result.closedByModal).toBe(true);
 });

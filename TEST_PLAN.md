@@ -70,21 +70,18 @@ The release is green only when the following evidence is complete:
 
 ### Dock interaction
 
-- [x] Selecting a policy changes only dock selection; selecting lifts changes only target selection; neither action
-  changes lift automation.
-- [x] Both entry paths are valid: policy-first flashes lift targets, and lift-first flashes the automation carousel;
-  existing selections persist while making the second selection.
-- [x] Carousel arrows change only the preview; they do not select a policy, start lift flashing, or change the policy
-  that Apply would use. Clicking the card commits the preview.
-- [x] A remembered carousel position does not arm a policy or flash lift controllers on Dock mount or carousel browse.
-- [x] Guidance flashes for ten seconds, then stops without clearing the explicit policy or target selections.
-- [x] Apply changes every selected lift exactly once, clears target selection, retains the selected policy, and reports
-  the count changed.
-- [x] Apply is a terminal transition for the current selection: pending guidance is cancelled, no lift-controller or
-  dock hint remains active afterward, and assignment cannot immediately re-arm flashing.
+- [ ] Disarmed lift clicks select/deselect a batch without changing lift automation.
+- [ ] Carousel arrows change only the preview; they never arm, assign, or start lift flashing.
+- [ ] Clicking a preview card arms it; clicking the already armed card disarms it.
+- [ ] Armed policy-first assignment applies immediately to each clicked lift and keeps the policy armed.
+- [ ] The armed-lift hint flashes for five seconds, then stops without disarming the policy.
+- [ ] Lift-first batch selection persists while browsing; clicking a policy assigns it to every selected lift, clears the
+  batch, and leaves the policy armed.
+- [ ] Disarming preserves a pending batch selection.
+- [ ] No Apply control remains, and no legacy Apply/Clear-specific state or guidance is exposed.
 - [x] The compact carousel removes the native policy scrollbar, preserves the automation-row height, and flashes lift
   targets after a policy is armed.
-- [ ] Empty Apply and invalid Apply leave all lift automation unchanged and give accessible feedback.
+- [ ] Invalid or unavailable armed assignments leave lift automation unchanged and give accessible feedback.
 - [ ] Lift status accurately updates after Dock assignment, manual assignment, reset, retry, round
   initialization, and imported/deleted-script recovery.
 - [ ] The carousel shows persistent player pins, with Manual and currently unlocked built-ins pinned by default, and
@@ -95,7 +92,7 @@ The release is green only when the following evidence is complete:
 - [x] The Library toggles from its Dock button, uses Built-in, Custom, and Shared with Me accordion groups, persists
   pin checkbox changes, and closes when another modal opens.
 - [ ] The Library supports search across the complete currently legal catalog and remains keyboard/touch operable.
-- [x] Selecting an entry closes or returns from the overlay without assigning it until Apply.
+- [ ] Selecting an entry closes the overlay, arms the policy, and assigns any pending batch immediately.
 - [ ] Long custom/shared names, authors, zone labels, empty groups, and a collection larger than the pinned strip remain
   readable and operable.
 - [ ] First-use teaching cues work through the Dock, acknowledge on user interaction, and do not leak to removed
@@ -113,9 +110,9 @@ The release is green only when the following evidence is complete:
 
 ### Human comparison protocol
 
-- [ ] On the same seed/loadout/round, a playtester can assign one policy to one lift and to multiple lifts confidently,
-  accurately describing what will happen before Apply.
-- [ ] Record accidental assignments, missed Apply affordances, library-discovery failures, policy-label confusion, and
+- [ ] On the same seed/loadout/round, a playtester can arm a policy, assign it to one lift, and assign it to multiple
+  lifts confidently without looking for an Apply step.
+- [ ] Record accidental assignments, missed armed/disarmed cues, library-discovery failures, policy-label confusion, and
   stale-UI issues in `docs/archive/PLAYTEST_ARCHIVE.md`.
 - [ ] Confirm the permanent Dock remains comprehensible for both early rounds and R19/R20 fleets.
 
@@ -128,8 +125,8 @@ visual inspection, and full-device playtesting remain open.
 
 - `npm run test:syntax`: passed, 61 JavaScript files.
 - `npm run docs:check`: passed, 22 Markdown files.
-- Lifecycle suite: passed, 83/83.
-- Browser suite excluding the known long Protocol Alpha case: passed, 111/111.
+- Lifecycle suite: passed, 84/84.
+- Browser suite excluding the known long Protocol Alpha case: passed, 112/112.
 - Aggregate `npm test`: all pre-browser gates, Protocol Alpha, mechanics, integration, and the browser cases reached
   before the wrapper limit passed; the command timed out at 10 minutes because Protocol Alpha alone takes about eight
   minutes and the aggregate suite continued beyond the wrapper limit. This is an execution-time limitation, not an

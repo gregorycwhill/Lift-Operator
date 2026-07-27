@@ -269,5 +269,133 @@ window.Game = window.Game || {};
         applyTeachingCue() { return null; }
     };
 
+    controller.renderDock = function ({ autoLobby, controlRow }) {
+        const catalog = this.getCatalog();
+        const api = this;
+        const state = { armedPolicy: null, previewPolicy: Registry.automationControllerPreviewPolicy || 'manual', lifts: new Set(), guidance: 'none' };
+        autoLobby.classList.add('automation-dock-host');
+        autoLobby.innerHTML = '';
+        controlRow.dataset.automationController = 'dock';
+        Registry.automationControllerSelectedPolicy = null;
+
+        const dock = document.createElement('div');
+        dock.className = 'automation-dock automation-dock-compact';
+        dock.setAttribute('aria-label', 'Automation Dock');
+        let guidanceTimer = null;
+        let policies = catalog.filter(item => item.pinned);
+        const clearGuidance = () => {
+            if (guidanceTimer) clearTimeout(guidanceTimer);
+            guidanceTimer = null;
+            state.guidance = 'none';
+            dock.classList.remove('automation-policy-hint', 'automation-target-hint-active');
+            controlRow.querySelectorAll('.automation-status').forEach(status => status.classList.remove('automation-target-hint'));
+        };
+        const requestGuidance = type => {
+            clearGuidance();
+            state.guidance = type;
+            guidanceTimer = setTimeout(() => { guidanceTimer = null; state.guidance = 'none'; renderInteraction(); }, 5000);
+            renderInteraction();
+        };
+        const carousel = document.createElement('div'); carousel.className = 'automation-carousel';
+        const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'automation-carousel-arrow'; previous.textContent = 'â€¹'; previous.setAttribute('aria-label', 'Previous automation');
+        const next = document.createElement('button'); next.type = 'button'; next.className = 'automation-carousel-arrow'; next.textContent = 'â€º'; next.setAttribute('aria-label', 'Next automation');
+        const viewport = document.createElement('div'); viewport.className = 'automation-carousel-viewport';
+        const card = document.createElement('button'); card.type = 'button'; card.className = 'automation-policy-btn automation-carousel-card';
+        const indicator = document.createElement('span'); indicator.className = 'automation-carousel-indicator';
+        const actions = document.createElement('div'); actions.className = 'automation-dock-actions';
+        const libraryButton = document.createElement('button'); libraryButton.type = 'button'; libraryButton.className = 'btn btn-gray btn-small'; libraryButton.textContent = 'Library';
+        actions.append(libraryButton); dock.append(actions); autoLobby.appendChild(dock);
+
+        const statusRow = document.createElement('div'); statusRow.className = 'automation-status-row';
+        const renderInteraction = () => {
+            dock.dataset.armedPolicy = state.armedPolicy || '';
+            dock.dataset.selectedLiftCount = String(state.lifts.size);
+            dock.classList.toggle('automation-armed', Boolean(state.armedPolicy));
+            dock.classList.toggle('automation-policy-hint', state.guidance === 'policy');
+            dock.classList.toggle('automation-target-hint-active', state.guidance === 'lifts');
+            statusRow.querySelectorAll('.automation-status').forEach(status => {
+                const selected = state.lifts.has(Number(status.dataset.liftIndex));
+                status.classList.toggle('selected', selected);
+                status.classList.toggle('automation-target-hint', state.guidance === 'lifts' && Boolean(state.armedPolicy));
+                status.setAttribute('aria-pressed', String(selected));
+            });
+        };
+        const renderPreview = () => {
+            const found = policies.findIndex(item => item.value === state.previewPolicy);
+            state.carouselIndex = found < 0 ? 0 : found;
+            const item = policies[state.carouselIndex] || policies[0];
+            if (!item) return;
+            state.previewPolicy = item.value;
+            Registry.automationControllerPreviewPolicy = item.value;
+            card.dataset.policy = item.value;
+            card.dataset.armedPolicy = state.armedPolicy || '';
+            card.textContent = item.name;
+            card.classList.toggle('selected', state.armedPolicy === item.value);
+            card.classList.toggle('automation-policy-preview', state.armedPolicy !== item.value);
+            card.title = state.armedPolicy && state.armedPolicy !== item.value
+                ? `Preview ${item.name}; armed: ${api.getPolicy(state.armedPolicy)?.name || state.armedPolicy}`
+                : state.armedPolicy === item.value ? `${item.name} armed; click again to disarm` : `Preview ${item.name}; click to arm`;
+            indicator.textContent = `${state.carouselIndex + 1}/${policies.length}`;
+            renderInteraction();
+        };
+        const refreshStatuses = targets => targets.forEach(index => {
+            const status = statusRow.querySelector(`[data-lift-index="${index}"]`);
+            const lift = Registry.lifts[index];
+            if (status && lift) status.textContent = `${api.getPolicy(lift.automation)?.name || lift.automation}`;
+        });
+        const assignTo = (policy, targets, clearBatch = false) => {
+            const result = api.assign(policy, targets);
+            if (!result.ok) { window.Game.UI?.showToast?.(result.reason); return result; }
+            refreshStatuses(result.liftIndexes);
+            if (clearBatch) state.lifts.clear();
+            clearGuidance();
+            renderInteraction();
+            window.Game.UI?.showToast?.(`${result.policy.name} applied to ${result.liftIndexes.length} lift${result.liftIndexes.length === 1 ? '' : 's'}.`);
+            return result;
+        };
+        const armPolicy = policy => {
+            if (!api.getPolicy(policy)) return;
+            state.previewPolicy = policy;
+            state.armedPolicy = policy;
+            Registry.automationControllerSelectedPolicy = policy;
+            renderPreview();
+            if (state.lifts.size) assignTo(policy, [...state.lifts], true);
+            else requestGuidance('lifts');
+        };
+        const togglePolicy = () => {
+            if (state.armedPolicy === state.previewPolicy) {
+                state.armedPolicy = null;
+                Registry.automationControllerSelectedPolicy = null;
+                clearGuidance();
+                renderPreview();
+                window.Game.UI?.showToast?.('Automation disarmed. Select lift(s) for a batch.');
+            } else armPolicy(state.previewPolicy);
+        };
+        card.addEventListener('click', event => { event.stopPropagation(); togglePolicy(); });
+        previous.addEventListener('click', event => { event.stopPropagation(); clearGuidance(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; renderPreview(); });
+        next.addEventListener('click', event => { event.stopPropagation(); clearGuidance(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; renderPreview(); });
+        viewport.append(card); carousel.append(previous, viewport, next, indicator); dock.insertBefore(carousel, actions);
+
+        Registry.lifts.forEach((lift, index) => {
+            const status = document.createElement('button'); status.type = 'button'; status.className = 'automation-status'; status.dataset.liftIndex = index;
+            status.textContent = `${api.getPolicy(lift.automation)?.name || lift.automation}`;
+            status.setAttribute('aria-pressed', 'false');
+            status.addEventListener('click', event => {
+                event.stopPropagation();
+                if (state.armedPolicy) { assignTo(state.armedPolicy, [index]); return; }
+                state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index);
+                clearGuidance();
+                if (state.lifts.size) requestGuidance('policy'); else renderInteraction();
+            });
+            statusRow.appendChild(status);
+        });
+        controlRow.appendChild(statusRow);
+        libraryButton.addEventListener('click', event => {
+            event.stopPropagation();
+            api.openLibrary(state, catalog, item => { api.closeLibrary(); armPolicy(item.value); }, null, () => { policies = catalog.filter(item => item.pinned); clearGuidance(); renderPreview(); });
+        });
+        renderPreview();
+    };
+
     window.Game.AutomationController = controller;
 })();

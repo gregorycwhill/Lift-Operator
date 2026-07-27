@@ -34,10 +34,11 @@ scalable `Zoned Low` and `Zoned High` built-ins, while all existing built-ins re
 policy, adjust its Service Zone block, save a custom variant, and deploy it through the normal in-game automation menu.
 The Workshop does not select individual lifts for zoning.
 
-**Accepted product direction:** Automation assignment will move from per-lift HTML select menus to an in-world
-Automation Dock in the basement/lobby space. The player selects one policy, selects one or more target lifts, and
-explicitly applies it as a batch. The dock provides pinned shortcuts; a separate library overlay holds the growing
-custom and shared collection. This is a desktop campaign interface and remains outside the later phone-first edition.
+**Accepted product direction:** Automation assignment will use an in-world Automation Dock in the basement/lobby space.
+The disarmed Dock lets players select one or more lifts; clicking a carousel policy arms it and assigns it to a pending
+batch immediately. While armed, clicking any lift assigns the policy directly; clicking the armed policy disarms it.
+The dock provides pinned shortcuts; a separate library overlay holds the growing custom and shared collection. This is
+a desktop campaign interface and remains outside the later phone-first edition.
 The Automation Dock is now the permanent production controller; the former per-lift selector and Debug controller
 variant have been removed. Pin choices persist per player; Manual and unlocked built-ins are pinned by default, while
 Custom and Shared with Me automations are curated through a scrollable accordion Library.

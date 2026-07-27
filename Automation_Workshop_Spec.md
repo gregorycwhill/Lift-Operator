@@ -91,24 +91,24 @@ The in-game controller is the deployment surface for saved policies, not a secon
 library of built-in, player-authored, and shared automations usable across large fleets without altering policy content.
 
 - The player chooses one automation in a horizontal basement/lobby dock, or selects one or more lift targets first.
-- Policy and target selection are independent, so either order is valid and no lift changes policy merely because it
-  was selected.
-- Carousel navigation previews an automation only; clicking its text commits it as the selected policy. Library entries
-  commit when clicked.
-- The remembered carousel position is a presentation preference, not an active selection. A Dock mount starts with no
-  committed policy and no guidance, even if it previews the previously browsed automation.
-- The next required selection flashes: lift controllers after explicit policy selection, or the automation carousel
-  after lift-first.
-- Apply is dimmed until both a policy and one or more lift targets are explicitly selected, then becomes the committing
-  action.
+- Policy and target selection are independent while the Dock is disarmed, so either order is valid. Once a policy is
+  armed, clicking a lift assigns it immediately.
+- Carousel navigation previews an automation only; clicking its text arms it, or disarms it when the same policy is
+  already armed. Library entries arm the selected policy through the same pathway.
+- The remembered carousel position is a presentation preference, not an active selection. A Dock mount starts disarmed
+  with no guidance, even if it previews the previously browsed automation.
+- When a policy is armed, lift controllers flash for five seconds as a one-shot hint. The policy remains armed after the
+  hint ends and every subsequently clicked controller receives it until the policy is disarmed.
+- When disarmed, selected lift controllers retain a separate batch-selection treatment. Clicking a policy while lifts
+  are selected assigns it to the whole batch immediately, clears that batch, and leaves the policy armed.
 - The controller row occupies a fixed-width basement level beneath Ground and is marked by a non-interactive `⚙⇅`
-  badge. Guidance expires after ten seconds without clearing either selection.
+  badge. Armed-lift guidance expires after five seconds without disarming the policy.
 - Lift controls show their current assignment as status, including Manual and resolved Service Zone labels. They do not
   expose independent policy pickers.
 - The carousel shows the player's pinned policies. Manual and currently unlocked built-ins are pinned by default;
   pin choices persist per player and can be changed from the Library.
 - The Library is a vertically scrolling accordion with Built-in, Custom, and Shared with Me groups. Pinning changes
-  carousel membership only; it never selects or applies an automation.
+  carousel membership only; it never arms or applies an automation.
 - Clicking Library toggles the panel closed, and opening any other modal closes it.
 - Manual is a first-class assignable policy and clears automation/policy constraints exactly as it does today.
 - Unlock, ownership, shared-script, policy-version, and Service Zone rules remain authoritative regardless of how the
