@@ -64,7 +64,8 @@ balance, and determinism follow-ups rather than missing implementation coverage.
 
 ### Presentation and authored-round acceptance
 
-- [ ] Pair colours, pulleys, cables, and simultaneous opposite movement make causality legible without adding a
+- [x] Pair colours, solid rounded-square cables attached to both car ends, four exterior pulleys per pair, and simultaneous
+  opposite movement make causality legible without adding a
   master/slave UI, warning dialog, or consequence preview.
 - [ ] R21 briefing explains paired movement before play; R22 teaches Open Plan as passenger-distribution recovery; R23
   explains the combined zoning/Open Plan network problem.

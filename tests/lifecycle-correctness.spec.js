@@ -840,6 +840,41 @@ test('Open Plan uses one active hub to transfer a compatible guest between adjac
     expect(result.partnerPairs).toEqual([1, 0, 3, 2]);
 });
 
+test('counterweight visual uses fixed rounded-square cables and four exterior pulleys per pair', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(23, { showBriefing: false });
+        const pairs = [...document.querySelectorAll('.counterweight-pair-visual')];
+        return {
+            pairCount: pairs.length,
+            frameCount: document.querySelectorAll('.counterweight-cable-frame').length,
+            pulleyCount: document.querySelectorAll('.counterweight-pulley').length,
+            pulleyPositions: [...document.querySelectorAll('.counterweight-pulley')].map(node => node.className),
+            cableBorderRadius: pairs[0] ? getComputedStyle(pairs[0].querySelector('.counterweight-cable-frame')).borderRadius : '',
+            cableStyle: pairs[0] ? getComputedStyle(pairs[0].querySelector('.counterweight-cable-frame')).borderStyle : '',
+            legacyOvalCount: document.querySelectorAll('.counterweight-pair-visual > .counterweight-cable').length
+        };
+    });
+
+    expect(result).toEqual({
+        pairCount: 4,
+        frameCount: 4,
+        pulleyCount: 16,
+        pulleyPositions: [
+            'counterweight-pulley top-left', 'counterweight-pulley top-right',
+            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right',
+            'counterweight-pulley top-left', 'counterweight-pulley top-right',
+            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right',
+            'counterweight-pulley top-left', 'counterweight-pulley top-right',
+            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right',
+            'counterweight-pulley top-left', 'counterweight-pulley top-right',
+            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right'
+        ],
+        cableBorderRadius: '18px',
+        cableStyle: 'solid',
+        legacyOvalCount: 0
+    });
+});
+
 test('automation-native zoning scales, assigns, overrides, and preserves existing passengers', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(14, { showBriefing: false });

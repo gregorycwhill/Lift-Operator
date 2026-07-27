@@ -74,15 +74,15 @@ window.buildWorld = function() {
             pair.dataset.pairStart = String(index);
             pair.style.left = `${layout.baseLeft + index * layout.shaftWidth}px`;
             pair.style.width = `${layout.shaftWidth * 2}px`;
-            const topPulley = document.createElement('span');
-            topPulley.className = 'counterweight-pulley top';
-            const bottomPulley = document.createElement('span');
-            bottomPulley.className = 'counterweight-pulley bottom';
-            const leftCable = document.createElement('span');
-            leftCable.className = 'counterweight-cable left';
-            const rightCable = document.createElement('span');
-            rightCable.className = 'counterweight-cable right';
-            pair.append(topPulley, bottomPulley, leftCable, rightCable);
+            pair.style.height = `${FIXED_BOARD_HEIGHT}px`;
+            const cableFrame = document.createElement('span');
+            cableFrame.className = 'counterweight-cable-frame';
+            const pulleys = ['top-left', 'top-right', 'bottom-left', 'bottom-right'].map(position => {
+                const pulley = document.createElement('span');
+                pulley.className = `counterweight-pulley ${position}`;
+                return pulley;
+            });
+            pair.append(cableFrame, ...pulleys);
             world.appendChild(pair);
         }
     }

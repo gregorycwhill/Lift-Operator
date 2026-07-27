@@ -506,6 +506,8 @@ warned, restricted, or given a master/slave interface.
 - Stink, Wrench, TARDIS, Wide Doors, Group Think, Double-Decker, Musak, and ordinary automations remain available under
   their normal rules unless a counterweight rule above explicitly changes their movement consequence.
 - Zoned automation remains optional and accepts the usual manual override; it resumes normal zone behaviour afterwards.
+- The visual loop is fixed to the building: a solid rounded-square cable attaches at the top and bottom of both cars and
+  runs across two top pulleys and two bottom pulleys positioned outside the pair’s shafts. No oval or dashed cable is used.
 
 ### Open Plan role
 

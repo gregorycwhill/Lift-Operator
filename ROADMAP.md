@@ -104,9 +104,10 @@ briefing should make the consequence clear without presenting the mechanic as a 
 > These lifts share a counterweight loop. Move one up and its partner moves down. Both cabins carry their own guests.
 > Plan for the pair.
 
-The in-game visual language should make causality legible without adding an advisory interface: matching pair colours,
-continuous pulley/loop animation, clearly connected shafts, and simultaneous opposite movement. Players should be able
-to understand what happened after a command even though the game never prevented the command.
+The in-game visual language should make causality legible without adding an advisory interface: each pair has a solid
+rounded-square cable fixed to the building, attached to both the top and bottom of each car, with two pulley circles at
+the top and two at the bottom outside the car shafts. Matching pair colours and simultaneous opposite movement should
+make the consequence clear even though the game never prevents the command.
 
 ### R21–R23 progression
 
