@@ -228,7 +228,7 @@ window.Game = window.Game || {};
             const overlay = document.createElement('div'); overlay.className = 'automation-library-overlay'; overlay.setAttribute('role', 'dialog'); overlay.setAttribute('aria-label', 'Automation library');
             const panel = document.createElement('div'); panel.className = 'automation-library';
             const header = document.createElement('div'); header.className = 'automation-library-header'; header.innerHTML = '<strong>Automation library</strong>';
-            const close = document.createElement('button'); close.type = 'button'; close.className = 'btn btn-gray btn-small automation-library-toggle'; close.textContent = 'Library'; close.setAttribute('aria-label', 'Close automation library'); close.onclick = () => this.closeLibrary(); header.appendChild(close); panel.appendChild(header);
+            const close = document.createElement('button'); close.type = 'button'; close.className = 'btn btn-gray btn-small automation-library-toggle'; close.textContent = '\u00D7'; close.setAttribute('aria-label', 'Close automation library'); close.title = 'Close automation library'; close.onclick = () => this.closeLibrary(); header.appendChild(close); panel.appendChild(header);
             const search = document.createElement('input'); search.type = 'search'; search.placeholder = 'Search automations'; search.className = 'automation-library-search'; panel.appendChild(search);
             const list = document.createElement('div'); list.className = 'automation-library-list'; panel.appendChild(list);
             const groups = [
@@ -245,7 +245,7 @@ window.Game = window.Game || {};
                     if (query && items.length) expandedGroup = group.key;
                     const section = document.createElement('section'); section.className = 'automation-library-group';
                     const heading = document.createElement('button'); heading.type = 'button'; heading.className = 'automation-library-group-toggle'; heading.setAttribute('aria-expanded', String(expandedGroup === group.key));
-                    heading.innerHTML = `<span>${group.label}</span><span class="automation-library-chevron">${expandedGroup === group.key ? '▾' : '▸'}</span>`;
+                    heading.innerHTML = `<span>${group.label}</span><span class="automation-library-chevron">${expandedGroup === group.key ? '\u25BE' : '\u25B8'}</span>`;
                     heading.onclick = () => { expandedGroup = expandedGroup === group.key ? null : group.key; draw(); };
                     section.appendChild(heading);
                     if (expandedGroup === group.key) {
@@ -297,8 +297,8 @@ window.Game = window.Game || {};
             renderInteraction();
         };
         const carousel = document.createElement('div'); carousel.className = 'automation-carousel';
-        const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'automation-carousel-arrow'; previous.textContent = 'â€¹'; previous.setAttribute('aria-label', 'Previous automation');
-        const next = document.createElement('button'); next.type = 'button'; next.className = 'automation-carousel-arrow'; next.textContent = 'â€º'; next.setAttribute('aria-label', 'Next automation');
+        const previous = document.createElement('button'); previous.type = 'button'; previous.className = 'automation-carousel-arrow'; previous.textContent = '\u2039'; previous.setAttribute('aria-label', 'Previous automation');
+        const next = document.createElement('button'); next.type = 'button'; next.className = 'automation-carousel-arrow'; next.textContent = '\u203A'; next.setAttribute('aria-label', 'Next automation');
         const viewport = document.createElement('div'); viewport.className = 'automation-carousel-viewport';
         const card = document.createElement('button'); card.type = 'button'; card.className = 'automation-policy-btn automation-carousel-card';
         const indicator = document.createElement('span'); indicator.className = 'automation-carousel-indicator';
@@ -333,8 +333,8 @@ window.Game = window.Game || {};
             card.classList.toggle('selected', state.armedPolicy === item.value);
             card.classList.toggle('automation-policy-preview', state.armedPolicy !== item.value);
             card.title = state.armedPolicy && state.armedPolicy !== item.value
-                ? `Preview ${item.name}; armed: ${api.getPolicy(state.armedPolicy)?.name || state.armedPolicy}`
-                : state.armedPolicy === item.value ? `${item.name} armed; click again to disarm` : `Preview ${item.name}; click to arm`;
+                ? `Preview ${item.name}; another automation is active`
+                : state.armedPolicy === item.value ? `${item.name} selected; click again to disarm` : `Preview ${item.name}; click to select`;
             indicator.textContent = `${state.carouselIndex + 1}/${policies.length}`;
             renderInteraction();
         };

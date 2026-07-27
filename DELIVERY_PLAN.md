@@ -13,6 +13,13 @@ and testable campaign slice. This plan does not add transfers, a G hub, new haza
 Service Zoning, and the latest playtest remediation implemented.
 **Automated baseline:** Component gates are recorded in `TEST_PLAN.md`; the aggregate browser command is limited by the
 execution environment rather than an observed test failure.
+
+### Current follow-up slice
+
+The next playtest slice tightens the permanent Automation Dock presentation: wider carousel arrow hit targets, compact
+policy text without a visible “Armed” label, a true Dock Library toggle, and an icon-only Library-panel close control.
+The empty-cart credit warning now shares the canonical Supply Closet eligibility predicate, so carried-forward credits do
+not trigger a warning before power-ups are available, including Debug-mode Round 1.
 **Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
 only where evidence supports it, and a release decision with a recorded test/device/seed pack.
 

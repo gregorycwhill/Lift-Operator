@@ -239,7 +239,7 @@ window.initializeUI = function() {
     bind("startRoundBtn", () => {
         const hasUnspentCredits = Number(Registry.points) > 0;
         const hasPurchases = typeof PowerUps !== 'undefined' && PowerUps.cart.length > 0;
-        const supplyClosetAvailable = Config.debugMode || Registry.stats.round >= 3;
+        const supplyClosetAvailable = window.isSupplyClosetAvailable(Registry.stats.round);
         if (supplyClosetAvailable && hasUnspentCredits && !hasPurchases && !Registry.autoPilotActive) {
             const message = document.getElementById('roundStartConfirmText');
             if (message) message.textContent = `You have ${Registry.points} unused Credits. Start this round without spending any?`;

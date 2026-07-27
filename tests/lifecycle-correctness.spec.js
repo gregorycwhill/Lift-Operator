@@ -341,6 +341,28 @@ test('credits carry forward and eligible empty-cart starts request confirmation'
     expect(result).toEqual({ carried: 12, confirmationVisible: true, briefingVisible: false });
 });
 
+test('Round 1 never warns about unspent credits, including in Debug mode', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.points = 12;
+        PowerUps.cart = [];
+        initializeRound(1, { showBriefing: true });
+        document.getElementById('startRoundBtn').click();
+        return {
+            supplyClosetAvailable: isSupplyClosetAvailable(1),
+            shopDisplay: document.getElementById('shopContainer')?.style.display,
+            confirmationDisplay: document.getElementById('roundStartConfirmOverlay')?.style.display,
+            briefingDisplay: document.getElementById('roundModalOverlay')?.style.display
+        };
+    });
+    expect(result).toEqual({
+        supplyClosetAvailable: false,
+        shopDisplay: 'none',
+        confirmationDisplay: 'none',
+        briefingDisplay: 'none'
+    });
+});
+
 test('pause and resume preserve guest and scheduled-event ages', async ({ page }) => {
     const result = await page.evaluate(() => {
         const originalNow = Date.now;
@@ -1250,7 +1272,12 @@ test('Automation library toggles, groups automations, persists pins, and closes 
         document.querySelector('.automation-dock-actions .btn-gray')?.click();
         openModalExclusive('debugOverlay');
         const closedByModal = !document.querySelector('.automation-library-overlay');
-        return { opened, groups, pinPersisted, beforePolicy, policyAfterPin, closedByToggle, closedByModal };
+        const arrowLabels = [...document.querySelectorAll('.automation-carousel-arrow')].map(button => button.textContent);
+        const arrowWidths = [...document.querySelectorAll('.automation-carousel-arrow')].map(button => getComputedStyle(button).width);
+        document.querySelector('.automation-dock-actions .btn-gray')?.click();
+        const reopened = Boolean(document.querySelector('.automation-library-overlay'));
+        const closeText = document.querySelector('.automation-library-toggle')?.textContent;
+        return { opened, groups, pinPersisted, beforePolicy, policyAfterPin, closedByToggle, closedByModal, arrowLabels, arrowWidths, reopened, closeText };
     });
     expect(result.opened).toBe(true);
     expect(result.groups).toEqual(['Built-in▾', 'Custom▸', 'Shared with Me▸']);
@@ -1259,6 +1286,10 @@ test('Automation library toggles, groups automations, persists pins, and closes 
     expect(result.policyAfterPin).toBe(null);
     expect(result.closedByToggle).toBe(true);
     expect(result.closedByModal).toBe(true);
+    expect(result.arrowLabels).toEqual(['‹', '›']);
+    expect(result.arrowWidths).toEqual(['36px', '36px']);
+    expect(result.reopened).toBe(true);
+    expect(result.closeText).toBe('×');
 });
 
 test('Debug Warp exposes every configured round', async ({ page }) => {

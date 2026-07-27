@@ -3,6 +3,19 @@
 // ============================================================================
 
 /**
+ * The Supply Closet is a progression gate, not a consequence of having
+ * carry-forward credits or being in Debug mode. Keep shop rendering and the
+ * empty-cart start warning on the same predicate.
+ */
+window.isSupplyClosetAvailable = function(round) {
+    const currentRound = Number(round);
+    return currentRound >= 3
+        && typeof PowerUps !== 'undefined'
+        && Object.values(Config.GAME_DATA.shopUnlocks || {})
+            .some(tiers => tiers.some(unlockRound => unlockRound <= currentRound));
+};
+
+/**
  * Open the round briefing modal with contextually relevant instructions.
  */
 window.showRoundModal = function(round) {
@@ -64,8 +77,7 @@ window.showRoundModal = function(round) {
         btn.parentNode.insertBefore(shopDiv, btn);
     }
     
-    const hasShopUnlocks = round >= 3 && typeof PowerUps !== 'undefined' && Object.values(Config.GAME_DATA.shopUnlocks || {})
-        .some(tiers => tiers.some(unlockRound => unlockRound <= round));
+    const hasShopUnlocks = window.isSupplyClosetAvailable(round);
     if (hasShopUnlocks) {
         if (shopDiv) shopDiv.style.display = 'block';
         if (typeof ui.renderShop === 'function') ui.renderShop();

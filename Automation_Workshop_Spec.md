@@ -110,6 +110,9 @@ library of built-in, player-authored, and shared automations usable across large
 - The Library is a vertically scrolling accordion with Built-in, Custom, and Shared with Me groups. Pinning changes
   carousel membership only; it never arms or applies an automation.
 - Clicking Library toggles the panel closed, and opening any other modal closes it.
+- The Dock carousel gives the previous/next controls the larger clickable share of the available space, keeps the policy
+  label compact, and communicates armed state through colour/state semantics rather than a visible “Armed” suffix. The
+  Dock Library button is a visibility toggle; the open Library panel is closed with an icon-only `×` control.
 - Manual is a first-class assignable policy and clears automation/policy constraints exactly as it does today.
 - Unlock, ownership, shared-script, policy-version, and Service Zone rules remain authoritative regardless of how the
   Dock renders them.

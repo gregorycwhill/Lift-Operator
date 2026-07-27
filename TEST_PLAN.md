@@ -25,7 +25,7 @@ The release is green only when the following evidence is complete:
 
 - [ ] R19 and R20 fit the supported desktop viewport with eight lifts visible and readable.
 - [ ] The countdown skip control is icon-only, keyboard/touch accessible, and starts only from the countdown control.
-- [ ] Round 2 hides the Supply Closet and does not prompt about spending credits; eligible later rounds retain the prompt.
+- [ ] Rounds 1 and 2 hide the Supply Closet and do not prompt about spending credits, including in Debug mode; eligible later rounds retain the prompt.
 - [ ] Workshop pauses both active gameplay and pre-round countdowns, including scheduled events and power-up timing.
 - [ ] Rooftop start/end toasts appear, disco lighting is visible, and reset/retry cannot leave rooftop music playing.
 - [ ] VIP arrival begins from G after a seeded delay, visits a seeded random non-G floor after her room, and exits via G.
@@ -91,6 +91,8 @@ The release is green only when the following evidence is complete:
 
 - [x] The Library toggles from its Dock button, uses Built-in, Custom, and Shared with Me accordion groups, persists
   pin checkbox changes, and closes when another modal opens.
+- [x] Dock carousel arrows use clean, wide click targets; the automation label is compact and does not expose the word
+  “Armed”. The Library dock button toggles the panel, and the panel uses an icon-only close control.
 - [ ] The Library supports search across the complete currently legal catalog and remains keyboard/touch operable.
 - [ ] Selecting an entry closes the overlay, arms the policy, and assigns any pending batch immediately.
 - [ ] Long custom/shared names, authors, zone labels, empty groups, and a collection larger than the pinned strip remain
