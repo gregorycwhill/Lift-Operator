@@ -302,8 +302,15 @@ window.Game = window.Game || {};
             worker.onmessage = ({ data }) => {
                 cleanup();
                 if (!data.ok) return this.reportExecutionError(script, data.error);
+                    if (Number.isInteger(data.actions.targetFloor)) {
+                        const target = data.actions.targetFloor;
+                        const inZone = !Registry.isZoningEnabled?.() || Registry.isFloorInLiftZone(lift, target);
+                        const existingPassenger = lift.passengers.some(passenger => passenger.dest === target);
+                        if ((inZone || existingPassenger) && typeof window.applyLiftTarget === 'function') {
+                            window.applyLiftTarget(lift.id, target, { manualOverride: false });
+                        }
+                    }
                 if (data.actions.sweepDirection === 1 || data.actions.sweepDirection === -1) lift.sweepDirection = data.actions.sweepDirection;
-                if (Number.isInteger(data.actions.targetFloor)) this.getBuildingBridge(lift).setTarget(data.actions.targetFloor);
                 if (window.Registry) window.Registry.customScriptTicks = (window.Registry.customScriptTicks || 0) + 1;
             };
             worker.onerror = event => { cleanup(); this.reportExecutionError(script, event.message || 'worker error'); };
@@ -345,7 +352,8 @@ window.Game = window.Game || {};
                     const existingPassenger = lift.passengers.some(passenger => passenger.dest === f);
                     const inZone = !R.isZoningEnabled || !R.isZoningEnabled() || R.isFloorInLiftZone(lift, f);
                     if (!isNaN(f) && f >= 0 && f <= maxAllowed && (inZone || existingPassenger)) {
-                        lift.targetFloor = f;
+                        if (typeof window.applyLiftTarget === 'function') window.applyLiftTarget(lift.id, f, { manualOverride: false });
+                        else lift.targetFloor = f;
                     }
                 },
                 

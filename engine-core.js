@@ -142,6 +142,26 @@ window.resumeGame = function() {
     window.Game.Audio?.publish('resume', { round: Registry.stats.round });
 };
 
+window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
+    const lift = Registry.lifts[liftIndex];
+    if (!lift) return false;
+    const maxFloor = Math.max(0, Config.numFloors - 1);
+    const target = Math.max(0, Math.min(maxFloor, Math.round(Number(targetFloor))));
+    const setTarget = (targetLift, floor) => {
+        targetLift.targetFloor = floor;
+        const currentFloor = Math.round(targetLift.pos / Registry.floorHeight);
+        if (floor > currentFloor) targetLift.sweepDirection = 1;
+        else if (floor < currentFloor) targetLift.sweepDirection = -1;
+        if (options.manualOverride !== undefined) targetLift.manualOverride = options.manualOverride;
+    };
+    setTarget(lift, target);
+    if (Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)) {
+        const partner = Registry.lifts[lift.counterweightPartner];
+        if (partner) setTarget(partner, maxFloor - target);
+    }
+    return true;
+};
+
 window.setLiftTarget = function(liftIndex, targetFloor) {
     if (typeof PowerUps !== 'undefined' && PowerUps.activeTargeting) {
         PowerUps.resolveTargeting(liftIndex, targetFloor);
@@ -160,11 +180,7 @@ window.setLiftTarget = function(liftIndex, targetFloor) {
         }
         Registry.roundStats.manualClicks++;
         
-        Registry.lifts[liftIndex].targetFloor = targetFloor;
-        Registry.lifts[liftIndex].manualOverride = true;
-        const currentFloor = Math.round(Registry.lifts[liftIndex].pos / Registry.floorHeight);
-        if (targetFloor > currentFloor) Registry.lifts[liftIndex].sweepDirection = 1;
-        else if (targetFloor < currentFloor) Registry.lifts[liftIndex].sweepDirection = -1;
+        window.applyLiftTarget(liftIndex, targetFloor, { manualOverride: true });
     }
 };
 
@@ -227,7 +243,7 @@ window.getRoundDefinition = function(round, operation = null) {
     if (operation && typeof operation === 'object' && Number.isInteger(operation.floors) && Number.isInteger(operation.lifts)) {
         return { ...operation, round: Number.isInteger(operation.round) ? operation.round : 14 };
     }
-    const supportedRound = Math.max(1, Math.min(20, parseInt(round) || 1));
+    const supportedRound = Math.max(1, Math.min(23, parseInt(round) || 1));
     const configured = Config.GAME_DATA.rounds[supportedRound];
     const liftOverride = Number(Config[`liftsR${supportedRound}`]);
     return {
@@ -239,7 +255,7 @@ window.getRoundDefinition = function(round, operation = null) {
 
 window.createLiftState = function(id) {
     return {
-        id, targetFloor: 0, pos: 0, passengers: [],
+        id, targetFloor: 0, pos: 0, passengers: [], counterweightPartner: null,
         lastActionTime: 0, automation: 'manual', sweepDirection: 1,
         manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0,
         tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
@@ -270,6 +286,7 @@ window.createRoundState = function(round, seed, options = {}) {
             : Config.roundTime,
         lives: Config.startingLives,
         currentSpawnChance: definition.spawnStart,
+        counterweightEnabled: Boolean(definition.counterweightEnabled),
         lifts: Array.from({ length: definition.lifts }, (_, id) => window.createLiftState(id)),
         floors: Array.from({ length: definition.floors }, () => ({ waitingGuests: [] })),
         vipSpawned: false,
@@ -307,6 +324,23 @@ window.createRoundState = function(round, seed, options = {}) {
         lift.serviceUpper = definition.floors - 1;
     });
 
+    if (state.counterweightEnabled) {
+        const maxFloor = definition.floors - 1;
+        const lowerMiddle = Math.floor(maxFloor / 2);
+        const floorHeight = 600 / definition.floors;
+        for (let index = 0; index < state.lifts.length; index += 2) {
+            const first = state.lifts[index];
+            const second = state.lifts[index + 1];
+            if (!first || !second) continue;
+            first.counterweightPartner = second.id;
+            second.counterweightPartner = first.id;
+            first.pos = lowerMiddle * floorHeight;
+            first.targetFloor = lowerMiddle;
+            second.pos = (maxFloor - lowerMiddle) * floorHeight;
+            second.targetFloor = maxFloor - lowerMiddle;
+        }
+    }
+
     return state;
 };
 
@@ -318,6 +352,7 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.stats.timeLeft = roundState.timeLeft;
     Registry.stats.lives = roundState.lives;
     Registry.stats.currentSpawnChance = roundState.currentSpawnChance;
+    Registry.counterweightEnabled = Boolean(roundState.counterweightEnabled);
     if (options.resetCampaign) Registry.stats.served = 0;
     Registry.lifts = roundState.lifts;
     Registry.floors = roundState.floors;
@@ -442,7 +477,7 @@ window.completeRound = function(reason = 'completed') {
 
     Registry.highestUnlockedRound = Math.max(
         Registry.highestUnlockedRound,
-        Math.min(20, Registry.stats.round + 1)
+        Math.min(23, Registry.stats.round + 1)
     );
 
     const ui = GameUI();
@@ -451,7 +486,7 @@ window.completeRound = function(reason = 'completed') {
 };
 
 window.advanceToRound = function(targetRound) {
-    if (targetRound > 20) {
+    if (targetRound > 23) {
         const ui = GameUI();
         if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("You Won!");
         return;
@@ -472,7 +507,7 @@ window.resetGame = function() {
     window.Game.Audio?.publish('reset', { round: Registry.stats.round });
     if (Config.debugMode) {
         Registry.points = 99999;
-        Registry.highestUnlockedRound = 20;
+        Registry.highestUnlockedRound = 23;
     } else {
         Registry.points = 0;
         Registry.highestUnlockedRound = 1;
@@ -601,6 +636,7 @@ window.Game.Engine = window.Game.Engine || {};
 window.Game.Engine.pause = window.pauseGame;
 window.Game.Engine.resume = window.resumeGame;
 window.Game.Engine.setLiftTarget = window.setLiftTarget;
+window.Game.Engine.applyLiftTarget = window.applyLiftTarget;
 window.Game.Engine.setLiftAutomation = window.setLiftAutomation;
 window.Game.Engine.openWorkshopModal = window.openWorkshopModal;
 window.Game.Engine.reset = window.resetGame;

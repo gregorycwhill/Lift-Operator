@@ -67,6 +67,26 @@ window.buildWorld = function() {
         world.appendChild(row);
     }
 
+    if (Registry.counterweightEnabled) {
+        for (let index = 0; index < Registry.lifts.length - 1; index += 2) {
+            const pair = document.createElement('div');
+            pair.className = 'counterweight-pair-visual';
+            pair.dataset.pairStart = String(index);
+            pair.style.left = `${layout.baseLeft + index * layout.shaftWidth}px`;
+            pair.style.width = `${layout.shaftWidth * 2}px`;
+            const topPulley = document.createElement('span');
+            topPulley.className = 'counterweight-pulley top';
+            const bottomPulley = document.createElement('span');
+            bottomPulley.className = 'counterweight-pulley bottom';
+            const leftCable = document.createElement('span');
+            leftCable.className = 'counterweight-cable left';
+            const rightCable = document.createElement('span');
+            rightCable.className = 'counterweight-cable right';
+            pair.append(topPulley, bottomPulley, leftCable, rightCable);
+            world.appendChild(pair);
+        }
+    }
+
     // Global Event Delegation for Shaft Clicks
     if (!world.dataset.hasListener) {
         world.addEventListener('click', (e) => {
@@ -124,6 +144,8 @@ window.buildWorld = function() {
         if (lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold) extraClass += ' stinky';
         
         car.className = `lift ${extraClass}`;
+        if (Registry.counterweightEnabled) car.classList.add('counterweight-car');
+        if (Number.isInteger(lift.counterweightPartner)) car.dataset.counterweightPartner = String(lift.counterweightPartner);
         car.style.setProperty('--lift-index', index);
         car.style.pointerEvents = 'none'; 
         
@@ -195,6 +217,7 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     if (!car) return;
 
     car.classList.toggle('jammed', lift.jamTimer > 0 || lift.isJammed);
+    car.classList.toggle('counterweight-car', Boolean(Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)));
     const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
     car.classList.toggle('capacity-full', Registry.getLiftWeight(lift) >= capacity);
 

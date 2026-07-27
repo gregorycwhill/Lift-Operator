@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.7-audio-playtest-remediation",
+  "balanceVersion": "0.2.8-counterweight-trilogy",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -22,7 +22,7 @@
     "doors": [3, 4, 12],
     "groupThink": [10, 10, 12],
     "doubleDecker": [11, 11, 12],
-    "openPlan": [14, 14, 14]
+    "openPlan": [22, 22, 22]
   },
   "automationUnlocks": {
     "manual": 1,
@@ -185,7 +185,7 @@
         },
         {
           "cost": 5,
-          "duration": 30
+          "duration": 60
         }
       ]
     },
@@ -322,7 +322,7 @@
         },
         {
           "cost": 10,
-          "duration": 30
+          "duration": 60
         }
       ]
     }
@@ -551,6 +551,37 @@
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true
+    },
+    "21": {
+      "floors": 12,
+      "lifts": 2,
+      "spawnStart": 0.25,
+      "spawnEnd": 0.4,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "counterweightEnabled": true,
+      "counterweightIntro": true
+    },
+    "22": {
+      "floors": 15,
+      "lifts": 4,
+      "spawnStart": 0.55,
+      "spawnEnd": 0.75,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "counterweightEnabled": true,
+      "openPlanIntro": true
+    },
+    "23": {
+      "floors": 30,
+      "lifts": 8,
+      "spawnStart": 0.95,
+      "spawnEnd": 1.2,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "counterweightEnabled": true,
+      "zoningEnabled": true,
+      "openPlanIntro": true
     }
   }
 }

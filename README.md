@@ -41,7 +41,7 @@ Historical handoffs and completed plans remain in the repository for context, bu
 
 ## Current project phase
 
-The game is a playable 20-round build with the first 13 rounds covered by the accelerated playtest campaign, canonical balance data, compact simulation reports, and a stabilized core loop.
+The game is a playable 23-round build with the first 13 rounds covered by the accelerated playtest campaign, canonical balance data, compact simulation reports, and a stabilized core loop. Rounds 21–23 introduce the counterweight puzzle trilogy and remain subject to focused playtesting.
 
 Historical stabilization, balance, implementation, and playtest material remains in `docs/archive/` for context. It is
 not current delivery authority.

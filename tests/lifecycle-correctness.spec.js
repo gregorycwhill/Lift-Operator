@@ -415,10 +415,10 @@ test('pause and resume preserve guest and scheduled-event ages', async ({ page }
 
 test('all supported rounds have explicit factory configuration', async ({ page }) => {
     const definitions = await page.evaluate(() => {
-        return Array.from({ length: 20 }, (_, index) => getRoundDefinition(index + 1));
+        return Array.from({ length: 23 }, (_, index) => getRoundDefinition(index + 1));
     });
 
-    expect(definitions).toHaveLength(20);
+    expect(definitions).toHaveLength(23);
     definitions.forEach((definition, index) => {
         expect(definition.round).toBe(index + 1);
         expect(definition.floors).toBeGreaterThan(0);
@@ -764,6 +764,82 @@ test('Service Zoning reports coverage, overlap, and reproducible direct-route ga
     });
 });
 
+test('counterweight trilogy has canonical scale and Open Plan timing', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        rounds: [21, 22, 23].map(round => {
+            const definition = Config.GAME_DATA.rounds[round];
+            return { round, floors: definition.floors, lifts: definition.lifts, counterweight: definition.counterweightEnabled };
+        }),
+        unlock: Config.GAME_DATA.shopUnlocks.openPlan,
+        durations: Config.GAME_DATA.powerups.openPlan.tiers.map(tier => tier.duration)
+    }));
+
+    expect(result.rounds).toEqual([
+        { round: 21, floors: 12, lifts: 2, counterweight: true },
+        { round: 22, floors: 15, lifts: 4, counterweight: true },
+        { round: 23, floors: 30, lifts: 8, counterweight: true }
+    ]);
+    expect(result.unlock).toEqual([22, 22, 22]);
+    expect(result.durations).toEqual([20, 45, 60]);
+});
+
+test('counterweight pairs start complementary and mirror commanded targets', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        Registry.gameActive = true;
+        const before = Registry.lifts.map(lift => ({ partner: lift.counterweightPartner, floor: Math.round(lift.pos / Registry.floorHeight) }));
+        setLiftTarget(0, 10);
+        const after = Registry.lifts.map(lift => ({ target: lift.targetFloor, direction: lift.sweepDirection }));
+        initializeRound(20, { showBriefing: false });
+        Registry.gameActive = true;
+        setLiftTarget(0, 10);
+        return { before, after, unpairedTarget: Registry.lifts[0].targetFloor, unpairedPartner: Registry.lifts[0].counterweightPartner };
+    });
+
+    expect(result.before).toEqual([
+        { partner: 1, floor: 5 },
+        { partner: 0, floor: 6 }
+    ]);
+    expect(result.after).toEqual([
+        { target: 10, direction: 1 },
+        { target: 1, direction: -1 }
+    ]);
+    expect(result.unpairedTarget).toBe(10);
+    expect(result.unpairedPartner).toBe(null);
+});
+
+test('Open Plan uses one active hub to transfer a compatible guest between adjacent lifts', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(22, { showBriefing: false });
+        const [source, target, nonAdjacent] = Registry.lifts;
+        const floor = 5;
+        [source, target, nonAdjacent].forEach(lift => {
+            lift.pos = floor * Registry.floorHeight;
+            lift.state = 'BOARDING';
+            lift.openPlanTimer = 0;
+        });
+        source.openPlanTimer = 20;
+        source.targetFloor = 0;
+        target.targetFloor = 10;
+        nonAdjacent.targetFloor = floor;
+        source.passengers = [{ id: 'transfer-guest', dest: 10, target: { targetFloor: 10 }, status: GuestStatus.HAPPY, boardingWeight: 1 }];
+        target.passengers = [];
+        Registry.roundStats = createRoundStats();
+        processOpenPlanTransfers();
+        return {
+            sourcePassengers: source.passengers.length,
+            targetPassengers: target.passengers.length,
+            transfers: Registry.roundStats.lateralTransfers,
+            partnerPairs: Registry.lifts.map(lift => lift.counterweightPartner)
+        };
+    });
+
+    expect(result.sourcePassengers).toBe(0);
+    expect(result.targetPassengers).toBe(1);
+    expect(result.transfers).toBe(1);
+    expect(result.partnerPairs).toEqual([1, 0, 3, 2]);
+});
+
 test('automation-native zoning scales, assigns, overrides, and preserves existing passengers', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(14, { showBriefing: false });
@@ -898,7 +974,7 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     ]);
     expect(result.r2SpawnStart).toBe(0.4);
     expect(result.r2SpawnEnd).toBe(0.468);
-    expect(result.version).toBe('0.2.7-audio-playtest-remediation');
+    expect(result.version).toBe('0.2.8-counterweight-trilogy');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {

@@ -123,6 +123,23 @@ The Automation Dock is the sole in-game deployment surface. It owns presentation
 unlock logic, assignment rules, and persistent state remain canonical in the shared automation services. There is no
 Debug-only controller switch or alternate in-game selector.
 
+## 2.3 Future counterweight compatibility
+
+The post-R20 Counterweight trilogy does not introduce a second automation controller or special paired-lift authoring
+surface. Existing built-ins, saved Blockly policies, custom policies, and the Automation Dock continue to assign one
+policy per lift. The movement engine owns the fixed adjacent-pair consequence of a command.
+
+For R21–R23, a manual or automation target selected for either car applies through the ordinary assignment/target path;
+the engine moves its counterweight partner in the opposite direction. Zoned policy manual overrides retain their normal
+temporary-out-of-zone behaviour. Open Plan is an operational timed power-up, not a Workshop block: it enables legal,
+destination-aware transfers between adjacent cars sharing a floor while preserving capacity, stink, Gym Bro, VIP, and
+other boarding checks.
+
+Before custom policies are asked to solve the eight-lift Counterweight Network, the automation bridge must expose only
+canonical, deterministic pair state required for safe observation—paired-lift identity, current floor/target, movement
+availability, and whether an Open Plan transfer window is active. It must not expose a way to rewire pairs, bypass the
+complementary-floor rule, transfer guests directly, or mutate another lift's protected state.
+
 ## 3. Workshop unlock
 
 Target campaign unlock: Round 10.

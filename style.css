@@ -223,6 +223,15 @@ body {
 }
 .shaft:hover { background: #e0e6e9; }
 
+.counterweight-pair-visual { position: absolute; top: 0; bottom: 40px; z-index: 2; pointer-events: none; border-top: 3px solid rgba(52, 73, 94, .68); border-bottom: 3px solid rgba(52, 73, 94, .68); border-radius: 50%; }
+.counterweight-pulley { position: absolute; width: 18px; height: 18px; border: 3px solid #34495e; border-radius: 50%; background: #bdc3c7; transform: translateX(-50%); }
+.counterweight-pulley.top { top: -10px; left: 50%; }
+.counterweight-pulley.bottom { bottom: -10px; left: 50%; }
+.counterweight-cable { position: absolute; top: 6px; bottom: 6px; width: 2px; background: repeating-linear-gradient(to bottom, #7f8c8d 0 8px, transparent 8px 14px); opacity: .8; }
+.counterweight-cable.left { left: 25%; }
+.counterweight-cable.right { right: 25%; }
+.counterweight-car { outline: 2px solid rgba(52, 152, 219, .45); outline-offset: 2px; }
+
 /* Permanent in-game Automation Dock. */
 .automation-dock-host { display: flex; flex: 0 0 var(--lobby-width); width: var(--lobby-width); overflow: visible; padding: 1px 3px; }
 .automation-control-row > .label { flex: 0 0 var(--label-width); }

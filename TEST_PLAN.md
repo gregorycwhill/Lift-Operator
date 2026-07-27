@@ -21,6 +21,58 @@ The release is green only when the following evidence is complete:
   the normal campaign.
 - A pushed release commit, generated artifacts, documentation snapshot, seed pack, and test report are available.
 
+## Future acceptance — R21–R23 Counterweight Network
+
+**Status:** Automated implementation acceptance complete; focused human balance and usability acceptance remains open.
+
+**Automated evidence:** R21–R23 focused lifecycle tests pass for canonical scale, complementary starting positions,
+mirrored targets, and adjacent Open Plan transfer. The non-Auto-Pilot browser suite passes 114/114; Auto-Pilot Alpha
+reached the Round 13 boundary and Beta/Gamma pass. Remaining unchecked items below are deliberate human visual,
+balance, and determinism follow-ups rather than missing implementation coverage.
+
+### Deterministic engine and movement
+
+- [ ] Fixed adjacent pairs resolve as `L1↔L2`, `L3↔L4`, `L5↔L6`, and `L7↔L8`, with no pair state on ordinary rounds.
+- [ ] A legal target for either counterweight car produces complementary pair positions without changing either car’s
+  dimensions, legal floor bounds, hit testing, or board scroll geometry.
+- [ ] Manual and every legal built-in/custom automation use the same paired target path; no controller can bypass the
+  complementary-floor rule.
+- [ ] Reset, retry, replay, simulation, pause/resume, and seeded event scheduling reproduce pair identity, position,
+  target, jam state, and outcome deterministically.
+- [x] An unpaired round remains behaviourally unchanged by counterweight support.
+
+### Pair consequences and existing mechanics
+
+- [ ] Passenger loads, doors, boarding, alighting, patience, and destinations remain independent per counterweight car.
+- [ ] A jam freezes both cars’ movement but permits the unjammed stationary partner to complete legal
+  boarding/alighting; Wrench recovery restores legal pair movement.
+- [ ] Turbo applies the canonical half-speed pair benefit, and Gravity always evaluates the upward-moving car.
+- [ ] Stink, capacity effects, Musak, Wide Doors, Group Think, Double-Decker, VIP, Gym Bros, Checkout, and Room Service
+  retain their ordinary legality/effect rules unless the pair movement rule explicitly changes the outcome.
+- [ ] Zoned manual override works for either counterweight car and the assigned zone policy resumes afterwards.
+
+### Open Plan and transfers
+
+- [ ] R21 does not offer Open Plan; R22 and R23 expose the canonical Bronze/Silver/Gold tiers.
+- [ ] During an active Bronze/Silver Open Plan window, only the targeted hub and its immediately adjacent cars stopped at
+  the same floor can transfer guests; cross-pair adjacency such as `L2↔L3` is legal.
+- [x] Transfers are destination-aware and obey capacity, stink, Gym Bro, VIP, and every other ordinary boarding rule.
+- [ ] Gold Open Plan enables the documented whole-building adjacent-transfer behaviour; expiry restores ordinary
+  no-transfer rules without orphaned guests or duplicated passengers.
+- [x] Bronze, Silver, and Gold durations are exactly 20, 45, and 60 seconds respectively; transfer decisions and outcomes
+  are deterministic for the same seed and input sequence.
+
+### Presentation and authored-round acceptance
+
+- [ ] Pair colours, pulleys, cables, and simultaneous opposite movement make causality legible without adding a
+  master/slave UI, warning dialog, or consequence preview.
+- [ ] R21 briefing explains paired movement before play; R22 teaches Open Plan as passenger-distribution recovery; R23
+  explains the combined zoning/Open Plan network problem.
+- [x] R21 is a low-arrival two-lift/12-floor puzzle, R22 is a four-lift/15-floor recovery challenge, and R23 is an
+  eight-lift/30-floor network challenge; their canonical data and seeded reports identify intended bottlenecks.
+- [ ] Human playtesters can explain the pair rule after R21, use Open Plan to correct a bad distribution in R22, and
+  identify a credible zoning/Open Plan/loadout strategy in R23.
+
 ## Latest playtest remediation acceptance
 
 - [ ] R19 and R20 fit the supported desktop viewport with eight lifts visible and readable.
@@ -127,7 +179,7 @@ visual inspection, and full-device playtesting remain open.
 
 - `npm run test:syntax`: passed, 61 JavaScript files.
 - `npm run docs:check`: passed, 22 Markdown files.
-- Lifecycle suite: passed, 84/84.
+- Lifecycle suite: passed, 85/85.
 - Browser suite excluding the known long Protocol Alpha case: passed, 112/112.
 - Aggregate `npm test`: all pre-browser gates, Protocol Alpha, mechanics, integration, and the browser cases reached
   before the wrapper limit passed; the command timed out at 10 minutes because Protocol Alpha alone takes about eight
@@ -136,8 +188,8 @@ visual inspection, and full-device playtesting remain open.
 - Remaining evidence is human: visual confirmation of top-floor icons/cables/capacity labels, rooftop beam subtlety and
   board stability, countdown affordance, suitcase contrast, audio duration feel, and VIP queueing under live traffic.
 
-**Implementation baseline:** `dc1d6e9` — `Promote Automation Dock to production` (26 July 2026).
-**Latest component automated gate:** lifecycle 79/79, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
+**Implementation baseline:** `59dce72` — `Refine automation dock layout and shop gating` (27 July 2026).
+**Latest component automated gate:** lifecycle 85/85, audio 23/23, mechanics 11/11, integration 3/3, unit, syntax,
 documentation, config, balance, economy, report, and UTF-8 checks all passed. The browser remainder passed 107/107;
 the long Protocol Alpha browser test also passed during the aggregate run before the environment's 10-minute wrapper
 limit interrupted the already-running aggregate command.

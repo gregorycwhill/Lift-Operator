@@ -45,6 +45,42 @@ window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity) {
     return window.isGuestDirectionCompatible(lift, guest, floor);
 };
 
+window.processOpenPlanTransfers = function() {
+    const doorStates = new Set(['DOORS_OPENING', 'BOARDING', 'DOORS_CLOSING']);
+    const isAligned = (left, right) => {
+        const leftFloor = Math.round(left.pos / Registry.floorHeight);
+        const rightFloor = Math.round(right.pos / Registry.floorHeight);
+        return leftFloor === rightFloor && Math.abs(left.pos - right.pos) < Config.GAME_DATA.system.lateralTolerance * Registry.floorHeight;
+    };
+    const transferOne = (source, target, floor) => {
+        const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(target.id) : Config.liftCapacity;
+        const index = source.passengers.findIndex(guest => {
+            if (guest.dest === floor) return false;
+            const sourceDistance = Math.abs(source.targetFloor - guest.dest);
+            const targetDistance = Math.abs(target.targetFloor - guest.dest);
+            if (targetDistance >= sourceDistance) return false;
+            return window.canGuestBoardLift(target, guest, floor, target.stinkTimer > 0, capacity);
+        });
+        if (index < 0) return false;
+        const guest = source.passengers.splice(index, 1)[0];
+        target.passengers.push(guest);
+        Registry.roundStats.lateralTransfers++;
+        if (typeof PowerUps !== 'undefined') PowerUps.showEffectOnLift(target.id, '↔️');
+        return true;
+    };
+
+    for (let index = 0; index < Registry.lifts.length - 1; index++) {
+        const left = Registry.lifts[index];
+        const right = Registry.lifts[index + 1];
+        if (!left || !right || !isAligned(left, right)) continue;
+        if (!doorStates.has(left.state) || !doorStates.has(right.state)) continue;
+        if (left.openPlanTimer <= 0 && right.openPlanTimer <= 0) continue;
+        const floor = Math.round(left.pos / Registry.floorHeight);
+        if (transferOne(left, right, floor)) continue;
+        transferOne(right, left, floor);
+    }
+};
+
 window.gameTick = function(timestamp) {
     if (!Registry.gameActive) return;
     const now = timestamp || Date.now();
@@ -144,7 +180,7 @@ window.gameTick = function(timestamp) {
             }
         }
         
-        if (lift.openPlanTimer > 0) {
+        if (false && lift.openPlanTimer > 0) {
             lift.openPlanTimer--;
             // Lateral Transfer Logic
             Registry.lifts.forEach((other, otherIdx) => {
@@ -201,6 +237,8 @@ window.gameTick = function(timestamp) {
             }
         }
     });
+
+    window.processOpenPlanTransfers();
 
     // Process Floor Aging Logic
     Registry.floors.forEach((floor, floorIdx) => {
@@ -439,13 +477,27 @@ window.animationTick = function(timestamp) {
 
         const currentFloor = Math.round(lift.pos / Registry.floorHeight);
         const targetPos = lift.targetFloor * Registry.floorHeight;
+        const partner = Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)
+            ? Registry.lifts[lift.counterweightPartner]
+            : null;
+        const partnerMovementBlocked = Boolean(partner && (partner.jamTimer > 0 || partner.isJammed));
+
+        // A jammed car holds the pair in place. If the partner is already at a
+        // floor, its ordinary door/boarding state may still complete.
+        if (partnerMovementBlocked && Math.abs(lift.pos - targetPos) > (Config.GAME_DATA.system.lateralTolerance * Registry.floorHeight)) {
+            lift.state = 'IDLE';
+            lift.stateProgress = 0;
+            return;
+        }
         
         let actualPixelsPerTick = basePixelsPerTick;
         if (typeof PowerUps !== 'undefined') {
+            const pairTurboActive = Boolean(partner && (lift.turboTimer > 0 || partner.turboTimer > 0));
             if (PowerUps.timers.globalTurbo > 0) {
-                actualPixelsPerTick /= 0.05; 
-            } else if (lift.turboTimer > 0) {
-                let mod = lift.activeTurboSpeed || 0.1; 
+                actualPixelsPerTick /= (Registry.counterweightEnabled && partner ? 0.1 : 0.05);
+            } else if (lift.turboTimer > 0 || pairTurboActive) {
+                let mod = lift.turboTimer > 0 ? (lift.activeTurboSpeed || 0.1) : (partner.activeTurboSpeed || 0.1);
+                if (pairTurboActive) mod *= 2;
                 actualPixelsPerTick /= mod; 
             }
         }

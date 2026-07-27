@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.7-audio-playtest-remediation
+// Balance version: 0.2.8-counterweight-trilogy
 window.GameBalanceData = {
-  "balanceVersion": "0.2.7-audio-playtest-remediation",
+  "balanceVersion": "0.2.8-counterweight-trilogy",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -58,9 +58,9 @@ window.GameBalanceData = {
       12
     ],
     "openPlan": [
-      14,
-      14,
-      14
+      22,
+      22,
+      22
     ]
   },
   "automationUnlocks": {
@@ -224,7 +224,7 @@ window.GameBalanceData = {
         },
         {
           "cost": 5,
-          "duration": 30
+          "duration": 60
         }
       ]
     },
@@ -361,7 +361,7 @@ window.GameBalanceData = {
         },
         {
           "cost": 10,
-          "duration": 30
+          "duration": 60
         }
       ]
     }
@@ -590,6 +590,37 @@ window.GameBalanceData = {
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true
+    },
+    "21": {
+      "floors": 12,
+      "lifts": 2,
+      "spawnStart": 0.25,
+      "spawnEnd": 0.4,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "counterweightEnabled": true,
+      "counterweightIntro": true
+    },
+    "22": {
+      "floors": 15,
+      "lifts": 4,
+      "spawnStart": 0.55,
+      "spawnEnd": 0.75,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "counterweightEnabled": true,
+      "openPlanIntro": true
+    },
+    "23": {
+      "floors": 30,
+      "lifts": 8,
+      "spawnStart": 0.95,
+      "spawnEnd": 1.2,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "counterweightEnabled": true,
+      "zoningEnabled": true,
+      "openPlanIntro": true
     }
   }
 };

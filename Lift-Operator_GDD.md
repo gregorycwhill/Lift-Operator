@@ -5,7 +5,7 @@
 **Owner class:** Product and design  
 **Last reviewed:** 26 July 2026
 **Current phase:** Playable campaign entering structured playtesting  
-**Campaign scope:** 20 rounds; R14–R20 traffic tuning remains subject to playtest evidence.
+**Campaign scope:** 23 rounds; R14–R20 traffic tuning remains subject to playtest evidence, while R21–R23 form the counterweight puzzle trilogy.
 
 **Authority boundary:** The playable structural campaign includes Rounds 14-20. This document defines durable player
 experience and rules; current delivery status belongs in `DELIVERY_PLAN.md`, and late-round tuning evidence belongs in
@@ -45,8 +45,10 @@ Player-authored custom automation is the deliberate exception. A custom policy m
 Selecting a policy is an operational decision, not form filling. The player uses an in-world basement Automation Dock
 to choose a policy, select one or more lifts, and explicitly deploy it. Lift-side controls report the current assignment
 rather than presenting a dense menu per lift. Built-ins and a compact pinned set remain immediately accessible; the
-complete custom and shared collection belongs in a separate library. This preserves fast tactical reassignment while
-scaling from early single lifts to late-game fleets.
+complete custom and shared collection belongs in a separate library. The dock uses wide carousel navigation, compact
+policy text, and colour/state feedback rather than a visible “Armed” label. Its Library button toggles the library, which
+has an icon-only `×` close control. This preserves fast tactical reassignment while scaling from early single lifts to
+late-game fleets.
 
 ## 3. Player experience arc
 
@@ -253,6 +255,24 @@ The current catalog is sufficient:
 | Open Plan | Multi-lift coordination and lateral transfer |
 
 ## 9. Hazards and special traffic
+
+### Counterweight network (post-R20 authored arc)
+
+Rounds 21–23 add fixed, immediately adjacent counterweight pairs. Each pair has complementary floor positions: moving one
+car upward moves the other downward. The player and every existing automation command either car normally; the game
+does not expose a paired-command mode or protect the player from a bad consequence. Pair identity is visible through
+matching colours and a continuous cable/pulley loop above and below the adjacent shafts.
+
+The rule changes movement, not cabin independence. Passenger load, doors, boarding, alighting, patience, and destination
+state remain per car. A jam prevents both cars in the pair travelling, while the unjammed partner may still complete
+boarding/alighting at its current floor. Turbo drives both cars and therefore supplies half its normal speed advantage;
+Gravity always evaluates the upward leg. Other power-ups and all automation policies remain available.
+
+Open Plan enters in Round 22 as a timed tiered recovery tool. Bronze and Silver target one lift as a transfer hub;
+during their effect, guests may automatically make a destination-aware transfer between that car and either adjacent car
+stopped at the same floor. The transfer obeys normal capacity, stink, Gym Bro, VIP, and boarding constraints. Bronze lasts
+20 seconds, Silver 45 seconds, and Gold 60 seconds; Gold allows the whole building to use adjacent transfers. This makes
+it possible to repair a bad passenger distribution without removing the counterweight constraint.
 
 Hazards exist to change decisions, not just subtract performance.
 

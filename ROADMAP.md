@@ -55,11 +55,11 @@ multi-exception fleets, then 30-floor network mastery.
 **Gate:** Human failure diagnoses match round intent, and balance changes are reproducible through canonical data,
 fixed seeds, compact reports, and recorded playtests.
 
-## Later — Counterweight Pairs and Open Plan puzzle arc
+## Now — Validate Counterweight Pairs and Open Plan puzzle trilogy
 
-**Outcome:** Introduce a deliberately puzzle-themed round in which familiar lift controls operate a mechanically
-coupled system. The challenge comes from anticipating consequences across a pair, not from learning a new control
-interface.
+**Outcome:** Add a post-R20, three-round puzzle arc in which familiar lift controls operate mechanically coupled
+systems. The challenge comes from anticipating consequences across a pair, repairing passenger distribution, then
+running a coupled network—not from learning a new control interface.
 
 ### Product concept
 
@@ -79,7 +79,8 @@ different group with different destinations and urgency.
 - Both cabins continue to use the ordinary player controls.
 - The player is allowed to make strategically bad commands; the game does not protect them from the consequence.
 - Passenger loads, boarding, alighting, and guest statuses remain independent per cabin.
-- A jam is devastating at pair level and represents a major loss of infrastructure, not an ordinary isolated lift delay.
+- A jam immobilises its car and prevents its partner travelling. The stationary partner may still board and alight, so a
+  pair failure is severe but recoverable with planning or the Wrench.
 - Stink uses its existing rules. It may still create an unexpected recovery opportunity by forcing a cabin to unload and
   reducing a problematic load.
 - Turbo applies to the pair but provides only half its normal speed benefit because it is driving two lifts.
@@ -87,7 +88,10 @@ different group with different destinations and urgency.
   burden should reflect the upward leg rather than allowing the player to avoid gravity by choosing a direction.
 - Arrival rates are deliberately slower than ordinary high-pressure rounds. Difficulty comes from planning, passenger
   distribution, and recovery decisions rather than raw spawn volume.
-- The round should not initially combine the paired system with every major event. Rooftop, VIP, Checkout, heavy
+- All ordinary automations and power-ups remain available. Their counterweight interactions are authoritative: Turbo
+  supplies half its ordinary speed benefit, Gravity always applies through the upward-moving car, Jam has pair-level
+  movement consequences, and Stink remains an ordinary (and sometimes tactically useful) evacuation mechanism.
+- The introductory round does not combine the paired system with every major event. Rooftop, VIP, Checkout, heavy
   Room Service, and repeated jams are candidates for later variants once the base puzzle is understood.
 
 ### Player comprehension
@@ -104,23 +108,38 @@ The in-game visual language should make causality legible without adding an advi
 continuous pulley/loop animation, clearly connected shafts, and simultaneous opposite movement. Players should be able
 to understand what happened after a command even though the game never prevented the command.
 
+### R21–R23 progression
+
+| Round | Working role | Scale | New lesson | Required solution space |
+| --- | --- | --- | --- | --- |
+| 21 | Counterweight Basics | 2 lifts, 12 floors, deliberately low arrivals | A move in either car moves its adjacent partner in the opposite direction | Manual anticipation and independent passenger-load planning |
+| 22 | Counterweight Crossovers | 4 lifts, 15 floors, two adjacent pairs | Open Plan repairs a passenger-distribution mistake | Timed lateral transfer, pair positioning, and recovery planning |
+| 23 | Counterweight Network | 8 lifts, 30 floors, four adjacent pairs | Coupled movement becomes a fleet-architecture problem | Zoned automation, Open Plan, power-up loadouts, overlap, and manual recovery |
+
+Pairs are fixed and immediately adjacent: `L1↔L2`, `L3↔L4`, `L5↔L6`, and `L7↔L8`. Bronze/Silver Open Plan targets one
+lift as a transfer hub and permits automatic, destination-aware lateral transfers between that lift and either adjacent
+lift—not only the lift’s counterweight partner—when cars are stopped at the same floor. Transfers remain subject to
+ordinary capacity, stink, Gym Bro, VIP, and other boarding rules. Open Plan is timed and tiered: Bronze lasts 20 seconds,
+Silver 45 seconds, and Gold 60 seconds with the whole-building effect.
+
 ### Intended learning arc
 
 The first puzzle round teaches that lift position and passenger distribution are coupled strategic resources. Players
 learn to consider the partner’s load and future destination before commanding either cabin. The round should reward
 observation, anticipation, and manual intervention rather than fast clicking or automation alone.
 
-The following round or progression beat introduces the **Open Plan** power-up. Open Plan allows guests to swap cabins at
-the midpoint of a journey. Its role is intentionally linked to the counterweight lesson: the puzzle round first creates
-the problem of passengers being in the less useful cabin, then Open Plan becomes a meaningful problem-solving tool for
+Round 22 introduces the **Open Plan** power-up. It creates a timed opportunity for destination-aware transfers between
+adjacent cars sharing a floor. Its role is intentionally linked to the counterweight lesson: Round 21 first creates the
+problem of passengers being in the less useful cabin, then Open Plan becomes a meaningful problem-solving tool for
 repairing that distribution mid-journey.
 
 Open Plan should therefore not be available during the introductory Counterweight Pairs round. Its later introduction
 turns a frustrating consequence into a learned strategic opportunity without weakening the initial puzzle’s identity.
 
 **Gate:** Players can explain the paired counterweight rule, recognise that a command to either cabin affects its
-partner, and describe why Open Plan is useful after experiencing the coupled-load problem. The round is not ready for
-implementation planning until its teaching beat, failure recovery expectations, and traffic envelope are playtested.
+partner, use Open Plan to repair a bad passenger distribution, and describe why zoning/open overlap matter in the
+eight-lift network. The future delivery slice must prove the teaching beat, failure recovery expectations, traffic
+envelope, and visual legibility before this arc is promoted.
 
 Open Plan is deliberately introduced after the introductory Counterweight Pairs round. This keeps the first puzzle
 focused on learning the coupled-lift consequence, then gives players a later tool that solves the passenger-distribution

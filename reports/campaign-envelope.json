@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "balanceVersion": "0.2.7-audio-playtest-remediation",
+  "balanceVersion": "0.2.8-counterweight-trilogy",
   "seeds": [
     1234,
     3141,
@@ -83,12 +83,12 @@
       "strong": {
         "survivors": 3,
         "averageElapsedSeconds": 180,
-        "averageServed": 138.66666666666666,
+        "averageServed": 143,
         "averageArrivalRate": 1.078212290499816,
-        "averageDeliveryRate": 0.7746741154540991,
-        "averageUtilisationProxy": 1.3953474259178875,
-        "averageLittleLawResidual": 0.7108478559555991,
-        "averageQueueTrend": 0.3035381750457167,
+        "averageDeliveryRate": 0.7951582867762026,
+        "averageUtilisationProxy": 1.3568499860935834,
+        "averageLittleLawResidual": -0.04448969071934764,
+        "averageQueueTrend": 0.2830540037236131,
         "averageFirstPerilSecond": 110.0000000000067
       }
     },
@@ -109,13 +109,13 @@
       "strong": {
         "survivors": 3,
         "averageElapsedSeconds": 180,
-        "averageServed": 211.33333333333334,
+        "averageServed": 211.66666666666666,
         "averageArrivalRate": 1.5865921787665682,
-        "averageDeliveryRate": 1.1769087523244968,
-        "averageUtilisationProxy": 1.351857926484792,
-        "averageLittleLawResidual": 0.44579617582362846,
-        "averageQueueTrend": 0.4096834264420717,
-        "averageFirstPerilSecond": 137.00000000013242
+        "averageDeliveryRate": 1.1750465549315783,
+        "averageUtilisationProxy": 1.3543040293040294,
+        "averageLittleLawResidual": -0.020694319404168954,
+        "averageQueueTrend": 0.41154562383499016,
+        "averageFirstPerilSecond": 142.33333333332425
       }
     },
     {
@@ -159,41 +159,41 @@
         "averageFirstPerilSecond": 70.6666666666565
       },
       "strong": {
-        "survivors": 0,
-        "averageElapsedSeconds": 156.33333333333334,
-        "averageServed": 125.66666666666667,
-        "averageArrivalRate": 1.3094707723437695,
-        "averageDeliveryRate": 0.8056366911041067,
-        "averageUtilisationProxy": 1.630435413041677,
-        "averageLittleLawResidual": 0.5024609509745895,
-        "averageQueueTrend": 0.5038340812396628,
-        "averageFirstPerilSecond": 57.99999999993085
+        "survivors": 1,
+        "averageElapsedSeconds": 117,
+        "averageServed": 88.66666666666667,
+        "averageArrivalRate": 1.3279714795676434,
+        "averageDeliveryRate": 0.6870939189509416,
+        "averageUtilisationProxy": 2.053525463876826,
+        "averageLittleLawResidual": 2.2087366440974208,
+        "averageQueueTrend": 0.6408775606167019,
+        "averageFirstPerilSecond": 59.33266666666092
       }
     },
     {
       "round": 8,
-      "classification": "CONTESTED",
+      "classification": "OVERLOADED",
       "unattended": {
         "survivors": 0,
-        "averageElapsedSeconds": 148,
-        "averageServed": 104.33333333333333,
-        "averageArrivalRate": 1.0935008371471546,
-        "averageDeliveryRate": 0.7070614488451411,
-        "averageUtilisationProxy": 1.55305890830481,
+        "averageElapsedSeconds": 144,
+        "averageServed": 101.33333333333333,
+        "averageArrivalRate": 1.1180996417191456,
+        "averageDeliveryRate": 0.7047594173562345,
+        "averageUtilisationProxy": 1.5904813025585973,
         "averageLittleLawResidual": null,
-        "averageQueueTrend": 0.3864393883020136,
-        "averageFirstPerilSecond": 57.99999999993085
+        "averageQueueTrend": 0.413340224362911,
+        "averageFirstPerilSecond": 70.99999999999137
       },
       "strong": {
-        "survivors": 2,
-        "averageElapsedSeconds": 173,
-        "averageServed": 125.66666666666667,
-        "averageArrivalRate": 1.1232586097134223,
-        "averageDeliveryRate": 0.7241944228347205,
-        "averageUtilisationProxy": 1.5745745448687307,
-        "averageLittleLawResidual": 2.900865491024875,
-        "averageQueueTrend": 0.39906418687870177,
-        "averageFirstPerilSecond": 134.00000000011843
+        "survivors": 0,
+        "averageElapsedSeconds": 157.66666666666666,
+        "averageServed": 117,
+        "averageArrivalRate": 1.1390220064259948,
+        "averageDeliveryRate": 0.7471158958290344,
+        "averageUtilisationProxy": 1.5269334963439523,
+        "averageLittleLawResidual": 4.021423138451706,
+        "averageQueueTrend": 0.3919061105969604,
+        "averageFirstPerilSecond": 88.3330000000721
       }
     },
     {
@@ -213,13 +213,13 @@
       "strong": {
         "survivors": 3,
         "averageElapsedSeconds": 180,
-        "averageServed": 129.33333333333334,
-        "averageArrivalRate": 1.2942271880783627,
-        "averageDeliveryRate": 0.7150837988807068,
-        "averageUtilisationProxy": 1.8194614771278224,
-        "averageLittleLawResidual": 23.109176986479298,
-        "averageQueueTrend": 0.5791433891976557,
-        "averageFirstPerilSecond": 80.66666666670307
+        "averageServed": 125,
+        "averageArrivalRate": 1.2905027932925257,
+        "averageDeliveryRate": 0.6964618249515219,
+        "averageUtilisationProxy": 1.863487275251981,
+        "averageLittleLawResidual": 22.848521213988136,
+        "averageQueueTrend": 0.5940409683410038,
+        "averageFirstPerilSecond": 84.00000000005193
       }
     },
     {
@@ -238,19 +238,19 @@
       },
       "strong": {
         "survivors": 0,
-        "averageElapsedSeconds": 129,
-        "averageServed": 106.66666666666667,
-        "averageArrivalRate": 1.5845729787727345,
-        "averageDeliveryRate": 0.8220640930769253,
-        "averageUtilisationProxy": 1.9708169417330443,
-        "averageLittleLawResidual": 0.6656293655039107,
-        "averageQueueTrend": 0.7625088856958092,
-        "averageFirstPerilSecond": 63.33333333328901
+        "averageElapsedSeconds": 130.33333333333334,
+        "averageServed": 108,
+        "averageArrivalRate": 1.5381528695141526,
+        "averageDeliveryRate": 0.8320253738512805,
+        "averageUtilisationProxy": 1.8518447673528922,
+        "averageLittleLawResidual": 1.661810311478348,
+        "averageQueueTrend": 0.7061274956628724,
+        "averageFirstPerilSecond": 71.66666666666116
       }
     },
     {
       "round": 11,
-      "classification": "UNPROVEN",
+      "classification": "CONTESTED",
       "unattended": {
         "survivors": 0,
         "averageElapsedSeconds": 112,
@@ -263,15 +263,15 @@
         "averageFirstPerilSecond": 49.66666666655871
       },
       "strong": {
-        "survivors": 0,
-        "averageElapsedSeconds": 105,
-        "averageServed": 86.33333333333333,
-        "averageArrivalRate": 1.85676849355836,
-        "averageDeliveryRate": 0.824814482046023,
-        "averageUtilisationProxy": 2.3034259259259255,
-        "averageLittleLawResidual": 5.110809521928156,
-        "averageQueueTrend": 1.0319540115123371,
-        "averageFirstPerilSecond": 59.66666666660527
+        "survivors": 3,
+        "averageElapsedSeconds": 27,
+        "averageServed": 12.666666666666666,
+        "averageArrivalRate": 1.8953039278046901,
+        "averageDeliveryRate": 0.47256435051513895,
+        "averageUtilisationProxy": 4.146929824561403,
+        "averageLittleLawResidual": 0.31519036222546504,
+        "averageQueueTrend": 1.4227395772895512,
+        "averageFirstPerilSecond": 27
       }
     },
     {
@@ -290,14 +290,14 @@
       },
       "strong": {
         "survivors": 0,
-        "averageElapsedSeconds": 277.6666666666667,
-        "averageServed": 246.66666666666666,
-        "averageArrivalRate": 1.9324147536870837,
-        "averageDeliveryRate": 0.8914957710547565,
-        "averageUtilisationProxy": 2.1687253603731316,
-        "averageLittleLawResidual": 62.06891262598694,
-        "averageQueueTrend": 1.040918982632327,
-        "averageFirstPerilSecond": 277.6666666666667
+        "averageElapsedSeconds": 277.3333333333333,
+        "averageServed": 251.66666666666666,
+        "averageArrivalRate": 1.925186557749238,
+        "averageDeliveryRate": 0.9104836529458004,
+        "averageUtilisationProxy": 2.1174549201215593,
+        "averageLittleLawResidual": 60.4813796729253,
+        "averageQueueTrend": 1.0147029048034375,
+        "averageFirstPerilSecond": 277.3333333333333
       }
     },
     {
@@ -317,13 +317,13 @@
       "strong": {
         "survivors": 3,
         "averageElapsedSeconds": 180,
-        "averageServed": 117.66666666666667,
-        "averageArrivalRate": 0.9739292364963794,
-        "averageDeliveryRate": 0.6517690875214776,
-        "averageUtilisationProxy": 1.4956112910658366,
-        "averageLittleLawResidual": 11.27928728006034,
-        "averageQueueTrend": 0.32216014897490175,
-        "averageFirstPerilSecond": 99.00000000012176
+        "averageServed": 115.33333333333333,
+        "averageArrivalRate": 0.9720670391034609,
+        "averageDeliveryRate": 0.6368715083781296,
+        "averageUtilisationProxy": 1.5268052989291927,
+        "averageLittleLawResidual": 9.332361358257588,
+        "averageQueueTrend": 0.33519553072533137,
+        "averageFirstPerilSecond": 87.0000000000659
       }
     }
   ],
@@ -535,15 +535,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 124,
-        "livesRemaining": 3,
+        "served": 141,
+        "livesRemaining": 14,
         "firstPerilSecond": 73.0000000000007,
-        "peakQueue": 46,
+        "peakQueue": 39,
         "arrivalRate": 1.0949720670360823,
-        "deliveryRate": 0.6927374301656848,
-        "utilisationProxy": 1.5806451612903225,
-        "littlesLawResidual": 2.1440269517875734,
-        "queueTrend": 0.4022346368703975
+        "deliveryRate": 0.7877094972045287,
+        "utilisationProxy": 1.3900709219858154,
+        "littlesLawResidual": 0.2525364184856258,
+        "queueTrend": 0.30726256983155364
       }
     },
     {
@@ -563,15 +563,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 131,
-        "livesRemaining": 5,
+        "served": 144,
+        "livesRemaining": 17,
         "firstPerilSecond": 83.00000000004727,
         "peakQueue": 39,
         "arrivalRate": 1.0949720670360823,
-        "deliveryRate": 0.7318435754169734,
-        "utilisationProxy": 1.49618320610687,
-        "littlesLawResidual": 2.194859292725859,
-        "queueTrend": 0.3631284916191089
+        "deliveryRate": 0.7988826815620397,
+        "utilisationProxy": 1.3706293706293706,
+        "littlesLawResidual": -0.29712943793388646,
+        "queueTrend": 0.2960893854740426
       }
     },
     {
@@ -613,12 +613,12 @@
         "served": 131,
         "livesRemaining": 9,
         "firstPerilSecond": 90.00000000007987,
-        "peakQueue": 38,
+        "peakQueue": 36,
         "arrivalRate": 1.0614525139635493,
-        "deliveryRate": 0.7150837988807068,
-        "utilisationProxy": 1.4843750000000002,
-        "littlesLawResidual": 1.0940802490560841,
-        "queueTrend": 0.3463687150828425
+        "deliveryRate": 0.7262569832382179,
+        "utilisationProxy": 1.4615384615384617,
+        "littlesLawResidual": 1.3344578140560657,
+        "queueTrend": 0.3351955307253315
       }
     },
     {
@@ -714,14 +714,14 @@
         "survived": true,
         "elapsedSeconds": 180,
         "served": 139,
-        "livesRemaining": 16,
+        "livesRemaining": 15,
         "firstPerilSecond": 66.99999999997276,
-        "peakQueue": 39,
+        "peakQueue": 37,
         "arrivalRate": 1.0782122904998157,
-        "deliveryRate": 0.7765363128470176,
-        "utilisationProxy": 1.3884892086330933,
-        "littlesLawResidual": 0.4634093842066953,
-        "queueTrend": 0.3016759776527981
+        "deliveryRate": 0.7709497206682621,
+        "utilisationProxy": 1.3985507246376812,
+        "littlesLawResidual": 0.6893854748416004,
+        "queueTrend": 0.30726256983155364
       }
     },
     {
@@ -758,17 +758,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 177,
-        "served": 183,
-        "livesRemaining": 0,
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 193,
+        "livesRemaining": 2,
         "firstPerilSecond": 73.0000000000007,
-        "peakQueue": 68,
-        "arrivalRate": 1.6420454545409733,
-        "deliveryRate": 1.0397727272698896,
-        "utilisationProxy": 1.5792349726775958,
-        "littlesLawResidual": 2.7880491494420667,
-        "queueTrend": 0.6022727272710837
+        "peakQueue": 63,
+        "arrivalRate": 1.6480446927328791,
+        "deliveryRate": 1.0782122904998157,
+        "utilisationProxy": 1.528497409326425,
+        "littlesLawResidual": 3.048628116920014,
+        "queueTrend": 0.5698324022330634
       }
     },
     {
@@ -788,15 +788,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 201,
-        "livesRemaining": 5,
-        "firstPerilSecond": 164.00000000042445,
-        "peakQueue": 69,
+        "served": 202,
+        "livesRemaining": 12,
+        "firstPerilSecond": null,
+        "peakQueue": 66,
         "arrivalRate": 1.6480446927328791,
-        "deliveryRate": 1.12290502792986,
-        "utilisationProxy": 1.4676616915422886,
-        "littlesLawResidual": 2.747602305034711,
-        "queueTrend": 0.5251396648030191
+        "deliveryRate": 1.1173184357511046,
+        "utilisationProxy": 1.4749999999999999,
+        "littlesLawResidual": 1.3481308193513186,
+        "queueTrend": 0.5307262569817746
       }
     },
     {
@@ -814,17 +814,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 175,
-        "served": 176,
-        "livesRemaining": 0,
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 185,
+        "livesRemaining": 1,
         "firstPerilSecond": 71.99999999999604,
-        "peakQueue": 63,
-        "arrivalRate": 1.6379310344783249,
-        "deliveryRate": 1.0114942528708253,
-        "utilisationProxy": 1.6193181818181817,
-        "littlesLawResidual": 1.2569250074455667,
-        "queueTrend": 0.6264367816074996
+        "peakQueue": 76,
+        "arrivalRate": 1.6480446927328791,
+        "deliveryRate": 1.0223463687122605,
+        "utilisationProxy": 1.6120218579234975,
+        "littlesLawResidual": 0.07056354364947026,
+        "queueTrend": 0.6256983240206186
       }
     },
     {
@@ -861,17 +861,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 162,
-        "served": 161,
-        "livesRemaining": 0,
-        "firstPerilSecond": 106.00000000015437,
-        "peakQueue": 60,
-        "arrivalRate": 1.571428571424565,
-        "deliveryRate": 0.9999999999974505,
-        "utilisationProxy": 1.5714285714285714,
-        "littlesLawResidual": 5.675660827923309,
-        "queueTrend": 0.5714285714271146
+        "survived": true,
+        "elapsedSeconds": 180,
+        "served": 196,
+        "livesRemaining": 6,
+        "firstPerilSecond": 136.00000000029405,
+        "peakQueue": 57,
+        "arrivalRate": 1.592178770945324,
+        "deliveryRate": 1.0949720670360823,
+        "utilisationProxy": 1.4540816326530615,
+        "littlesLawResidual": 2.9335271538616254,
+        "queueTrend": 0.4972067039092416
       }
     },
     {
@@ -917,17 +917,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
+        "survived": true,
         "elapsedSeconds": 180,
-        "served": 182,
-        "livesRemaining": 0,
+        "served": 189,
+        "livesRemaining": 8,
         "firstPerilSecond": 64.99999999996345,
-        "peakQueue": 64,
+        "peakQueue": 58,
         "arrivalRate": 1.592178770945324,
-        "deliveryRate": 1.016759776533505,
-        "utilisationProxy": 1.565934065934066,
-        "littlesLawResidual": -0.28958209700233084,
-        "queueTrend": 0.5754189944118189
+        "deliveryRate": 1.0502793296060382,
+        "utilisationProxy": 1.5159574468085106,
+        "littlesLawResidual": -1.3208110464172194,
+        "queueTrend": 0.5418994413392857
       }
     },
     {
@@ -994,15 +994,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 196,
-        "livesRemaining": 12,
+        "served": 206,
+        "livesRemaining": 15,
         "firstPerilSecond": 81.00000000003796,
-        "peakQueue": 54,
+        "peakQueue": 43,
         "arrivalRate": 1.519553072621502,
-        "deliveryRate": 1.0893854748573268,
-        "utilisationProxy": 1.3948717948717948,
-        "littlesLawResidual": 1.0129293797311334,
-        "queueTrend": 0.43016759776417524
+        "deliveryRate": 1.134078212287371,
+        "utilisationProxy": 1.3399014778325125,
+        "littlesLawResidual": 0.72961490123825,
+        "queueTrend": 0.38547486033413114
       }
     },
     {
@@ -1022,15 +1022,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 192,
-        "livesRemaining": 11,
+        "served": 202,
+        "livesRemaining": 12,
         "firstPerilSecond": 66.99999999997276,
-        "peakQueue": 50,
+        "peakQueue": 39,
         "arrivalRate": 1.519553072621502,
-        "deliveryRate": 1.0670391061423048,
-        "utilisationProxy": 1.4240837696335078,
-        "littlesLawResidual": -1.6250949785924078,
-        "queueTrend": 0.4525139664791973
+        "deliveryRate": 1.1284916201086155,
+        "utilisationProxy": 1.3465346534653466,
+        "littlesLawResidual": -2.4309634874381842,
+        "queueTrend": 0.3910614525128866
       }
     },
     {
@@ -1417,16 +1417,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 135,
-        "served": 87,
+        "elapsedSeconds": 141,
+        "served": 100,
         "livesRemaining": 0,
-        "firstPerilSecond": 90.00000000007987,
-        "peakQueue": 42,
-        "arrivalRate": 1.2761194029823628,
-        "deliveryRate": 0.6492537313419039,
-        "utilisationProxy": 1.9655172413793103,
-        "littlesLawResidual": 7.370835477795605,
-        "queueTrend": 0.6268656716404589
+        "firstPerilSecond": 90.99900000008452,
+        "peakQueue": 43,
+        "arrivalRate": 1.271437653123254,
+        "deliveryRate": 0.7142908163613786,
+        "utilisationProxy": 1.7800000000000002,
+        "littlesLawResidual": 5.799394797092717,
+        "queueTrend": 0.5571468367618755
       }
     },
     {
@@ -1449,16 +1449,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 149,
-        "served": 120,
+        "elapsedSeconds": 132,
+        "served": 94,
         "livesRemaining": 0,
-        "firstPerilSecond": 63.99999999995879,
-        "peakQueue": 42,
-        "arrivalRate": 1.2770270270240074,
-        "deliveryRate": 0.8108108108088936,
-        "utilisationProxy": 1.575,
-        "littlesLawResidual": 1.013755101543552,
-        "queueTrend": 0.4662162162151138
+        "firstPerilSecond": 63.99899999995879,
+        "peakQueue": 45,
+        "arrivalRate": 1.2824525378029814,
+        "deliveryRate": 0.7175627294850014,
+        "utilisationProxy": 1.7872340425531916,
+        "littlesLawResidual": 3.9982540064659773,
+        "queueTrend": 0.56488980831798
       }
     },
     {
@@ -1535,13 +1535,13 @@
         "elapsedSeconds": 174,
         "served": 149,
         "livesRemaining": 0,
-        "firstPerilSecond": 50.99999999989825,
+        "firstPerilSecond": 50.99899999989825,
         "peakQueue": 49,
-        "arrivalRate": 1.3410404624241306,
-        "deliveryRate": 0.8612716762982562,
-        "utilisationProxy": 1.557046979865772,
-        "littlesLawResidual": 1.4722624954074703,
-        "queueTrend": 0.47976878612587437
+        "arrivalRate": 1.3410482141479116,
+        "deliveryRate": 0.8612766547760295,
+        "utilisationProxy": 1.5570469798657716,
+        "littlesLawResidual": 1.489513547897964,
+        "queueTrend": 0.4797715593718821
       }
     },
     {
@@ -1565,15 +1565,15 @@
       "metrics": {
         "survived": false,
         "elapsedSeconds": 173,
-        "served": 145,
+        "served": 144,
         "livesRemaining": 0,
-        "firstPerilSecond": 111.00000000017765,
-        "peakQueue": 47,
-        "arrivalRate": 1.3430232558103483,
-        "deliveryRate": 0.8430232558116905,
-        "utilisationProxy": 1.5931034482758621,
-        "littlesLawResidual": 1.9091247780678415,
-        "queueTrend": 0.49999999999865785
+        "firstPerilSecond": 111.9990000001823,
+        "peakQueue": 49,
+        "arrivalRate": 1.3430310641304886,
+        "deliveryRate": 0.8372141698475773,
+        "utilisationProxy": 1.6041666666666665,
+        "littlesLawResidual": 2.2957830653428246,
+        "queueTrend": 0.5058168942829112
       }
     },
     {
@@ -1596,16 +1596,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 142,
-        "served": 101,
+        "elapsedSeconds": 145,
+        "served": 102,
         "livesRemaining": 0,
-        "firstPerilSecond": 83.00000000004727,
-        "peakQueue": 48,
-        "arrivalRate": 1.3120567375856993,
-        "deliveryRate": 0.7163120567359764,
-        "utilisationProxy": 1.8316831683168315,
-        "littlesLawResidual": 0.5993394065137636,
-        "queueTrend": 0.5957446808497229
+        "firstPerilSecond": 80.99900000003795,
+        "peakQueue": 46,
+        "arrivalRate": 1.3055736885204476,
+        "deliveryRate": 0.7083431714313068,
+        "utilisationProxy": 1.8431372549019607,
+        "littlesLawResidual": 1.0345889241638702,
+        "queueTrend": 0.5972305170891409
       }
     },
     {
@@ -1646,17 +1646,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 145,
-        "served": 104,
-        "livesRemaining": 0,
-        "firstPerilSecond": 66.99999999997276,
-        "peakQueue": 48,
-        "arrivalRate": 1.3124999999969802,
-        "deliveryRate": 0.7222222222205605,
-        "utilisationProxy": 1.8173076923076923,
-        "littlesLawResidual": 2.669135444283725,
-        "queueTrend": 0.5902777777764197
+        "survived": true,
+        "elapsedSeconds": 36,
+        "served": 17,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 16,
+        "arrivalRate": 1.3714285714317647,
+        "deliveryRate": 0.48571428571541664,
+        "utilisationProxy": 2.823529411764706,
+        "littlesLawResidual": -0.6626984126984183,
+        "queueTrend": 0.885714285716348
       }
     },
     {
@@ -1674,142 +1674,78 @@
         },
         {
           "id": "wrench",
-          "tier": 1
-        }
-      ],
-      "metrics": {
-        "survived": false,
-        "elapsedSeconds": 142,
-        "served": 105,
-        "livesRemaining": 0,
-        "firstPerilSecond": 57.99999999993085,
-        "peakQueue": 45,
-        "arrivalRate": 1.3120567375856993,
-        "deliveryRate": 0.7446808510621536,
-        "utilisationProxy": 1.7619047619047619,
-        "littlesLawResidual": 3.301775586524876,
-        "queueTrend": 0.5673758865235456
-      }
-    },
-    {
-      "round": 7,
-      "seed": 6060,
-      "profile": "resource-supported-weighted-voting",
-      "loadout": [
-        {
-          "id": "turbo",
-          "tier": 1
-        },
-        {
-          "id": "turbo",
-          "tier": 1
-        },
-        {
-          "id": "wrench",
-          "tier": 1
-        }
-      ],
-      "metrics": {
-        "survived": false,
-        "elapsedSeconds": 146,
-        "served": 108,
-        "livesRemaining": 0,
-        "firstPerilSecond": 58.999999999935504,
-        "peakQueue": 44,
-        "arrivalRate": 1.3103448275831708,
-        "deliveryRate": 0.7448275862051708,
-        "utilisationProxy": 1.7592592592592593,
-        "littlesLawResidual": -0.9786347440272536,
-        "queueTrend": 0.5655172413780001
-      }
-    },
-    {
-      "round": 8,
-      "seed": 1234,
-      "profile": "idealized-dispatch",
-      "loadout": [],
-      "metrics": {
-        "survived": false,
-        "elapsedSeconds": 143,
-        "served": 87,
-        "livesRemaining": 0,
-        "firstPerilSecond": 55.999999999921535,
-        "peakQueue": 31,
-        "arrivalRate": 1.0774647887299509,
-        "deliveryRate": 0.6126760563366388,
-        "utilisationProxy": 1.7586206896551722,
-        "littlesLawResidual": -0.40160288960274215,
-        "queueTrend": 0.4647887323933121
-      }
-    },
-    {
-      "round": 8,
-      "seed": 1234,
-      "profile": "resource-supported-sweep",
-      "loadout": [
-        {
-          "id": "musak",
-          "tier": 1
-        },
-        {
-          "id": "musak",
-          "tier": 1
-        },
-        {
-          "id": "turbo",
-          "tier": 1
-        }
-      ],
-      "metrics": {
-        "survived": false,
-        "elapsedSeconds": 164,
-        "served": 119,
-        "livesRemaining": 0,
-        "firstPerilSecond": 55.999999999921535,
-        "peakQueue": 35,
-        "arrivalRate": 1.0858895705493508,
-        "deliveryRate": 0.7300613496913714,
-        "utilisationProxy": 1.4873949579831933,
-        "littlesLawResidual": 3.2257014851159056,
-        "queueTrend": 0.3558282208579794
-      }
-    },
-    {
-      "round": 8,
-      "seed": 1234,
-      "profile": "resource-supported-priority-sweep",
-      "loadout": [
-        {
-          "id": "musak",
-          "tier": 1
-        },
-        {
-          "id": "musak",
-          "tier": 1
-        },
-        {
-          "id": "turbo",
           "tier": 1
         }
       ],
       "metrics": {
         "survived": true,
-        "elapsedSeconds": 180,
-        "served": 143,
-        "livesRemaining": 12,
-        "firstPerilSecond": 149.0000000003546,
-        "peakQueue": 32,
-        "arrivalRate": 1.0949720670360823,
-        "deliveryRate": 0.7932960893832842,
-        "utilisationProxy": 1.3802816901408448,
-        "littlesLawResidual": 3.245313469870382,
-        "queueTrend": 0.3016759776527981
+        "elapsedSeconds": 36,
+        "served": 16,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 25,
+        "arrivalRate": 1.3714285714317647,
+        "deliveryRate": 0.45714285714392155,
+        "utilisationProxy": 3,
+        "littlesLawResidual": -1.5880952380952387,
+        "queueTrend": 0.9142857142878431
+      }
+    },
+    {
+      "round": 7,
+      "seed": 6060,
+      "profile": "resource-supported-weighted-voting",
+      "loadout": [
+        {
+          "id": "turbo",
+          "tier": 1
+        },
+        {
+          "id": "turbo",
+          "tier": 1
+        },
+        {
+          "id": "wrench",
+          "tier": 1
+        }
+      ],
+      "metrics": {
+        "survived": true,
+        "elapsedSeconds": 36,
+        "served": 9,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 24,
+        "arrivalRate": 1.3714285714317647,
+        "deliveryRate": 0.25714285714345586,
+        "utilisationProxy": 5.333333333333334,
+        "littlesLawResidual": -1.1657142857142908,
+        "queueTrend": 1.1142857142883087
       }
     },
     {
       "round": 8,
       "seed": 1234,
-      "profile": "resource-supported-weighted-voting",
+      "profile": "idealized-dispatch",
+      "loadout": [],
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 138,
+        "served": 83,
+        "livesRemaining": 0,
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 32,
+        "arrivalRate": 1.0729927007275875,
+        "deliveryRate": 0.6058394160570733,
+        "utilisationProxy": 1.7710843373493974,
+        "littlesLawResidual": -0.7236523370714423,
+        "queueTrend": 0.4671532846705142
+      }
+    },
+    {
+      "round": 8,
+      "seed": 1234,
+      "profile": "resource-supported-sweep",
       "loadout": [
         {
           "id": "musak",
@@ -1826,41 +1762,54 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 141,
-        "served": 88,
+        "elapsedSeconds": 150,
+        "served": 99,
         "livesRemaining": 0,
-        "firstPerilSecond": 55.999999999921535,
-        "peakQueue": 30,
-        "arrivalRate": 1.0785714285690196,
-        "deliveryRate": 0.6285714285700247,
-        "utilisationProxy": 1.7159090909090908,
-        "littlesLawResidual": 5.958261432670945,
-        "queueTrend": 0.44999999999899487
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 31,
+        "arrivalRate": 1.0805369127491065,
+        "deliveryRate": 0.664429530199761,
+        "utilisationProxy": 1.6262626262626265,
+        "littlesLawResidual": 5.568329830720302,
+        "queueTrend": 0.41610738254934543
       }
     },
     {
       "round": 8,
-      "seed": 3141,
-      "profile": "idealized-dispatch",
-      "loadout": [],
+      "seed": 1234,
+      "profile": "resource-supported-priority-sweep",
+      "loadout": [
+        {
+          "id": "musak",
+          "tier": 1
+        },
+        {
+          "id": "musak",
+          "tier": 1
+        },
+        {
+          "id": "turbo",
+          "tier": 1
+        }
+      ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 150,
-        "served": 88,
+        "elapsedSeconds": 151,
+        "served": 116,
         "livesRemaining": 0,
-        "firstPerilSecond": 69.99999999998673,
-        "peakQueue": 34,
-        "arrivalRate": 1.100671140936978,
-        "deliveryRate": 0.5906040268442321,
-        "utilisationProxy": 1.8636363636363638,
-        "littlesLawResidual": 1.2536404311456764,
-        "queueTrend": 0.510067114092746
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 30,
+        "arrivalRate": 1.0799999999974135,
+        "deliveryRate": 0.7733333333314812,
+        "utilisationProxy": 1.396551724137931,
+        "littlesLawResidual": 3.8294069421978882,
+        "queueTrend": 0.30666666666593223
       }
     },
     {
       "round": 8,
-      "seed": 3141,
-      "profile": "resource-supported-sweep",
+      "seed": 1234,
+      "profile": "resource-supported-weighted-voting",
       "loadout": [
         {
           "id": "musak",
@@ -1878,15 +1827,66 @@
       "metrics": {
         "survived": false,
         "elapsedSeconds": 139,
-        "served": 92,
+        "served": 85,
         "livesRemaining": 0,
-        "firstPerilSecond": 57.99999999993085,
-        "peakQueue": 33,
-        "arrivalRate": 1.086956521736741,
-        "deliveryRate": 0.6666666666652011,
-        "utilisationProxy": 1.6304347826086956,
-        "littlesLawResidual": 6.511162242200747,
-        "queueTrend": 0.4202898550715398
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 30,
+        "arrivalRate": 1.0724637681135845,
+        "deliveryRate": 0.6159420289841532,
+        "utilisationProxy": 1.7411764705882355,
+        "littlesLawResidual": 3.4731985664142115,
+        "queueTrend": 0.4565217391294313
+      }
+    },
+    {
+      "round": 8,
+      "seed": 3141,
+      "profile": "idealized-dispatch",
+      "loadout": [],
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 118,
+        "served": 61,
+        "livesRemaining": 0,
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 32,
+        "arrivalRate": 1.102564102562165,
+        "deliveryRate": 0.5213675213666052,
+        "utilisationProxy": 2.1147540983606556,
+        "littlesLawResidual": 2.6580682430796365,
+        "queueTrend": 0.5811965811955598
+      }
+    },
+    {
+      "round": 8,
+      "seed": 3141,
+      "profile": "resource-supported-sweep",
+      "loadout": [
+        {
+          "id": "musak",
+          "tier": 1
+        },
+        {
+          "id": "musak",
+          "tier": 1
+        },
+        {
+          "id": "turbo",
+          "tier": 1
+        }
+      ],
+      "metrics": {
+        "survived": false,
+        "elapsedSeconds": 145,
+        "served": 88,
+        "livesRemaining": 0,
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 42,
+        "arrivalRate": 1.1041743345414494,
+        "deliveryRate": 0.6111153549663368,
+        "utilisationProxy": 1.8068181818181817,
+        "littlesLawResidual": 9.0970820803628,
+        "queueTrend": 0.4930589795751126
       }
     },
     {
@@ -1908,17 +1908,17 @@
         }
       ],
       "metrics": {
-        "survived": true,
-        "elapsedSeconds": 180,
-        "served": 137,
-        "livesRemaining": 10,
-        "firstPerilSecond": null,
-        "peakQueue": 40,
-        "arrivalRate": 1.12290502792986,
-        "deliveryRate": 0.7653631284895066,
-        "utilisationProxy": 1.4671532846715327,
-        "littlesLawResidual": 5.791036759115197,
-        "queueTrend": 0.3575418994403534
+        "survived": false,
+        "elapsedSeconds": 168,
+        "served": 124,
+        "livesRemaining": 0,
+        "firstPerilSecond": 119.99900000021955,
+        "peakQueue": 43,
+        "arrivalRate": 1.1736597225102272,
+        "deliveryRate": 0.7425194162819805,
+        "utilisationProxy": 1.5806451612903225,
+        "littlesLawResidual": 4.5865132828103405,
+        "queueTrend": 0.43114030622824673
       }
     },
     {
@@ -1941,16 +1941,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 140,
-        "served": 82,
+        "elapsedSeconds": 146,
+        "served": 92,
         "livesRemaining": 0,
-        "firstPerilSecond": 57.99999999993085,
-        "peakQueue": 33,
-        "arrivalRate": 1.086330935249391,
-        "deliveryRate": 0.5899280575526495,
-        "utilisationProxy": 1.841463414634146,
-        "littlesLawResidual": 6.007892570906677,
-        "queueTrend": 0.4964028776967415
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 36,
+        "arrivalRate": 1.103448275859512,
+        "deliveryRate": 0.6344827586192195,
+        "utilisationProxy": 1.7391304347826084,
+        "littlesLawResidual": 7.50603944598506,
+        "queueTrend": 0.46896551724029256
       }
     },
     {
@@ -1960,16 +1960,16 @@
       "loadout": [],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 159,
-        "served": 97,
+        "elapsedSeconds": 117,
+        "served": 64,
         "livesRemaining": 0,
-        "firstPerilSecond": 73.0000000000007,
-        "peakQueue": 49,
-        "arrivalRate": 1.1518987341743245,
-        "deliveryRate": 0.6139240506313707,
-        "utilisationProxy": 1.8762886597938147,
-        "littlesLawResidual": -0.3337537559109549,
-        "queueTrend": 0.5379746835429539
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 33,
+        "arrivalRate": 1.1034482758601576,
+        "deliveryRate": 0.5517241379300788,
+        "utilisationProxy": 2,
+        "littlesLawResidual": -0.3175803124123462,
+        "queueTrend": 0.5517241379300788
       }
     },
     {
@@ -1992,16 +1992,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 133,
-        "served": 86,
+        "elapsedSeconds": 150,
+        "served": 105,
         "livesRemaining": 0,
-        "firstPerilSecond": 59.999999999940165,
-        "peakQueue": 37,
-        "arrivalRate": 1.106060606058298,
-        "deliveryRate": 0.651515151513792,
-        "utilisationProxy": 1.697674418604651,
-        "littlesLawResidual": 5.90975392585251,
-        "queueTrend": 0.454545454544506
+        "firstPerilSecond": 70.99899999999138,
+        "peakQueue": 36,
+        "arrivalRate": 1.1409472546768462,
+        "deliveryRate": 0.7047027161239344,
+        "utilisationProxy": 1.619047619047619,
+        "littlesLawResidual": 4.74133234726154,
+        "queueTrend": 0.4362445385529118
       }
     },
     {
@@ -2024,16 +2024,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 121,
-        "served": 78,
+        "elapsedSeconds": 154,
+        "served": 111,
         "livesRemaining": 0,
-        "firstPerilSecond": 59.999999999940165,
-        "peakQueue": 32,
-        "arrivalRate": 1.0999999999979875,
-        "deliveryRate": 0.6499999999988108,
-        "utilisationProxy": 1.6923076923076923,
-        "littlesLawResidual": 4.9691746132487005,
-        "queueTrend": 0.4499999999991767
+        "firstPerilSecond": 74.00000000000536,
+        "peakQueue": 40,
+        "arrivalRate": 1.1634062967703436,
+        "deliveryRate": 0.7254949378736412,
+        "utilisationProxy": 1.6036036036036037,
+        "littlesLawResidual": 3.648349190346888,
+        "queueTrend": 0.4379113588967024
       }
     },
     {
@@ -2056,16 +2056,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 116,
-        "served": 56,
+        "elapsedSeconds": 127,
+        "served": 66,
         "livesRemaining": 0,
-        "firstPerilSecond": 59.999999999940165,
-        "peakQueue": 30,
-        "arrivalRate": 1.0956521739111735,
-        "deliveryRate": 0.4869565217382993,
-        "utilisationProxy": 2.2500000000000004,
-        "littlesLawResidual": 5.289104197884612,
-        "queueTrend": 0.6086956521728742
+        "firstPerilSecond": 70.99999999999139,
+        "peakQueue": 38,
+        "arrivalRate": 1.119056500446218,
+        "deliveryRate": 0.5238136810599319,
+        "utilisationProxy": 2.1363636363636362,
+        "littlesLawResidual": 3.7100868678664085,
+        "queueTrend": 0.5952428193862862
       }
     },
     {
@@ -2108,15 +2108,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 136,
-        "livesRemaining": 3,
+        "served": 138,
+        "livesRemaining": 12,
         "firstPerilSecond": 99.00000000012177,
-        "peakQueue": 67,
-        "arrivalRate": 1.3743016759738584,
-        "deliveryRate": 0.74860335195324,
-        "utilisationProxy": 1.835820895522388,
-        "littlesLawResidual": 24.05445306054321,
-        "queueTrend": 0.6256983240206184
+        "peakQueue": 57,
+        "arrivalRate": 1.28491620111377,
+        "deliveryRate": 0.7709497206682621,
+        "utilisationProxy": 1.6666666666666665,
+        "littlesLawResidual": 21.569863438829024,
+        "queueTrend": 0.513966480445508
       }
     },
     {
@@ -2171,16 +2171,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 107,
-        "served": 18,
+        "elapsedSeconds": 115,
+        "served": 20,
         "livesRemaining": 0,
         "firstPerilSecond": 59.999999999940165,
-        "peakQueue": 78,
-        "arrivalRate": 1.198113207545425,
-        "deliveryRate": 0.16981132075446967,
-        "utilisationProxy": 7.055555555555556,
-        "littlesLawResidual": 17.575291035682028,
-        "queueTrend": 1.0283018867909555
+        "peakQueue": 81,
+        "arrivalRate": 1.2017543859628923,
+        "deliveryRate": 0.17543859649093319,
+        "utilisationProxy": 6.85,
+        "littlesLawResidual": 18.194793414759467,
+        "queueTrend": 1.0263157894719592
       }
     },
     {
@@ -2255,15 +2255,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 123,
-        "livesRemaining": 11,
-        "firstPerilSecond": 87.0000000000659,
-        "peakQueue": 69,
-        "arrivalRate": 1.251396648041237,
-        "deliveryRate": 0.6815642458081738,
-        "utilisationProxy": 1.8360655737704918,
-        "littlesLawResidual": 23.809643231435963,
-        "queueTrend": 0.5698324022330633
+        "served": 117,
+        "livesRemaining": 14,
+        "firstPerilSecond": 95.00000000010314,
+        "peakQueue": 81,
+        "arrivalRate": 1.28491620111377,
+        "deliveryRate": 0.6536312849143961,
+        "utilisationProxy": 1.9658119658119655,
+        "littlesLawResidual": 24.06126947742989,
+        "queueTrend": 0.6312849161993739
       }
     },
     {
@@ -2484,16 +2484,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 111,
-        "served": 97,
+        "elapsedSeconds": 112,
+        "served": 98,
         "livesRemaining": 0,
         "firstPerilSecond": 53.99999999991222,
-        "peakQueue": 63,
-        "arrivalRate": 1.7363636363609056,
-        "deliveryRate": 0.881818181816795,
-        "utilisationProxy": 1.9690721649484535,
-        "littlesLawResidual": 5.578963077405888,
-        "queueTrend": 0.8545454545441106
+        "peakQueue": 70,
+        "arrivalRate": 1.738738738735956,
+        "deliveryRate": 0.8828828828814699,
+        "utilisationProxy": 1.969387755102041,
+        "littlesLawResidual": 7.162215787215608,
+        "queueTrend": 0.8558558558544862
       }
     },
     {
@@ -2567,16 +2567,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 129,
-        "served": 108,
+        "elapsedSeconds": 140,
+        "served": 119,
         "livesRemaining": 0,
         "firstPerilSecond": 90.00000000007987,
-        "peakQueue": 58,
-        "arrivalRate": 1.5546874999968807,
-        "deliveryRate": 0.8437499999983071,
-        "utilisationProxy": 1.8425925925925926,
-        "littlesLawResidual": 2.4867686856435327,
-        "queueTrend": 0.7109374999985736
+        "peakQueue": 70,
+        "arrivalRate": 1.525179856111728,
+        "deliveryRate": 0.8561151079117718,
+        "utilisationProxy": 1.781512605042017,
+        "littlesLawResidual": 2.9942607258834784,
+        "queueTrend": 0.6690647481999562
       }
     },
     {
@@ -2682,16 +2682,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 112,
-        "served": 73,
+        "elapsedSeconds": 115,
+        "served": 89,
         "livesRemaining": 0,
         "firstPerilSecond": 53.99999999991222,
-        "peakQueue": 56,
-        "arrivalRate": 1.5675675675650587,
-        "deliveryRate": 0.6576576576566051,
-        "utilisationProxy": 2.383561643835616,
-        "littlesLawResidual": 2.123177262390165,
-        "queueTrend": 0.9099099099084536
+        "peakQueue": 52,
+        "arrivalRate": 1.5263157894711186,
+        "deliveryRate": 0.7807017543846526,
+        "utilisationProxy": 1.9550561797752808,
+        "littlesLawResidual": 3.664406191336546,
+        "queueTrend": 0.745614035086466
       }
     },
     {
@@ -2714,16 +2714,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 111,
-        "served": 78,
+        "elapsedSeconds": 108,
+        "served": 77,
         "livesRemaining": 0,
         "firstPerilSecond": 44.99999999989522,
-        "peakQueue": 63,
-        "arrivalRate": 1.6181818181792733,
-        "deliveryRate": 0.709090909089794,
-        "utilisationProxy": 2.282051282051282,
-        "littlesLawResidual": 5.596614796606481,
-        "queueTrend": 0.9090909090894793
+        "peakQueue": 57,
+        "arrivalRate": 1.5420560747640635,
+        "deliveryRate": 0.7196261682232296,
+        "utilisationProxy": 2.1428571428571432,
+        "littlesLawResidual": 3.2703110319862674,
+        "queueTrend": 0.8224299065408339
       }
     },
     {
@@ -2800,13 +2800,13 @@
         "elapsedSeconds": 98,
         "served": 82,
         "livesRemaining": 0,
-        "firstPerilSecond": 52.999999999907565,
+        "firstPerilSecond": 52.99899999990757,
         "peakQueue": 56,
-        "arrivalRate": 1.8556701030906322,
-        "deliveryRate": 0.845360824741288,
-        "utilisationProxy": 2.195121951219512,
-        "littlesLawResidual": 6.02623760088963,
-        "queueTrend": 1.0103092783493441
+        "arrivalRate": 1.8556892339074764,
+        "deliveryRate": 0.8453695398911837,
+        "utilisationProxy": 2.1951219512195124,
+        "littlesLawResidual": 6.026015426781335,
+        "queueTrend": 1.0103196940162928
       }
     },
     {
@@ -2860,17 +2860,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 95,
-        "served": 61,
-        "livesRemaining": 0,
-        "firstPerilSecond": 54.99999999991688,
-        "peakQueue": 63,
-        "arrivalRate": 1.893617021274612,
-        "deliveryRate": 0.648936170212086,
-        "utilisationProxy": 2.918032786885246,
-        "littlesLawResidual": 1.6991310680114609,
-        "queueTrend": 1.244680851062526
+        "survived": true,
+        "elapsedSeconds": 24,
+        "served": 11,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 18,
+        "arrivalRate": 1.9131266576852233,
+        "deliveryRate": 0.4782816644213058,
+        "utilisationProxy": 4,
+        "littlesLawResidual": -1.7869345768656544,
+        "queueTrend": 1.4348449932639173
       }
     },
     {
@@ -2911,17 +2911,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 98,
-        "served": 67,
-        "livesRemaining": 0,
-        "firstPerilSecond": 48.99999999988894,
-        "peakQueue": 74,
-        "arrivalRate": 1.8969072164926464,
-        "deliveryRate": 0.6907216494837354,
-        "utilisationProxy": 2.746268656716418,
-        "littlesLawResidual": 6.3099330823732345,
-        "queueTrend": 1.206185567008911
+        "survived": true,
+        "elapsedSeconds": 23,
+        "served": 8,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 26,
+        "arrivalRate": 1.8636363636407027,
+        "deliveryRate": 0.3636363636372103,
+        "utilisationProxy": 5.125,
+        "littlesLawResidual": -0.2196187417654798,
+        "queueTrend": 1.5000000000034923
       }
     },
     {
@@ -2943,17 +2943,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 98,
-        "served": 75,
-        "livesRemaining": 0,
-        "firstPerilSecond": 56.999999999926196,
-        "peakQueue": 64,
-        "arrivalRate": 1.8865979381421427,
-        "deliveryRate": 0.7731958762877634,
-        "utilisationProxy": 2.44,
-        "littlesLawResidual": 8.075366575529564,
-        "queueTrend": 1.1134020618543792
+        "survived": true,
+        "elapsedSeconds": 23,
+        "served": 8,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 25,
+        "arrivalRate": 1.8637210782351683,
+        "deliveryRate": 0.36365289331417916,
+        "utilisationProxy": 5.125,
+        "littlesLawResidual": 0.7463800232026365,
+        "queueTrend": 1.5000681849209891
       }
     },
     {
@@ -2975,17 +2975,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 99,
-        "served": 63,
-        "livesRemaining": 0,
-        "firstPerilSecond": 50.99999999989825,
-        "peakQueue": 70,
-        "arrivalRate": 1.7857142857121517,
-        "deliveryRate": 0.6428571428563746,
-        "utilisationProxy": 2.7777777777777777,
-        "littlesLawResidual": 5.923924620402069,
-        "queueTrend": 1.1428571428557772
+        "survived": true,
+        "elapsedSeconds": 23,
+        "served": 7,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 20,
+        "arrivalRate": 1.818264466570896,
+        "deliveryRate": 0.31819628164990676,
+        "utilisationProxy": 5.714285714285715,
+        "littlesLawResidual": 2.9854896472331625,
+        "queueTrend": 1.5000681849209894
       }
     },
     {
@@ -3058,17 +3058,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 109,
-        "served": 100,
-        "livesRemaining": 0,
-        "firstPerilSecond": 63.99999999995879,
-        "peakQueue": 66,
-        "arrivalRate": 1.9166666666637617,
-        "deliveryRate": 0.9259259259245226,
-        "utilisationProxy": 2.07,
-        "littlesLawResidual": 3.6448191896046183,
-        "queueTrend": 0.9907407407392391
+        "survived": true,
+        "elapsedSeconds": 34,
+        "served": 19,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 33,
+        "arrivalRate": 1.9091487620881449,
+        "deliveryRate": 0.5757750234869008,
+        "utilisationProxy": 3.3157894736842106,
+        "littlesLawResidual": 2.9521244053075293,
+        "queueTrend": 1.333373738601244
       }
     },
     {
@@ -3090,17 +3090,17 @@
         }
       ],
       "metrics": {
-        "survived": false,
-        "elapsedSeconds": 83,
-        "served": 33,
-        "livesRemaining": 0,
-        "firstPerilSecond": 48.99999999988894,
-        "peakQueue": 77,
-        "arrivalRate": 1.8170731707307632,
-        "deliveryRate": 0.4024390243900348,
-        "utilisationProxy": 4.515151515151515,
-        "littlesLawResidual": -4.6292713350938826,
-        "queueTrend": 1.4146341463407284
+        "survived": true,
+        "elapsedSeconds": 33,
+        "served": 4,
+        "livesRemaining": 20,
+        "firstPerilSecond": null,
+        "peakQueue": 35,
+        "arrivalRate": 1.8438076189923864,
+        "deliveryRate": 0.1250039063723652,
+        "utilisationProxy": 14.749999999999998,
+        "littlesLawResidual": -5.234080231673904,
+        "queueTrend": 1.7188037126200213
       }
     },
     {
@@ -3792,16 +3792,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 281,
-        "served": 250,
+        "elapsedSeconds": 280,
+        "served": 265,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 264,
-        "arrivalRate": 1.949999999993282,
-        "deliveryRate": 0.8928571428540668,
-        "utilisationProxy": 2.184,
-        "littlesLawResidual": 65.76040220629736,
-        "queueTrend": 1.0571428571392152
+        "peakQueue": 209,
+        "arrivalRate": 1.928315412179745,
+        "deliveryRate": 0.9498207885271979,
+        "utilisationProxy": 2.030188679245283,
+        "littlesLawResidual": 60.997803347112445,
+        "queueTrend": 0.9784946236525471
       }
     },
     {
@@ -3976,16 +3976,16 @@
       ],
       "metrics": {
         "survived": false,
-        "elapsedSeconds": 259,
-        "served": 194,
+        "elapsedSeconds": 257,
+        "served": 183,
         "livesRemaining": 0,
         "firstPerilSecond": null,
-        "peakQueue": 261,
-        "arrivalRate": 1.9147286821641443,
-        "deliveryRate": 0.7519379844936113,
-        "utilisationProxy": 2.54639175257732,
-        "littlesLawResidual": 58.611832656622305,
-        "queueTrend": 1.1627906976705331
+        "peakQueue": 239,
+        "arrivalRate": 1.9218749999935971,
+        "deliveryRate": 0.7148437499976185,
+        "utilisationProxy": 2.6885245901639343,
+        "littlesLawResidual": 51.04405694501638,
+        "queueTrend": 1.2070312499959788
       }
     },
     {
@@ -4287,15 +4287,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 124,
+        "served": 114,
         "livesRemaining": 15,
         "firstPerilSecond": 53.99999999991222,
-        "peakQueue": 41,
-        "arrivalRate": 0.9720670391034609,
-        "deliveryRate": 0.6815642458081738,
-        "utilisationProxy": 1.4262295081967213,
-        "littlesLawResidual": 16.40657162333178,
-        "queueTrend": 0.29050279329528716
+        "peakQueue": 47,
+        "arrivalRate": 0.983240223460972,
+        "deliveryRate": 0.631284916199374,
+        "utilisationProxy": 1.5575221238938055,
+        "littlesLawResidual": 14.729169207241494,
+        "queueTrend": 0.35195530726159796
       }
     },
     {
@@ -4355,15 +4355,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 119,
-        "livesRemaining": 16,
+        "served": 120,
+        "livesRemaining": 15,
         "firstPerilSecond": 98.00000000011711,
-        "peakQueue": 40,
+        "peakQueue": 39,
         "arrivalRate": 0.994413407818483,
-        "deliveryRate": 0.6536312849143961,
-        "utilisationProxy": 1.5213675213675213,
-        "littlesLawResidual": 14.07973945149191,
-        "queueTrend": 0.3407821229040868
+        "deliveryRate": 0.6592178770931516,
+        "utilisationProxy": 1.5084745762711864,
+        "littlesLawResidual": 11.306983766232271,
+        "queueTrend": 0.33519553072533137
       }
     },
     {
@@ -4510,15 +4510,15 @@
       "metrics": {
         "survived": true,
         "elapsedSeconds": 180,
-        "served": 121,
-        "livesRemaining": 17,
-        "firstPerilSecond": 107.00000000015902,
-        "peakQueue": 35,
-        "arrivalRate": 0.9664804469247054,
-        "deliveryRate": 0.6759776536294182,
-        "utilisationProxy": 1.4297520661157024,
-        "littlesLawResidual": 14.14658674093144,
-        "queueTrend": 0.29050279329528716
+        "served": 119,
+        "livesRemaining": 15,
+        "firstPerilSecond": 115.00000000019628,
+        "peakQueue": 27,
+        "arrivalRate": 0.9720670391034609,
+        "deliveryRate": 0.6536312849143961,
+        "utilisationProxy": 1.4871794871794872,
+        "littlesLawResidual": 7.656379219773598,
+        "queueTrend": 0.3184357541890648
       }
     },
     {

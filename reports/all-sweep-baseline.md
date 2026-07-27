@@ -1,6 +1,6 @@
 # All-Sweep Balance Baseline
 
-Balance version: `0.2.7-audio-playtest-remediation`
+Balance version: `0.2.8-counterweight-trilogy`
 Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 
 | Round | Seed | Outcome | Elapsed | Lives | Served | First peril | Min SI | Peak queue | P90 journey | Classification |
@@ -23,9 +23,9 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 | 7 | 1234 | died | 144s | 0 | 113 | 99s | 0.00 | 40 | 45.6s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 3141 | died | 168s | 0 | 142 | 51s | 0.00 | 51 | 50.2s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 6060 | died | 148s | 0 | 122 | 62s | 0.00 | 43 | 43.4s | MEETS_ALL_SWEEP_FLOOR |
-| 8 | 1234 | died | 160s | 0 | 122 | 56s | 0.00 | 31 | 52.8s | MEETS_ALL_SWEEP_FLOOR |
-| 8 | 3141 | died | 146s | 0 | 100 | 58s | 0.00 | 32 | 45.9s | MEETS_ALL_SWEEP_FLOOR |
-| 8 | 6060 | died | 138s | 0 | 91 | 60s | 0.00 | 38 | 49.2s | MEETS_ALL_SWEEP_FLOOR |
+| 8 | 1234 | died | 128s | 0 | 81 | 67s | 0.00 | 39 | 48.4s | MEETS_ALL_SWEEP_FLOOR |
+| 8 | 3141 | died | 149s | 0 | 108 | 71s | 0.00 | 31 | 44.4s | MEETS_ALL_SWEEP_FLOOR |
+| 8 | 6060 | died | 155s | 0 | 115 | 75s | 0.00 | 45 | 51.2s | MEETS_ALL_SWEEP_FLOOR |
 | 9 | 1234 | survived | 180s | 3 | 121 | 92s | 0.28 | 78 | 47.7s | VIOLATION_SURVIVED |
 | 9 | 3141 | survived | 180s | 14 | 157 | 61s | 0.39 | 69 | 49.9s | VIOLATION_SURVIVED |
 | 9 | 6060 | survived | 180s | 3 | 120 | 47s | 0.07 | 79 | 46.9s | VIOLATION_SURVIVED |

@@ -9,19 +9,83 @@ and testable campaign slice. This plan does not add transfers, a G hub, new haza
 
 ## Current state
 
-**Implementation:** Current `master` baseline `dc1d6e9` (26 July 2026), with the permanent Automation Dock promotion,
+**Implementation:** Current `master` baseline `59dce72` (27 July 2026), with the permanent Automation Dock promotion,
 Service Zoning, and the latest playtest remediation implemented.
 **Automated baseline:** Component gates are recorded in `TEST_PLAN.md`; the aggregate browser command is limited by the
 execution environment rather than an observed test failure.
 
-### Current follow-up slice
+### Completed follow-up slice
 
-The next playtest slice tightens the permanent Automation Dock presentation: wider carousel arrow hit targets, compact
+**Status:** Implemented and pushed to `master`.<br>
+This slice tightens the permanent Automation Dock presentation: wider carousel arrow hit targets, compact
 policy text without a visible “Armed” label, a true Dock Library toggle, and an icon-only Library-panel close control.
 The empty-cart credit warning now shares the canonical Supply Closet eligibility predicate, so carried-forward credits do
 not trigger a warning before power-ups are available, including Debug-mode Round 1.
 **Promotion status:** Not promoted. The remaining release work is structured human/device evidence, R14–R20 tuning
 only where evidence supports it, and a release decision with a recorded test/device/seed pack.
+
+## Future vertical slice — R21–R23 Counterweight Network
+
+**Status:** Implemented vertical slice; awaiting focused human playtest and balance tuning.<br>
+**Implementation status (current):** Vertical slice implemented; focused human balance, accessibility, and visual playtesting remains open.<br>
+**Scope:** Three authored post-R20 rounds: a two-lift counterweight teaching puzzle, a four-lift Open Plan recovery
+round, and an eight-lift network round that combines counterweights, Service Zoning, Open Plan, and the existing
+power-up economy.<br>
+**Design authority:** `ROADMAP.md`, `Game Play Map.md`, `Lift-Operator_GDD.md`, and `Automation_Workshop_Spec.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Locked behaviour
+
+1. Fixed immediately-adjacent pairs are `L1↔L2`, `L3↔L4`, `L5↔L6`, and `L7↔L8`; each pair maintains complementary
+   floors during travel.
+2. Either car receives ordinary player and automation commands. There is no master/slave control, restriction, warning,
+   or consequence preview; commanding one car moves its partner in the opposite direction.
+3. Loads, doors, boarding, alighting, guest status, and ordinary suitability rules remain independent per car.
+4. A jam immobilises its car and prevents its partner travelling, but the stationary partner may finish ordinary
+   boarding/alighting. Wrench recovery remains available.
+5. Turbo applies to the pair at half ordinary speed benefit; Gravity always evaluates the upward-moving car; Stink
+   remains unchanged; all existing power-ups and automations remain legal.
+6. Open Plan is introduced in R22. While its timed tier effect is active, destination-aware guests may transfer between
+   any adjacent lifts stopped on the same floor. Capacity, stink, Gym Bro, VIP, and every other ordinary boarding rule
+   still apply. Bronze/Silver are longer local windows; Gold is whole-building.
+7. Zoned policies retain their current manual-override semantics: a manual command may leave the zone temporarily, then
+   the policy resumes its zone behaviour.
+
+### Delivery sequence
+
+1. Add counterweight-pair state and deterministic paired movement without changing ordinary unpaired-round behaviour.
+2. Render fixed adjacent pair identity with matching colours, centred cables, top/bottom pulleys, and a continuous loop
+   that makes simultaneous opposite movement legible.
+3. Author R21 at 2 lifts/12 floors with low arrival pressure and a briefing that teaches the physical rule.
+4. Implement the timed, tiered Open Plan transfer window and author R22 at 4 lifts/15 floors around recoverable
+   passenger-distribution mistakes.
+5. Author R23 at 8 lifts/30 floors, combining counterweights with zoning, Open Plan, and existing power-ups; tune
+   only after deterministic and human evidence identifies the bottleneck.
+
+### Explicitly deferred from this slice
+
+- Dynamic pair rewiring, player-selectable pair assignment, or non-adjacent counterweights.
+- Transfers outside an active Open Plan window, between non-adjacent lifts, or while cars are on different floors.
+- New automation primitives beyond exposing canonical counterweight/open-plan state needed for existing policies to
+  operate correctly.
+- Procedural Counterweight rounds. The first trilogy is authored and seed-tested.
+
+### Implementation result
+
+The engine now carries explicit counterweight partners, initializes complementary positions, mirrors manual and
+automation targets, blocks pair travel when the partner is jammed, applies the half-benefit Turbo rule, and renders the
+paired pulley/cable treatment. Open Plan uses a single active local hub for Bronze/Silver and adjacent whole-building
+exchange for Gold, with ordinary boarding constraints preserved. Canonical balance, generated artifacts, Debug Warp,
+briefings, and focused browser tests cover R21–R23. Human balance, accessibility, and visual playtesting remain open.
+
+### Locked decisions before implementation
+
+1. **Open Plan local scope:** Bronze/Silver target one lift as a transfer hub. That lift may exchange compatible guests
+   with either immediately adjacent neighbour at the same floor. Gold remains whole-building adjacent transfer.
+2. **Open Plan economy:** move the canonical unlock to R22 and set Bronze/Silver/Gold durations to 20/45/60 seconds.
+   Gold is the longest tier and applies across the whole building.
+3. **Authored balance envelope:** R21 uses 12 floors and R23 uses 30 floors. Arrival curves remain deterministic and are
+   tuned only after the R14–R20 evidence provides an economy baseline.
 
 ## Current playtest remediation slice
 

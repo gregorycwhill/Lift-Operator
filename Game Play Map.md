@@ -1,7 +1,7 @@
 # Lift Operator — Target Game Play Map
 
 **Document role:** Target learning arc and candidate round/balance intent  
-**Campaign scope:** 20 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20  
+**Campaign scope:** 23 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20, with R21-R23 defined as the counterweight puzzle trilogy
 **Status:** Design candidate for iterative playtesting; not a statement of current implementation  
 **Owner class:** Product and design  
 **Last reviewed:** 26 July 2026
@@ -61,7 +61,8 @@ Automation deployment follows a deliberate two-step pattern. When disarmed, sele
 batch; then click a carousel policy to arm it and assign it immediately. Alternatively, arm a policy first: lift
 controllers glow for five seconds, and each clicked lift receives the armed policy. The policy remains armed until its
 card is clicked again. Carousel scrolling previews only, and each lift continues to display its assigned policy as
-compact status information.
+compact status information. The carousel uses wide previous/next controls and a compact policy label; the Dock Library
+button toggles the accordion library, whose panel closes with an icon-only `×` control.
 
 Lift capacity appears as a floating effect above each lift during the countdown, then disappears. It reappears whenever effective capacity changes, including modifier activation and expiry. Normal play does not carry a permanent capacity label.
 
@@ -111,11 +112,14 @@ Failure timing still matters. Round 2 all-Sweep should fail late enough for Swee
 | Double-Decker | 11 | 13 | 13 |
 | Endurance until death | 12 | 12 | — |
 | Gravity | 13 | 13 | — |
-| Open Plan | Experimental after campaign | — | Not required for campaign balance |
+| Open Plan | Round 22 (post-R20) | 22–23 | Timed adjacent-lift transfer; outside core 1–20 balance |
 
 ### Why Open Plan is outside the core 13-round balance
 
-Open Plan is technically and cognitively complex, partially implemented, and not required to complete the intended arcade-to-automation arc. It should remain an experimental post-campaign or sandbox mechanic until lateral transfer is reliable, observable, and testable.
+Open Plan is technically and cognitively complex and is not required to complete the intended arcade-to-automation arc.
+It enters only after the R20 campaign in the authored Counterweight trilogy: R22 teaches timed lateral recovery and R23
+combines it with zoning. It must remain unavailable to the core 1–20 balance until lateral transfer is reliable,
+observable, and testable.
 
 ### Deferred advanced telemetry automation
 
@@ -480,6 +484,40 @@ direct-service band for each lift.
 The current screen renders approximately seven lifts comfortably. R14–R18 should remain usable within that limit;
 R19–R20 use a compact large-fleet layout so all eight lifts remain visible on supported desktop widths.
 Every round should retain manual/hybrid, built-in automation plus loadout, and custom Workshop solutions where practical.
+
+## 6.6 Post-R20 counterweight trilogy: Rounds 21–23
+
+This authored puzzle trilogy shifts the late-game challenge from raw fleet scale to coupled spatial planning. Counterweight
+pairs are always immediately adjacent (`L1↔L2`, then `L3↔L4`, and so on). A command to either car moves its partner in
+the opposite direction; the pair maintains complementary floors. The player retains ordinary controls and is never
+warned, restricted, or given a master/slave interface.
+
+| Round | Title | Floors | Lifts | Role in arc | Intended solution space |
+| --- | --- | ---: | ---: | --- | --- |
+| 21 | Counterweight Basics | 12 | 2 | Teach paired movement as a low-pressure spatial puzzle | Manual anticipation, cabin-load planning, and recovery from a bad command |
+| 22 | Counterweight Crossovers | 15 | 4 | Introduce Open Plan after the player has experienced misplaced passenger load | Timed adjacent-lift transfers, pair positioning, and power-up timing |
+| 23 | Counterweight Network | 30 | 8 | Scale paired movement into fleet architecture | Zoned automation, zone overlap, Open Plan, loadouts, and manual recovery |
+
+### Counterweight operating rules
+
+- Passenger loads, doors, boarding, alighting, and guest patience remain independent in each car.
+- A jam immobilises its car and stops its partner travelling, but the partner may still board/alight at its current floor.
+- Turbo applies to the pair at half its normal speed benefit. Gravity always matters through the car travelling upward.
+- Stink, Wrench, TARDIS, Wide Doors, Group Think, Double-Decker, Musak, and ordinary automations remain available under
+  their normal rules unless a counterweight rule above explicitly changes their movement consequence.
+- Zoned automation remains optional and accepts the usual manual override; it resumes normal zone behaviour afterwards.
+
+### Open Plan role
+
+Open Plan is unavailable in Round 21. In R22 and later, it is a timed, tiered lateral-transfer window. Bronze and Silver
+target one lift as a transfer hub: compatible destination-aware guests may move between it and either adjacent lift
+stopped at the same floor, including across a pair boundary such as `L2↔L3`. Bronze lasts 20 seconds and Silver 45
+seconds. Gold lasts 60 seconds and enables the whole-building adjacent-transfer effect. Transfers still obey capacity,
+stink, Gym Bro, VIP, and all ordinary boarding rules.
+
+The R21 briefing teaches the physical rule with a simple example. R22 teaches that Open Plan repairs passenger
+distribution rather than cancelling counterweight movement. R23 asks the player to combine both ideas with zoning and
+the established power-up economy.
 
 ## 7. Hazard tuning principles
 
