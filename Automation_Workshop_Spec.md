@@ -3,7 +3,7 @@
 **Purpose:** Define the educational experience, current implementation boundary, target execution model, and reliability requirements for player automation.
 **Document status:** Active feature specification; implementation status is tracked below.  
 **Owner class:** Product and engineering  
-**Last reviewed:** 26 July 2026
+**Last reviewed:** 28 July 2026
 
 ## 1. Player purpose
 
@@ -60,11 +60,13 @@ the normal in-game automation controller.
 Round 14 unlocks two scalable read-only examples:
 
 - **Zoned Low:** serves from G through the calculated midpoint floor.
-- **Zoned High:** serves from the calculated midpoint floor through the highest floor.
+- **Zoned High:** serves Ground plus the calculated midpoint floor through the highest floor.
 
 The midpoint is shared by both policies, giving one floor of overlap. For a building with floors 0 through `maxFloor`,
-the pivot is `ceil(maxFloor / 2)`, so Low is `0..pivot` and High is `pivot..maxFloor`. Existing unzoned built-ins
-remain available; zoning is optional and is initiated by assigning a Zoned policy to a lift.
+the pivot is `ceil(maxFloor / 2)`, so Low is `0..pivot` and High is `0` plus `pivot..maxFloor`. Ground is a shared
+direct-service exception for every zoned policy, including valid custom zones; it does not turn Ground into a
+passenger-transfer hub. Existing unzoned built-ins remain available; zoning is optional and is initiated by assigning
+a Zoned policy to a lift.
 
 ### Blockly and policy metadata
 

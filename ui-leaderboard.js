@@ -147,3 +147,34 @@ window.showLeaderboard = function(titleText) {
     
     window.openModalExclusive('leaderboardOverlay');
 };
+
+window.showSettings = function() {
+    if (window.Game.Audio) window.Game.Audio.setContext('menu');
+    const engine = GameEngine();
+    if (typeof engine.pause === 'function') engine.pause();
+    const audio = window.Game.Audio;
+    const mute = document.getElementById('settingsAudioMute');
+    const music = document.getElementById('settingsAudioMusic');
+    const sfx = document.getElementById('settingsAudioSfx');
+    if (audio && mute && music && sfx) {
+        const settings = audio.getSettings();
+        mute.checked = settings.muted;
+        music.value = settings.music;
+        sfx.value = settings.sfx;
+        mute.onchange = () => audio.setMuted(mute.checked);
+        music.oninput = () => audio.setVolume('music', music.value);
+        sfx.oninput = () => audio.setVolume('sfx', sfx.value);
+    }
+    const container = document.getElementById('settingsAchievements');
+    if (container) {
+        const player = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
+        const record = JSON.parse(window.Game.Storage.get(window.Game.Keys.ACHIEVEMENTS + player, '{}'));
+        const definitions = typeof Achievements !== 'undefined' ? Achievements.definitions : {};
+        container.innerHTML = Object.values(definitions).map(feat => {
+            const tier = record[feat.id];
+            const asset = tier && feat[tier];
+            return `<div class="settings-achievement ${asset ? 'earned' : ''}">${asset ? asset.icon : '○'} <span>${feat.name}</span><small>${asset ? asset.label : 'Locked'}</small></div>`;
+        }).join('') || '<p>No achievements recorded yet.</p>';
+    }
+    window.openModalExclusive('settingsOverlay');
+};

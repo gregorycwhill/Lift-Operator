@@ -3,14 +3,14 @@
 **Status:** Active playtest release  
 **Release target:** `0.3.0-network-campaign-preview`  
 **Owner class:** Product and engineering  
-**Last reviewed:** 26 July 2026
+**Last reviewed:** 28 July 2026
 **Scope boundary:** Promote the implemented R14–R20 direct-service zoning foundation into a diagnosable, playable,
 and testable campaign slice. This plan does not add transfers, a G hub, new hazards, or new power-ups.
 
 ## Current state
 
-**Implementation:** Current `master` baseline `59dce72` (27 July 2026), with the permanent Automation Dock promotion,
-Service Zoning, and the latest playtest remediation implemented.
+**Implementation:** Current `master` baseline `a0b9c58` (28 July 2026), with the permanent Automation Dock promotion,
+Service Zoning, counterweight visual revision, and the latest playtest remediation implemented.
 **Automated baseline:** Component gates are recorded in `TEST_PLAN.md`; the aggregate browser command is limited by the
 execution environment rather than an observed test failure.
 
@@ -56,10 +56,10 @@ power-up economy.<br>
 1. Add counterweight-pair state and deterministic paired movement without changing ordinary unpaired-round behaviour.
 2. Render fixed adjacent pair identity with matching colours, centred cables, top/bottom pulleys, and a continuous loop
    that makes simultaneous opposite movement legible.
-3. Author R21 at 2 lifts/12 floors with low arrival pressure and a briefing that teaches the physical rule.
+3. Author R21 at 2 lifts/11 floors with low arrival pressure and a briefing that teaches the physical rule.
 4. Implement the timed, tiered Open Plan transfer window and author R22 at 4 lifts/15 floors around recoverable
    passenger-distribution mistakes.
-5. Author R23 at 8 lifts/30 floors, combining counterweights with zoning, Open Plan, and existing power-ups; tune
+5. Author R23 at 8 lifts/29 floors, combining counterweights with zoning, Open Plan, and existing power-ups; tune
    only after deterministic and human evidence identifies the bottleneck.
 
 ### Explicitly deferred from this slice
@@ -84,8 +84,58 @@ briefings, and focused browser tests cover R21–R23. Human balance, accessibili
    with either immediately adjacent neighbour at the same floor. Gold remains whole-building adjacent transfer.
 2. **Open Plan economy:** move the canonical unlock to R22 and set Bronze/Silver/Gold durations to 20/45/60 seconds.
    Gold is the longest tier and applies across the whole building.
-3. **Authored balance envelope:** R21 uses 12 floors and R23 uses 30 floors. Arrival curves remain deterministic and are
+3. **Authored balance envelope:** R21 uses 11 floors and R23 uses 29 floors. Arrival curves remain deterministic and are
    tuned only after the R14–R20 evidence provides an economy baseline.
+
+## Next remediation slice — settings, shared Ground, and counterweight polish
+
+**Status:** Implemented; ready for focused human playtest from 28 July 2026 feedback.<br>
+**Scope:** Replace the ordinary Leaderboard entry point with Settings; make Ground shared and weighted once zoning
+unlocks; improve guest/briefing readability; correct R6 and counterweight authored balance; fix Open Plan expiry; and
+reproduce the reported R22 manual-stop boarding issue before changing boarding rules.<br>
+**Design authority:** `ROADMAP.md` and `Game Play Map.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Locked behaviour
+
+1. **Settings and Leaderboard:** the normal button/modal becomes Settings. Settings shows current achievements, audio
+   controls, attribution, and a link to the separate Leaderboard. Campaign completion continues to open Leaderboard.
+2. **Shared Ground:** when zoning is enabled, every lift can legally serve G. G receives a weight of three ordinary
+   floors for both spawned origins and selected destinations.
+3. **Checkout readability:** checkout status does not replace the guest's normal happy/annoyed/critical colour. Use a
+   light monochrome suitcase treatment that remains legible on those status colours.
+4. **Briefing and R6:** R15–R20 briefings name their actual combined challenge and relevant preparation. R6 changes
+   from `0.80→0.92` to `0.90→1.05` spawn pressure.
+5. **Counterweight and Open Plan:** R21/R22/R23 use 11/15/29 floors. Open Plan timers decrement once per gameplay
+   second and expiry removes both transfer eligibility and active treatment.
+6. **Gym Bros:** two-digit Gym Bro destinations fit within their tile without reducing normal guest readability.
+7. **R22 boarding report:** first add a deterministic reproduction covering manual target, Sweep direction, parked-lift
+   arbitration, capacity, and zoning. Do not weaken ordinary direction/boarding rules until the observed cause is known.
+
+### Implementation sequence
+
+1. Refactor the existing Leaderboard presentation into a reusable score modal; introduce Settings as the ordinary
+   navigation modal and move achievements/audio/attribution there.
+2. Add canonical Ground weighting and shared-G zoning semantics through spawning, direct-route checks, automation
+   labels, telemetry, and replay/simulation inputs.
+3. Replace the checkout emoji-only colour dependency with a status-preserving suitcase treatment; tighten Gym Bro type.
+4. Author R15–R20 challenge-specific briefing copy and apply the accepted R6/R21/R23 canonical balance changes.
+5. Restore Open Plan timer decay in the single timer owner and ensure expiry removes the transfer capability.
+6. Build the R22 boarding reproduction. If parked-lift arbitration is confirmed, surface or revise that arbitration only
+   with a separately documented behavioural decision.
+
+### Implementation result
+
+Settings, shared Ground zoning, weighted post-R14 guest traffic, status-preserving checkout luggage, compact Gym Bro
+tiles, R15–R20 challenge briefings, R6/R21/R23 balance changes, and single-owner Open Plan expiry are implemented and
+covered by focused browser tests. The R22 manual-stop report remains an evidence-gathering item for playtest; no
+boarding rule was changed speculatively.
+
+### Explicit non-goals
+
+- No change to campaign-completion Leaderboard behaviour.
+- No transfers outside active Open Plan windows.
+- No speculative change to Sweep direction compatibility before the R22 report is reproduced.
 
 ## Current playtest remediation slice
 

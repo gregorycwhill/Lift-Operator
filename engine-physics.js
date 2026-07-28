@@ -100,6 +100,10 @@ window.gameTick = function(timestamp) {
     }
 
     if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick();
+
+    Registry.lifts.forEach(lift => {
+        if (lift.openPlanTimer > 0) lift.openPlanTimer--;
+    });
     
     // Round Logic Orchestrator
     if (roundConfig.objective === 'QUOTA') {

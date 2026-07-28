@@ -88,6 +88,7 @@ const Registry = {
     },
     isFloorInLiftZone: function(lift, floor) {
         if (!this.isZoningEnabled()) return floor >= 0 && floor < Config.numFloors;
+        if (floor === 0) return true;
         const lower = Number.isInteger(lift?.serviceLower) ? lift.serviceLower : 0;
         const upper = Number.isInteger(lift?.serviceUpper) ? lift.serviceUpper : Config.numFloors - 1;
         return floor >= lower && floor <= upper && floor >= 0 && floor < Config.numFloors;

@@ -4,7 +4,7 @@
 **Campaign scope:** 23 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20, with R21-R23 defined as the counterweight puzzle trilogy
 **Status:** Design candidate for iterative playtesting; not a statement of current implementation  
 **Owner class:** Product and design  
-**Last reviewed:** 26 July 2026
+**Last reviewed:** 28 July 2026
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
 **Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
@@ -138,7 +138,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
 | 4 | Triage Protocol | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
 | 5 | Democracy | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
-| 6 | Maintenance Crisis | Survive 180s | 12 | 3 | 0.80→0.92 | Lift jams, redundancy | Wrench |
+| 6 | Maintenance Crisis | Survive 180s | 15 | 3 | 0.90→1.05 | Lift jams, redundancy | Wrench |
 | 7 | Checkout Rush | Survive 150s | 12 | 4 | 1.00→1.30 | Ground-floor funnel | Turbo |
 | 8 | VIP Security | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
 | 9 | Happy Hour | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |
@@ -147,7 +147,8 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | 12 | Endurance Operations | Survive until 20 lives are lost | 15 | 4 | 0.80→1.00 | Resource endurance and recombination | Higher tiers |
 | 13 | Pedal Power | Deliver 50 | 15 | 5 | 1.20→1.55 | Gravity and load optimization | Full catalog |
 
-These figures are a candidate baseline. The current implementation uses 180-second early rounds and substantially different values.
+These figures are the next accepted tuning targets where they differ from the current canonical balance; implementation
+must update the canonical source and generated artifact together.
 
 ## 6. Detailed round designs
 
@@ -461,6 +462,8 @@ direct-service band for each lift.
 
 - A lift has an inclusive lower and upper service floor.
 - G is a normal serviced floor within the zone, not a transfer hub. A zone such as `G–10` includes G and Floors 1–10.
+- G is shared by every zoned policy, including Zoned High. It is three times as likely as an ordinary floor as both a
+  guest origin and destination, making lobby flow a deliberate shared-service demand.
 - Guests board only when the lift can carry them directly from their current floor to their destination within its
   configured zone. Multi-lift journeys and transfers are deferred.
 - Including G reflects real lift operation and is especially useful for Room Service and Checkout traffic, which often
@@ -494,9 +497,9 @@ warned, restricted, or given a master/slave interface.
 
 | Round | Title | Floors | Lifts | Role in arc | Intended solution space |
 | --- | --- | ---: | ---: | --- | --- |
-| 21 | Counterweight Basics | 12 | 2 | Teach paired movement as a low-pressure spatial puzzle | Manual anticipation, cabin-load planning, and recovery from a bad command |
+| 21 | Counterweight Basics | 11 | 2 | Teach paired movement as a low-pressure spatial puzzle | Manual anticipation, cabin-load planning, and recovery from a bad command |
 | 22 | Counterweight Crossovers | 15 | 4 | Introduce Open Plan after the player has experienced misplaced passenger load | Timed adjacent-lift transfers, pair positioning, and power-up timing |
-| 23 | Counterweight Network | 30 | 8 | Scale paired movement into fleet architecture | Zoned automation, zone overlap, Open Plan, loadouts, and manual recovery |
+| 23 | Counterweight Network | 29 | 8 | Scale paired movement into fleet architecture | Zoned automation, zone overlap, Open Plan, loadouts, and manual recovery |
 
 ### Counterweight operating rules
 
@@ -516,6 +519,9 @@ target one lift as a transfer hub: compatible destination-aware guests may move 
 stopped at the same floor, including across a pair boundary such as `L2↔L3`. Bronze lasts 20 seconds and Silver 45
 seconds. Gold lasts 60 seconds and enables the whole-building adjacent-transfer effect. Transfers still obey capacity,
 stink, Gym Bro, VIP, and all ordinary boarding rules.
+
+All counterweight rounds use an odd floor count so each pair can meet at the middle floor. Expiry ends an Open Plan
+window; it must not leave lateral transfer or its active visual state permanently enabled.
 
 The R21 briefing teaches the physical rule with a simple example. R22 teaches that Open Plan repairs passenger
 distribution rather than cancelling counterweight movement. R23 asks the player to combine both ideas with zoning and

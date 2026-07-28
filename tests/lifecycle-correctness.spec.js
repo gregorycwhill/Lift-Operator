@@ -775,9 +775,9 @@ test('counterweight trilogy has canonical scale and Open Plan timing', async ({ 
     }));
 
     expect(result.rounds).toEqual([
-        { round: 21, floors: 12, lifts: 2, counterweight: true },
+        { round: 21, floors: 11, lifts: 2, counterweight: true },
         { round: 22, floors: 15, lifts: 4, counterweight: true },
-        { round: 23, floors: 30, lifts: 8, counterweight: true }
+        { round: 23, floors: 29, lifts: 8, counterweight: true }
     ]);
     expect(result.unlock).toEqual([22, 22, 22]);
     expect(result.durations).toEqual([20, 45, 60]);
@@ -798,11 +798,11 @@ test('counterweight pairs start complementary and mirror commanded targets', asy
 
     expect(result.before).toEqual([
         { partner: 1, floor: 5 },
-        { partner: 0, floor: 6 }
+        { partner: 0, floor: 5 }
     ]);
     expect(result.after).toEqual([
         { target: 10, direction: 1 },
-        { target: 1, direction: -1 }
+        { target: 0, direction: -1 }
     ]);
     expect(result.unpairedTarget).toBe(10);
     expect(result.unpairedPartner).toBe(null);
@@ -1421,6 +1421,49 @@ test('checkout guests heading to Ground use suitcase text only when marked check
     }));
 
     expect(result).toEqual({ checkout: '🧳', ordinaryGround: 'G', checkoutUpper: 4 });
+});
+
+test('Settings replaces the normal Leaderboard entry point and links to the scoreboard', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        document.getElementById('settingsBtn').click();
+        const settingsOpen = document.getElementById('settingsOverlay').style.display === 'flex';
+        const hasAchievements = document.querySelectorAll('#settingsAchievements .settings-achievement').length > 0;
+        document.getElementById('settingsLeaderboardBtn').click();
+        return { settingsOpen, hasAchievements, leaderboardOpen: document.getElementById('leaderboardOverlay').style.display === 'flex', settingsClosed: document.getElementById('settingsOverlay').style.display !== 'flex' };
+    });
+    expect(result).toEqual({ settingsOpen: true, hasAchievements: true, leaderboardOpen: true, settingsClosed: true });
+});
+
+test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(14, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        lift.serviceLower = 10;
+        lift.serviceUpper = Config.numFloors - 1;
+        setSeed(314159);
+        const counts = Array(Config.numFloors).fill(0);
+        for (let i = 0; i < 5000; i++) counts[getRandomGuestFloor()]++;
+        return { groundShared: Registry.isFloorInLiftZone(lift, 0), ground: counts[0], maxUpperFloor: Math.max(...counts.slice(1)), floors: Config.numFloors };
+    });
+    expect(result.groundShared).toBe(true);
+    expect(result.ground).toBeGreaterThan(result.maxUpperFloor * 2);
+    expect(result.ground).toBeLessThan(result.maxUpperFloor * 4);
+    expect(result.floors).toBe(20);
+});
+
+test('Open Plan timer expires after the canonical duration', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(22, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        lift.openPlanTimer = Config.GAME_DATA.powerups.openPlan.tiers[0].duration;
+        const before = lift.openPlanTimer;
+        gameTick(Date.now());
+        const afterOneTick = lift.openPlanTimer;
+        for (let i = 0; i < before - 1; i++) gameTick(Date.now() + (i + 1) * 1000);
+        return { before, afterOneTick, expired: lift.openPlanTimer };
+    });
+    expect(result).toEqual({ before: 20, afterOneTick: 19, expired: 0 });
 });
 
 test('Room Service display width is reduced without changing height', async ({ page }) => {

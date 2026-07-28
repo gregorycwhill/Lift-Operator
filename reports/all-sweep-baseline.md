@@ -17,9 +17,9 @@ Policy: Every lift uses Sweep; no manual targets, policy changes, or power-ups.
 | 5 | 1234 | died | 140s | 0 | 130 | 54s | 0.00 | 57 | 49.5s | MEETS_ALL_SWEEP_FLOOR |
 | 5 | 3141 | died | 152s | 0 | 140 | 66s | 0.00 | 67 | 48.8s | MEETS_ALL_SWEEP_FLOOR |
 | 5 | 6060 | died | 156s | 0 | 151 | 71s | 0.00 | 52 | 48.0s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 1234 | died | 178s | 0 | 93 | 69s | 0.00 | 33 | 51.3s | MEETS_ALL_SWEEP_FLOOR |
-| 6 | 3141 | survived | 180s | 11 | 112 | 73s | 0.43 | 29 | 49.2s | VIOLATION_SURVIVED |
-| 6 | 6060 | survived | 180s | 2 | 89 | 70s | 0.40 | 33 | 51.1s | VIOLATION_SURVIVED |
+| 6 | 1234 | died | 170s | 0 | 102 | 65s | 0.00 | 39 | 48.3s | MEETS_ALL_SWEEP_FLOOR |
+| 6 | 3141 | survived | 180s | 5 | 114 | 56s | 0.43 | 29 | 52.2s | VIOLATION_SURVIVED |
+| 6 | 6060 | survived | 180s | 4 | 116 | 64s | 0.24 | 32 | 51.0s | VIOLATION_SURVIVED |
 | 7 | 1234 | died | 144s | 0 | 113 | 99s | 0.00 | 40 | 45.6s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 3141 | died | 168s | 0 | 142 | 51s | 0.00 | 51 | 50.2s | MEETS_ALL_SWEEP_FLOOR |
 | 7 | 6060 | died | 148s | 0 | 122 | 62s | 0.00 | 43 | 43.4s | MEETS_ALL_SWEEP_FLOOR |

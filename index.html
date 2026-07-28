@@ -68,7 +68,7 @@
             </div>
             
             <button id="openWorkshopBtn" class="btn btn-purple">Workshop</button>
-            <button id="leaderboardBtn" class="btn btn-yellow">Leaderboard</button>
+            <button id="settingsBtn" class="btn btn-yellow">Settings</button>
             <button id="restartBtn" class="btn btn-red">Restart Game</button>
             <button id="openDebugBtn" class="btn btn-gray btn-margin-top hidden">Debug Menu</button>
         </div>
@@ -201,6 +201,24 @@
                         <div id="blocklyDiv"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="settingsOverlay">
+            <div class="modal-content">
+                <h2>Settings</h2>
+                <section aria-labelledby="settingsAchievementsTitle">
+                    <h3 id="settingsAchievementsTitle">Achievements</h3>
+                    <div id="settingsAchievements" class="settings-achievements"></div>
+                </section>
+                <section class="audio-controls" aria-label="Audio controls">
+                    <label><input type="checkbox" id="settingsAudioMute"> Mute</label>
+                    <label>Music <input type="range" id="settingsAudioMusic" min="0" max="1" step="0.05"></label>
+                    <label>SFX <input type="range" id="settingsAudioSfx" min="0" max="1" step="0.05"></label>
+                </section>
+                <details class="audio-credits"><summary>Attributions</summary><p id="settingsAudioAttribution">Procedural fallback tones by Lift Operator. Licensed asset credits are listed in the project audio manifest.</p></details>
+                <button id="settingsLeaderboardBtn" class="btn btn-blue btn-full-width btn-margin-top">Leaderboard</button>
+                <button id="closeSettingsBtn" class="btn btn-gray btn-full-width btn-margin-top">Resume</button>
             </div>
         </div>
 

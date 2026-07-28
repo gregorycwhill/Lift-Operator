@@ -2,7 +2,7 @@
 
 **Status:** Active acceptance plan for the `0.3.0-network-campaign-preview` playtest release  
 **Owner class:** Engineering and playtest  
-**Last reviewed:** 26 July 2026
+**Last reviewed:** 28 July 2026
 **Testing principles:** `TESTING_STRATEGY.md`
 **Product scope:** `ROADMAP.md` and the product design documents
 
@@ -23,7 +23,8 @@ The release is green only when the following evidence is complete:
 
 ## Future acceptance — R21–R23 Counterweight Network
 
-**Status:** Automated implementation acceptance complete; focused human balance and usability acceptance remains open.
+**Status:** Prior automated implementation acceptance passed; the accepted 11/15/29-floor parity remediation and
+Open Plan expiry verification remain pending implementation. Focused human balance and usability acceptance remains open.
 
 **Automated evidence:** R21–R23 focused lifecycle tests pass for canonical scale, complementary starting positions,
 mirrored targets, and adjacent Open Plan transfer. The non-Auto-Pilot browser suite passes 114/114; Auto-Pilot Alpha
@@ -69,10 +70,46 @@ balance, and determinism follow-ups rather than missing implementation coverage.
   master/slave UI, warning dialog, or consequence preview.
 - [ ] R21 briefing explains paired movement before play; R22 teaches Open Plan as passenger-distribution recovery; R23
   explains the combined zoning/Open Plan network problem.
-- [x] R21 is a low-arrival two-lift/12-floor puzzle, R22 is a four-lift/15-floor recovery challenge, and R23 is an
-  eight-lift/30-floor network challenge; their canonical data and seeded reports identify intended bottlenecks.
+- [ ] R21 is a low-arrival two-lift/11-floor puzzle, R22 is a four-lift/15-floor recovery challenge, and R23 is an
+  eight-lift/29-floor network challenge; their canonical data and seeded reports identify intended bottlenecks.
 - [ ] Human playtesters can explain the pair rule after R21, use Open Plan to correct a bad distribution in R22, and
   identify a credible zoning/Open Plan/loadout strategy in R23.
+
+## Next remediation acceptance — settings, shared Ground, and counterweight polish
+
+**Status:** Automated acceptance passed; ready for focused human playtest. The R22 manual-stop case remains a
+reproduction/diagnostic check rather than an accepted behavioural change.
+
+**Latest evidence:** 115 lifecycle/audio browser tests passed; mechanics, integration, unit, configuration, balance,
+report, syntax, documentation, and UTF-8 gates passed. Auto-Pilot Alpha, Beta, and Gamma all passed; Alpha reached the
+Round 13 boundary in its intended long-running protocol.
+
+### Settings and presentation
+
+- [x] The normal navigation button opens Settings, which shows current achievements, mute/music/SFX controls, audio
+  attribution, and a link that opens the Leaderboard; campaign completion still opens Leaderboard directly.
+- [x] Checkout guests preserve their normal status background and use a light monochrome suitcase that remains legible
+  at every status colour.
+- [x] Gym Bro tiles render a two-digit destination without clipping or overlapping adjacent guests.
+- [x] R15–R20 briefings identify each round's actual pressure combination and preparation-relevant mechanics.
+
+### Shared Ground and authored balance
+
+- [x] Zoned Low, Zoned High, and valid custom zoned policies all serve G; automation, manual targeting, direct-route
+  refusal, simulation, telemetry, and zone reports agree on that rule.
+- [x] Across a fixed seeded sample, G appears approximately three times as often as an ordinary floor as both guest
+  origin and destination, excluding deliberately scripted VIP/checkout/event destinations.
+- [x] R6 canonical spawn pressure is `0.90→1.05`; generated balance remains in parity with the source.
+- [x] R21/R22/R23 use 11/15/29 floors, and each counterweight pair can align at the unique middle floor.
+
+### Open Plan and R22 investigation
+
+- [x] Bronze/Silver/Gold Open Plan timers decrement once per gameplay second and expiry removes transfer eligibility,
+  active icon/state, and transfer behaviour without deleting or duplicating passengers.
+- [ ] A deterministic R22 manual-stop reproduction distinguishes direction compatibility, parking arbitration, capacity,
+  zoning, stink, VIP, and passenger-state refusals. The test records the observed reason before any behavioural fix.
+- [ ] If a manual target reaches a floor with a compatible waiting guest and no documented competing refusal, that guest
+  boards regardless of the lift's prior Sweep direction.
 
 ## Latest playtest remediation acceptance
 

@@ -3,7 +3,7 @@
 **Purpose:** Product outcomes and sequence. This is not an implementation checklist.
 **Status:** Active product roadmap  
 **Owner class:** Product  
-**Last reviewed:** 26 July 2026
+**Last reviewed:** 28 July 2026
 **Current delivery:** `DELIVERY_PLAN.md` — `0.3.0-network-campaign-preview` playtest release
 
 ## Product north star
@@ -42,6 +42,14 @@ a desktop campaign interface and remains outside the later phone-first edition.
 The Automation Dock is now the permanent production controller; the former per-lift selector and Debug controller
 variant have been removed. Pin choices persist per player; Manual and unlocked built-ins are pinned by default, while
 Custom and Shared with Me automations are curated through a scrollable accordion Library.
+
+**Accepted product direction:** The ordinary navigation button becomes **Settings**. Settings is the player-facing home
+for current achievements, sound controls, attributions, and a link to the separate Leaderboard. Campaign completion
+continues to open the Leaderboard directly.
+
+**Accepted product direction:** Once zoning unlocks, Ground is a shared service floor: every zoned lift can legally
+serve G. Guest origins and destinations weight G at three times an ordinary floor, making the lobby a deliberate shared
+traffic pressure rather than an excluded upper-zone edge case.
 
 ## Next — Tune the extended campaign
 
@@ -113,15 +121,19 @@ make the consequence clear even though the game never prevents the command.
 
 | Round | Working role | Scale | New lesson | Required solution space |
 | --- | --- | --- | --- | --- |
-| 21 | Counterweight Basics | 2 lifts, 12 floors, deliberately low arrivals | A move in either car moves its adjacent partner in the opposite direction | Manual anticipation and independent passenger-load planning |
+| 21 | Counterweight Basics | 2 lifts, 11 floors, deliberately low arrivals | A move in either car moves its adjacent partner in the opposite direction | Manual anticipation and independent passenger-load planning |
 | 22 | Counterweight Crossovers | 4 lifts, 15 floors, two adjacent pairs | Open Plan repairs a passenger-distribution mistake | Timed lateral transfer, pair positioning, and recovery planning |
-| 23 | Counterweight Network | 8 lifts, 30 floors, four adjacent pairs | Coupled movement becomes a fleet-architecture problem | Zoned automation, Open Plan, power-up loadouts, overlap, and manual recovery |
+| 23 | Counterweight Network | 8 lifts, 29 floors, four adjacent pairs | Coupled movement becomes a fleet-architecture problem | Zoned automation, Open Plan, power-up loadouts, overlap, and manual recovery |
 
 Pairs are fixed and immediately adjacent: `L1↔L2`, `L3↔L4`, `L5↔L6`, and `L7↔L8`. Bronze/Silver Open Plan targets one
 lift as a transfer hub and permits automatic, destination-aware lateral transfers between that lift and either adjacent
 lift—not only the lift’s counterweight partner—when cars are stopped at the same floor. Transfers remain subject to
 ordinary capacity, stink, Gym Bro, VIP, and other boarding rules. Open Plan is timed and tiered: Bronze lasts 20 seconds,
 Silver 45 seconds, and Gold 60 seconds with the whole-building effect.
+
+Every counterweight building has an odd number of floors, so paired cars can share the middle floor when a lateral
+transfer is needed. Open Plan remains timed: expiry ends new transfers and removes its active treatment; it is never a
+permanent routing state.
 
 ### Intended learning arc
 

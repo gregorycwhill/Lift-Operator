@@ -21,7 +21,7 @@ window.showToast = function(message) {
 
 window.openModalExclusive = function(id) {
     window.Game.AutomationController?.closeLibrary?.();
-    ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
+    ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
     const overlay = document.getElementById(id);
@@ -273,15 +273,27 @@ window.initializeUI = function() {
         }
     });
 
-    // LEADERBOARD CONTROLS
-    bind("leaderboardBtn", () => {
-        const overlay = document.getElementById('leaderboardOverlay');
+    // SETTINGS / LEADERBOARD CONTROLS
+    bind("settingsBtn", () => {
+        const overlay = document.getElementById('settingsOverlay');
         if (overlay && overlay.style.display === 'flex') {
             overlay.style.display = 'none';
             window.Game.Audio?.setContext('gameplay');
             engine.resume?.();
             ui.draw?.();
-        } else if (typeof ui.showLeaderboard === "function") ui.showLeaderboard("Paused");
+        } else if (typeof ui.showSettings === "function") ui.showSettings();
+    });
+
+    bind("closeSettingsBtn", () => {
+        const overlay = document.getElementById("settingsOverlay");
+        if (overlay) overlay.style.display = "none";
+        if (typeof engine.resume === "function") engine.resume();
+        window.Game.Audio?.setContext('gameplay');
+        ui.draw?.();
+    });
+
+    bind("settingsLeaderboardBtn", () => {
+        if (typeof ui.showLeaderboard === "function") ui.showLeaderboard("Paused");
     });
 
     bind("closeLbBtn", () => {
@@ -454,7 +466,7 @@ window.UI = window.UI || {};
     "checkoutCart", "updateInventoryUI", "renderShop", "updateLocksUI",
     "updateWorkshopScriptList", "openWorkshopModal", "showRoundModal",
     "showRoundReview", "showToast", "shareLeaderboard", "shareGame",
-    "showLeaderboard", "renderDebugMenu", "openDebugModal", "processNextManifestItem", "initializeUI",
+    "showLeaderboard", "showSettings", "renderDebugMenu", "openDebugModal", "processNextManifestItem", "initializeUI",
     "buildWorld", "draw", "updateLiftAutomationUI", "updateLiftVisualState",
     "triggerDefenestration", "updateScoreboardUI", "getGuestText",
     "startRoundCountdown"

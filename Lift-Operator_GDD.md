@@ -3,7 +3,7 @@
 **Document role:** Product vision and design intent  
 **Status:** Active product design reference  
 **Owner class:** Product and design  
-**Last reviewed:** 26 July 2026
+**Last reviewed:** 28 July 2026
 **Current phase:** Playable campaign entering structured playtesting  
 **Campaign scope:** 23 rounds; R14–R20 traffic tuning remains subject to playtest evidence, while R21–R23 form the counterweight puzzle trilogy.
 
@@ -228,6 +228,11 @@ scalable built-in policy examples; players can copy them or create a Custom Serv
 lift accepts a guest only when both the current floor and destination are within its configured range. G is included as
 an ordinary serviced floor, not as a transfer hub; this mirrors real lift behavior and supports Room Service and Checkout
 journeys that use the lobby. Transfers, G-hub routing, and arbitrary multi-lift passenger journeys remain deferred.
+Every zoned policy includes G, and G is weighted threefold as both a normal guest origin and destination. This makes
+the lobby a shared direct-service demand, not an upper-zone exclusion or a passenger-transfer hub.
+
+The ordinary navigation control is **Settings**, containing current achievements, sound controls, attribution, and a
+link to Leaderboard. End-of-campaign completion continues to open Leaderboard directly.
 
 ## 8. Power-ups
 
@@ -273,6 +278,8 @@ during their effect, guests may automatically make a destination-aware transfer 
 stopped at the same floor. The transfer obeys normal capacity, stink, Gym Bro, VIP, and boarding constraints. Bronze lasts
 20 seconds, Silver 45 seconds, and Gold 60 seconds; Gold allows the whole building to use adjacent transfers. This makes
 it possible to repair a bad passenger distribution without removing the counterweight constraint.
+Every counterweight building uses an odd floor count so paired cars can align at the middle floor. Open Plan expiry ends
+the transfer window and its active state; it is never persistent.
 
 Hazards exist to change decisions, not just subtract performance.
 

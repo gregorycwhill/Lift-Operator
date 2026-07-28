@@ -449,8 +449,8 @@ window.GameBalanceData = {
     "6": {
       "floors": 15,
       "lifts": 3,
-      "spawnStart": 0.8,
-      "spawnEnd": 0.92,
+      "spawnStart": 0.9,
+      "spawnEnd": 1.05,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -592,7 +592,7 @@ window.GameBalanceData = {
       "gymEvent": true
     },
     "21": {
-      "floors": 12,
+      "floors": 11,
       "lifts": 2,
       "spawnStart": 0.25,
       "spawnEnd": 0.4,
@@ -612,7 +612,7 @@ window.GameBalanceData = {
       "openPlanIntro": true
     },
     "23": {
-      "floors": 30,
+      "floors": 29,
       "lifts": 8,
       "spawnStart": 0.95,
       "spawnEnd": 1.2,

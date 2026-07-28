@@ -3,7 +3,7 @@
 // ============================================================================
 
 window.forceFirstSpawn = function(now) {
-    let start = window.getRandomFloor();
+    let start = window.getRandomGuestFloor();
     let dest;
     let isCheckout = false;
     const roundDefinition = window.getRoundDefinition(Registry.stats.round);
@@ -12,8 +12,8 @@ window.forceFirstSpawn = function(now) {
         isCheckout = true;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
     } else {
-        dest = window.getRandomFloor();
-        while (dest === start) dest = window.getRandomFloor();
+        dest = window.getRandomGuestFloor();
+        while (dest === start) dest = window.getRandomGuestFloor();
     }
     let isGym = !isCheckout && (start === Registry.gymFloor);
     let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
@@ -133,7 +133,7 @@ window.runSpawnerTick = function(now) {
     
     while (tempChance > 0) {
         if (seededRandom() < tempChance) {
-            let start = window.getRandomFloor();
+            let start = window.getRandomGuestFloor();
             let dest;
             let isCheckout = false;
             
@@ -143,8 +143,8 @@ window.runSpawnerTick = function(now) {
                 isCheckout = true;
                 if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
             } else {
-                dest = window.getRandomFloor();
-                while (dest === start) dest = window.getRandomFloor();
+                dest = window.getRandomGuestFloor();
+                while (dest === start) dest = window.getRandomGuestFloor();
             }
             
             let isGym = !isCheckout && (start === Registry.gymFloor);

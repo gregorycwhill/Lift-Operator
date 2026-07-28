@@ -81,6 +81,14 @@ window.getRandomFloor = function() {
     return Math.max(0, Math.min(window.Config.numFloors - 1, f));
 };
 
+window.getRandomGuestFloor = function() {
+    const floorCount = Math.max(1, Number(window.Config.numFloors) || 1);
+    const zoningEnabled = typeof Registry !== 'undefined' && Number(Registry.stats?.round || 0) >= 14;
+    if (!zoningEnabled || floorCount === 1) return window.getRandomFloor();
+    const roll = Math.floor(seededRandom() * (floorCount + 2));
+    return roll < 3 ? 0 : roll - 2;
+};
+
 window.getAutomationRandomFloor = function() {
     const value = Math.floor(window.Game.AutomationSeed.random() * window.Config.numFloors);
     return Math.max(0, Math.min(window.Config.numFloors - 1, value));
