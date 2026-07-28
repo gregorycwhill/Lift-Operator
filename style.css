@@ -222,6 +222,20 @@ body {
     box-sizing: border-box; 
 }
 .shaft:hover { background: #e0e6e9; }
+.capsule-bank .shaft {
+    position: relative;
+    border-right: 1px solid rgba(93, 125, 137, 0.55);
+    background: linear-gradient(90deg, rgba(220, 239, 247, 0.72), rgba(176, 211, 224, 0.38), rgba(220, 239, 247, 0.72));
+}
+.capsule-bank .shaft::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(92, 145, 165, 0.42);
+    transform: translateX(calc(var(--shaft-width) / 2));
+}
 
 .counterweight-pair-visual { position: absolute; top: 0; z-index: 2; pointer-events: none; }
 .counterweight-cable-frame { position: absolute; top: 10px; right: 25%; bottom: 10px; left: 25%; border: 4px solid #607487; border-radius: 18px; box-sizing: border-box; opacity: .85; }
@@ -294,6 +308,18 @@ body {
     height: var(--lift-height, 50px);
     transition: bottom var(--lift-anim-speed, 0.016s) linear;
     box-sizing: border-box;
+}
+.lift.capsule-car {
+    border-radius: 14px;
+    border-width: 2px;
+    background: #e7f8ff;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.45), inset 0 0 4px rgba(52, 152, 219, 0.35);
+    padding: 2px;
+}
+.lift.capsule-car::before {
+    width: 3px;
+    border-radius: 3px;
+    background: #77bfd8;
 }
 .lift::before { 
     content: ''; 

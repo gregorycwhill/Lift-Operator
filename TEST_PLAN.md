@@ -1,12 +1,12 @@
-# Current Test Plan — Service Zoning and Playtest Evidence
+# Current Test Plan — SciiFi Capsule Dispatch and Playtest Evidence
 
-**Status:** Active acceptance plan for the `0.3.0-network-campaign-preview` playtest release  
+**Status:** Active acceptance plan for the `0.3.1-capsule-dispatch-preview` playtest release
 **Owner class:** Engineering and playtest  
 **Last reviewed:** 28 July 2026
 **Testing principles:** `TESTING_STRATEGY.md`
 **Product scope:** `ROADMAP.md` and the product design documents
 
-## Next-release gate — `0.3.0-network-campaign-preview`
+## Baseline gate — `0.3.0-network-campaign-preview`
 
 The release is green only when the following evidence is complete:
 
@@ -23,13 +23,12 @@ The release is green only when the following evidence is complete:
 
 ## Future acceptance — R21–R23 Counterweight Network
 
-**Status:** Prior automated implementation acceptance passed; the accepted 11/15/29-floor parity remediation and
-Open Plan expiry verification remain pending implementation. Focused human balance and usability acceptance remains open.
+**Status:** Automated implementation acceptance passed; focused human balance and usability acceptance remains open.
 
 **Automated evidence:** R21–R23 focused lifecycle tests pass for canonical scale, complementary starting positions,
-mirrored targets, and adjacent Open Plan transfer. The non-Auto-Pilot browser suite passes 114/114; Auto-Pilot Alpha
-reached the Round 13 boundary and Beta/Gamma pass. Remaining unchecked items below are deliberate human visual,
-balance, and determinism follow-ups rather than missing implementation coverage.
+mirrored targets, adjacent Open Plan transfer, 11/15/29-floor parity, and expiry. The lifecycle/audio browser suite
+passes 115/115; Auto-Pilot Alpha reached the Round 13 boundary and Beta/Gamma pass. Remaining unchecked items below
+are deliberate human visual, balance, and determinism follow-ups rather than missing implementation coverage.
 
 ### Deterministic engine and movement
 
@@ -74,6 +73,43 @@ balance, and determinism follow-ups rather than missing implementation coverage.
   eight-lift/29-floor network challenge; their canonical data and seeded reports identify intended bottlenecks.
 - [ ] Human playtesters can explain the pair rule after R21, use Open Plan to correct a bad distribution in R22, and
   identify a credible zoning/Open Plan/loadout strategy in R23.
+
+## Current acceptance — R24–R25 SciiFi Capsule Dispatch
+
+**Status:** Automated implementation acceptance passed; focused human balance, visual, and performance acceptance remains open.
+
+### Canonical rules and exclusion matrix
+
+- [x] R24/R25 canonical definitions use 15/30 floors and 10/20 capsule pods respectively, with the ordinary campaign
+  objective/lives/economy defaults recorded as initial tuning baselines.
+- [x] A capsule has one normal passenger place, remains just wider than a guest visually, and travels 15/30 floors in
+  approximately 3/6 seconds at the authored speed.
+- [x] VIP, Gym Bro, Room Service, and Stink/farter generation is absent only in capsule rounds; conventional and
+  counterweight rounds retain their canonical event behaviour.
+- [x] Freshener, TARDIS, and Double-Decker are unavailable in capsule-round shops. Turbo remains displayed and supplies
+  the authored 15% boost; Wrench and Open Plan retain their documented availability.
+- [x] A shortened capsule jam retains the passenger, preserves deterministic recovery, and leaves the rest of the fleet
+  operational. Wrench clears it without changing passenger identity or destination.
+
+### Demand, automation, and recovery
+
+- [x] Seeded continuous demand currents reproduce their origin/destination weighting, rise/fade timing, and overlaps;
+  they never produce Checkout/Rooftop-style hard state transitions or in-round wave announcements.
+- [x] R24/R25 briefings tell players that demand will shift without revealing the live schedule.
+- [ ] Existing Low, High, and valid custom zoning policies can dispatch capsules without a capsule-specific automation
+  primitive; manual commands remain legal but cannot be the competitive primary strategy in fixed-seed comparison.
+- [ ] Open Plan permits only ordinary adjacent, same-floor capsule transfers and remains a niche recovery tool.
+- [ ] Across the agreed fixed seeds, a sensible zoned bank outperforms all-Sweep; R24 remains recoverable and R25 is
+  challenging without relying on unwinnable queue growth.
+
+### Presentation, performance, and human evidence
+
+- [x] Tube-bank rendering contains no conventional cable, pulley, or counterweight treatment and keeps capsule state,
+  automation assignment, jams, and passenger presence legible.
+- [ ] Ten pods at 15 floors and twenty at 30 fit supported desktop widths without horizontal scrolling, loss of click
+  targets, automation-dock overlap, or unacceptable animation cost.
+- [ ] Human testers can establish a viable automation bank in R24, explain why zoning beats all-Sweep, recover a
+  shortened jam, and revise a R25 fleet when traffic currents overlap.
 
 ## Next remediation acceptance — settings, shared Ground, and counterweight polish
 

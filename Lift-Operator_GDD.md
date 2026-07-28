@@ -5,7 +5,7 @@
 **Owner class:** Product and design  
 **Last reviewed:** 28 July 2026
 **Current phase:** Playable campaign entering structured playtesting  
-**Campaign scope:** 23 rounds; R14–R20 traffic tuning remains subject to playtest evidence, while R21–R23 form the counterweight puzzle trilogy.
+**Campaign scope:** 25 rounds; R14–R20 traffic tuning remains subject to playtest evidence, R21–R23 form the counterweight puzzle trilogy, and R24–R25 are the implemented capsule-dispatch arc entering playtest.
 
 **Authority boundary:** The playable structural campaign includes Rounds 14-20. This document defines durable player
 experience and rules; current delivery status belongs in `DELIVERY_PLAN.md`, and late-round tuning evidence belongs in
@@ -280,6 +280,17 @@ stopped at the same floor. The transfer obeys normal capacity, stink, Gym Bro, V
 it possible to repair a bad passenger distribution without removing the counterweight constraint.
 Every counterweight building uses an odd floor count so paired cars can align at the middle floor. Open Plan expiry ends
 the transfer window and its active state; it is never persistent.
+
+### SciiFi capsule dispatch (post-R23 implemented arc)
+
+R24 and R25 use narrow, tube-bound single-passenger capsules rather than conventional lift cars. R24 has 10 capsules
+over 15 floors at about three seconds end-to-end; R25 has 20 capsules over 30 floors at about six seconds. Existing
+zoned and custom automation remains the intended dispatch mechanism; manual targeting is legal but not the primary
+solution. Demand is generated through continuous seeded currents with no in-round wave announcement beyond the briefing.
+
+VIPs, Gym Bros, Room Service, and Stink are excluded. Freshener, TARDIS, and Double-Decker are unavailable. Jams remain
+common but are shorter and retain their passenger. Open Plan keeps its normal adjacent/same-floor behaviour; Turbo is
+available with a 15% boost but intentionally low value for already fast capsules.
 
 Hazards exist to change decisions, not just subtract performance.
 

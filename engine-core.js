@@ -243,13 +243,13 @@ window.getRoundDefinition = function(round, operation = null) {
     if (operation && typeof operation === 'object' && Number.isInteger(operation.floors) && Number.isInteger(operation.lifts)) {
         return { ...operation, round: Number.isInteger(operation.round) ? operation.round : 14 };
     }
-    const supportedRound = Math.max(1, Math.min(23, parseInt(round) || 1));
+    const supportedRound = Math.max(1, Math.min(25, parseInt(round) || 1));
     const configured = Config.GAME_DATA.rounds[supportedRound];
     const liftOverride = Number(Config[`liftsR${supportedRound}`]);
     return {
         round: supportedRound,
         ...configured,
-        lifts: Number.isFinite(liftOverride) && Config.debugMode ? Math.max(1, Math.min(10, liftOverride)) : configured.lifts
+        lifts: Number.isFinite(liftOverride) && Config.debugMode ? Math.max(1, Math.min(20, liftOverride)) : configured.lifts
     };
 };
 
@@ -287,6 +287,8 @@ window.createRoundState = function(round, seed, options = {}) {
         lives: Config.startingLives,
         currentSpawnChance: definition.spawnStart,
         counterweightEnabled: Boolean(definition.counterweightEnabled),
+        capsuleMode: Boolean(definition.capsuleMode),
+        capsuleTravelSecPerFloor: Number(definition.capsuleTravelSecPerFloor || 0),
         lifts: Array.from({ length: definition.lifts }, (_, id) => window.createLiftState(id)),
         floors: Array.from({ length: definition.floors }, () => ({ waitingGuests: [] })),
         vipSpawned: false,
@@ -313,7 +315,7 @@ window.createRoundState = function(round, seed, options = {}) {
     if (definition.round === 9 || definition.rooftopEvent === true) {
         state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
     }
-    if (definition.round >= 11) {
+    if (definition.round >= 11 && !definition.capsuleMode) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
     }
 
@@ -353,6 +355,8 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.stats.lives = roundState.lives;
     Registry.stats.currentSpawnChance = roundState.currentSpawnChance;
     Registry.counterweightEnabled = Boolean(roundState.counterweightEnabled);
+    Registry.capsuleMode = Boolean(roundState.capsuleMode);
+    Registry.capsuleTravelSecPerFloor = Number(roundState.capsuleTravelSecPerFloor || 0);
     if (options.resetCampaign) Registry.stats.served = 0;
     Registry.lifts = roundState.lifts;
     Registry.floors = roundState.floors;
@@ -477,7 +481,7 @@ window.completeRound = function(reason = 'completed') {
 
     Registry.highestUnlockedRound = Math.max(
         Registry.highestUnlockedRound,
-        Math.min(23, Registry.stats.round + 1)
+        Math.min(25, Registry.stats.round + 1)
     );
 
     const ui = GameUI();
@@ -486,7 +490,7 @@ window.completeRound = function(reason = 'completed') {
 };
 
 window.advanceToRound = function(targetRound) {
-    if (targetRound > 23) {
+    if (targetRound > 25) {
         const ui = GameUI();
         if (typeof ui.showLeaderboard === 'function') ui.showLeaderboard("You Won!");
         return;
@@ -507,7 +511,7 @@ window.resetGame = function() {
     window.Game.Audio?.publish('reset', { round: Registry.stats.round });
     if (Config.debugMode) {
         Registry.points = 99999;
-        Registry.highestUnlockedRound = 23;
+        Registry.highestUnlockedRound = 25;
     } else {
         Registry.points = 0;
         Registry.highestUnlockedRound = 1;
@@ -593,7 +597,7 @@ window.initializeEngine = function() {
     }
 
     if (Config.debugMode) {
-        Registry.highestUnlockedRound = 20;
+        Registry.highestUnlockedRound = 25;
         Registry.points = 99999;
     } else {
         Registry.points = 0;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "balanceVersion": "0.2.8-counterweight-trilogy",
-  "balanceHash": "a79cd038c180b5493995a2745099960cd552e0c4015c6cbc37d8333a7d46c865",
+  "balanceVersion": "0.2.9-capsule-dispatch",
+  "balanceHash": "e871f852591cd9033a588371b65ab142cddc5e64569744653f2dc5f8ecc1c19d",
   "matrixHash": "e057df00431294d0258008f3c778dba598ae25192353686221243927af6327dc",
   "policy": {
     "id": "all-sweep-unattended",

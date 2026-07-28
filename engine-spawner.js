@@ -3,20 +3,24 @@
 // ============================================================================
 
 window.forceFirstSpawn = function(now) {
-    let start = window.getRandomGuestFloor();
+    const roundDefinition = window.getRoundDefinition(Registry.stats.round);
+    const progress = (Config.roundTime - Registry.stats.timeLeft) / Config.roundTime;
+    const pickFloor = () => roundDefinition.capsuleMode
+        ? window.getCapsuleDemandFloor(Registry.stats.round, progress)
+        : window.getRandomGuestFloor();
+    let start = pickFloor();
     let dest;
     let isCheckout = false;
-    const roundDefinition = window.getRoundDefinition(Registry.stats.round);
     if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
         dest = 0;
         isCheckout = true;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
     } else {
-        dest = window.getRandomGuestFloor();
-        while (dest === start) dest = window.getRandomGuestFloor();
+        dest = pickFloor();
+        while (dest === start) dest = pickFloor();
     }
-    let isGym = !isCheckout && (start === Registry.gymFloor);
-    let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
+    let isGym = !roundDefinition.capsuleMode && !isCheckout && (start === Registry.gymFloor);
+    let isRoomService = !roundDefinition.capsuleMode && (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
     
     Registry.floors[start].waitingGuests.push({
         id: `guest-${++Registry.guestSequence}`,
@@ -62,7 +66,7 @@ window.runSpawnerTick = function(now) {
     }
 
     // 2. VIP Event Orchestration
-    if (Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
+    if (!roundDefinition.capsuleMode && Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
         const start = 0;
         const maxFloor = Math.max(1, Config.numFloors - 1);
         const roomFloor = window.getRandomInt(1, maxFloor);
@@ -90,7 +94,7 @@ window.runSpawnerTick = function(now) {
     }
 
     // 3. Sunset Happy Hour Event Logic
-    if (Registry.stats.round >= 9) {
+    if (!roundDefinition.capsuleMode && Registry.stats.round >= 9) {
         if (Registry.sunsetActive) {
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;
@@ -133,22 +137,24 @@ window.runSpawnerTick = function(now) {
     
     while (tempChance > 0) {
         if (seededRandom() < tempChance) {
-            let start = window.getRandomGuestFloor();
+            const pickFloor = () => roundDefinition.capsuleMode
+                ? window.getCapsuleDemandFloor(Registry.stats.round, progress)
+                : window.getRandomGuestFloor();
+            let start = pickFloor();
             let dest;
             let isCheckout = false;
             
-            const roundDefinition = window.getRoundDefinition(Registry.stats.round);
             if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
                 dest = 0;
                 isCheckout = true;
                 if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
             } else {
-                dest = window.getRandomGuestFloor();
-                while (dest === start) dest = window.getRandomGuestFloor();
+                dest = pickFloor();
+                while (dest === start) dest = pickFloor();
             }
             
-            let isGym = !isCheckout && (start === Registry.gymFloor);
-            let isRoomService = (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
+            let isGym = !roundDefinition.capsuleMode && !isCheckout && (start === Registry.gymFloor);
+            let isRoomService = !roundDefinition.capsuleMode && (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
             
             let newGuest = {
                 id: `guest-${++Registry.guestSequence}`,

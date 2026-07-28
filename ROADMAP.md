@@ -4,7 +4,7 @@
 **Status:** Active product roadmap  
 **Owner class:** Product  
 **Last reviewed:** 28 July 2026
-**Current delivery:** `DELIVERY_PLAN.md` — `0.3.0-network-campaign-preview` playtest release
+**Current delivery:** `DELIVERY_PLAN.md` — `0.3.1-capsule-dispatch-preview` playtest release
 
 ## Product north star
 
@@ -157,6 +157,37 @@ envelope, and visual legibility before this arc is promoted.
 Open Plan is deliberately introduced after the introductory Counterweight Pairs round. This keeps the first puzzle
 focused on learning the coupled-lift consequence, then gives players a later tool that solves the passenger-distribution
 problem they have already experienced.
+
+## Current — R24–R25 SciiFi capsule dispatch
+
+**Outcome:** A fast, automation-first dispatch arc changes the problem from operating shared lift cars to designing a
+resilient fleet of narrow, single-passenger capsule pods.
+
+The capsules travel in tubes rather than conventional shafts: they are only slightly wider than a guest and use no
+cables, pulleys, or counterweight treatment. Each pod normally carries one guest. R24 introduces a 10-pod bank across
+15 floors, with a typical end-to-end trip of about three seconds; R25 scales to 20 pods across 30 floors, preserving
+per-floor speed for a typical six-second trip. Manual targeting remains legal as a rescue action, but the intended
+solution is a batch-assigned automation network using existing zoning and Workshop policies—no new automation primitive
+is planned.
+
+| Round | Working role | Scale | New lesson | Intended solution space |
+| --- | --- | --- | --- | --- |
+| 24 | SciiFi Dispatch | 10 capsule pods, 15 floors | Fast infrastructure still fails without coherent coverage | Low/High/custom zoning, batch assignment, flexible Ground coverage |
+| 25 | SciiFi Overdrive | 20 capsule pods, 30 floors | Overlapping traffic currents turn dispatch into fleet architecture | Adapted Workshop policies, zone rebalance, jam recovery, selective manual rescue |
+
+Traffic uses continuous, seeded demand currents that rise, overlap, and fade; they are not Checkout- or Rooftop-style
+discrete events. The briefing warns that demand will shift, but play supplies no in-round wave hint. Initial objective,
+lives, and general economy use normal campaign defaults pending fixed-seed simulation and human tuning.
+
+Capsule rounds exclude VIPs, Gym Bros, Room Service, Stink/farter events, Freshener, TARDIS, and Double-Decker. Jams
+remain frequent but use a shorter duration and retain any passenger normally, making redundancy and Wrench recovery
+meaningful rather than catastrophic. Open Plan retains its ordinary adjacent, same-floor transfer rule but is a niche
+recovery tool. Turbo remains visible and gives a noticeable 15% speed increase, while deliberately offering little
+strategic value against already fast pods.
+
+**Gate:** Fixed-seed evidence must show that an automation bank with sensible zoning clearly outperforms an all-Sweep
+fleet, while R24 remains recoverable and R25 remains readable, performant, and not manually controllable as a primary
+strategy.
 
 ## Later — Mobile edition
 

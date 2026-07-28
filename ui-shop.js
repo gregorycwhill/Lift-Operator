@@ -145,6 +145,7 @@ window.renderShop = function() {
     const unlocks = Config.GAME_DATA.shopUnlocks || {};
     const currentRound = Registry.stats.round;
     Object.values(PowerUps.catalog).forEach(pu => {
+        if (!PowerUps.isPowerUpAvailableForRound(pu.id, currentRound)) return;
         pu.tiers.forEach((tier, index) => {
             const unlockRound = unlocks[pu.id]?.[index] || 1;
             if (!Config.debugMode && currentRound < unlockRound) return;

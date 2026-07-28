@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.8-counterweight-trilogy
+// Balance version: 0.2.9-capsule-dispatch
 window.GameBalanceData = {
-  "balanceVersion": "0.2.8-counterweight-trilogy",
+  "balanceVersion": "0.2.9-capsule-dispatch",
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -621,6 +621,34 @@ window.GameBalanceData = {
       "counterweightEnabled": true,
       "zoningEnabled": true,
       "openPlanIntro": true
+    },
+    "24": {
+      "floors": 15,
+      "lifts": 10,
+      "liftCapacity": 1,
+      "spawnStart": 1.6,
+      "spawnEnd": 2.4,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "capsuleMode": true,
+      "capsuleTravelSecPerFloor": 0.2,
+      "jamMinSec": 6,
+      "jamMaxSec": 10,
+      "demandCurrents": 2
+    },
+    "25": {
+      "floors": 30,
+      "lifts": 20,
+      "liftCapacity": 1,
+      "spawnStart": 2.2,
+      "spawnEnd": 3.2,
+      "objective": "SURVIVAL",
+      "gravityScalar": 0,
+      "capsuleMode": true,
+      "capsuleTravelSecPerFloor": 0.2,
+      "jamMinSec": 6,
+      "jamMaxSec": 10,
+      "demandCurrents": 2.5
     }
   }
 };

@@ -1,7 +1,7 @@
 # Lift Operator — Target Game Play Map
 
 **Document role:** Target learning arc and candidate round/balance intent  
-**Campaign scope:** 23 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20, with R21-R23 defined as the counterweight puzzle trilogy
+**Campaign scope:** 25 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20, with R21-R23 defined as the counterweight puzzle trilogy and R24-R25 implemented as the capsule-dispatch arc
 **Status:** Design candidate for iterative playtesting; not a statement of current implementation  
 **Owner class:** Product and design  
 **Last reviewed:** 28 July 2026
@@ -526,6 +526,39 @@ window; it must not leave lateral transfer or its active visual state permanentl
 The R21 briefing teaches the physical rule with a simple example. R22 teaches that Open Plan repairs passenger
 distribution rather than cancelling counterweight movement. R23 asks the player to combine both ideas with zoning and
 the established power-up economy.
+
+## 6.7 Post-R23 SciiFi capsule-dispatch arc: Rounds 24–25
+
+This planned two-round arc replaces large shared cars with many narrow, tube-bound capsule pods. A pod holds one guest
+and is only slightly wider than a guest icon. R24 uses 10 pods over 15 floors and targets a three-second end-to-end
+trip; R25 uses 20 pods over 30 floors and targets six seconds, preserving the same per-floor speed.
+
+| Round | Title | Floors | Capsules | Traffic design | Intended solution space |
+| --- | --- | ---: | ---: | --- | --- |
+| 24 | SciiFi Dispatch | 15 | 10 | Continuous seeded currents, initially readable and lightly overlapping | Batch-assign existing Zoned Low/High/custom policies; retain flexible G coverage |
+| 25 | SciiFi Overdrive | 30 | 20 | Multiple overlapping currents with persistent G pressure | Rebalance a large automation fleet, recover from jams, and use selective manual rescue |
+
+The briefing states that demand patterns will change, but there are no in-round wave announcements. Default campaign
+objective, lives, and economy apply initially and are tuning targets rather than locked balance claims.
+
+### Capsule-round rules
+
+- Capsules render as compact cars inside tubes, with no cables, pulleys, or counterweight visual language.
+- Manual targeting remains legal, but these rounds must make automation the practical primary operating model.
+- Existing Service Zoning and custom Workshop policies are sufficient; no capsule-specific automation primitive is added.
+- VIPs, Gym Bros, Room Service, and Stink/farter events are excluded. Freshener, TARDIS, and Double-Decker are not
+  offered in the shop.
+- Jams remain common but use a shorter authored duration; passengers stay in the jammed capsule normally. Wrench
+  remains useful because fleet redundancy lowers the consequence without removing the disruption.
+- Open Plan remains legal under its normal adjacent, same-floor rule, but is deliberately niche. Turbo remains visible,
+  provides a 15% speed increase, and is intentionally low-value because pods are already fast.
+
+### Capsule-dispatch tuning questions
+
+Fixed-seed simulations and playtest should establish wave weights, overlap timing, spawn curves, shortened jam range,
+shop costs, and whether all-Sweep is sufficiently but not overwhelmingly inferior to a sensible zoned fleet. Presentation
+must prove that 20 pods and their automation/status cues remain readable without horizontal scrolling or degraded click
+targets.
 
 ## 7. Hazard tuning principles
 

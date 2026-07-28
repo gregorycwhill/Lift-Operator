@@ -89,6 +89,28 @@ window.getRandomGuestFloor = function() {
     return roll < 3 ? 0 : roll - 2;
 };
 
+window.getCapsuleDemandFloor = function(round, progress) {
+    const maxFloor = Math.max(1, (Number(window.Config.numFloors) || 1) - 1);
+    const phase = Math.max(0, Math.min(1, Number(progress) || 0))
+        * (Number(round) === 25 ? 2.5 : 2.0) * Math.PI * 2;
+    const weights = [3];
+    let total = 3;
+    for (let floor = 1; floor <= maxFloor; floor++) {
+        const position = floor / maxFloor;
+        const current = 0.5 + 1.5 * ((Math.cos(position * Math.PI * 2 - phase) + 1) / 2);
+        const overlap = 0.25 * ((Math.cos(position * Math.PI * 4 + phase * 0.7) + 1) / 2);
+        const weight = current + overlap;
+        weights.push(weight);
+        total += weight;
+    }
+    let roll = seededRandom() * total;
+    for (let floor = 0; floor < weights.length; floor++) {
+        roll -= weights[floor];
+        if (roll <= 0) return floor;
+    }
+    return maxFloor;
+};
+
 window.getAutomationRandomFloor = function() {
     const value = Math.floor(window.Game.AutomationSeed.random() * window.Config.numFloors);
     return Math.max(0, Math.min(window.Config.numFloors - 1, value));
@@ -119,7 +141,7 @@ window.Config = {
     jamMaxSec: BalanceSystem.jam.maxSec,
     checkoutChance: BalanceSystem.checkoutChance,
     
-    liftsR1: BalanceRounds[1].lifts, liftsR2: BalanceRounds[2].lifts, liftsR3: BalanceRounds[3].lifts, liftsR4: BalanceRounds[4].lifts, liftsR5: BalanceRounds[5].lifts, liftsR6: BalanceRounds[6].lifts, liftsR7: BalanceRounds[7].lifts, liftsR8: BalanceRounds[8].lifts, liftsR9: BalanceRounds[9].lifts, liftsR10: BalanceRounds[10].lifts, liftsR11: BalanceRounds[11].lifts, liftsR12: BalanceRounds[12].lifts, liftsR13: BalanceRounds[13].lifts, liftsR14: BalanceRounds[14].lifts, liftsR15: BalanceRounds[15].lifts, liftsR16: BalanceRounds[16].lifts, liftsR17: BalanceRounds[17].lifts, liftsR18: BalanceRounds[18].lifts, liftsR19: BalanceRounds[19].lifts, liftsR20: BalanceRounds[20].lifts, liftsR21: BalanceRounds[21].lifts, liftsR22: BalanceRounds[22].lifts, liftsR23: BalanceRounds[23].lifts,
+    liftsR1: BalanceRounds[1].lifts, liftsR2: BalanceRounds[2].lifts, liftsR3: BalanceRounds[3].lifts, liftsR4: BalanceRounds[4].lifts, liftsR5: BalanceRounds[5].lifts, liftsR6: BalanceRounds[6].lifts, liftsR7: BalanceRounds[7].lifts, liftsR8: BalanceRounds[8].lifts, liftsR9: BalanceRounds[9].lifts, liftsR10: BalanceRounds[10].lifts, liftsR11: BalanceRounds[11].lifts, liftsR12: BalanceRounds[12].lifts, liftsR13: BalanceRounds[13].lifts, liftsR14: BalanceRounds[14].lifts, liftsR15: BalanceRounds[15].lifts, liftsR16: BalanceRounds[16].lifts, liftsR17: BalanceRounds[17].lifts, liftsR18: BalanceRounds[18].lifts, liftsR19: BalanceRounds[19].lifts, liftsR20: BalanceRounds[20].lifts, liftsR21: BalanceRounds[21].lifts, liftsR22: BalanceRounds[22].lifts, liftsR23: BalanceRounds[23].lifts, liftsR24: BalanceRounds[24].lifts, liftsR25: BalanceRounds[25].lifts,
     
     spawnR1Start: BalanceRounds[1].spawnStart, spawnR1End: BalanceRounds[1].spawnEnd, spawnR2Start: BalanceRounds[2].spawnStart, spawnR2End: BalanceRounds[2].spawnEnd,
     spawnR3Start: BalanceRounds[3].spawnStart, spawnR3End: BalanceRounds[3].spawnEnd, spawnR4Start: BalanceRounds[4].spawnStart, spawnR4End: BalanceRounds[4].spawnEnd,
@@ -170,7 +192,9 @@ window.Config = {
         20: "Grand Hotel Network",
         21: "Counterweight Basics",
         22: "Counterweight Crossovers",
-        23: "Counterweight Network"
+        23: "Counterweight Network",
+        24: "SciiFi Dispatch",
+        25: "SciiFi Overdrive"
     },
 
     // GAME_DATA: The single source of truth for all game balancing
@@ -195,7 +219,7 @@ const debugDefinitions = [
     { key: 'sunsetMaxSec', label: 'Sunset Max Spawn (sec)', min: 20, max: 180, step: 5, dispFormat: (v)=>v },
     { key: 'sunsetDurationSec', label: 'Sunset Duration (sec)', min: 10, max: 120, step: 5, dispFormat: (v)=>v },
     { key: 'sunsetGuestRatio', label: 'Sunset Ratio', min: 0.1, max: 1.0, step: 0.1, dispFormat: (v)=>Math.round(v*100)+'%' },
-    ...Array.from({ length: 23 }, (_, index) => ({ key: `liftsR${index + 1}`, label: `Lifts in Round ${index + 1}`, min: 1, max: 10, step: 1, dispFormat: (v)=>v })),
+    ...Array.from({ length: 25 }, (_, index) => ({ key: `liftsR${index + 1}`, label: `Lifts in Round ${index + 1}`, min: 1, max: 20, step: 1, dispFormat: (v)=>v })),
     { key: 'spawnR1Start', label: 'R1 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
     { key: 'spawnR1End', label: 'R1 End Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
     { key: 'spawnR2Start', label: 'R2 Start Rate', min: 0.05, max: 2.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },

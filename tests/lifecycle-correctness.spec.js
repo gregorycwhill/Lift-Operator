@@ -415,10 +415,10 @@ test('pause and resume preserve guest and scheduled-event ages', async ({ page }
 
 test('all supported rounds have explicit factory configuration', async ({ page }) => {
     const definitions = await page.evaluate(() => {
-        return Array.from({ length: 23 }, (_, index) => getRoundDefinition(index + 1));
+        return Array.from({ length: 25 }, (_, index) => getRoundDefinition(index + 1));
     });
 
-    expect(definitions).toHaveLength(23);
+    expect(definitions).toHaveLength(25);
     definitions.forEach((definition, index) => {
         expect(definition.round).toBe(index + 1);
         expect(definition.floors).toBeGreaterThan(0);
@@ -783,6 +783,60 @@ test('counterweight trilogy has canonical scale and Open Plan timing', async ({ 
     expect(result.durations).toEqual([20, 45, 60]);
 });
 
+test('capsule dispatch rounds have canonical scale, travel, and exclusions', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        r24: Config.GAME_DATA.rounds[24],
+        r25: Config.GAME_DATA.rounds[25],
+        available: ['turbo', 'openPlan', 'freshener', 'tardis', 'doubleDecker']
+            .map(id => [id, PowerUps.isPowerUpAvailableForRound(id, 24)])
+    }));
+
+    expect(result.r24).toMatchObject({ floors: 15, lifts: 10, liftCapacity: 1, capsuleMode: true, capsuleTravelSecPerFloor: 0.2, jamMinSec: 6, jamMaxSec: 10 });
+    expect(result.r25).toMatchObject({ floors: 30, lifts: 20, liftCapacity: 1, capsuleMode: true, capsuleTravelSecPerFloor: 0.2, jamMinSec: 6, jamMaxSec: 10 });
+    expect(result.available).toEqual([
+        ['turbo', true], ['openPlan', true], ['freshener', false],
+        ['tardis', false], ['doubleDecker', false]
+    ]);
+});
+
+test('capsule rounds render narrow cars and use seeded continuous demand currents', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(24, { showBriefing: false });
+        Game.Seed.set(2468);
+        const first = Array.from({ length: 8 }, () => getCapsuleDemandFloor(24, 0.35));
+        Game.Seed.set(2468);
+        const replay = Array.from({ length: 8 }, () => getCapsuleDemandFloor(24, 0.35));
+        const r24View = {
+            capsuleMode: Registry.capsuleMode,
+            liftCount: Registry.lifts.length,
+            capsuleCars: document.querySelectorAll('.capsule-car').length,
+            shaftWidth: getLiftLayoutMetrics().shaftWidth,
+            liftWidth: getLiftLayoutMetrics().liftWidth
+        };
+        initializeRound(25, { showBriefing: false });
+        return {
+            ...r24View,
+            r25LiftCount: Registry.lifts.length,
+            r25CapsuleCars: document.querySelectorAll('.capsule-car').length,
+            groundPresent: first.includes(0),
+            varied: new Set(first).size > 1,
+            first,
+            replay
+        };
+    });
+
+    expect(result.capsuleMode).toBe(true);
+    expect(result.liftCount).toBe(10);
+    expect(result.capsuleCars).toBe(10);
+    expect(result.shaftWidth).toBe(30);
+    expect(result.liftWidth).toBe(28);
+    expect(result.r25LiftCount).toBe(20);
+    expect(result.r25CapsuleCars).toBe(20);
+    expect(result.groundPresent).toBe(true);
+    expect(result.varied).toBe(true);
+    expect(result.replay).toEqual(result.first);
+});
+
 test('counterweight pairs start complementary and mirror commanded targets', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(21, { showBriefing: false });
@@ -1009,7 +1063,7 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
     ]);
     expect(result.r2SpawnStart).toBe(0.4);
     expect(result.r2SpawnEnd).toBe(0.468);
-    expect(result.version).toBe('0.2.8-counterweight-trilogy');
+    expect(result.version).toBe('0.2.9-capsule-dispatch');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {

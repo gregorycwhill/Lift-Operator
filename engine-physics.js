@@ -226,11 +226,13 @@ window.gameTick = function(timestamp) {
         if (Registry.stats.round >= 6) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
             if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
-                lift.jamTimer = window.getRandomInt(Config.jamMinSec, Config.jamMaxSec); // gameTick decrements once per second
+                const jamMin = Number(roundConfig.jamMinSec || Config.jamMinSec);
+                const jamMax = Number(roundConfig.jamMaxSec || Config.jamMaxSec);
+                lift.jamTimer = window.getRandomInt(jamMin, jamMax); // gameTick decrements once per second
                 window.Game.Audio?.publish('hazard_started', { id: 'jam', liftId: lift.id });
             }
             
-            if (Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
+            if (!roundConfig.capsuleMode && Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
                 if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
                     lift.stinkTimer = Config.fartStinkSec; // gameTick decrements once per second
@@ -459,7 +461,10 @@ window.animationTick = function(timestamp) {
         }
     }
 
-    const pixelsPerSecond = Registry.floorHeight / Config.liftSpeedSec;
+    const travelSec = Registry.capsuleMode
+        ? (Registry.capsuleTravelSecPerFloor || 0.2)
+        : Config.liftSpeedSec;
+    const pixelsPerSecond = Registry.floorHeight / travelSec;
     const basePixelsPerTick = pixelsPerSecond * (16 / 1000);
 
     Registry.lifts.forEach((lift, index) => {
@@ -495,7 +500,7 @@ window.animationTick = function(timestamp) {
         }
         
         let actualPixelsPerTick = basePixelsPerTick;
-        if (typeof PowerUps !== 'undefined') {
+        if (typeof PowerUps !== 'undefined' && !Registry.capsuleMode) {
             const pairTurboActive = Boolean(partner && (lift.turboTimer > 0 || partner.turboTimer > 0));
             if (PowerUps.timers.globalTurbo > 0) {
                 actualPixelsPerTick /= (Registry.counterweightEnabled && partner ? 0.1 : 0.05);
@@ -504,6 +509,9 @@ window.animationTick = function(timestamp) {
                 if (pairTurboActive) mod *= 2;
                 actualPixelsPerTick /= mod; 
             }
+        } else if (Registry.capsuleMode && typeof PowerUps !== 'undefined' &&
+            (lift.turboTimer > 0 || PowerUps.timers.globalTurbo > 0)) {
+            actualPixelsPerTick *= 1.15;
         }
 
         // --- 2.2 Gravity & Weight Physics ---

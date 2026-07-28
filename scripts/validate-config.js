@@ -34,7 +34,7 @@ assert(
 );
 
 const rounds = design.rounds;
-for (let round = 1; round <= 23; round++) {
+for (let round = 1; round <= 25; round++) {
     const value = rounds[round];
     assert(value, `Missing round ${round}.`);
     if (!value) continue;
@@ -65,7 +65,7 @@ Object.keys(design.powerups).forEach(id => {
     const unlocks = design.shopUnlocks[id];
     assert(Array.isArray(unlocks) && unlocks.length === 3, `${id}: expected three shop unlock rounds.`);
     unlocks?.forEach((round, index) => {
-        assert(Number.isInteger(round) && round >= 1 && round <= 23, `${id} tier ${index + 1}: invalid unlock round.`);
+        assert(Number.isInteger(round) && round >= 1 && round <= 25, `${id} tier ${index + 1}: invalid unlock round.`);
     });
 });
 Object.keys(design.shopUnlocks).forEach(id => {

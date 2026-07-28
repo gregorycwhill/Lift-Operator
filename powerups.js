@@ -366,6 +366,10 @@ const PowerUps = {
     },
 
     primeAbility: function(powerUpId, tierIndex) {
+        if (!this.isPowerUpAvailableForRound(powerUpId)) {
+            window.showToast?.('That power-up is unavailable for capsule dispatch rounds.');
+            return;
+        }
         const ability = this.catalog[powerUpId].tiers[tierIndex];
         
         if (ability.target === 'instant') {
@@ -402,6 +406,10 @@ const PowerUps = {
 
     resolveTargeting: function(liftId, floorId) {
         if (!this.activeTargeting) return false;
+        if (!this.isPowerUpAvailableForRound(this.activeTargeting.id)) {
+            this.cancelTargeting();
+            return false;
+        }
 
         const abilityId = this.activeTargeting.id;
         const lift = Registry.lifts[liftId];
@@ -442,6 +450,12 @@ const PowerUps = {
             doubleDecker: lift.doubleDeckerTimer > 0 || lift.isDoubleDecker,
             openPlan: lift.openPlanTimer > 0
         })[powerUpId] === true;
+    },
+
+    isPowerUpAvailableForRound: function(powerUpId, round = Registry.stats.round) {
+        const definition = Config.GAME_DATA.rounds[round];
+        if (!definition?.capsuleMode) return true;
+        return !['freshener', 'tardis', 'doubleDecker'].includes(powerUpId);
     },
 
     isGlobalPowerUpActive: function(powerUpId) {

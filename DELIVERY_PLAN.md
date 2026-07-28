@@ -1,11 +1,11 @@
-# Current Playtest Release — Service Zoning Campaign Preview
+# Current Playtest Release — SciiFi Capsule Dispatch Preview
 
 **Status:** Active playtest release  
-**Release target:** `0.3.0-network-campaign-preview`  
+**Release target:** `0.3.1-capsule-dispatch-preview`
 **Owner class:** Product and engineering  
 **Last reviewed:** 28 July 2026
-**Scope boundary:** Promote the implemented R14–R20 direct-service zoning foundation into a diagnosable, playable,
-and testable campaign slice. This plan does not add transfers, a G hub, new hazards, or new power-ups.
+**Scope boundary:** Deliver the implemented R24–R25 SciiFi capsule-dispatch arc on top of the existing campaign. Balance and
+human playability remain open gates; this release does not add a new automation primitive or new power-up family.
 
 ## Current state
 
@@ -86,6 +86,48 @@ briefings, and focused browser tests cover R21–R23. Human balance, accessibili
    Gold is the longest tier and applies across the whole building.
 3. **Authored balance envelope:** R21 uses 11 floors and R23 uses 29 floors. Arrival curves remain deterministic and are
    tuned only after the R14–R20 evidence provides an economy baseline.
+
+## Current vertical slice — R24–R25 SciiFi Capsule Dispatch
+
+**Status:** Implemented on `master`; automated acceptance is passing, with focused human balance and visual playtest open.<br>
+**Scope:** Add a two-round, automation-first capsule-pod arc after the counterweight trilogy: R24 teaches coherent
+dispatch with 10 fast single-passenger pods; R25 scales the same system to 20 pods and 30 floors.<br>
+**Design authority:** `ROADMAP.md`, `Game Play Map.md`, and `Lift-Operator_GDD.md`<br>
+**Test authority:** `TEST_PLAN.md`
+
+### Locked behaviour
+
+1. R24 uses 10 narrow tube-bound capsules over 15 floors, each normally holding one guest and traversing the building
+   in about three seconds. R25 uses 20 capsules over 30 floors at the same per-floor speed, about six seconds end-to-end.
+2. Existing Zoned Low/High/custom Workshop policies are sufficient. Manual commands remain legal rescue actions, but
+   the rounds must require automation as the practical primary operating model.
+3. Demand is deterministic continuous traffic currents that rise, overlap, and fade. The briefing warns that demand
+   changes; there are no in-round wave announcements or Checkout/Rooftop-style hard event transitions.
+4. VIP, Gym Bro, Room Service, and Stink/farter traffic are excluded. Freshener, TARDIS, and Double-Decker are absent
+   from the shop. Open Plan retains ordinary adjacent/same-floor transfers as a niche recovery tool.
+5. Jams remain prevalent but use a shortened authored duration; a passenger stays in the jammed capsule. Wrench remains
+   available. Turbo stays visible with a 15% boost but intentionally has little strategic value.
+6. Initial objectives, lives, and economy use normal campaign defaults. Spawn curves, wave weights, jam range, and shop
+   costs are explicit tuning work, not pre-accepted balance values.
+
+### Delivery evidence
+
+1. Canonical R24/R25 definitions, compact capsule rendering, and debug warp entries are implemented.
+2. Capsule capacity, travel speed, shortened jams, guest/event exclusions, and the round-specific power-up catalogue are
+   centralized in runtime rules.
+3. Seeded continuous demand-current scheduling and briefing copy are implemented without live wave hints.
+4. Focused browser coverage passes for 25-round factory configuration, capsule scale/exclusions/rendering, and seeded
+   demand; full acceptance still requires human playtest and fixed-seed balance evidence.
+4. Validate 10-pod and 20-pod presentation, click targets, animation cost, and Automation Dock batch assignment at
+   target desktop widths.
+5. Run fixed-seed strategy comparisons (all Sweep, Low/High zoning, custom zoning, and manual rescue) before human
+   playtest; tune only documented bottlenecks.
+
+### Explicit non-goals
+
+- No capsule-specific automation primitive or dispatch controller.
+- No conventional cables, pulleys, counterweights, or passenger transfer outside normal Open Plan rules.
+- No VIP, Gym Bro, Room Service, Stink, Freshener, TARDIS, or Double-Decker exception design for these two rounds.
 
 ## Next remediation slice — settings, shared Ground, and counterweight polish
 

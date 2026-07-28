@@ -3,6 +3,9 @@
 // ============================================================================
 
 window.getLiftLayoutMetrics = function() {
+    if (Registry.capsuleMode) {
+        return { shaftWidth: 30, liftWidth: 28, baseLeft: 415 };
+    }
     const compact = Registry.lifts.length >= 8;
     return {
         shaftWidth: compact ? 72 : 120,
@@ -16,6 +19,7 @@ window.buildWorld = function() {
     const world = document.getElementById('world');
     if (!world) return;
     world.innerHTML = ''; 
+    world.classList.toggle('capsule-bank', Boolean(Registry.capsuleMode));
     
     const FIXED_BOARD_HEIGHT = 600; 
     const layout = window.getLiftLayoutMetrics();
@@ -143,7 +147,7 @@ window.buildWorld = function() {
         let gymBroCount = lift.passengers.filter(p => p.isGymBro).length;
         if (lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold) extraClass += ' stinky';
         
-        car.className = `lift ${extraClass}`;
+        car.className = `lift ${extraClass}${Registry.capsuleMode ? ' capsule-car' : ''}`;
         if (Registry.counterweightEnabled) car.classList.add('counterweight-car');
         if (Number.isInteger(lift.counterweightPartner)) car.dataset.counterweightPartner = String(lift.counterweightPartner);
         car.style.setProperty('--lift-index', index);
@@ -235,14 +239,17 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     car.classList.toggle('idle', lift.state === 'IDLE');
 
     // Phase 2.5: Power-up Expansions Rendering
-    const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
+    const isDouble = !Registry.capsuleMode && (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
     const isOpenPlan = lift.openPlanTimer > 0;
 
     car.classList.toggle('double-decker', isDouble);
     car.classList.toggle('open-plan', isOpenPlan);
 
-    const liftHeight = isDouble ? (Math.min(50, Registry.floorHeight * 0.85) * 2) : Math.min(50, Registry.floorHeight * 0.85);
-    const bottomOffset = 40 + (Registry.floorHeight - Math.min(50, Registry.floorHeight * 0.85)) / 2;
+    const baseLiftHeight = Registry.capsuleMode
+        ? Math.min(28, Registry.floorHeight * 0.65)
+        : Math.min(50, Registry.floorHeight * 0.85);
+    const liftHeight = isDouble ? baseLiftHeight * 2 : baseLiftHeight;
+    const bottomOffset = 40 + (Registry.floorHeight - baseLiftHeight) / 2;
     
     // Calculate animation speed based on turbo
     const isTurbo = lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0);
@@ -335,7 +342,7 @@ window.draw = function() {
         if (car) {
             // OPTIMIZATION: Only update if passenger state has changed
             const guestStateKey = lift.passengers.map(p => `${p.dest}-${p.status}`).join('|');
-            const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
+            const isDouble = !Registry.capsuleMode && (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
             const stateHash = `${guestStateKey}-${isDouble}`;
 
             if (car.dataset.guestState === stateHash) {
