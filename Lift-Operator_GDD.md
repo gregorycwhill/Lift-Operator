@@ -261,6 +261,22 @@ The current catalog is sufficient:
 
 ## 9. Hazards and special traffic
 
+### VIP queue priority
+
+A waiting VIP is a priority passenger: she occupies the front of her floor queue and an eligible VIP boards before
+ordinary guests. The priority does not bypass capacity, stink, zoning, or the VIP empty-cabin constraint. If a lift is
+unsuitable for the VIP, an eligible ordinary guest may board instead; the VIP remains first for the next suitable car.
+
+An explicit manual lift target is a rescue instruction. It must not be replaced by an automation result already in
+flight; the lift honours the selected stop through arrival and one boarding attempt, then its assigned policy resumes.
+
+### Authored event matrix (decision pending)
+
+The balance configuration must be the single authority for whether a round includes VIP, Rooftop, Stink, Gym, jam, or
+Checkout traffic. Broad “introduced from this round onward” thresholds are not a substitute for an authored event flag.
+The precise R8–R13 legacy event matrix requires confirmation before implementation because it determines whether events
+persist between their introductory rounds and later combination rounds.
+
 ### Counterweight network (post-R20 authored arc)
 
 Rounds 21–23 add fixed, immediately adjacent counterweight pairs. Each pair has complementary floor positions: moving one
@@ -291,6 +307,9 @@ solution. Demand is generated through continuous seeded currents with no in-roun
 VIPs, Gym Bros, Room Service, and Stink are excluded. Freshener, TARDIS, and Double-Decker are unavailable. Jams remain
 common but are shorter and retain their passenger. Open Plan keeps its normal adjacent/same-floor behaviour; Turbo is
 available with a 15% boost but intentionally low value for already fast capsules.
+
+Capsule shafts are pneumatic tubes, not suspension systems: they have no central cable above or below a car. Each
+capsule controller discloses its active automation without requiring the player to infer it from the narrow car.
 
 Hazards exist to change decisions, not just subtract performance.
 

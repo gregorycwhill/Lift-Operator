@@ -293,6 +293,10 @@ window.showLiftCapacity = function(liftId, durationMs = 1800) {
     setTimeout(() => indicator.remove(), durationMs);
 };
 
+window.clearTransientLiftCues = function() {
+    document.querySelectorAll('.capacity-float, [data-capacity-lift]').forEach(node => node.remove());
+};
+
 window.applyAutomationTeachingCue = function() {
     const round = Registry.stats.round;
     const unlocks = Config.GAME_DATA.automationUnlocks;
@@ -602,6 +606,7 @@ window.UI.getGuestText = window.getGuestText;
 window.UI.updateLiftAutomationUI = window.updateLiftAutomationUI;
 window.UI.updateLiftVisualState = window.updateLiftVisualState;
 window.UI.showLiftCapacity = window.showLiftCapacity;
+window.UI.clearTransientLiftCues = window.clearTransientLiftCues;
 window.UI.applyAutomationTeachingCue = window.applyAutomationTeachingCue;
 
 window.Game = window.Game || {};

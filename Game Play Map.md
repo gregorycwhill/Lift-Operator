@@ -476,7 +476,7 @@ direct-service band for each lift.
 
 | Round | Title | Floors | Lifts | Structural challenge | Zoning/Workshop lesson |
 | --- | --- | ---: | ---: | --- | --- |
-| 14 | Split-Level Service | 20 | 5 | Lower, middle, and upper traffic bands | Configure direct local zones including G where useful |
+| 14 | Split-Level Service | 20 | 5 | Rising arrivals across lower, middle, and upper traffic bands | Configure direct local zones including G while preserving flexible Ground coverage |
 | 15 | VIP Rooftop Gala | 20 | 6 | VIP traffic combined with Rooftop Party | Preserve direct VIP and rooftop coverage |
 | 16 | Maintenance Blackout | 20 | 6 | Jams and stink create temporary fleet gaps | Keep overlapping rescue coverage |
 | 17 | Express Check-Out | 25 | 6 | Checkout traffic concentrates at special/G floors | Use local and express direct zones |
@@ -529,7 +529,7 @@ the established power-up economy.
 
 ## 6.7 Post-R23 SciiFi capsule-dispatch arc: Rounds 24–25
 
-This planned two-round arc replaces large shared cars with many narrow, tube-bound capsule pods. A pod holds one guest
+This implemented two-round arc replaces large shared cars with many narrow, tube-bound capsule pods. A pod holds one guest
 and is only slightly wider than a guest icon. R24 uses 10 pods over 15 floors and targets a three-second end-to-end
 trip; R25 uses 20 pods over 30 floors and targets six seconds, preserving the same per-floor speed.
 

@@ -189,6 +189,10 @@ strategic value against already fast pods.
 fleet, while R24 remains recoverable and R25 remains readable, performant, and not manually controllable as a primary
 strategy.
 
+**Current hardening prerequisite:** Before interpreting further balance feedback, resolve VIP priority, manual-stop
+arbitration, capsule/controller presentation, Rooftop Party visual scope, unwanted refusal audio, and the R24/R25
+performance profile recorded in `DELIVERY_PLAN.md`.
+
 ## Later — Mobile edition
 
 **Outcome:** A stripped-back, phone-first version makes the core lift-routing game readable and enjoyable on a modern

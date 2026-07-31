@@ -1603,6 +1603,11 @@ test('round countdown freezes play while allowing automation setup and transient
         guests: Registry.floors.reduce((sum, floor) => sum + floor.waitingGuests.length, 0)
     }));
     expect(frozen).toEqual({ active: false, countdown: true, timeLeft: 180, guests: 0 });
+    await page.evaluate(() => {
+        if (Registry.roundCountdownActive) document.getElementById('roundCountdownSkip')?.click();
+    });
+    await expect(page.locator('#roundCountdown')).toBeHidden();
+    await expect(page.locator('.capacity-float')).toHaveCount(0);
 
     const liftController = page.locator('.automation-status').first();
     await expect(liftController).toHaveClass(/automation-teaching-cue/);
@@ -1622,7 +1627,7 @@ test('round countdown freezes play while allowing automation setup and transient
     }));
     expect(started.active).toBe(true);
     expect(started.countdown).toBe(false);
-    expect(started.timeLeft).toBe(180);
+    expect(started.timeLeft).toBeGreaterThanOrEqual(179);
     expect(started.guests).toBeGreaterThan(0);
 });
 
@@ -2011,6 +2016,26 @@ test('production boarding enforces capacity, rage, VIP, and stink compatibility'
         vipRejectedWithPassenger: true,
         ordinaryRejectedWithVip: true
     });
+});
+
+test('VIP takes boarding priority over an ordinary compatible queue entry', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(8, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        lift.pos = 0;
+        lift.targetFloor = 0;
+        lift.state = 'BOARDING';
+        lift.stateProgress = 1;
+        lift.passengers = [];
+        Registry.floors[0].waitingGuests = [
+            { id: 'ordinary-first', dest: 3, status: GuestStatus.HAPPY, isVip: false, boardingWeight: 1 },
+            { id: 'vip-priority', dest: 4, status: GuestStatus.ANNOYED, isVip: true, boardingWeight: 1 }
+        ];
+        animationTick(100000);
+        return { boarded: lift.passengers[0]?.id, remaining: Registry.floors[0].waitingGuests.map(guest => guest.id) };
+    });
+    expect(result).toEqual({ boarded: 'vip-priority', remaining: ['ordinary-first'] });
 });
 
 test('production gravity multiplier slows loaded upward travel with a safety floor', async ({ page }) => {

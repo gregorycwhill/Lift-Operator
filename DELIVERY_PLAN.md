@@ -3,16 +3,95 @@
 **Status:** Active playtest release  
 **Release target:** `0.3.1-capsule-dispatch-preview`
 **Owner class:** Product and engineering  
-**Last reviewed:** 28 July 2026
+**Last reviewed:** 31 July 2026
 **Scope boundary:** Deliver the implemented R24–R25 SciiFi capsule-dispatch arc on top of the existing campaign. Balance and
 human playability remain open gates; this release does not add a new automation primitive or new power-up family.
 
 ## Current state
 
-**Implementation:** Current `master` baseline `a0b9c58` (28 July 2026), with the permanent Automation Dock promotion,
-Service Zoning, counterweight visual revision, and the latest playtest remediation implemented.
+**Implementation:** Current `master` baseline `ea42d5b` (28 July 2026), with the permanent Automation Dock promotion,
+Service Zoning, counterweight visual revision, and R24–R25 capsule dispatch implemented.
 **Automated baseline:** Component gates are recorded in `TEST_PLAN.md`; the aggregate browser command is limited by the
 execution environment rather than an observed test failure.
+
+## Consolidated open remediation list
+
+**Last consolidated:** 31 July 2026
+
+These are the active follow-ups from the latest and earlier playtest cycles. Engineering and documentation items can be
+implemented before the next playtest; the separate human-evidence items remain acceptance work rather than assumed defects.
+
+### Engineering or documentation work
+
+1. Enforce VIP priority boarding. VIPs must move to the front of the boarding queue; current playtest evidence says they
+   still wait like ordinary guests.
+2. Prevent stale Sweep decisions from overwriting a manual capsule-lift stop. A touch-selected floor must be honoured and
+   remain eligible for boarding.
+3. Clear the capsule-size/capacity popup when the round countdown is dismissed.
+4. Remove the central capsule tube line above and below each capsule; it is not pneumatic-tube styling.
+5. Add an accessible tooltip/title for the active automation on each capsule-lift controller.
+6. Correct the Round 17 title and briefing: the authored challenge is Checkout, not VIP/Rooftop traffic.
+7. Remove the board-wide Rooftop Party stripe overlay and confine stronger laser/glitter effects to the rooftop floor.
+8. Profile and optimize R24/R25 rendering before tuning further, especially per-frame DOM updates and large-fleet layout.
+9. Remove the `guest_refused` audio mapping that is producing the unwanted boarding-decline “bong”.
+10. Reproduce and resolve the outstanding R22 manual-stop boarding case, keeping direction compatibility, parking
+    arbitration, capacity, and zoning refusal distinguishable in diagnostics.
+11. Correct remaining documentation status language that calls the implemented R24–R25 arc “planned”.
+
+12. Expand the Round 14 briefing so the player can choose a zoning/loadout strategy from the stated scale and traffic
+    challenge, not merely from the unlock announcement.
+13. Make canonical round event flags authoritative. The current broad round-threshold logic can add VIP, Rooftop, Stink,
+    and Gym traffic to a round such as R17 despite its authored Checkout-only definition.
+14. Reconcile the active test-plan checkboxes with previously passed automated evidence so unchecked historical rows do
+    not masquerade as unimplemented engineering work.
+
+## Planned remediation slice — priority, manual rescue, and capsule presentation
+
+**Status:** Planned; ready for implementation.<br>
+**Scope:** Resolve deterministic engineering and documentation issues before further balance tuning. This slice does not
+change authored spawn curves, credits, capsule demand weights, or counterweight rules.
+
+### Agreed interaction defaults
+
+1. **VIP priority:** A VIP is first in the queue and boards before ordinary guests when the arriving lift is suitable.
+   An unsuitable lift may still take an eligible ordinary guest; priority is not a floor-wide boarding lock.
+2. **Automation disclosure:** Pointer hover and keyboard focus show the controller tooltip; a short touch shows the same
+   non-mutating disclosure without assigning or changing automation.
+3. **Performance budget:** R25 targets 60fps on the reference desktop, accepts no less than 45fps, and must avoid
+   sustained long tasks above 50ms during the representative trace.
+
+### Delivery sequence
+
+1. Add a priority-boarding predicate and a command-generation token per lift. A manual command increments the token,
+   holds its target through arrival and one boarding attempt, and makes any older asynchronous automation result a no-op.
+2. Apply that command arbitration to capsule and R22 manual-stop paths; add structured refusal diagnostics for direction,
+   capacity, parking arbitration, zoning, and stale automation outcomes.
+3. Queue VIPs at the front and select an eligible VIP before ordinary guests, while preserving suitability constraints.
+4. After the event-matrix decision, make canonical event flags authoritative. Centralize countdown cue cleanup; remove
+   the capsule centre line and board-wide party stripes; add automation disclosure; correct R14/R17 copy; confine
+   rooftop lasers/glitter to the rooftop; remove `guest_refused` audio mapping.
+5. Profile R24/R25 before optimizing. Use evidence to batch visual writes, skip unchanged work, or simplify only the
+   decorative layers responsible for scripting, layout, paint, or long-task cost.
+6. Add targeted browser coverage, then rerun regression, configuration, documentation, generated-balance, and audio
+   gates before handoff.
+
+### Potential persistent gaps
+
+- Code-level profiling cannot establish feel on the playtester’s device; R24/R25 still need real-device frame-rate and
+  readability evidence.
+- Fixed-seed tests can prove command arbitration, but cannot establish final traffic balance or zoning’s strategic value.
+- R22 may expose a separate parking-arbitration or zoning defect after stale-command arbitration is resolved; diagnostics
+  must identify the actual refusal before broadening boarding rules.
+- Converting legacy event thresholds to explicit flags can alter R8–R13 event mixes. That is intentional only after the
+  authored event matrix is confirmed; it must not be smuggled in as a Round 17 copy fix.
+
+### Human playtest acceptance still required
+
+- R14–R20 balance, credit-saving strategy, power-up affordability, and challenge comprehension.
+- R21–R23 counterweight comprehension, Open Plan usefulness, and late-round playability.
+- R24/R25 automation viability, demand-current readability, visual fit, performance, and device behaviour.
+- Final visual/audio confirmation for rooftop effects, top-floor icons, power-up timing, Gym Bro boarding, and late-round
+  layout/readability.
 
 ### Completed follow-up slice
 
@@ -628,3 +707,12 @@ intentional credit-saving strategy.
 - Broad architectural rewrites beyond changes required by this slice.
 
 See `TEST_PLAN.md` for the evidence matrix and `ROADMAP.md` for what follows this delivery slice.
+
+## Remediation checkpoint — 31 July 2026
+
+The deterministic fixes from the consolidated open list are implemented locally: VIP boarding priority with suitability
+fallback, stale automation-command rejection, countdown cue cleanup, capsule tube presentation, automation disclosure,
+R14/R17 briefing corrections, rooftop board-stripe removal, and silent guest-decline audio. Focused syntax, configuration,
+documentation, audio, countdown, VIP, and boarding tests pass. Remaining gates are R24/R25 device performance profiling,
+the R22 manual-stop reproduction, final human visual/playtest evidence, and confirmation of the authored R8–R13 event matrix
+before threshold-based event logic is changed.

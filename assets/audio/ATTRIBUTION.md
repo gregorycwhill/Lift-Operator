@@ -61,8 +61,6 @@ Additional provisional CC0 assets:
   Spring/Spring Enterprises; stored as `assets/audio/sfx/event-vip-fanfare.wav`.
 - “aww scream” by bluszcz ([source](https://opengameart.org/content/aww-scream)), CC-BY 3.0. Stored as
   `assets/audio/sfx/guest-urgency-aww.ogg`.
-- “Alert/Notification Sound” by frosty ham ([source](https://opengameart.org/content/alertnotification-sound)), CC0.
-  Stored as `assets/audio/sfx/guest-refused-alert.wav`.
 - “Plingy Coin” by Fupi ([source](https://opengameart.org/content/plingy-coin)), CC0. Stored as
   `assets/audio/sfx/ui-purchase-coin.wav`.
 - “UI Failed or Error” by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0.

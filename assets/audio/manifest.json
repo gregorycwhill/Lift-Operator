@@ -155,14 +155,6 @@
       "modification": "Selected OGG retained",
       "attribution": "Aww scream by bluszcz"
     },
-    "guestRefused": {
-      "file": "assets/audio/sfx/guest-refused-alert.wav",
-      "source": "https://opengameart.org/content/alertnotification-sound",
-      "author": "frosty ham",
-      "license": "CC0",
-      "modification": "None; downloaded WAV retained",
-      "attribution": ""
-    },
     "purchase": {
       "file": "assets/audio/sfx/ui-purchase-coin.wav",
       "source": "https://opengameart.org/content/plingy-coin",
@@ -220,7 +212,7 @@
     "hazard_ended": { "asset": null, "fallback": "ding" },
     "vip_arrival": { "asset": "assets/audio/sfx/event-vip-fanfare.wav", "fallback": "victory" },
     "guest_urgency": { "asset": null, "role": "no-sound" },
-    "guest_refused": { "asset": "assets/audio/sfx/guest-refused-alert.wav", "fallback": "error" },
+    "guest_refused": { "asset": null, "role": "no-sound" },
     "purchase_confirmed": { "asset": "assets/audio/sfx/ui-purchase-coin.wav", "fallback": "ding" },
     "shop_item_selected": { "asset": "assets/audio/sfx/ui-purchase-coin.wav", "fallback": "ding" },
     "ui_error": { "asset": "assets/audio/sfx/ui-error-failed.mp3", "fallback": "error" },

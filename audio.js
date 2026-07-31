@@ -18,17 +18,17 @@ window.Game.Audio = (function () {
         lift_arrived: 'ding', guest_boarded: 'ding',
         powerup_used: 'powerup', hazard_started: 'hazard', hazard_ended: 'ding',
         victory: 'victory', vip_arrival: 'vipArrival',
-        guest_refused: 'guestRefused', purchase_confirmed: 'purchase', ui_error: 'uiError', error: 'uiError',
+        purchase_confirmed: 'purchase', ui_error: 'uiError', error: 'uiError',
         guest_served: 'ding', guest_defenestrated: 'defenestration', shop_item_selected: 'purchase', round_started: 'ding', failure: 'uiError', retry_started: 'ding'
     };
     let context = null, masterGain = null, musicGain = null, sfxGain = null, menuBuffer = null, menuSource = null, menuSourceStartedAt = 0, menuOffset = 0, rooftopSource = null, pressureLayerGain = null, musakSource = null, musakStopTimer = null;
     const buffers = {}, failedAssets = new Map(), musicSources = [];
-    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-dream-raid.mp3', pressure: 'assets/audio/gameplay-orbital-colossus.mp3', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-toolbox.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-gastric-distress.wav', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', guestRefused: 'assets/audio/sfx/guest-refused-alert.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
+    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-dream-raid.mp3', pressure: 'assets/audio/gameplay-orbital-colossus.mp3', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-toolbox.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-gastric-distress.wav', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
     let initialized = false, currentContext = 'menu', psi = 1, pressureBand = 'calm', musicTimer = null, rooftopActive = false, acceptedEventCount = 0;
     let settings = { muted: false, music: 0.22, sfx: 0.50 };
     const listeners = new Map();
-    const fallbackMap = { vipArrival: 'victory', guestRefused: 'error', purchase: 'ding', uiError: 'error', defenestration: 'error' };
-    const eventCooldownMs = { guest_urgency: 300, guest_refused: 250 };
+    const fallbackMap = { vipArrival: 'victory', purchase: 'ding', uiError: 'error', defenestration: 'error' };
+    const eventCooldownMs = { guest_urgency: 300 };
     const lastPlayedEventAt = new Map();
 
     try { settings = { ...settings, ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; } catch (_) { /* private mode */ }

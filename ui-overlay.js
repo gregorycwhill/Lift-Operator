@@ -52,6 +52,7 @@ window.startRoundCountdown = function(seconds = 5) {
         if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
         Registry.roundCountdownTimer = null;
         Registry.roundCountdownActive = false;
+        window.clearTransientLiftCues?.();
         window.Game.Audio?.publish('round_started', { round: Registry.stats.round });
         if (countdown) countdown.classList.add('hidden');
         const now = window.Game.virtualTime || Date.now();

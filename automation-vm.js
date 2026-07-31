@@ -243,6 +243,7 @@ window.Game = window.Game || {};
             const snapshot = {
                 lift: {
                     pos: lift.pos, targetFloor: lift.targetFloor, sweepDirection: lift.sweepDirection,
+                    commandRevision: lift.commandRevision || 0,
                     serviceLower: lift.serviceLower, serviceUpper: lift.serviceUpper,
                     passengers: lift.passengers.map(passenger => ({ dest: passenger.dest, boardingWeight: passenger.boardingWeight, isGymBro: passenger.isGymBro }))
                 },
@@ -302,6 +303,9 @@ window.Game = window.Game || {};
             worker.onmessage = ({ data }) => {
                 cleanup();
                 if (!data.ok) return this.reportExecutionError(script, data.error);
+                    // A player command made while the worker was running owns the
+                    // lift. Never let a stale asynchronous policy result overwrite it.
+                    if ((lift.commandRevision || 0) !== (snapshot.lift.commandRevision || 0) || lift.manualOverride) return;
                     if (Number.isInteger(data.actions.targetFloor)) {
                         const target = data.actions.targetFloor;
                         const inZone = !Registry.isZoningEnabled?.() || Registry.isFloorInLiftZone(lift, target);

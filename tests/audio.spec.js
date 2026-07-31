@@ -415,7 +415,6 @@ test('verified imported audio assets are available at their production paths', a
         'sfx/hazard-metal-interaction.wav',
         'sfx/event-vip-fanfare.wav',
         'sfx/guest-urgency-aww.ogg',
-        'sfx/guest-refused-alert.wav',
         'sfx/ui-purchase-coin.wav',
         'sfx/ui-error-failed.mp3'
     ]) {
@@ -428,6 +427,8 @@ test('manifested production event mappings resolve to local assets', async ({ re
     const response = await request.get('http://127.0.0.1:5500/assets/audio/manifest.json');
     const manifest = await response.json();
     const paths = [];
+
+    expect(manifest.events.guest_refused).toEqual({ asset: null, role: 'no-sound' });
     for (const event of Object.values(manifest.events)) {
         if (event.asset) paths.push(event.asset);
         if (event.assetsByPayloadId) paths.push(...Object.values(event.assetsByPayloadId));

@@ -2,9 +2,52 @@
 
 **Status:** Active acceptance plan for the `0.3.1-capsule-dispatch-preview` playtest release
 **Owner class:** Engineering and playtest  
-**Last reviewed:** 28 July 2026
+**Last reviewed:** 31 July 2026
 **Testing principles:** `TESTING_STRATEGY.md`
 **Product scope:** `ROADMAP.md` and the product design documents
+
+## Consolidated open remediation acceptance
+
+**Last consolidated:** 31 July 2026
+
+The following engineering checks correspond to the active remediation list in `DELIVERY_PLAN.md` and do not depend on new
+human playtest sessions before implementation:
+
+- [ ] VIP priority is enforced at boarding while capacity, stink, and suitability rules remain authoritative.
+- [ ] A stale asynchronous Sweep result cannot overwrite a manual capsule-lift destination.
+- [ ] Capsule-size/capacity cues clear when countdown dismissal occurs.
+- [ ] Capsule rendering has no central cable line and each lift controller exposes its active automation accessibly.
+- [ ] Round 17 briefing/title accurately describe Checkout.
+- [ ] Rooftop Party board-wide stripes are removed; effects are confined to the rooftop floor.
+- [ ] R24/R25 profiling identifies and removes avoidable per-frame DOM/layout work without regressing conventional or
+  counterweight rounds.
+- [ ] The unwanted `guest_refused`/boarding-decline “bong” has no production audio mapping.
+- [ ] The R22 manual-stop boarding reproduction distinguishes direction, parking, capacity, and zoning outcomes.
+- [ ] Product/status documents describe R24–R25 consistently as implemented and playtest-pending.
+- [ ] Canonical event flags, rather than broad round thresholds, determine VIP, Rooftop, Stink, Gym, jam, and Checkout
+  traffic; R17 is Checkout-only under the agreed event matrix.
+- [ ] Active acceptance checkboxes distinguish passed automated evidence from remaining human acceptance work.
+
+### Planned remediation test design
+
+1. **VIP priority:** Test initial arrival and each re-entry with ordinary guests ahead of the VIP. An eligible VIP boards
+   first; an unsuitable lift may board a later ordinary guest; no guest is lost or duplicated.
+2. **Manual command arbitration:** Start an asynchronous Sweep decision, issue a manual target before its result returns,
+   and verify the target, override, arrival, and boarding attempt survive unchanged. Repeat for R24 and R22, then
+   verify Sweep resumes only after the completed stop.
+3. **Refusal diagnostics:** Exercise direction, capacity, parking-arbitration, zoning, VIP, and jam cases. Each gets a
+   distinct machine-readable reason without the removed boarding-decline sound.
+4. **Transient presentation:** Dismiss countdown with a capsule-size cue active; assert immediate cue removal. Assert
+   no capsule centre cable, no board-wide Rooftop Party stripe, and rooftop-only effects with reduced-motion support.
+5. **Copy and disclosure:** Assert R14 names its 20-floor/five-lift/rising-pressure zoning challenge, R17 names
+   Checkout, and capsule controllers expose active automation through pointer, keyboard, and touch disclosure.
+6. **Event matrix:** Exercise each event-bearing round and nearby non-event rounds. Assert event scheduling follows only
+   the canonical flags, including the agreed R8–R13 matrix and R17 Checkout-only behaviour.
+7. **Performance:** Run deterministic R24/R25 traces with representative demand and effects. Record average/worst frame
+   interval, long-task count, DOM count, and layout/paint work; R25 targets 60fps, accepts no less than 45fps, and has
+   no sustained long tasks above 50ms on the reference desktop.
+
+Human balance, visual, audio-perception, device, and usability gates remain listed in their relevant sections below.
 
 ## Baseline gate — `0.3.0-network-campaign-preview`
 
@@ -417,3 +460,11 @@ historical handoff documents, not this active plan.
 - Canonical balance artifacts are regenerated after the Round 13 25% spawn-pressure adjustment.
 - Human/device checks remain open for perceived audio timing, Gym Bro boarding in live play, pressure-track continuity,
   and rocket placement at multiple floors.
+
+### Automated implementation checkpoint — 31 July 2026 — remediation follow-up
+
+- Focused browser evidence passes for VIP priority selection, stale manual-command protection, countdown cue cleanup,
+  boarding compatibility, and the corrected audio manifest/event mapping.
+- `guest_refused` remains telemetry-only and has no sound asset or fallback.
+- Remaining unchecked acceptance items are intentional human/device or design gates: R22 manual-stop reproduction,
+  R24/R25 frame-rate profiling, visual rooftop/capsule review, and confirmation of the authored R8–R13 event matrix.

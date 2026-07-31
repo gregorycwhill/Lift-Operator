@@ -228,13 +228,7 @@ body {
     background: linear-gradient(90deg, rgba(220, 239, 247, 0.72), rgba(176, 211, 224, 0.38), rgba(220, 239, 247, 0.72));
 }
 .capsule-bank .shaft::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: rgba(92, 145, 165, 0.42);
-    transform: translateX(calc(var(--shaft-width) / 2));
+    display: none;
 }
 
 .counterweight-pair-visual { position: absolute; top: 0; z-index: 2; pointer-events: none; }
@@ -431,15 +425,7 @@ body {
     pointer-events: none;
 }
 #world.rooftop-party-board::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    opacity: .12;
-    background: repeating-linear-gradient(112deg, rgba(255, 70, 140, .55) 0 22px, transparent 22px 92px, rgba(0, 220, 255, .45) 92px 112px, transparent 112px 182px, rgba(255, 230, 70, .45) 182px 202px, transparent 202px 280px);
-    background-size: 180% 100%;
-    animation: boardDiscoSweep 4s linear infinite;
+    display: none;
 }
 
 /* Lift Status */

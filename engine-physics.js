@@ -635,9 +635,15 @@ window.animationTick = function(timestamp) {
                     else {
                         let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
                         let targetFloorToBoard = f;
-                        let boardableGuestIndex = Registry.floors[f].waitingGuests.findIndex(g =>
-                            window.canGuestBoardLift(lift, g, f, isStinky, maxCap)
-                        );
+                        const findBoardableGuest = floor => {
+                            const queue = Registry.floors[floor].waitingGuests;
+                            const isBoardable = guest => window.canGuestBoardLift(lift, guest, floor, isStinky, maxCap);
+                            // VIPs hold priority at the front of boarding selection,
+                            // but an unsuitable lift may still serve ordinary guests.
+                            const vipIndex = queue.findIndex(guest => guest.isVip && isBoardable(guest));
+                            return vipIndex !== -1 ? vipIndex : queue.findIndex(isBoardable);
+                        };
+                        let boardableGuestIndex = findBoardableGuest(f);
 
                         if (boardableGuestIndex === -1 && Registry.isZoningEnabled?.()) {
                             const zoneGuests = Registry.floors[f].waitingGuests.filter(g =>
@@ -653,9 +659,7 @@ window.animationTick = function(timestamp) {
 
                         if (boardableGuestIndex === -1 && isDouble && Registry.floors[f+1]) {
                             targetFloorToBoard = f + 1;
-                            boardableGuestIndex = Registry.floors[f+1].waitingGuests.findIndex(g =>
-                                window.canGuestBoardLift(lift, g, f + 1, isStinky, maxCap)
-                            );
+                            boardableGuestIndex = findBoardableGuest(f + 1);
                         }
 
                         if (boardableGuestIndex !== -1) {

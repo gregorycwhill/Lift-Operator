@@ -153,6 +153,7 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
         if (floor > currentFloor) targetLift.sweepDirection = 1;
         else if (floor < currentFloor) targetLift.sweepDirection = -1;
         if (options.manualOverride !== undefined) targetLift.manualOverride = options.manualOverride;
+        if (options.manualOverride === true) targetLift.commandRevision = (targetLift.commandRevision || 0) + 1;
     };
     setTarget(lift, target);
     if (Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)) {
@@ -257,7 +258,7 @@ window.createLiftState = function(id) {
     return {
         id, targetFloor: 0, pos: 0, passengers: [], counterweightPartner: null,
         lastActionTime: 0, automation: 'manual', sweepDirection: 1,
-        manualOverride: false, isJammed: false, jamTimer: 0, stinkTimer: 0,
+        manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0,
         tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
         sardineScored: false, isDoubleDecker: false,

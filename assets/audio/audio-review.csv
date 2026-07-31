@@ -18,6 +18,6 @@ Stink,hazard,sfx/hazard-gastric-distress.wav,https://opengameart.org/content/gas
 Rooftop party,event,gameplay-rooftop-trance.mp3,https://opengameart.org/content/trance-boss-battle,MintoDog,verified,CC0,not-required,Downloaded loopable MP3 retained without modification.
 VIP arrival,event,sfx/event-vip-fanfare.wav,https://opengameart.org/content/fanfare-2,Spring Spring,verified,CC-BY 4.0,required-and-recorded,Selected WAV retained; credit Spring/Spring Enterprises.
 Guest urgency,guest,,NO SOUND,,verified,CC-BY 3.0,required-and-recorded,Selected OGG retained; credit bluszcz.
-Guest refused boarding,guest,sfx/guest-refused-alert.wav,https://opengameart.org/content/alertnotification-sound,frosty ham,verified,CC0,not-required,Downloaded WAV retained.
+Guest refused boarding,guest,,https://opengameart.org/content/alertnotification-sound,frosty ham,verified,CC0,not-required,Intentionally disabled; no sound is emitted for an incompatible boarding attempt.
 Purchase confirmation,UI,sfx/ui-purchase-coin.wav,https://opengameart.org/content/plingy-coin,Fupi,verified,CC0,not-required,Downloaded WAV retained.
 UI error,UI,sfx/ui-error-failed.mp3,https://opengameart.org/content/ui-failed-or-error,ViRiX,verified,CC-BY 3.0,required-and-recorded,Downloaded MP3 retained; credit “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”.

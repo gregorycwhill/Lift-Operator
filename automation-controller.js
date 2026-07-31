@@ -378,7 +378,10 @@ window.Game = window.Game || {};
 
         Registry.lifts.forEach((lift, index) => {
             const status = document.createElement('button'); status.type = 'button'; status.className = 'automation-status'; status.dataset.liftIndex = index;
-            status.textContent = `${api.getPolicy(lift.automation)?.name || lift.automation}`;
+            const automationName = api.getPolicy(lift.automation)?.name || lift.automation;
+            status.textContent = automationName;
+            status.title = `Lift ${index + 1}: ${automationName}`;
+            status.setAttribute('aria-label', `Lift ${index + 1}, automation ${automationName}`);
             status.setAttribute('aria-pressed', 'false');
             status.addEventListener('click', event => {
                 event.stopPropagation();
