@@ -1,7 +1,7 @@
 # End-to-End Satisficing Balance Plan
 
-**Status:** Historical balance rationale. Current thresholds, commands, sequence, replay, reporting, and stopping rules
-live in `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
+**Status:** Historical balance rationale. Current balance practice lives in `BALANCE_WORKFLOW.md`; current delivery and
+release evidence live in `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
 
 ## Objective
 

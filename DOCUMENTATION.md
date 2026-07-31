@@ -1,8 +1,8 @@
 # Lift Operator Documentation Guide
 
-**Status:** Active documentation governance reference  
-**Owner class:** Product and engineering  
-**Last reviewed:** 25 July 2026
+**Status:** Active documentation governance reference
+**Owner class:** Product and engineering
+**Last reviewed:** 31 July 2026
 
 ## Purpose
 
@@ -13,11 +13,15 @@ plan as current work authority just because it contains useful detail.
 
 | Question | Authoritative document | Update when |
 | --- | --- | --- |
-| What experience are we building? | `Lift-Operator_GDD.md`, `Game Play Map.md`, `Game Economy.md`, `Automation_Workshop_Spec.md` | Product intent or rules change |
+| What durable experience and rules are we building? | `Lift-Operator_GDD.md` | Product vision or cross-system rules change |
+| What does each authored round teach? | `Game Play Map.md` | Round progression or learning intent changes |
+| How do Credits, purchases, and progression work? | `Game Economy.md` | Economy rules change |
+| How do Workshop and Automation Dock work? | `Automation_Workshop_Spec.md` | Automation authoring/deployment rules change |
 | What outcome comes next and why? | `ROADMAP.md` | A product phase starts, finishes, or is reprioritized |
 | What are we implementing now? | `DELIVERY_PLAN.md` | A delivery slice changes scope, risk, or acceptance criteria |
 | What proves the current slice works? | `TEST_PLAN.md` | Tests, playtest protocol, or release gate changes |
 | What did playtesters actually say? | `docs/archive/PLAYTEST_ARCHIVE.md` | A playtester message or its disposition is recorded |
+| What shipped in completed delivery slices? | `docs/archive/RELEASE_HISTORY.md` | A release candidate or material delivery slice completes |
 | What audio assets may ship and how are they credited? | `assets/audio/ATTRIBUTION.md` | An audio source, licence, or local asset changes |
 | What does the code currently expose? | Code, `package.json`, generated balance data, and focused tests | Code is always primary; write a short baseline note only for material behavior |
 | How do balance and quality practices work? | `BALANCE_WORKFLOW.md`, `TESTING_STRATEGY.md` | Enduring process changes |
@@ -40,6 +44,7 @@ when available and explicitly mark unrecoverable timestamps.
 | `IMPLEMENTATION_HANDOFF.md` | Historic implementation decisions and handoff record | This guide, roadmap, delivery plan, test plan |
 | `IMPLEMENTATION_PLAN.md`, `REFACTOR_PLAN.md`, `STABILIZATION_PLAN.md`, `ORIENTATION_IMPLEMENTATION_PLAN.md` | Completed phase plans | Current delivery/test plans and code |
 | `PLAYTEST_ARCHIVE.md` | Verbatim and retrospective playtest evidence | No replacement; append new evidence here |
+| `RELEASE_HISTORY.md` | Concise completed-slice and release evidence | No replacement; append only when a slice closes |
 
 ## Status vocabulary
 
@@ -60,6 +65,8 @@ Avoid ambiguous labels such as “partially implemented” without naming the mi
 4. Update `ROADMAP.md` only when the product sequencing or outcome changes.
 5. Update links and document status in the same change as any authority change.
 6. Before release, run the documented gate and ensure no historical document is described as the current authority.
+7. Keep release notes/history out of `ROADMAP.md`, implementation design out of `TEST_PLAN.md`, and future product
+   concepts out of `DELIVERY_PLAN.md` until they are selected for delivery.
 
 `npm.cmd run docs:check` verifies local Markdown links, the required live-plan files, and obsolete authority claims.
 

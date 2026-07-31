@@ -1,62 +1,59 @@
 # Lift Operator
 
-**Status:** Active project entry point  
-**Owner class:** Product and engineering  
-**Last reviewed:** 25 July 2026
+**Document role:** Project entry point
+**Status:** Active
+**Owner class:** Product and engineering
+**Last reviewed:** 31 July 2026
 
-Lift Operator is a browser-based elevator management and automation game. It begins as a fast arcade game about routing lifts under time pressure, then develops into a strategy puzzle about traffic analysis, scarce power-ups, automation selection, and custom routing logic.
+Lift Operator is a browser-based elevator-management and automation game. It begins as a fast arcade game about routing
+lifts under pressure, then develops into a strategy puzzle about traffic analysis, scarce power-ups, automation
+selection, Service Zoning, custom policies, counterweights, and capsule dispatch.
 
 Live build: https://gregorycwhill.github.io/Lift-Operator/
 
-## Design north star
+## Current project phase
 
-Each major round presents a diagnosable operational problem:
+The game is a playable 25-round desktop campaign entering major release-candidate hardening and broad playtesting.
+Rounds 14–20 develop Service Zoning and fleet architecture, R21–R23 form the counterweight/Open Plan puzzle trilogy,
+and R24–R25 introduce fast single-passenger capsule dispatch.
 
-1. The player encounters a new bottleneck.
-2. Familiar tactics become insufficient.
-3. Failure reveals the nature of the bottleneck.
-4. The player changes lift roles, automation, purchases, or power-up timing.
-5. The player retries the same seeded traffic pattern.
-6. The round is overcome through understanding and execution.
-
-Built-in automation is a force multiplier, never autoplay. From Round 2 onward, unattended all-Sweep play must fail; progression comes from supervision, timely intervention, specialized policies, power-up timing, and later custom logic. Player-authored custom automation is the advanced exception and can earn Hands-Free mastery.
-
-The game should be frenetic and novel early, tactical in the middle, and increasingly strategic and puzzle-like late. It does not need more mechanics. It needs the existing mechanics to create clear problems, multiple viable solutions, meaningful scarcity, and satisfying mastery.
+The current work is correctness, performance, balance, usability, and device acceptance—not another feature expansion.
+See `DELIVERY_PLAN.md` for current release scope and `TEST_PLAN.md` for evidence and the broad-feedback protocol.
 
 ## Documentation
 
-Start with [DOCUMENTATION.md](DOCUMENTATION.md). It defines document ownership, status vocabulary, and the update
-rules that keep current plans separate from history.
+Start with [DOCUMENTATION.md](DOCUMENTATION.md). It defines document roles and prevents active plans from being mixed
+with historical implementation material.
 
 | Need | Document |
 | --- | --- |
-| Product direction and sequencing | [ROADMAP.md](ROADMAP.md) |
-| Current implementation scope | [DELIVERY_PLAN.md](DELIVERY_PLAN.md) |
+| Product direction and sequence | [ROADMAP.md](ROADMAP.md) |
+| Current implementation/release scope | [DELIVERY_PLAN.md](DELIVERY_PLAN.md) |
 | Current evidence and release gates | [TEST_PLAN.md](TEST_PLAN.md) |
-| Product rules and round/economy intent | [GDD](Lift-Operator_GDD.md), [Game Play Map](Game%20Play%20Map.md), [Game Economy](Game%20Economy.md) |
-| Long-lived engineering practices | [TESTING_STRATEGY.md](TESTING_STRATEGY.md), [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) |
-| Playtester verbatims and historical observations | [Playtest archive](docs/archive/PLAYTEST_ARCHIVE.md) |
+| Durable product rules | [GDD](Lift-Operator_GDD.md), [Game Play Map](Game%20Play%20Map.md), [Game Economy](Game%20Economy.md) |
+| Workshop and Automation Dock contract | [Automation Workshop specification](Automation_Workshop_Spec.md) |
+| Enduring quality/balance practices | [TESTING_STRATEGY.md](TESTING_STRATEGY.md), [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) |
+| Playtester verbatims | [Playtest archive](docs/archive/PLAYTEST_ARCHIVE.md) |
+| Completed release slices | [Release history](docs/archive/RELEASE_HISTORY.md) |
 
-Historical handoffs and completed plans remain in the repository for context, but are not current work authority.
+Historical handoffs and completed plans remain under `docs/archive/` and in Git history. They are not current delivery
+authority.
 
-## Current project phase
+## Design north star
 
-The game is a playable 23-round build with the first 13 rounds covered by the accelerated playtest campaign, canonical balance data, compact simulation reports, and a stabilized core loop. Rounds 21–23 introduce the counterweight puzzle trilogy and remain subject to focused playtesting.
+Each major round presents a diagnosable operational problem. The player encounters a bottleneck, understands why a
+familiar tactic failed, changes lift roles, automation, purchases, or timing, and masters the same seeded traffic
+through understanding rather than grinding.
 
-Historical stabilization, balance, implementation, and playtest material remains in `docs/archive/` for context. It is
-not current delivery authority.
+Built-in automation is a force multiplier, not autoplay. Player-authored automation is the advanced expression of
+operational insight.
 
-The current delivery is the `0.3.0-network-campaign-preview` playtest release: validate direct-service behavior,
-Workshop comprehension, large-fleet layouts, reproducible diagnostics, audio continuity, and the first R14-R20 tuning
-evidence. Audio is cleared for desktop Chromium/WebKit playtesting; real-device/mobile audio checks are follow-up
-acceptance work. See `DELIVERY_PLAN.md` and `docs/archive/PLAYTEST_ARCHIVE.md`.
-
-## Local development and tests
+## Local development
 
 Requirements:
 
-- Node.js 24 or a current supported LTS release.
-- npm.
+- Node.js 24 or a current supported LTS release;
+- npm;
 - Playwright Chromium, installed once with `npx.cmd playwright install chromium`.
 
 From PowerShell:
@@ -68,58 +65,30 @@ npm.cmd run serve
 
 Open `http://127.0.0.1:5500/` for local play.
 
-Run the manifest-gated Monkey lifecycle suite with:
-
-```powershell
-npm.cmd run test:e2e
-```
-
 Run the complete validation command with:
 
 ```powershell
 npm.cmd test
 ```
 
-This performs JavaScript syntax checking, canonical balance/config validation, generated-artifact verification, and the Playwright suites. The same command runs in GitHub Actions.
+The long Auto-Pilot protocol can make the aggregate command exceed short external wrappers. `TEST_PLAN.md` lists the
+release commands separately so long-running evidence can be recorded accurately.
 
-It also runs deterministic struggling, typical, and expert economy scenarios. These enforce transaction and affordability invariants while reporting bank accumulation as balance evidence.
-
-After changing `design/game-balance.v1.json`, regenerate the browser artifact:
+After changing `design/game-balance.v1.json`, regenerate and validate the browser artifact:
 
 ```powershell
 npm.cmd run balance:generate
+npm.cmd run balance:check
 ```
-
-Run the unattended all-Sweep balance matrix and regenerate its reports with:
-
-```powershell
-npm.cmd run balance:matrix
-```
-
-Balance violations are reported as tuning evidence; `npm.cmd test` verifies report integrity without pretending that currently unmet balance goals are correctness failures.
-
-The suite verifies the accelerated campaign boundary, the human-intervention kill switch, ordinary-death rollback,
-single-commit checkout/evaluation, pause clock preservation, and spawn-to-delivery timing. The latest complete local
-gate is recorded in `TEST_PLAN.md`; update that record whenever the test count changes.
 
 ## Project security philosophy
 
-Lift Operator is a hobby project for children learning to move from Scratch into purposeful programming. Its source is intentionally inspectable.
+Lift Operator is a hobby project for children learning to move from Scratch into purposeful programming. Its source is
+intentionally inspectable. The project protects the experience from accidents, not the source from curious players:
 
-The project protects the experience from accidents, not the source from curious players:
+- Debug and Monkey capabilities require visible opt-in.
+- Malformed payloads and broken scripts fail safely.
+- Custom scripts run through bounded containment so they cannot freeze ordinary play.
+- Reverse-engineering the manifest or constructing a debug link is a successful learning outcome.
 
-- XOR manifests hide developer controls from accidental discovery.
-- Debug and Monkey capabilities should require a visible opt-in.
-- Malformed payloads and broken scripts should fail gracefully.
-- Infinite loops should not freeze the whole game.
-- Reverse-engineering the manifest, finding the XOR secret, or constructing a debug link is considered a successful learning outcome.
-
-The obfuscation is therefore fit for the project’s purpose. Strong authentication, anti-cheat, and adversarial security are not goals.
-# Stabilization status
-
-The current implementation passes the full automated gate, including the Round 13 Monkey playtest-boundary campaign. Developer
-simulation and balance tooling is available through `npm.cmd run sim:matrix`, `sim:repro`, `balance:search`,
-`balance:search:late`, `economy:search`, and `audit:completion`.
-
-Canonical balance promotion is not automatic. The current pointer in `reports/latest-balance.json` records the
-exploratory baseline and the remaining blockers: Round 2 solution leverage and human playtest evidence.
+Strong authentication, anti-cheat, and adversarial source protection are not product goals.

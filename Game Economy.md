@@ -1,9 +1,9 @@
 # Lift Operator — Target Game Economy
 
-**Document role:** Active economy design reference for earning, spending, retry, and progression  
-**Status:** Active design; numerical authority remains `design/game-balance.v1.json`  
-**Owner class:** Product and design  
-**Last reviewed:** 25 July 2026  
+**Document role:** Active economy design reference for earning, spending, retry, and progression
+**Status:** Active design; numerical authority remains `design/game-balance.v1.json`
+**Owner class:** Product and design
+**Last reviewed:** 31 July 2026
 **Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
 
 ## 1. Economy goals
@@ -295,7 +295,8 @@ Achievements based only on raw script tick counts should be reconsidered because
 
 Hands-Free remains a campaign achievement only for player-authored custom automation. Unattended completion with Sweep, Priority Sweep, Voting, or Weighted Voting does not qualify. The achievement rewards the player for encoding their own diagnosis and strategy rather than selecting a built-in autoplay solution.
 
-The current implementation checks only for the absence of manual clicks and does not yet verify that a custom automation was responsible. That eligibility defect must be corrected before the achievement is used as balance evidence.
+The implementation now requires zero manual clicks, at least one player-authored custom-script execution tick, and
+Round 2 or later. Built-in-only unattended completion does not qualify.
 
 ## 10. Anti-inflation rules
 

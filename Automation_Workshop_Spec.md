@@ -1,9 +1,9 @@
 # Automation Workshop Specification
 
-**Purpose:** Define the educational experience, current implementation boundary, target execution model, and reliability requirements for player automation.
-**Document status:** Active feature specification; implementation status is tracked below.  
-**Owner class:** Product and engineering  
-**Last reviewed:** 28 July 2026
+**Document role:** Durable Workshop and Automation Dock product/containment contract
+**Document status:** Active feature specification; implementation status is tracked below.
+**Owner class:** Product and engineering
+**Last reviewed:** 31 July 2026
 
 ## 1. Player purpose
 
@@ -29,25 +29,28 @@ Custom automation is the strategic culmination of the game, not an unrestricted 
 - Local storage per player name.
 - Blueprint sharing through encoded URLs.
 - A routing bridge exposing selected building queries.
-- Generated JavaScript execution using `new Function`.
+- Generated JavaScript execution inside a dedicated Worker for non-system scripts.
+- Source validation rejects browser globals, dynamic-code access, imports, and loop constructs.
+- Worker execution has a 250ms deadline and is terminated on timeout.
+- Capacity sensors use effective capacity and passenger weight.
+- Service Zone metadata and the permanent two-step Automation Dock described below.
 
-### Partial or inconsistent
+### Known implementation gaps
 
-- Capacity sensors use passenger count/base capacity instead of effective weight.
 - Imported script origin is not clearly communicated.
 - Custom script errors are logged but not fully explained in the game UI.
 - Open Plan observations are not part of a stable bridge.
 - Script identifiers use inconsistent prefixes.
 
-### Not implemented despite earlier claims
+### Deliberately undeveloped capabilities
 
-- Reliable infinite-loop timeout.
-- Isolation from browser globals that can accidentally disrupt the game.
-- Bounded loop execution.
 - Event callbacks such as `onFloorReached`.
 - Persistent script memory.
 - A mandatory event-hat/root block.
 - A visual Think block in the current block set.
+
+These are future feature candidates, not current release commitments. Loop blocks are currently rejected rather than
+instrumented with a bounded iteration model.
 
 ## 2.1 Service Zoning policy extension
 
@@ -260,36 +263,21 @@ The engine validates and applies the response.
 
 ## 8. Execution containment
 
-### Required target
+### Current implementation
 
-Execute custom automation in a Web Worker or constrained interpreter.
+Non-system custom automation executes in a dedicated Web Worker. The worker receives an immutable sensor snapshot and
+returns only target-floor and sweep-direction actions. Source validation rejects loop constructs, browser globals,
+dynamic-code access, storage/network APIs, and imports. The engine terminates the worker after 250ms, validates returned
+actions, applies service-zone/passenger constraints, and reports failures without blocking the game.
 
-The worker receives:
+### Remaining containment limits
 
-- Script identifier and version.
-- Immutable sensor snapshot.
-- Bounded memory state.
-- Declared capability version.
+- There is no script-memory API, so bounded persistent memory is a future capability rather than an active risk.
+- Loop constructs are rejected rather than transformed into a bounded iteration model.
+- The capability/snapshot contract is internal and not yet an explicit versioned public API.
+- Imported/shared origin and runtime errors need clearer player-facing explanation.
 
-The worker returns a small action object.
-
-The engine:
-
-- Terminates execution after a strict deadline.
-- Rejects malformed responses.
-- Clamps target floors.
-- Limits memory size.
-- Records errors without crashing gameplay.
-
-### Current interim limitation
-
-The current `new Function` implementation does not contain accidental infinite loops or direct browser access. For this hobby project, the primary concern is session reliability, not adversarial security.
-
-Until isolation exists:
-
-- Shared scripts identify their external origin and require explicit import consent.
-- Unrestricted loop blocks should be disabled.
-- Imported code should be reviewed or regenerated from validated Blockly data.
+For this hobby project, containment protects session reliability rather than providing an adversarial security boundary.
 
 ## 9. Script memory
 

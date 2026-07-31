@@ -1,10 +1,10 @@
 # Lift Operator — Target Game Play Map
 
-**Document role:** Target learning arc and candidate round/balance intent  
-**Campaign scope:** 25 authored rounds; detailed tuning candidates currently cover R1-R13 and structural intent covers R14-R20, with R21-R23 defined as the counterweight puzzle trilogy and R24-R25 implemented as the capsule-dispatch arc
-**Status:** Design candidate for iterative playtesting; not a statement of current implementation  
-**Owner class:** Product and design  
-**Last reviewed:** 28 July 2026
+**Document role:** Authored round progression, learning arc, and candidate tuning intent
+**Campaign scope:** 25 implemented authored rounds; tuning remains evidence-led
+**Status:** Active product design reference; not a delivery-status or test-evidence record
+**Owner class:** Product and design
+**Last reviewed:** 31 July 2026
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
 **Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
@@ -86,6 +86,8 @@ Failure timing still matters. Round 2 all-Sweep should fail late enough for Swee
 ## 4. Mechanic introduction sequence
 
 “Introduced” means explained and intentionally relevant. “Recombined” means previously learned behaviour becomes important again.
+Once VIP, Rooftop, Stink, Gym, jam, or Checkout is introduced, it remains eligible in later conventional rounds unless
+that round explicitly excludes it. The table identifies teaching emphasis, not the complete event set active in a round.
 
 | Mechanic | Introduce | First pressure test | Late mastery use |
 | --- | ---: | ---: | ---: |
