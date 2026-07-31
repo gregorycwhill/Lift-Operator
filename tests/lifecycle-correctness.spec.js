@@ -810,6 +810,8 @@ test('capsule rounds render narrow cars and use seeded continuous demand current
             capsuleMode: Registry.capsuleMode,
             liftCount: Registry.lifts.length,
             capsuleCars: document.querySelectorAll('.capsule-car').length,
+            capsuleCable: getComputedStyle(document.querySelector('.capsule-car'), '::before').display,
+            tubeBoundaryWidth: getComputedStyle(document.querySelector('.capsule-bank .shaft')).borderRightWidth,
             shaftWidth: getLiftLayoutMetrics().shaftWidth,
             liftWidth: getLiftLayoutMetrics().liftWidth
         };
@@ -828,6 +830,8 @@ test('capsule rounds render narrow cars and use seeded continuous demand current
     expect(result.capsuleMode).toBe(true);
     expect(result.liftCount).toBe(10);
     expect(result.capsuleCars).toBe(10);
+    expect(result.capsuleCable).toBe('none');
+    expect(result.tubeBoundaryWidth).toBe('3px');
     expect(result.shaftWidth).toBe(30);
     expect(result.liftWidth).toBe(28);
     expect(result.r25LiftCount).toBe(20);

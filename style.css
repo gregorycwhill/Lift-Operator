@@ -224,7 +224,7 @@ body {
 .shaft:hover { background: #e0e6e9; }
 .capsule-bank .shaft {
     position: relative;
-    border-right: 1px solid rgba(93, 125, 137, 0.55);
+    border-right: 3px solid #536d78;
     background: linear-gradient(90deg, rgba(220, 239, 247, 0.72), rgba(176, 211, 224, 0.38), rgba(220, 239, 247, 0.72));
 }
 .capsule-bank .shaft::after {
@@ -311,9 +311,7 @@ body {
     padding: 2px;
 }
 .lift.capsule-car::before {
-    width: 3px;
-    border-radius: 3px;
-    background: #77bfd8;
+    display: none;
 }
 .lift::before { 
     content: ''; 
