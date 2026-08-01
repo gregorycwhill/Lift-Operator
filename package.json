@@ -22,7 +22,6 @@
     "balance:envelope": "node scripts/run-campaign-envelope.js",
     "balance:legacy:report:check": "node scripts/validate-balance-report.js",
     "test:lifecycle": "playwright test tests/lifecycle-correctness.spec.js",
-    "test:e2e": "playwright test tests/auto-pilot.spec.js",
     "test:unit": "node --test tests/unit/*.test.js",
     "test:mechanics": "playwright test tests/lifecycle-correctness.spec.js --grep \"patience|boarding|VIP|Gym|jam|stink|rooftop|Musak|Group Think|Open Plan\"",
     "test:integration": "playwright test tests/integration",
@@ -39,8 +38,7 @@
     "human:protocol": "node scripts/validate-human-protocol.js",
     "audit:completion": "node scripts/audit-completion.js",
     "balance:search:late": "node scripts/search-late-balance.js",
-    "economy:search": "node scripts/economy-search.js",
-    "test:e2e:report": "playwright show-report"
+    "economy:search": "node scripts/economy-search.js"
   },
   "devDependencies": {
     "@playwright/test": "1.55.1",

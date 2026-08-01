@@ -22,6 +22,7 @@ plan as current work authority just because it contains useful detail.
 | What proves the current slice works? | `TEST_PLAN.md` | Tests, playtest protocol, or release gate changes |
 | What did playtesters actually say, and how was it dispositioned? | `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` | A playtester message or its disposition is recorded |
 | What material instruction or decision came from chat? | `docs/CHAT_DECISION_LOG.md` | A durable product, design, release, or documentation decision is made |
+| How should an external tester run and report an RC session? | `docs/playtest/RC1_PLAYTEST_PACK.md` | The test window, reporting fields, or release-readiness guidance changes |
 | What shipped in completed delivery slices? | `docs/archive/RELEASE_HISTORY.md` | A release candidate or material delivery slice completes |
 | What audio assets may ship and how are they credited? | `assets/audio/ATTRIBUTION.md` | An audio source, licence, or local asset changes |
 | What does the code currently expose? | Code, `package.json`, generated balance data, and focused tests | Code is always primary; write a short baseline note only for material behavior |

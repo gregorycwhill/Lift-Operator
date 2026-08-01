@@ -52,3 +52,16 @@ feedback belongs here.
 The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. New feedback from
 that session must receive a new `PTF-` identifier here, then be classified in `DELIVERY_PLAN.md` and converted into
 acceptance evidence in `TEST_PLAN.md` where applicable.
+
+## Audit — 2 August 2026
+
+Every reconstructed entry has a disposition. The only open or human-evidence-dependent items are:
+
+| IDs | State | Next evidence |
+| --- | --- | --- |
+| PTF-013 | Implemented—awaiting replay | R7/R9 traffic-mix replay on the published H0 build. |
+| PTF-015 | Open | Exact reproduction context for any remaining refusal “bong”. |
+| PTF-007, PTF-018 | Implemented—awaiting H1 evidence | R9–R15 briefing, loadout, and zoning-discovery observations. |
+| PTF-010–PTF-012 | Implemented—awaiting later evidence | H2/H3 desktop layout, counterweight, and capsule-device checks. |
+
+All other entries are implemented historically, explicitly deferred, or retained as regression-sensitive observations.

@@ -134,15 +134,16 @@ These are genuine unresolved implementation or diagnosis items, not historical c
    validation, not spawn-rate or capacity changes.
 2. **R24/R25 performance evidence:** profile a representative R25 run. Target 60fps on the reference desktop, accept no
    sustained rate below 45fps, and investigate repeated long tasks above 50ms. Optimize only measured hotspots.
-3. **Release automation duration:** the long Auto-Pilot Alpha protocol takes approximately eight minutes and can make the
-   aggregate local command exceed a ten-minute wrapper. Decide whether CI should retain the long gate, split it into a
-   separate job, or use a shorter release smoke while keeping the long protocol scheduled.
+3. **Release automation:** the UNIT_01 Auto-Pilot suite was not a valid release gate: it depended on retired Debug
+   behavior and stalled without a bounded result. It and its dedicated commands are retired. `test:smoke` is now the
+   fast supported gate and `test:full` the supported comprehensive gate; any future browser E2E journey must be
+   designed against a supported player workflow.
 
 ## Current release-candidate decision
 
 | Gate | Current evidence | Decision |
 | --- | --- | --- |
-| Engineering correctness | Syntax, docs, config, balance freshness, economy, mechanics, integration, audio, and 103 lifecycle Playwright tests pass. The long Auto-Pilot E2E protocol exceeded its 10-minute command timeout without emitting a test result. | Conditional |
+| Engineering correctness | Syntax, docs, config, balance freshness, economy, mechanics, integration, audio, and lifecycle Playwright tests are the supported test surface. The retired UNIT_01 Auto-Pilot protocol is not release evidence. | Conditional |
 | Evidence provenance | The full R2–R25 / five-seed acceptance report is current and passes integrity validation. | Pass |
 | Balance acceptance | All-Sweep is rejected in 23/24 required rounds; R2 survives 5/5 seeds after the requested accessibility reduction. Intended profiles are diagnostic (10/24 currently positive). | **Block — decision required** |
 | Capsule device performance | Deterministic headless smoke passes; reference-device frame and long-task evidence is not captured. | **Block** |

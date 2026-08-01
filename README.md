@@ -33,7 +33,9 @@ with historical implementation material.
 | Durable product rules | [GDD](Lift-Operator_GDD.md), [Game Play Map](Game%20Play%20Map.md), [Game Economy](Game%20Economy.md) |
 | Workshop and Automation Dock contract | [Automation Workshop specification](Automation_Workshop_Spec.md) |
 | Enduring quality/balance practices | [TESTING_STRATEGY.md](TESTING_STRATEGY.md), [BALANCE_WORKFLOW.md](BALANCE_WORKFLOW.md) |
-| Playtester verbatims | [Playtest archive](docs/archive/PLAYTEST_ARCHIVE.md) |
+| Current playtest intake and reporting | [RC1 Playtest Pack](docs/playtest/RC1_PLAYTEST_PACK.md), [feedback log](docs/playtest/PLAYTEST_FEEDBACK_LOG.md) |
+| Material chat decisions | [Chat decision log](docs/CHAT_DECISION_LOG.md) |
+| Historical playtester verbatims | [Playtest archive](docs/archive/PLAYTEST_ARCHIVE.md) |
 | Completed release slices | [Release history](docs/archive/RELEASE_HISTORY.md) |
 
 Historical handoffs and completed plans remain under `docs/archive/` and in Git history. They are not current delivery
@@ -71,8 +73,13 @@ Run the complete validation command with:
 npm.cmd test
 ```
 
-The long Auto-Pilot protocol can make the aggregate command exceed short external wrappers. `TEST_PLAN.md` lists the
-release commands separately so long-running evidence can be recorded accurately.
+The retired UNIT_01 Auto-Pilot protocol is not a supported release check. Use the maintained smoke suite for a fast
+local gate; the full suite contains only supported verification:
+
+```powershell
+npm.cmd run test:smoke
+npm.cmd run test:full
+```
 
 After changing `design/game-balance.v1.json`, regenerate and validate the browser artifact:
 

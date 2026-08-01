@@ -8,7 +8,8 @@ const required = [
     'DELIVERY_PLAN.md',
     'TEST_PLAN.md',
     'docs/CHAT_DECISION_LOG.md',
-    'docs/playtest/PLAYTEST_FEEDBACK_LOG.md'
+    'docs/playtest/PLAYTEST_FEEDBACK_LOG.md',
+    'docs/playtest/RC1_PLAYTEST_PACK.md'
 ];
 const forbiddenAuthorityClaims = [
     /\bPrimary implementation authority\b/i,

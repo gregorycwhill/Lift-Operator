@@ -3,29 +3,28 @@
 **Document role:** Current release evidence, acceptance gates, and playtest protocol only
 **Status:** Active acceptance plan for the 25-round major release candidate
 **Owner class:** Engineering and playtest
-**Last reviewed:** 1 August 2026
+**Last reviewed:** 2 August 2026
 **Testing principles:** `TESTING_STRATEGY.md`
 **Delivery scope:** `DELIVERY_PLAN.md`
 
 ## Current evidence
 
-The active remediation working tree is based on `3dbfc5d` on `master`; a release-candidate commit is not yet cut.
+The active remediation working tree is based on `d9247aa` on `master`; the next commit is a release-readiness update.
 
 Recent focused evidence:
 
-- JavaScript syntax: 65 files passed.
-- Documentation: 23 Markdown files passed after the documentation refactor.
-- UTF-8: 102 first-party text files passed; unit gate passed.
-- Mechanics suite: 18/18 passed, including VIP priority boarding and Gym Bro stink boarding.
-- Audio suite: 23/23 passed; `guest_refused` is telemetry-only and has no sound asset or fallback.
+- `npm.cmd run test:full` passed on 2 August 2026 in 174 seconds: syntax (64 files), documentation (27 Markdown
+  files), config, balance freshness/integrity, economy, UTF-8 (112 first-party files), unit, mechanics (19/19),
+  integration (3/3), audio (25/25), and the supported Playwright suite (132/132).
+- `guest_refused` is telemetry-only and has no sound asset or fallback.
 - Integration suite: 3/3 passed.
 - Capsule rendering regression passed: capsule cars have no cable pseudo-element and tube separators use the intended
   dark 4px treatment; the capsule-specific cable pseudo-element is disabled.
 - Current 13-item remediation coverage includes Turbo floor snapping, capsule centering, synthetic-fart asset mapping,
   Gym Bro stink boarding, wall-clock power-up expiry, R14+ credit uplift, Room Service/Checkout exclusion, challenge
   briefings, countdown policy, counterweight command arbitration, zoning visuals, and R24/R25 performance smoke.
-- Protocol Alpha/Beta/Gamma passed: Alpha reached the Round-13 playtest boundary in 7.1 minutes; Beta verified the kill
-  switch and Gamma verified death/rebirth.
+- The retired UNIT_01 Auto-Pilot protocol is not current release evidence; its dedicated test file and commands have
+  been removed from the supported suite.
 - The all-Sweep negative-control rescue tuning is recorded in canonical data: R3, R5, and R9 received small spawn-end
   increases after the Turbo floor-snap fix caused one seed each to survive unattended Sweep.
 - The 25-round balance acceptance harness, canonical economy projection, event-persistence resolver, production-faithful
@@ -60,7 +59,7 @@ npm.cmd run test:mechanics
 npm.cmd run test:integration
 npx.cmd playwright test tests/audio.spec.js --workers=1
 npx.cmd playwright test tests/lifecycle-correctness.spec.js --workers=1
-npm.cmd run test:e2e
+npm.cmd run test:smoke
 ```
 
 Record the commit, Node/browser versions, operating system, pass counts, duration, and any failure artifact. The
@@ -79,8 +78,9 @@ full release gate only at H4, or when a fix changes shared simulation, balance, 
 - [ ] H3 R20–R25 human evidence: counterweight/Open Plan correctness and capsule responsiveness on target hardware.
 - [ ] H4 candidate gate: full release command, licence/attribution package, and triaged remaining-issue list.
 
-`test:e2e` is a long Auto-Pilot protocol. On the current local wrapper it exceeded ten minutes without emitting a test
-result; run it in an environment with a longer job allowance before release promotion.
+The former `test:e2e` Auto-Pilot protocol relied on retired UNIT_01 debug behavior and stalled without producing a
+bounded result. It is retired from the active suite. `test:smoke` is the short supported gate; `test:full` is the
+supported comprehensive gate.
 
 ## Full-campaign balance and economy acceptance
 
@@ -185,10 +185,11 @@ capacity fault. Improve and validate those policies before canonical balance par
 - [x] Capture deterministic R24/R25 acceptance traces with representative queues, automations, jams, and active
   effects. R25 meets the simulator threshold at 4/5 fixed seeds.
 - [x] Run `npm.cmd run perf:capsule` and record [the headless R24/R25 tick-cost/DOM/overflow smoke report](reports/capsule-performance-smoke.json).
-  The current reference run has no horizontal overflow and a 0.2ms p95 tick for both capsule rounds.
+  The current reference run has no horizontal overflow and a p95 tick at or below 0.4ms for both capsule rounds.
   This is a regression signal, not hardware frame-rate certification.
 - [x] Record deterministic frame intervals, tick cost, DOM count, and horizontal overflow for R24/R25 headless pressure.
-- [ ] Record frame intervals, long tasks, DOM count, and layout/paint hotspots on the supported reference device.
+- [ ] Record frame intervals, long tasks, DOM count, and layout/paint hotspots on the supported reference device using
+  `docs/playtest/RC1_PLAYTEST_PACK.md`.
 - [ ] R25 targets 60fps, remains at or above 45fps under representative pressure, and avoids sustained tasks above 50ms.
 - [ ] Twenty capsules and thirty floors remain fully operable without horizontal scrolling or Dock overlap on the
   reference desktop viewport.
@@ -211,13 +212,13 @@ capacity fault. Improve and validate those policies before canonical balance par
   canonical gate. `balance:acceptance:integrity` verifies the committed report's schema, provenance, seeds, and traces;
   `balance:acceptance:check` remains the active full-campaign release gate and rejects unmet thresholds.
 
-### Long-running release automation
+### Retired Auto-Pilot automation
 
-- [x] Protocols Alpha, Beta, and Gamma pass on the release-candidate working tree (1 August 2026). Alpha reached the
-  current Round-13 playtest boundary in approximately eight minutes; Beta verified the kill switch and Gamma verified
-  the death/rebirth cycle.
-- [ ] CI gives Protocol Alpha enough time, or runs it as an isolated/scheduled job with a shorter blocking smoke gate.
-- [ ] Documentation reports timeouts as environmental limitations, not successful test results.
+- [x] Retire the unbounded UNIT_01 Auto-Pilot protocol and its dedicated `test:e2e` commands from the active test
+  surface. It depended on a retired debug pathway and stalled without reliable release evidence.
+- [x] Use `npm.cmd run test:smoke` as the fast supported gate and `npm.cmd run test:full` as the supported
+  comprehensive gate. A future browser E2E journey must be designed against a supported player workflow before it is
+  reintroduced.
 
 ### Acceptance run-order reproducibility
 
@@ -226,6 +227,10 @@ capacity fault. Improve and validate those policies before canonical balance par
   result is unchanged alone and after R2–R5; the representative reproducibility suite passes.
 
 ## Structured broad-feedback playtest
+
+Use `docs/playtest/RC1_PLAYTEST_PACK.md` for tester-facing instructions, report fields, known limitations, and the
+audio attribution/distribution checklist. Use `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` as the authoritative intake
+record.
 
 For every session record: commit, balance version, browser/device, round, seed, starting Credits, purchases, automation
 layout, result, observed failure cause, and the tester's own explanation.
