@@ -5,7 +5,7 @@
 **Release target:** `1.0` (no release tag has been created)
 **Owner class:** Product and engineering
 **Last reviewed:** 1 August 2026
-**Implementation baseline:** Active remediation working tree based on `3dbfc5d` on `master`
+**Implementation baseline:** Active remediation working tree based on `b504978` on `master`
 
 ## Outcome
 
@@ -23,7 +23,7 @@ commands, evidence, and playtest acceptance belong in `TEST_PLAN.md`. Completed 
   capsule dispatch in R24–R25.
 - Permanent two-step Automation Dock with pinned carousel and built-in/custom/shared Library.
 - Workshop-authored policies, including scalable Low/High and custom Service Zones.
-- Persistent Credits, Supply Closet loadouts, tiered power-ups, Settings, achievements, Leaderboard, and audio controls.
+- Persistent Credits, Supply Closet loadouts, tiered power-ups, Settings, Leaderboard, and audio controls.
 - Desktop browser delivery through GitHub Pages from `master`.
 
 ## Remediation programme
@@ -34,7 +34,9 @@ The following programme is the current delivery scope. It restores the design-to
 ### Accepted decisions
 
 - Unattended all-Sweep must fail every fixed gate seed in every authored round from R2 through R25. R1 remains the
-  onboarding exception.
+  onboarding exception. The 25% R2 spawn-rate accessibility change is implemented but currently violates this invariant
+  (2/5 R2 all-Sweep seeds survive); resolving that conflict requires an explicit product decision rather than hidden
+  counter-tuning.
 - R12 expresses that rule as an endurance ceiling: all-Sweep loses its twentieth life before 240 seconds, while a
   competent strategy survives for 240–480 seconds.
 - Intended-strategy profiles remain diagnostic comparators. Their failures require trace review, but do not block this
@@ -52,8 +54,9 @@ The following programme is the current delivery scope. It restores the design-to
    every lift; simulated commands use production targeting; reproducibility covers representative rounds. The hash-only
    replay and placeholder robustness commands are retired from the supported npm surface pending a real action-log replay.
 3. **Economy evidence:** replace the fixed 13-round payout calculator with a 25-round current-price projection using
-   canonical payouts, unlocks, consumable use, retries, achievement rewards, and challenge-appropriate loadouts.
-   It must report affordability, savings, dominant purchases, and permanent-progression risk without changing prices.
+   canonical payouts, unlocks, consumable use, retries, and challenge-appropriate loadouts. It must report
+   affordability, savings, and dominant purchases without changing prices. Achievements are deferred and contribute no
+   runtime or modelled Credits in 1.0.
 4. **Configuration authority:** move remaining active balance parameters into canonical data, remove or repair dead
    compatibility/debug controls, and extend validation for event exclusions, counterweight geometry, capsule rules,
    unlock availability, and required mechanic support.
@@ -68,6 +71,14 @@ The following programme is the current delivery scope. It restores the design-to
 7. Separate correctness, balance, economy, and browser-performance gates. Add representative R24/R25 browser traces;
    the headless simulator cannot prove frame rate, layout stability, or touch/click usability.
 8. Update enduring balance/testing guidance and archive superseded R2–R13-only reports as historical evidence.
+
+### RC1.0 surface simplification
+
+The incomplete achievement system is deferred: its Settings, Review, showcase, and Leaderboard surfaces and its Credit
+rewards are absent from the production runtime, while legacy browser storage remains inert. Debug retains Warp and
+supported inspection controls only; non-player-facing simulation, UNIT_01, Endless Alpha, and in-browser regression
+controls are retired. Supported verification remains the documented npm/Playwright command set. Endless Operations is
+a roadmap investigation, not an RC1.0 mode.
 
 ## Remaining engineering work
 
@@ -87,8 +98,9 @@ These are genuine unresolved implementation or diagnosis items, not historical c
    - Treat the all-Sweep setup, fixed seeds, and R12 bounds as immutable policy. The simulator gate passes only when
      all-Sweep fails every seed. Intended profiles require trace/disposition review and browser/playtest evidence, but
      their survival rate is diagnostic rather than a release threshold.
-   Current evidence: profile and trace infrastructure is implemented. The full gate is 24/24 all-Sweep rounds and
-   9/24 intended diagnostic-positive rounds: R3–R9 and R24–R25 are currently positive; R2 and R10–R23 are not. The full report is
+   Current evidence: profile and trace infrastructure is implemented. After the requested R2 25% spawn-rate reduction,
+   the full gate is 23/24 all-Sweep rounds and 10/24 intended diagnostic-positive rounds. R2 is the sole all-Sweep
+   violation (2/5 survivors). The full report is
    authoritative for individual seeds and must be regenerated as one complete R2–R25 run. Virtual runs are now
    synchronous, realm-unique, and wall-clock pinned, with regression coverage for subset/full run-order invariance. R2 is explicitly
    deferred for this phase. R3–R6 remain the next staged recovery slice; later-family
@@ -109,9 +121,9 @@ These are genuine unresolved implementation or diagnosis items, not historical c
 
 | Gate | Current evidence | Decision |
 | --- | --- | --- |
-| Engineering correctness | Syntax, docs, config, economy, unit, mechanics, integration, 124 broad Playwright tests, and Alpha/Beta/Gamma all pass. | Pass |
+| Engineering correctness | Syntax, docs, config, balance freshness, economy, mechanics, integration, audio, and 103 lifecycle Playwright tests pass. The long Auto-Pilot E2E protocol exceeded its 10-minute command timeout without emitting a test result. | Conditional |
 | Evidence provenance | The full R2–R25 / five-seed acceptance report is current and passes integrity validation. | Pass |
-| Balance acceptance | All-Sweep is rejected in 24/24 required rounds; intended profiles are diagnostic (9/24 currently positive). | Pass for playtest; tuning remains open |
+| Balance acceptance | All-Sweep is rejected in 23/24 required rounds; R2 survives 2/5 seeds after the requested accessibility reduction. Intended profiles are diagnostic (10/24 currently positive). | **Block — decision required** |
 | Capsule device performance | Deterministic headless smoke passes; reference-device frame and long-task evidence is not captured. | **Block** |
 | Broad playtest | Session protocol is ready; broader external feedback has not yet been recorded against this working tree. | **Block** |
 

@@ -122,10 +122,6 @@ window.showRoundModal = function(round) {
         }
     }
 
-    if (typeof Achievements !== 'undefined' && typeof Achievements.renderTrophyWorkshop === 'function') {
-        Achievements.renderTrophyWorkshop();
-    }
-
     window.Game.Audio?.setContext('menu');
     window.openModalExclusive('roundModalOverlay');
 };
@@ -134,8 +130,7 @@ window.showRoundModal = function(round) {
  * Open the round review modal and display performance metrics/medals.
  */
 window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
-    if (typeof Achievements === 'undefined') return;
-    const evaluation = suppliedEvaluation || Achievements.evaluateRound();
+    const evaluation = suppliedEvaluation || window.evaluateRoundPayout();
     const heading = document.querySelector('#roundReviewOverlay h2');
     const outcome = document.getElementById('reviewOutcomeMessage');
     const continueButton = document.getElementById('continueToBriefingBtn');
@@ -173,9 +168,6 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
         : 'No deliveries';
     
     document.getElementById('reviewTotalPoints').innerText = evaluation.totalPoints;
-    
-    const listEl = document.getElementById('reviewAchievementsList');
-    listEl.innerHTML = evaluation.log.map(msg => `<li>${msg}</li>`).join('');
     
     window.Game.Audio?.setContext('menu');
     window.openModalExclusive('roundReviewOverlay');

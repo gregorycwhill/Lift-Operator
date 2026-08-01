@@ -12,6 +12,8 @@ window.renderDebugMenu = function() {
     if (!container) return;
     container.innerHTML = '';
     
+    /* Retired RC1.0 internal quick actions. Automated tests run from npm,
+       while Endless and UNIT_01 are not player-facing product modes.
     // Quick Actions Group
     const quickGroup = document.createElement('div');
     quickGroup.style.padding = "10px";
@@ -99,6 +101,7 @@ window.renderDebugMenu = function() {
     }
 
     container.appendChild(quickGroup);
+    */
 
     // Telemetry Console Section
     const consoleHeader = document.createElement('h3');
@@ -170,6 +173,7 @@ window.renderDebugMenu = function() {
     }
 };
 
+/* Retired RC1.0 in-game regression-suite loader.
 window.loadDebugTestSuite = function() {
     if (window.Game && window.Game.RegressionSuite) return Promise.resolve();
     const sources = [
@@ -192,6 +196,21 @@ window.refreshDebugVisibility = function() {
         if (Config.debugMode) btn.classList.remove('hidden');
         else btn.classList.add('hidden');
     }
+};
+
+window.openDebugModal = function() {
+    if (!Config.debugMode) return;
+    GameEngine().pause();
+    window.Game.Audio?.setContext('menu');
+    window.renderDebugMenu();
+    window.openModalExclusive('debugOverlay');
+};
+*/
+
+// Player-facing Debug retains only supported inspection and Warp controls.
+window.refreshDebugVisibility = function() {
+    const btn = document.getElementById('openDebugBtn');
+    if (btn) btn.classList.toggle('hidden', !Config.debugMode);
 };
 
 window.openDebugModal = function() {

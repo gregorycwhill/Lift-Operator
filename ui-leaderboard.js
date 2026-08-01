@@ -128,18 +128,8 @@ window.showLeaderboard = function(titleText) {
             listContainer.innerHTML = '<li>No scores registered yet!</li>';
         } else {
             records.slice(0, 10).forEach((record, index) => { 
-                let badgeIcons = "";
-                if (record.trophies && Array.isArray(record.trophies) && typeof Achievements !== 'undefined') {
-                    record.trophies.forEach(tKey => {
-                        const [featId, tier] = tKey.split('_');
-                        const feat = Achievements.definitions[featId];
-                        if (feat && feat[tier]) {
-                            badgeIcons += ` <span title="${feat.name}: ${feat[tier].label}">${feat[tier].icon}</span>`;
-                        }
-                    });
-                }
                 const li = document.createElement('li');
-                li.innerHTML = `<span>#${index + 1} ${record.name} ${badgeIcons}</span> <strong>${record.score}</strong>`;
+                li.innerHTML = `<span>#${index + 1} ${record.name}</span> <strong>${record.score}</strong>`;
                 listContainer.appendChild(li);
             });
         }
@@ -165,6 +155,7 @@ window.showSettings = function() {
         music.oninput = () => audio.setVolume('music', music.value);
         sfx.oninput = () => audio.setVolume('sfx', sfx.value);
     }
+    /* Retired RC1.0 achievement panel.
     const container = document.getElementById('settingsAchievements');
     if (container) {
         const player = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
@@ -176,5 +167,6 @@ window.showSettings = function() {
             return `<div class="settings-achievement ${asset ? 'earned' : ''}">${asset ? asset.icon : '○'} <span>${feat.name}</span><small>${asset ? asset.label : 'Locked'}</small></div>`;
         }).join('') || '<p>No achievements recorded yet.</p>';
     }
+    */
     window.openModalExclusive('settingsOverlay');
 };

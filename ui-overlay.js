@@ -21,7 +21,7 @@ window.showToast = function(message) {
 
 window.openModalExclusive = function(id) {
     window.Game.AutomationController?.closeLibrary?.();
-    ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay', 'testScorecardOverlay']
+    ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
     const overlay = document.getElementById(id);
@@ -358,7 +358,7 @@ window.initializeUI = function() {
         }
     });
 
-    // REGRESSION TEST SCORECARD BINDINGS
+    /* Retired RC1.0 in-game regression scorecard bindings.
     bind("runTestsBtn", async () => {
         if (typeof engine.pause === "function") engine.pause();
         const scOverlay = document.getElementById("testScorecardOverlay");
@@ -384,11 +384,13 @@ window.initializeUI = function() {
         runVisualRegressionSuite();
     });
 
+    */
 };
 
 /**
  * Runs the regression suite and populates the scorecard UI.
  */
+/* Retired RC1.0 in-game regression scorecard renderer.
 window.runVisualRegressionSuite = async function() {
     const statusText = document.getElementById('scorecardStatusText');
     const passCount = document.getElementById('scorecardPassCount');
@@ -454,6 +456,7 @@ window.runVisualRegressionSuite = async function() {
         resultsList.innerHTML = '<div style="padding: 20px; text-align: center; color: red;">Regression Suite not loaded!</div>';
     }
 };
+*/
 
 // ============================================================================
 // API REGISTRATION

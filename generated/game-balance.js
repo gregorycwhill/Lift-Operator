@@ -443,8 +443,8 @@ window.GameBalanceData = {
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.6,
-      "spawnEnd": 0.75,
+      "spawnStart": 0.45,
+      "spawnEnd": 0.5625,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },

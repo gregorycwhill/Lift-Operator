@@ -249,6 +249,28 @@ window.resetAttemptTelemetry = function() {
     }
 };
 
+// RC1.0 keeps operational Credits but deliberately defers achievement
+// progression. Completion accounting stays explicit and retry-safe here.
+window.evaluateRoundPayout = function() {
+    if (Registry.roundEvaluation) return Registry.roundEvaluation;
+    const stats = Registry.roundStats;
+    const requiredStats = ['servedThisRound', 'happyServed', 'annoyedServed', 'criticalServed', 'defenestrationsThisRound', 'totalWaitTimeServed'];
+    requiredStats.forEach(key => { if (stats[key] === undefined) stats[key] = 0; });
+
+    const pointsEarned = PowerUps.calculateRoundPoints();
+    Registry.points += pointsEarned;
+    Registry.roundEvaluation = {
+        pointsEarned,
+        totalPoints: Registry.points,
+        guestsServed: stats.servedThisRound,
+        averageWaitTime: stats.servedThisRound > 0
+            ? (stats.totalWaitTimeServed / stats.servedThisRound).toFixed(1)
+            : '0.0',
+        defenestrations: stats.defenestrationsThisRound
+    };
+    return Registry.roundEvaluation;
+};
+
 window.getRoundDefinition = function(round, operation = null) {
     operation = operation || Registry.activeOperation || null;
     if (operation && typeof operation === 'object' && Number.isInteger(operation.floors) && Number.isInteger(operation.lifts)) {
@@ -526,15 +548,6 @@ window.advanceToRound = function(targetRound) {
     window.skipToRound(targetRound);
 };
 
-window.startEndlessOperation = function(seed = Registry.seed) {
-    if (!Config.debugMode || !window.Game.EndlessOperations) return null;
-    const operation = window.Game.EndlessOperations.createPrechecked(seed);
-    if (!operation) return null;
-    Registry.seed = operation.seed;
-    Registry.points = Math.max(Registry.points, 99999);
-    return window.initializeRound(operation.round, { operation, seed: operation.seed, showBriefing: false });
-};
-
 window.resetGame = function() {
     window.Game.Audio?.publish('reset', { round: Registry.stats.round });
     if (Config.debugMode) {
@@ -591,12 +604,7 @@ window.initializeEngine = function() {
         }
     }
 
-    // Autopilot URI trigger removed for security hardening. 
-    // Use Debug Modal to launch UNIT_01.
-
     const isSimulationRealm = new URLSearchParams(window.location.search).get('simulation') === 'true';
-    const savedTrophies = window.Game.Storage.get(window.Game.Keys.TROPHIES, '[]');
-    Registry.trophyCase = JSON.parse(savedTrophies);
 
     // Kill Switch: Global listener for human intervention
     // Modified to ignore keyboard/window events to allow Alt-Tab and Console usage

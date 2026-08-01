@@ -370,10 +370,6 @@ body {
     border-radius: 4px; 
     font-size: 11px;
 }
-.settings-achievements { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:6px; margin:8px 0 14px; }
-.settings-achievement { display:flex; align-items:center; gap:6px; padding:7px; border:1px solid #d7dee2; border-radius:6px; color:#7f8c8d; font-size:12px; }
-.settings-achievement.earned { color:#2c3e50; background:#f7fbfd; border-color:#8fc7df; }
-.settings-achievement small { margin-left:auto; font-size:10px; }
 
 .room-service {
     width: 42px !important;
@@ -705,10 +701,6 @@ body {
 .review-list { list-style: none; padding: 0; margin-bottom: 20px; font-size: 14px; text-align: left; }
 .review-list li { padding: 6px 10px; border-bottom: 1px solid #f4f6f7; color: #2c3e50; font-weight: 500; }
 
-.trophy-workshop-grid button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
 
 /* Perfected Debug Menu Layout */
 .debug-controls { 

@@ -28,9 +28,9 @@ test('round evaluation commits payout only once', async ({ page }) => {
         Registry.roundStats.totalWaitTimeServed = 12;
         Registry.roundEvaluation = null;
 
-        const first = Achievements.evaluateRound();
+        const first = evaluateRoundPayout();
         const afterFirst = Registry.points;
-        const second = Achievements.evaluateRound();
+        const second = evaluateRoundPayout();
 
         return {
             afterFirst,
@@ -54,7 +54,7 @@ test('average wait measures spawn-to-destination delivery time', async ({ page }
         Registry.roundStats.happyServed = 1;
         Registry.roundStats.totalWaitTimeServed = 15;
         Registry.roundEvaluation = null;
-        return Achievements.evaluateRound().averageWaitTime;
+        return evaluateRoundPayout().averageWaitTime;
     });
 
     expect(averageWait).toBe('15.0');
@@ -88,7 +88,7 @@ test('live animation delivery uses the same clock domain as guest spawn time', a
     expect(result.wait).toBeLessThan(17);
 });
 
-test('retry resets attempt-scoped achievement telemetry', async ({ page }) => {
+test('retry resets attempt-scoped round telemetry', async ({ page }) => {
     const result = await page.evaluate(() => {
         skipToRound(3);
         Registry.customScriptTicks = 500;
@@ -115,13 +115,11 @@ test('campaign reset clears campaign and attempt state while retaining career id
         Registry.stats.round = 9;
         Registry.roundStats = { servedThisRound: 44 };
         Registry.customScriptTicks = 123;
-        Registry.trophyCase = [{ id: 'career-trophy' }];
         PowerUps.inventory = [{ id: 'wrench', tier: 0 }];
         PowerUps.cart = [{ id: 'turbo', tier: 0 }];
         resetGame();
         return {
             playerName: Registry.playerName,
-            trophies: Registry.trophyCase,
             points: Registry.points,
             highestUnlockedRound: Registry.highestUnlockedRound,
             round: Registry.stats.round,
@@ -133,7 +131,7 @@ test('campaign reset clears campaign and attempt state while retaining career id
     });
 
     expect(result).toEqual({
-        playerName: 'Career Pilot', trophies: [{ id: 'career-trophy' }], points: 0,
+        playerName: 'Career Pilot', points: 0,
         highestUnlockedRound: 1, round: 1, served: 0, customScriptTicks: 0, inventory: 0, cart: 0
     });
 });
@@ -1049,35 +1047,33 @@ test('Service Zone Blockly metadata and Round 14 policy discovery are available'
     expect(result.highVisible).toBe(true);
 });
 
-test('Endless alpha generates deterministic pre-checked operations and can enter play', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        Config.debugMode = true;
-        const first = Game.EndlessOperations.createPrechecked(24680);
-        const second = Game.EndlessOperations.createPrechecked(24680);
-        const state = startEndlessOperation(24680);
-        return {
-            identical: JSON.stringify(first) === JSON.stringify(second),
-            valid: Game.EndlessOperations.validate(first),
-            prechecked: first.prechecked,
-            stateRound: state.definition.round,
-            floors: state.definition.floors,
-            lifts: state.definition.lifts,
-            activeMode: Registry.activeOperation.mode
-        };
-    });
+test('RC1.0 excludes deferred Endless Alpha and achievement systems from the player runtime', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        achievements: typeof window.Achievements,
+        endlessOperations: typeof window.Game.EndlessOperations,
+        endlessStarter: typeof window.startEndlessOperation,
+        trophyWorkshop: Boolean(document.getElementById('trophyWorkshopContainer')),
+        reviewAchievements: Boolean(document.getElementById('reviewAchievementsList')),
+        settingsAchievements: Boolean(document.getElementById('settingsAchievements')),
+        regressionScorecard: Boolean(document.getElementById('testScorecardOverlay')),
+        debug: (() => {
+            Config.debugMode = true;
+            refreshDebugVisibility();
+            document.getElementById('openDebugBtn').click();
+            const text = document.getElementById('debugControls').innerText;
+            return {
+                visible: !document.getElementById('openDebugBtn').classList.contains('hidden'),
+                opened: document.getElementById('debugOverlay').style.display === 'flex',
+                hasRetiredTools: /Simulation Tests|UNIT_01|Endless Alpha|Regression Suite|Career Medals/.test(text)
+            };
+        })()
+    }));
 
     expect(result).toEqual({
-        identical: true,
-        valid: true,
-        prechecked: true,
-        stateRound: expect.any(Number),
-        floors: expect.any(Number),
-        lifts: expect.any(Number),
-        activeMode: 'endless-alpha'
+        achievements: 'undefined', endlessOperations: 'undefined', endlessStarter: 'undefined',
+        trophyWorkshop: false, reviewAchievements: false, settingsAchievements: false, regressionScorecard: false,
+        debug: { visible: true, opened: true, hasRetiredTools: false }
     });
-    expect(result.floors).toBeGreaterThanOrEqual(20);
-    expect(result.floors).toBeLessThanOrEqual(30);
-    expect(result.lifts).toBeGreaterThanOrEqual(5);
 });
 
 test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
@@ -1097,8 +1093,8 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
-    expect(result.r2SpawnStart).toBe(0.6);
-    expect(result.r2SpawnEnd).toBe(0.75);
+    expect(result.r2SpawnStart).toBe(0.45);
+    expect(result.r2SpawnEnd).toBe(0.5625);
     expect(result.version).toBe('0.2.9-capsule-dispatch');
 });
 
@@ -1541,15 +1537,15 @@ test('checkout guests heading to Ground use suitcase text only when marked check
     expect(result).toEqual({ checkout: '🧳', ordinaryGround: 'G', checkoutUpper: 4 });
 });
 
-test('Settings replaces the normal Leaderboard entry point and links to the scoreboard', async ({ page }) => {
+test('Settings links to the scoreboard without presenting deferred achievements', async ({ page }) => {
     const result = await page.evaluate(() => {
         document.getElementById('settingsBtn').click();
         const settingsOpen = document.getElementById('settingsOverlay').style.display === 'flex';
-        const hasAchievements = document.querySelectorAll('#settingsAchievements .settings-achievement').length > 0;
+        const hasAchievements = Boolean(document.getElementById('settingsAchievements'));
         document.getElementById('settingsLeaderboardBtn').click();
         return { settingsOpen, hasAchievements, leaderboardOpen: document.getElementById('leaderboardOverlay').style.display === 'flex', settingsClosed: document.getElementById('settingsOverlay').style.display !== 'flex' };
     });
-    expect(result).toEqual({ settingsOpen: true, hasAchievements: true, leaderboardOpen: true, settingsClosed: true });
+    expect(result).toEqual({ settingsOpen: true, hasAchievements: false, leaderboardOpen: true, settingsClosed: true });
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
@@ -2109,20 +2105,23 @@ test('R22 manual stop boards a compatible waiting guest before Sweep resumes', a
     expect(result.partnerTarget).toBe(9);
 });
 
-test('Hands-Free accepts custom automation only and rejects built-in policies', async ({ page }) => {
+test('deferred achievement storage cannot add campaign Credits', async ({ page }) => {
     const result = await page.evaluate(() => {
-        Registry.stats.round = 6;
-        Registry.roundStats.manualClicks = 0;
-        Registry.customScriptTicks = 0;
-        const builtIn = Achievements.definitions.handsfree.check(Registry.roundStats);
-        Registry.customScriptTicks = 120;
-        const custom = Achievements.definitions.handsfree.check(Registry.roundStats);
-        Registry.roundStats.manualClicks = 1;
-        const customWithClick = Achievements.definitions.handsfree.check(Registry.roundStats);
-        return { builtIn, custom, customWithClick };
+        Registry.playerName = 'Legacy Achievement Player';
+        localStorage.setItem(Game.Keys.ACHIEVEMENTS + Registry.playerName, JSON.stringify({ service: 'gold' }));
+        Registry.points = 0;
+        Registry.stats.round = 1;
+        Registry.stats.timeLeft = 0;
+        Registry.roundStats = createRoundStats();
+        Registry.roundStats.servedThisRound = 1;
+        Registry.roundStats.happyServed = 1;
+        Registry.roundEvaluation = null;
+        const expected = PowerUps.calculateRoundPoints();
+        const evaluation = evaluateRoundPayout();
+        return { expected, awarded: evaluation.pointsEarned, points: Registry.points };
     });
 
-    expect(result).toEqual({ builtIn: 0, custom: 6, customWithClick: 0 });
+    expect(result).toEqual({ expected: result.awarded, awarded: result.awarded, points: result.awarded });
 });
 
 test('runtime power-up catalog uses canonical prices and core effects', async ({ page }) => {

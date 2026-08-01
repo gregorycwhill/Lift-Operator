@@ -5,7 +5,7 @@ Policy: All-Sweep must fail every fixed gate seed from R2 through R25; productio
 
 | Round | All-Sweep accepted | Intended accepted | All-Sweep survivors | Intended survivors |
 | ---: | --- | --- | ---: | ---: |
-| 2 | yes | NO | 0/5 | 2/5 |
+| 2 | NO | NO | 2/5 | 4/5 |
 | 3 | yes | NO | 0/5 | 4/5 |
 | 4 | yes | NO | 0/5 | 5/5 |
 | 5 | yes | NO | 0/5 | 5/5 |
@@ -30,7 +30,7 @@ Policy: All-Sweep must fail every fixed gate seed from R2 through R25; productio
 | 24 | yes | NO | 0/5 | 5/5 |
 | 25 | yes | NO | 0/5 | 4/5 |
 
-- All-Sweep failures accepted: 24/24
-- Intended-strategy comparator rounds currently positive (diagnostic only): 9/24
+- All-Sweep failures accepted: 23/24
+- Intended-strategy comparator rounds currently positive (diagnostic only): 10/24
 
 This report is an acceptance result, not merely a freshness check. Any unmet required classification blocks the balance gate.

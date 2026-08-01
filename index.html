@@ -82,25 +82,6 @@
     <div id="game-area" class="game-area">
         <div id="world"></div>
         
-        <!-- UI Component: Regression Test Scorecard -->
-        <div class="overlay" id="testScorecardOverlay">
-            <div class="modal-content" style="max-width: 600px;">
-                <h2>🧪 Regression Scorecard</h2>
-                <div id="testScorecardStats" style="display: flex; justify-content: space-around; background: #fdfdfd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #eee;">
-                    <div>Status: <strong id="scorecardStatusText">Ready</strong></div>
-                    <div>Pass: <strong id="scorecardPassCount" class="text-green">0</strong></div>
-                    <div>Fail: <strong id="scorecardFailCount" class="text-red">0</strong></div>
-                </div>
-                <div id="testResultsList" style="text-align: left; max-height: 400px; overflow-y: auto; border: 1px solid #bdc3c7; border-radius: 4px; background: white;">
-                    <div style="padding: 20px; text-align: center; color: #7f8c8d;">No tests run yet.</div>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button id="closeScorecardBtn" class="btn btn-gray" style="flex: 1;">Close</button>
-                    <button id="rerunTestsBtn" class="btn btn-blue" style="flex: 2;">Run All Tests</button>
-                </div>
-            </div>
-        </div>
-
         <!-- NEW: IMMIGRATION & CUSTOMS GATEWAY MODAL FOR SHARED DATA PAYLOADS -->
         <div class="overlay" id="manifestOverlay">
             <div class="modal-content">
@@ -132,9 +113,6 @@
                         <input type="text" id="gameSeed" class="game-id-input">
                     </div>
                 </div>
-                
-                <!-- Dynamic Trophy Cabinet Showcase targeting panel container mounts here -->
-                <div id="trophyWorkshopContainer"></div>
                 
                 <button id="startRoundBtn" class="btn btn-green btn-large btn-full-width">Start Round</button>
             </div>
@@ -212,10 +190,6 @@
         <div class="overlay" id="settingsOverlay">
             <div class="modal-content">
                 <h2>Settings</h2>
-                <section aria-labelledby="settingsAchievementsTitle">
-                    <h3 id="settingsAchievementsTitle">Achievements</h3>
-                    <div id="settingsAchievements" class="settings-achievements"></div>
-                </section>
                 <section class="audio-controls" aria-label="Audio controls">
                     <label><input type="checkbox" id="settingsAudioMute"> Mute</label>
                     <label>Music <input type="range" id="settingsAudioMusic" min="0" max="1" step="0.05"></label>
@@ -285,7 +259,6 @@
                     </div>
                 </div>
                 
-                <ul id="reviewAchievementsList" class="review-list"></ul>
                 <button id="continueToBriefingBtn" class="btn btn-green btn-large btn-full-width">Supply Closet & Next Round</button>
             </div>
         </div>
@@ -294,7 +267,6 @@
             <div class="modal-content">
                 <h2>Engine Config</h2>
                 <div id="debugControls" class="debug-controls"></div>
-                <button id="runTestsBtn" class="btn btn-blue btn-full-width btn-margin-top">Run Regression Suite</button>
                 <button id="closeDebugBtn" class="btn btn-green btn-full-width btn-margin-top">Apply & Resume</button>
             </div>
         </div>
@@ -305,12 +277,10 @@
     <script src="generated/game-balance.js"></script>
     <script src="config.js"></script>
     <script src="state.js"></script>
-    <script src="endless-operations.js"></script>
     <script src="balance-telemetry.js"></script>
     <script src="audio.js"></script>
     <script src="automation-vm.js"></script>
     <script src="powerups.js"></script>
-    <script src="achievements.js"></script>
     <script src="workshop.js"></script>
 
     <script src="engine-core.js"></script>

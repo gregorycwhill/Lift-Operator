@@ -38,7 +38,9 @@ Automation reduces repetitive workload but never replaces the operator. From Rou
 
 The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. A built-in automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
 
-Player-authored custom automation is the deliberate exception. A custom policy may earn a Hands-Free achievement when it completes an eligible advanced round without manual intervention. This rewards the player for translating operational insight into working logic; built-in automations never qualify for Hands-Free.
+Player-authored custom automation remains the deliberate exception: it is the playerâ€™s route to mastering advanced
+rounds without manual intervention. Achievements are deferred from RC1.0; any future Hands-Free recognition must reward
+clear authored-play evidence, not raw runtime tick counts.
 
 ### Automation deployment experience
 
@@ -231,8 +233,8 @@ journeys that use the lobby. Transfers, G-hub routing, and arbitrary multi-lift 
 Every zoned policy includes G, and G is weighted threefold as both a normal guest origin and destination. This makes
 the lobby a shared direct-service demand, not an upper-zone exclusion or a passenger-transfer hub.
 
-The ordinary navigation control is **Settings**, containing current achievements, sound controls, attribution, and a
-link to Leaderboard. End-of-campaign completion continues to open Leaderboard directly.
+The ordinary navigation control is **Settings**, containing sound controls, attribution, and a link to Leaderboard.
+End-of-campaign completion continues to open Leaderboard directly. Achievements are deferred from RC1.0.
 
 ## 8. Power-ups
 
@@ -339,11 +341,12 @@ For most shop visits:
 - A strong player can buy one premium item or several small items.
 - A struggling player retains access to a recovery option.
 - The player cannot buy every relevant answer.
-- Gold tiers require saving, excellent performance, or achievement milestones.
+- Gold tiers require saving or excellent performance.
 
 Credits should reward the behaviour a round teaches. Remaining-time bonuses should only be used where time remaining is a meaningful performance measure.
 
-Career achievements should primarily represent mastery and long-term status. They should not overwhelm repeatable operational income.
+Future career achievements should primarily represent mastery and long-term status. They are deferred from RC1.0 and
+must not overwhelm repeatable operational income if reintroduced.
 
 Detailed targets are defined in `Game Economy.md`.
 

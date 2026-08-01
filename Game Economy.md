@@ -42,9 +42,12 @@ They are:
 - Carried forward between successful rounds.
 - Not farmable through repeated failed attempts.
 
-### 2.2 Career achievements
+### 2.2 Future career achievements (deferred from RC1.0)
 
-Achievements are permanent records of mastery.
+Achievements are not part of the 1.0 player experience and award no Credits. Legacy browser storage is retained
+inertly for compatibility; it has no runtime or economic effect.
+
+For a later release, achievements should be permanent records of mastery.
 
 Their primary rewards should be:
 
@@ -69,7 +72,8 @@ The retry model uses a checkpoint created immediately after the previous roundâ€
 8. Return to the shop so the player can choose a different loadout.
 9. On successful completion, commit spending and award the round payout once.
 
-Nothing from the failed gameplay attempt carries forward: no spent Credits, inventory, cart, served counts, achievements, timers, hazard state, or lift state. The player keeps only the knowledge gained from the attempt.
+Nothing from the failed gameplay attempt carries forward: no spent Credits, inventory, cart, served counts, timers,
+hazard state, or lift state. The player keeps only the knowledge gained from the attempt.
 
 This makes difficult rounds repeatable strategy puzzles without enabling Credit farming.
 
@@ -107,7 +111,6 @@ base completion award
 + service quality bonus
 + lives preserved bonus
 + round objective bonus
-+ first-time achievement bonuses
 ```
 
 Do not award one point per guest. Guest counts increase substantially across rounds and would inflate the economy.
@@ -274,7 +277,7 @@ This turns the shop into a loadout puzzle and prevents stockpiling every answer.
 
 The constraint should be playtested before adoption. If prices alone create strong scarcity, inventory slots may be unnecessary.
 
-## 9. Achievement redesign
+## 9. Future achievement concept (deferred from RC1.0)
 
 ### 9.1 Achievement categories
 
@@ -288,25 +291,18 @@ The constraint should be playtested before adoption. If prices alone create stro
 
 ### 9.2 Candidate achievement families
 
-| Achievement | Bronze | Silver | Gold | Economic reward |
-| --- | --- | --- | --- | ---: |
-| Service Award | Campaign delivery milestone | Higher milestone | Major milestone | 1 / 2 / 3 |
-| Active Supervisor | Recover one built-in-automation round through timely manual intervention | 3 rounds | 6 rounds | 1 / 2 / 3 |
-| Hands-Free Inventor | Complete an eligible round hands-free using player-authored custom automation | 3 eligible rounds | Late mastery round | 1 / 2 / 3 |
-| Flawless Shift | No lives lost once | 3 times | 6 times | 1 / 2 / 3 |
-| Sardine Packer | One exact full load | 3 | 8 | 1 / 2 / 3 |
-| Hacker | Custom-script completion | 3 completions | Complete mastery round | 1 / 2 / 4 |
-| Lean Operator | Complete with no power-ups | 2 difficult rounds | Late-game wall | 1 / 2 / 4 |
-| Recovery Expert | Recover one severe incident | 5 | 15 | 1 / 2 / 3 |
+| Achievement | Bronze | Silver | Gold | Future reward |
+| --- | --- | --- | --- | --- |
+| Service Award | Campaign delivery milestone | Higher milestone | Major milestone | Status/cosmetic only by default |
+| Active Supervisor | Recover one built-in-automation round through timely manual intervention | 3 rounds | 6 rounds | Status/cosmetic only by default |
+| Hands-Free Inventor | Complete an eligible round hands-free using player-authored custom automation | 3 eligible rounds | Late mastery round | Status/cosmetic only by default |
 
-Achievement bonuses are intentionally small relative to item prices. Their primary value is status and long-term identity.
+Any future achievement bonus must be intentionally small relative to item prices, modelled before release, and optional
+rather than a progression requirement. Their primary value is status and long-term identity.
 
-Achievements based only on raw script tick counts should be reconsidered because inefficient scripts can generate more ticks without demonstrating mastery.
-
-Hands-Free remains a campaign achievement only for player-authored custom automation. Unattended completion with Sweep, Priority Sweep, Voting, or Weighted Voting does not qualify. The achievement rewards the player for encoding their own diagnosis and strategy rather than selecting a built-in autoplay solution.
-
-The implementation now requires zero manual clicks, at least one player-authored custom-script execution tick, and
-Round 2 or later. Built-in-only unattended completion does not qualify.
+Achievements based only on raw script tick counts are rejected because inefficient scripts can generate more ticks without
+demonstrating mastery. Any future Hands-Free recognition must use clear authored-play evidence rather than an
+implementation counter.
 
 ## 10. Anti-inflation rules
 
@@ -314,7 +310,6 @@ Round 2 or later. Built-in-only unattended completion does not qualify.
 - Ordinary failed attempts restore the previous-round point checkpoint, clear inventory/cart, and award nothing.
 - Round 12 death counts as completion, commits the attempt, and awards its Endurance payout once.
 - Debug and simulation modes never write career or bank progress.
-- Achievement rewards are granted once per tier.
 - Payouts are capped.
 - No repeatable time bonus in survival rounds.
 - Endurance survival time is a deliberate exception and uses its own capped formula.
@@ -325,8 +320,8 @@ Round 2 or later. Built-in-only unattended completion does not qualify.
 For each campaign version, simulate at least three player profiles:
 
 For the 1.0 release candidate, the model must cover all 25 authored rounds and use canonical payouts, unlocks,
-consumable purchases, retries, and achievement rewards. It must report affordability, savings, dominant-purchase share,
-and permanent-progression risk. A fixed 13-round payout table is historical diagnostic evidence only.
+consumable purchases, and retries. It must report affordability, savings, and dominant-purchase share. A fixed 13-round
+payout table is historical diagnostic evidence only.
 
 ### Struggling player
 

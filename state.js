@@ -11,7 +11,7 @@ const Registry = {
     points: 0,
     inventory: [],
     
-    // Core Telemetry Upgrades for Achievements & Round Review
+    // Round telemetry and review state
     roundStats: { 
         manualClicks: 0, 
         jammedLiftsFixed: 0, 
@@ -30,9 +30,8 @@ const Registry = {
         journeyTimes: []
     },
     
-    // Social Sharing, Manifest & Trophy States
+    // Social sharing and manifest state
     pendingManifest: [],
-    trophyCase: [],
     
     highestUnlockedRound: 1, 
     gameActive: false, pauseStartTime: 0, lastSpawnTime: 0, floorHeight: 60, 

@@ -23,7 +23,7 @@ The campaign currently includes:
 - R14–R20 Service Zoning and increasingly large fleet-architecture challenges;
 - R21–R23 counterweight/Open Plan puzzle rounds;
 - R24–R25 fast single-passenger capsule dispatch;
-- the permanent Automation Dock, Settings, achievements, audio controls, and Leaderboard.
+- the permanent Automation Dock, Settings, audio controls, and Leaderboard.
 
 The current product work is validation and tuning: resolve reproducible correctness gaps, confirm the legacy event
 matrix, profile the capsule fleet, and gather structured human evidence across all five campaign arcs. Implementation
@@ -68,6 +68,15 @@ version, objective, intended bottleneck, difficulty envelope, and supported stra
 
 Endless Operations remains after Mobile so it builds on a stable campaign and settled presentation constraints.
 
+## Later — Meta-progression and achievements
+
+**Outcome:** Add a meaningful, status-first mastery layer only after the desktop campaign, Mobile constraints, and
+economy are proven in play.
+
+Achievements are deliberately absent from the 1.0 player surface. A future design must be per-player, based on clear
+player actions rather than raw implementation telemetry, and primarily communicate mastery. Any one-time Credit reward
+must be small, explicitly modelled in the campaign economy, and never become a required source of purchasing power.
+
 ## Cross-cutting product work
 
 - Improve briefing, Review, automation visualization, accessibility, and audio from observed playtest failures.
@@ -81,6 +90,7 @@ Endless Operations remains after Mobile so it builds on a stable campaign and se
 - New power-up families, hazards, guest types, themes, online services, or player-facing telemetry.
 - Workshop callbacks, persistent script memory, mandatory event-root blocks, and a visual Think block.
 - Runtime procedural generation before the authored campaign and Mobile edition are stable.
+- Player-facing achievements before their status, reward, persistence, and economy model are designed and validated.
 
 These are directions, not commitments. A future item enters `DELIVERY_PLAN.md` only after Product chooses it as the
 current delivery outcome.

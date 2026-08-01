@@ -31,8 +31,9 @@ Recent focused evidence:
 - The 25-round balance acceptance harness, canonical economy projection, event-persistence resolver, production-faithful
   simulator routing, and representative reproducibility command are now implemented. All-Sweep is the hard simulator
   gate; intended-strategy profiles are diagnostic evidence pending human round-level difficulty reports.
-- The acceptance harness now records a versioned intended profile ID and diagnostic trace for every intended seed. The
-  current full report is 24/24 all-Sweep and 9/24 intended. The 9/24 intended result is diagnostic only and is not a
+- The acceptance harness now records a versioned intended profile ID and diagnostic trace for every intended seed. After
+  the requested R2 reduction, the current full report is 23/24 all-Sweep and 10/24 intended: R2 is the sole all-Sweep
+  violation, with 2/5 survivors. The intended result is diagnostic only and is not a
   release gate. The checked-in full report is the authoritative per-seed result. Simulation runs no
   longer yield to browser timers, and a regression test proves that an R6 acceptance run is invariant alone and after
   R2–R5. R2 is explicitly deferred by the current
@@ -65,7 +66,15 @@ npm.cmd run test:e2e
 Record the commit, Node/browser versions, operating system, pass counts, duration, and any failure artifact. The
 aggregate `npm.cmd test` may also be used when the runner allows more than ten minutes.
 
+`test:e2e` is a long Auto-Pilot protocol. On the current local wrapper it exceeded ten minutes without emitting a test
+result; run it in an environment with a longer job allowance before release promotion.
+
 ## Full-campaign balance and economy acceptance
+
+**Current decision point:** the requested R2 25% spawn-rate reduction makes it friendlier for the blocked playtester,
+but leaves all-Sweep alive in 2/5 fixed R2 seeds. This is an explicit conflict with the R2–R25 all-Sweep invariant;
+Product must choose a different R2 intervention or make R2 an explicit onboarding exception. Do not silently alter the
+fixed seeds, accept the failed gate, or counter-tune arrival pressure.
 
 The existing R2–R13 reports are historical diagnostic evidence only. They are not a 1.0 balance pass.
 
@@ -94,8 +103,8 @@ The existing R2–R13 reports are historical diagnostic evidence only. They are 
 - [x] Simulated commands use production target routing, including counterweight partner consequences.
 - [x] Reproducibility samples R2, R12, R14, R17, R21, R23, R24, and R25.
 - [x] Replace the 13-round fixed-payout economy calculator with a 25-round current-price projection using canonical
-  payout, unlock, retry, consumable, and achievement rules.
-- [ ] Record affordability, savings, dominant-purchase share, and permanent-progression risk for struggling, typical,
+  payout, unlock, retry, and consumable rules. Achievements are deferred from RC1.0 and cannot add Credits.
+- [ ] Record affordability, savings, and dominant-purchase share for struggling, typical,
   and expert profiles. Current prices remain unchanged for 1.0; inflation is measured and documented.
 
 ### Round-by-round custom acceptance criteria
