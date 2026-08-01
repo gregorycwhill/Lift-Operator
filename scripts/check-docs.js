@@ -2,7 +2,14 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const required = ['DOCUMENTATION.md', 'ROADMAP.md', 'DELIVERY_PLAN.md', 'TEST_PLAN.md'];
+const required = [
+    'DOCUMENTATION.md',
+    'ROADMAP.md',
+    'DELIVERY_PLAN.md',
+    'TEST_PLAN.md',
+    'docs/CHAT_DECISION_LOG.md',
+    'docs/playtest/PLAYTEST_FEEDBACK_LOG.md'
+];
 const forbiddenAuthorityClaims = [
     /\bPrimary implementation authority\b/i,
     /\bhandoff takes precedence\b/i,

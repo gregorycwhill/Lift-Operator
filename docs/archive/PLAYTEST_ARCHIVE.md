@@ -88,6 +88,14 @@ _Later product decision: Credits carry forward across successful rounds; see `Ga
 
 > when you click on the Leaderboard, Debug or Workshop buttons, any currently open modals are closed before the new one is open. If the button for a currently-open modal is clicked, it just closes it.
 
+### Date/time unavailable — R7/R9 traffic mix
+
+> The only categories of guests are people checking out with suitcases, people going to the roof and the VIP. No one, say, going to Level 9.
+
+> Okay so Round 9 is also just checkout and it's meant to be rooftop. I think it's worth fixing this bug before I play more.
+
+> So round 7 ALL the guests are checking out. Is that intentional? The text at the start says that half the hotel is checking out.
+
 ## Capture protocol for future feedback
 
 Append direct wording as a new entry under **Retrospective verbatims**. Include the following when the source supplies

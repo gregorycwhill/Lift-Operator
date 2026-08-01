@@ -5,7 +5,7 @@
 **Release target:** `1.0` (no release tag has been created)
 **Owner class:** Product and engineering
 **Last reviewed:** 1 August 2026
-**Implementation baseline:** Active remediation working tree based on `b504978` on `master`
+**Implementation baseline:** Active remediation working tree based on `39c07b7` on `master`
 
 ## Outcome
 
@@ -36,7 +36,7 @@ The following programme is the current delivery scope. It restores the design-to
 - Unattended all-Sweep must fail every fixed gate seed in every authored round from R2 through R25. R1 remains the
   onboarding exception. The further 25% R2 spawn-rate accessibility change (43.75% total from the original values) is
   implemented but currently violates this invariant
-  (2/5 R2 all-Sweep seeds survive); resolving that conflict requires an explicit product decision rather than hidden
+  (5/5 R2 all-Sweep seeds survive); resolving that conflict requires an explicit product decision rather than hidden
   counter-tuning.
 - R12 expresses that rule as an endurance ceiling: all-Sweep loses its twentieth life before 240 seconds, while a
   competent strategy survives for 240–480 seconds.
@@ -81,6 +81,27 @@ supported inspection controls only; non-player-facing simulation, UNIT_01, Endle
 controls are retired. Supported verification remains the documented npm/Playwright command set. Endless Operations is
 a roadmap investigation, not an RC1.0 mode.
 
+### RC hardening control plan
+
+This is a release-assurance programme, not a general refactor. Each playtest cycle accepts four to twelve reported
+items, classifies them, and releases the verified fixes to `master` before the next playtest boundary.
+
+| Milestone | Scope | Release gate | Status |
+| --- | --- | --- | --- |
+| H0 — R9 stabilisation | Canonical event-to-traffic resolution; remove duplicated standard-spawn decisions; protect ordinary journeys during Checkout and Rooftop. | R7/R9 retain their authored traffic mix under both normal and fallback spawning. | Automated complete; awaiting R9 replay |
+| H1 — R9 to R15 | Briefings, economy/loadout clarity, event readability, and zoning discovery. | Tester reaches R15 without a progression blocker. | Pending playtest |
+| H2 — R15 to R20 | Large-fleet layout, event/briefing parity, automation interaction, reset cleanup, and credit presentation. | Tester reaches R20 without viewport or event-traffic regression. | Pending playtest |
+| H3 — R20 to R25 | Counterweights, Open Plan, capsules, input routing, and target-browser performance. | Tester reaches R25; capsules remain legible and responsive. | Pending playtest |
+| H4 — candidate decision | Freeze feature additions; classify the remaining issues and run the full release gate once. | No unresolved P0; release materials and human evidence complete. | Pending |
+
+| ID | Source | Classification | Required evidence | Status |
+| --- | --- | --- | --- | --- |
+| RC-TRAF-01 | R7/R9 standard guests became all Checkout traffic; R9 ceased to read as a Rooftop round. | P0 correctness | Both normal and max-delay spawn paths retain ordinary journeys; Checkout and Rooftop shares are bounded. | Implemented; focused browser coverage |
+
+Issue rule: P0 is a progression blocker, lost input/state, or broken authored rule; P1 is repeated clarity or
+accessibility friction; P2 is polish or isolated balance feedback. Only P0/P1 fixes and low-risk P2 polish enter a
+cycle. Larger redesigns and non-release-risk architecture debt move to `ROADMAP.md`.
+
 ## Remaining engineering work
 
 These are genuine unresolved implementation or diagnosis items, not historical checklist residue.
@@ -123,7 +144,7 @@ These are genuine unresolved implementation or diagnosis items, not historical c
 | --- | --- | --- |
 | Engineering correctness | Syntax, docs, config, balance freshness, economy, mechanics, integration, audio, and 103 lifecycle Playwright tests pass. The long Auto-Pilot E2E protocol exceeded its 10-minute command timeout without emitting a test result. | Conditional |
 | Evidence provenance | The full R2–R25 / five-seed acceptance report is current and passes integrity validation. | Pass |
-| Balance acceptance | All-Sweep is rejected in 23/24 required rounds; R2 survives 2/5 seeds after the requested accessibility reduction. Intended profiles are diagnostic (10/24 currently positive). | **Block — decision required** |
+| Balance acceptance | All-Sweep is rejected in 23/24 required rounds; R2 survives 5/5 seeds after the requested accessibility reduction. Intended profiles are diagnostic (10/24 currently positive). | **Block — decision required** |
 | Capsule device performance | Deterministic headless smoke passes; reference-device frame and long-task evidence is not captured. | **Block** |
 | Broad playtest | Session protocol is ready; broader external feedback has not yet been recorded against this working tree. | **Block** |
 

@@ -101,4 +101,5 @@ current delivery outcome.
 - `Game Play Map.md` — authored round progression and intended learning arc.
 - `Game Economy.md` — earning, spending, retry, and progression intent.
 - `Automation_Workshop_Spec.md` — Workshop and Automation Dock experience/containment contract.
-- `docs/archive/PLAYTEST_ARCHIVE.md` — playtester verbatims and dispositions.
+- `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` — active playtest feedback intake and dispositions.
+- `docs/CHAT_DECISION_LOG.md` — durable material instructions and decisions from project chat.

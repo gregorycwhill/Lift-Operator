@@ -66,6 +66,19 @@ npm.cmd run test:e2e
 Record the commit, Node/browser versions, operating system, pass counts, duration, and any failure artifact. The
 aggregate `npm.cmd test` may also be used when the runner allows more than ten minutes.
 
+## RC hardening cycle checks
+
+Run targeted checks for each 4–12 item playtest batch: syntax, config when canonical data changes, docs, and the
+smallest relevant browser test. Do not run long end-to-end or simulator protocols for ordinary polish fixes. Run the
+full release gate only at H4, or when a fix changes shared simulation, balance, lifecycle, or capsule-performance code.
+
+- [x] H0 traffic invariants: Checkout remains probabilistic; Rooftop redirects only its canonical share; normal and
+  max-delay fallback spawning use the same standard-guest decision path.
+- [ ] H1 R9–R15 human evidence: no progression blocker; zoning and named challenges are understandable.
+- [ ] H2 R15–R20 human evidence: no large-fleet clipping, event/briefing mismatch, or reset leakage.
+- [ ] H3 R20–R25 human evidence: counterweight/Open Plan correctness and capsule responsiveness on target hardware.
+- [ ] H4 candidate gate: full release command, licence/attribution package, and triaged remaining-issue list.
+
 `test:e2e` is a long Auto-Pilot protocol. On the current local wrapper it exceeded ten minutes without emitting a test
 result; run it in an environment with a longer job allowance before release promotion.
 
@@ -120,7 +133,7 @@ seed set.
 | Rounds | Profile / mechanic | Additional acceptance evidence required | Current status |
 | --- | --- | --- | --- |
 | R1 | Onboarding | Briefing, first gesture, warning gating, and audio start; no campaign balance gate. | Human evidence |
-| R2 | Hybrid rescue | Late-failure shape, one-lift recovery, bounded manual intervention, and deferral disposition. | Deferred; 2/5 |
+| R2 | Hybrid rescue | Late-failure shape, one-lift recovery, bounded manual intervention, and deferral disposition. | Deferred; 5/5 all-Sweep survivors |
 | R3 | Hybrid rescue / two lifts | Split lift roles, Room Service explanation, and credible recovery with declared loadout. | Meets threshold |
 | R4 | Triage / redundancy | Two-lift coverage and target acceptance under rising demand. | Meets threshold |
 | R5 | Triage / redundancy | Three-lift allocation and capacity/load distribution, not just survival. | Meets threshold |

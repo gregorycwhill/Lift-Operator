@@ -20,7 +20,8 @@ plan as current work authority just because it contains useful detail.
 | What outcome comes next and why? | `ROADMAP.md` | A product phase starts, finishes, or is reprioritized |
 | What are we implementing now? | `DELIVERY_PLAN.md` | A delivery slice changes scope, risk, or acceptance criteria |
 | What proves the current slice works? | `TEST_PLAN.md` | Tests, playtest protocol, or release gate changes |
-| What did playtesters actually say? | `docs/archive/PLAYTEST_ARCHIVE.md` | A playtester message or its disposition is recorded |
+| What did playtesters actually say, and how was it dispositioned? | `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` | A playtester message or its disposition is recorded |
+| What material instruction or decision came from chat? | `docs/CHAT_DECISION_LOG.md` | A durable product, design, release, or documentation decision is made |
 | What shipped in completed delivery slices? | `docs/archive/RELEASE_HISTORY.md` | A release candidate or material delivery slice completes |
 | What audio assets may ship and how are they credited? | `assets/audio/ATTRIBUTION.md` | An audio source, licence, or local asset changes |
 | What does the code currently expose? | Code, `package.json`, generated balance data, and focused tests | Code is always primary; write a short baseline note only for material behavior |
@@ -34,8 +35,10 @@ change. Markdown describes intent and evidence, never a competing numeric source
 `docs/archive/` preserves prior decisions, implementation context, and retrospective playtest evidence. Completed plans
 are not active work queues. Git history is the detailed change log; do not keep completed checklists alive indefinitely.
 
-The playtest archive is an active evidence record, not a work queue. New entries should include the transcript timestamp
-when available and explicitly mark unrecoverable timestamps.
+`docs/playtest/PLAYTEST_FEEDBACK_LOG.md` is the active feedback intake and disposition source, not a work queue. New
+entries should include the transcript timestamp when available and explicitly mark unrecoverable timestamps.
+`docs/CHAT_DECISION_LOG.md` is the active curated decision record for material chat instructions; it does not replace
+the service-hosted full transcript. `docs/archive/PLAYTEST_ARCHIVE.md` retains imported historical verbatims only.
 
 | Archived document | Retained for | Superseded by |
 | --- | --- | --- |
@@ -43,7 +46,7 @@ when available and explicitly mark unrecoverable timestamps.
 | `E2E_BALANCE_PLAN.md` | Historic satisficing-balance rationale | `BALANCE_WORKFLOW.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md` |
 | `IMPLEMENTATION_HANDOFF.md` | Historic implementation decisions and handoff record | This guide, roadmap, delivery plan, test plan |
 | `IMPLEMENTATION_PLAN.md`, `REFACTOR_PLAN.md`, `STABILIZATION_PLAN.md`, `ORIENTATION_IMPLEMENTATION_PLAN.md` | Completed phase plans | Current delivery/test plans and code |
-| `PLAYTEST_ARCHIVE.md` | Verbatim and retrospective playtest evidence | No replacement; append new evidence here |
+| `PLAYTEST_ARCHIVE.md` | Imported verbatim and retrospective playtest evidence | `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` for new intake/disposition |
 | `RELEASE_HISTORY.md` | Concise completed-slice and release evidence | No replacement; append only when a slice closes |
 
 ## Status vocabulary
@@ -59,6 +62,8 @@ Avoid ambiguous labels such as “partially implemented” without naming the mi
 ## Maintenance rules
 
 1. Start a material feature by updating `DELIVERY_PLAN.md` and its matching section in `TEST_PLAN.md`.
+2. Append new playtest feedback to `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` before planning its remedy. Append a
+   material chat instruction or decision to `docs/CHAT_DECISION_LOG.md` when it changes durable intent or process.
 2. Keep product intent in design documents; do not add implementation checklists there.
 3. Remove completed items from the active delivery/test plans at the end of a slice. Record the outcome, commit, and
    remaining follow-up in a short completion note instead of retaining stale checkboxes.
@@ -74,5 +79,6 @@ Avoid ambiguous labels such as “partially implemented” without naming the mi
 
 - Is the work in the current delivery plan, or has the plan been updated first?
 - Is there a production-path test or explicit human-playtest observation for each acceptance claim?
+- Does the playtest feedback log preserve the source observation and does the chat decision log preserve any material instruction?
 - Are balance values changed only in canonical JSON and regenerated artifacts?
 - Did the change leave a single current source for scope, status, and tests?

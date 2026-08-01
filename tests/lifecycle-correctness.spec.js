@@ -1302,6 +1302,37 @@ test('persistent Checkout remains a 50 percent guest mix instead of replacing or
     }
 });
 
+test('Rooftop redirect applies equally to runtime and max-delay fallback spawns without erasing ordinary traffic', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(9, { showBriefing: false });
+        Registry.sunsetActive = true;
+        Registry.sunsetEndTime = Number.MAX_SAFE_INTEGER;
+        Registry.sunsetTargetTime = Number.MAX_SAFE_INTEGER;
+        Registry.vipTargetTime = Number.MAX_SAFE_INTEGER;
+        const sample = spawn => {
+            const guests = [];
+            for (let index = 0; index < 120; index++) {
+                spawn(index * 1000);
+                guests.push(...Registry.floors.flatMap(floor => floor.waitingGuests.splice(0)));
+            }
+            return {
+                redirected: guests.filter(guest => guest.isSunset && guest.dest === Config.numFloors - 1).length,
+                ordinary: guests.filter(guest => !guest.isSunset && !guest.isCheckout && guest.dest > 0).length
+            };
+        };
+        return {
+            fallback: sample(now => forceFirstSpawn(now)),
+            runtime: sample(now => runSpawnerTick(now))
+        };
+    });
+
+    for (const mix of [result.fallback, result.runtime]) {
+        expect(mix.redirected).toBeGreaterThan(25);
+        expect(mix.redirected).toBeLessThan(95);
+        expect(mix.ordinary).toBeGreaterThan(0);
+    }
+});
+
 test('golden onboarding seed rewards Sweep over an idle manual lift', async ({ page }) => {
     const result = await page.evaluate(async () => {
         const seeds = await fetch('/tests/golden-seeds.json').then(response => response.json());

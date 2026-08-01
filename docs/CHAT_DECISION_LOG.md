@@ -1,0 +1,39 @@
+# Chat Decision Log
+
+**Document role:** Curated durable record of material product, design, release, and documentation instructions from chat  
+**Status:** Active, append-only decision record  
+**Coverage:** Reconstructed from the available project chat through 1 August 2026  
+**Not a substitute for:** The service-hosted chat transcript, Git history, or active delivery/test plans
+
+## Recording rule
+
+Record a decision here when it changes enduring product intent, a release constraint, documentation governance, or a
+test/acceptance rule. Do not copy routine implementation discussion. Link the authoritative design, delivery, or test
+document after the decision is applied there.
+
+## Reconstructed decisions
+
+| ID | Date | Decision | Durable effect / authority |
+| --- | --- | --- | --- |
+| DEC-001 | Date unavailable | `master` is the only working and deployment branch; GitHub Pages playtesting comes from it. The project will not use a branch/merge workflow. | Release practice; `DELIVERY_PLAN.md`. |
+| DEC-002 | Date unavailable | Documentation has distinct roles: roadmap for product sequence, delivery plan for current scope, test plan for evidence, and archives for history. | `DOCUMENTATION.md`. |
+| DEC-003 | Date unavailable | Playtest wording should be preserved as evidence; interpretation and implementation decisions belong in active plans. | `docs/playtest/PLAYTEST_FEEDBACK_LOG.md`, `TEST_PLAN.md`, `DELIVERY_PLAN.md`. |
+| DEC-004 | Date unavailable | Credits carry forward across successful rounds. | `Game Economy.md`. |
+| DEC-005 | Date unavailable | Persistent named events remain eligible after their introduction unless a round explicitly excludes them. Checkout remains a probabilistic traffic share, not a replacement for ordinary traffic. | `Lift-Operator_GDD.md`, `Game Play Map.md`, `engine-core.js`, `engine-spawner.js`. |
+| DEC-006 | Date unavailable | Gym Bros board stinky lifts regardless of stink source; Gym Bros and Checkout are mutually exclusive; Room Service is never Checkout. | Guest-rule implementation and focused tests. |
+| DEC-007 | Date unavailable | VIP makes three legs, pauses 10–30 seconds between legs, and has priority boarding once next in queue; an unsuitable occupied lift may be declined. | VIP lifecycle and test coverage. |
+| DEC-008 | Date unavailable | Power-up durations use canonical wall-clock values; SFX are capped at five seconds unless explicitly shorter/longer; icons persist for the effect lifetime. | Canonical config and audio rules. |
+| DEC-009 | Date unavailable | Automation Dock is the permanent controller: carousel selection is explicitly armed by clicking its text, armed policy applies directly to clicked lifts, Library selection arms the dock, and legacy Debug controller is removed. | `Automation_Workshop_Spec.md` and Dock implementation. |
+| DEC-010 | Date unavailable | Service Zoning unlocks at R14, is implemented as Workshop automation, has scalable overlapping Low/High built-ins, and all lifts can reach G. | Automation/round design. |
+| DEC-011 | Date unavailable | Counterweight puzzle sequence is R21–R23: adjacent pairs move oppositely, share no passenger load, permit normal effects unless stated, and use Open Plan as a later problem-solving tool. | Roadmap and authored rounds. |
+| DEC-012 | Date unavailable | Capsule dispatch is R24–R25: narrow pneumatic-tube capsules, high speed, demand waves, ordinary guests only; Gym Bros, Room Service, VIP, Freshener, Double-Decker, and Tardis are excluded/disabled as designed. | Roadmap, authored rounds, canonical data. |
+| DEC-013 | Date unavailable | RC1.0 defers the incomplete Achievements system and Endless mode; non-functional Debug actions are removed, while Warp/inspection remains supported. | `ROADMAP.md`, `DELIVERY_PLAN.md`. |
+| DEC-014 | 1 August 2026 | The balance simulator is a negative-control tool, not a model of competent human play. All-Sweep must fail R2–R25; intended-strategy results are diagnostic. R2 is currently deferred after accessibility tuning. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, `BALANCE_WORKFLOW.md`. |
+| DEC-015 | 1 August 2026 | Major RC hardening proceeds in playtest boundaries: stabilise R9, then gather feedback through R15, R20, and R25; each cycle is expected to be mostly polish. | `DELIVERY_PLAN.md` H0–H4. |
+| DEC-016 | 1 August 2026 | Specific feedback must have its own source document; broader material chat instructions/decisions must be curated in a separate decision log. | This file and `docs/playtest/PLAYTEST_FEEDBACK_LOG.md`. |
+
+## Chat persistence limitation
+
+The complete source conversation is retained by the chat service, outside this repository. This file is a curated
+repository-controlled record, not a claim to reproduce every message or timestamp. Reconstructed entries explicitly
+use `Date unavailable` when the original metadata is unavailable.

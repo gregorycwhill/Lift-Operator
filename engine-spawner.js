@@ -2,9 +2,9 @@
 // ENGINE-SPAWNER.JS : PASSENGER SPAWNING MECHANICS & ENVIRONMENT EVENTS
 // ============================================================================
 
-window.forceFirstSpawn = function(now) {
-    const roundDefinition = window.getRoundDefinition(Registry.stats.round);
-    const progress = (Config.roundTime - Registry.stats.timeLeft) / Config.roundTime;
+// Every standard spawn—including the max-delay fallback—uses this one path. Event
+// modifiers must alter a share of traffic, never accidentally replace it all.
+window.createStandardGuest = function(roundDefinition, progress, now) {
     const pickFloor = () => roundDefinition.capsuleMode
         ? window.getCapsuleDemandFloor(Registry.stats.round, progress)
         : window.getRandomGuestFloor();
@@ -22,7 +22,7 @@ window.forceFirstSpawn = function(now) {
     let isGym = window.isRoundEventEnabled(roundDefinition, 'gym') && !isCheckout && (start === Registry.gymFloor);
     let isRoomService = !isCheckout && window.isRoundEventEnabled(roundDefinition, 'roomService') && seededRandom() < (Config.roomServiceChance || 0.05);
     
-    Registry.floors[start].waitingGuests.push({
+    const guest = {
         id: `guest-${++Registry.guestSequence}`,
         dest: dest, 
         status: GuestStatus.HAPPY, 
@@ -36,9 +36,27 @@ window.forceFirstSpawn = function(now) {
         isBulky: isGym || isRoomService,
         isRoomService: isRoomService,
         boardingWeight: isRoomService ? 3.0 : (isGym ? 2.0 : 1.0)
-    });
+    };
+    if (Registry.sunsetActive && window.isRoundEventEnabled(roundDefinition, 'rooftop') && seededRandom() < Config.sunsetGuestRatio) {
+        guest.isSunset = true;
+        guest.originalDest = guest.dest;
+        guest.dest = Config.numFloors - 1;
+    }
+    return { start, guest };
+};
+
+window.enqueueStandardGuest = function(roundDefinition, progress, now) {
+    const { start, guest } = window.createStandardGuest(roundDefinition, progress, now);
+    Registry.floors[start].waitingGuests.push(guest);
     window.Game.BalanceTelemetry?.recordSpawn();
     Registry.lastSpawnTime = now;
+    return guest;
+};
+
+window.forceFirstSpawn = function(now) {
+    const roundDefinition = window.getRoundDefinition(Registry.stats.round);
+    const progress = (Config.roundTime - Registry.stats.timeLeft) / Config.roundTime;
+    return window.enqueueStandardGuest(roundDefinition, progress, now);
 };
 
 window.runSpawnerTick = function(now) {
@@ -137,48 +155,7 @@ window.runSpawnerTick = function(now) {
     
     while (tempChance > 0) {
         if (seededRandom() < tempChance) {
-            const pickFloor = () => roundDefinition.capsuleMode
-                ? window.getCapsuleDemandFloor(Registry.stats.round, progress)
-                : window.getRandomGuestFloor();
-            let start = pickFloor();
-            let dest;
-            let isCheckout = false;
-            
-            if (window.isRoundEventEnabled(roundDefinition, 'checkout') && seededRandom() < Config.checkoutChance) {
-                dest = 0;
-                isCheckout = true;
-                if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
-            } else {
-                dest = pickFloor();
-                while (dest === start) dest = pickFloor();
-            }
-            
-            let isGym = window.isRoundEventEnabled(roundDefinition, 'gym') && !isCheckout && (start === Registry.gymFloor);
-            let isRoomService = !isCheckout && window.isRoundEventEnabled(roundDefinition, 'roomService') && seededRandom() < (Config.roomServiceChance || 0.05);
-            
-            let newGuest = {
-                id: `guest-${++Registry.guestSequence}`,
-                dest: dest,
-                status: GuestStatus.HAPPY, 
-                spawnTime: now, 
-                isVip: false,
-                isCheckout,
-                isFarter: false, 
-                isSunset: false, 
-                isPartying: false, 
-                isGymBro: isGym,
-                isBulky: isGym || isRoomService,
-                isRoomService: isRoomService,
-                boardingWeight: isRoomService ? 3.0 : (isGym ? 2.0 : 1.0)
-            };
-            
-            if (Registry.sunsetActive && !newGuest.isVip && seededRandom() < Config.sunsetGuestRatio) {
-                newGuest.isSunset = true; 
-                newGuest.originalDest = newGuest.dest; 
-                newGuest.dest = Config.numFloors - 1;
-            }
-            Registry.floors[start].waitingGuests.push(newGuest);
-            window.Game.BalanceTelemetry?.recordSpawn();
+            window.enqueueStandardGuest(roundDefinition, progress, now);
             spawnedThisTick = true;
         }
         tempChance -= 1.0;
