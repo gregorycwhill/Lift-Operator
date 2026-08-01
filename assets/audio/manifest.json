@@ -108,12 +108,12 @@
       "attribution": "Optional credit: Alien Song by DRAGON-STUDIO via Pixabay"
     },
     "wrench": {
-      "file": "assets/audio/sfx/powerup-wrench-toolbox.wav",
-      "source": "https://opengameart.org/content/tools-in-plastic-toolbox",
-      "author": "Soundsnap",
-      "license": "GPL-3.0",
-      "modification": "None; downloaded WAV retained",
-      "attribution": "Tools in plastic toolbox by Soundsnap"
+      "file": "assets/audio/sfx/powerup-wrench-metal.wav",
+      "source": "https://opengameart.org/content/metal-sounds",
+      "author": "Vinrax",
+      "license": "CC-BY 3.0",
+      "modification": "First two seconds extracted from Metal_sounds.wav",
+      "attribution": "Metal sounds by Vinrax"
     },
     "doubleDecker": {
       "file": "assets/audio/sfx/powerup-double-decker-robot-step.wav",
@@ -188,7 +188,7 @@
     "guest_defenestrated": { "asset": null, "fallback": "error" },
     "powerup_used": {
       "assetsByPayloadId": {
-        "wrench": "assets/audio/sfx/powerup-wrench-toolbox.wav",
+        "wrench": "assets/audio/sfx/powerup-wrench-metal.wav",
         "turbo": "assets/audio/sfx/powerup-rocket-launch.wav",
         "musak": "assets/audio/sfx/musak-electronic-jazz.mp3",
         "freshener": "assets/audio/sfx/freesound_community-spray-48068.mp3",

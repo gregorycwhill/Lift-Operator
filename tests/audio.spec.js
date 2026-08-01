@@ -399,6 +399,20 @@ test('verified Turbo asset is available and mapped to the production audio path'
     expect(await page.evaluate(() => window.Game.Audio.getStatus())).toHaveProperty('initialized');
 });
 
+test('Wrench uses the documented two-second CC-BY metal excerpt and does not ship the GPL predecessor', async ({ request }) => {
+    const manifestResponse = await request.get('http://127.0.0.1:5500/assets/audio/manifest.json');
+    const manifest = await manifestResponse.json();
+    expect(manifest.assets.wrench).toMatchObject({
+        file: 'assets/audio/sfx/powerup-wrench-metal.wav',
+        source: 'https://opengameart.org/content/metal-sounds',
+        author: 'Vinrax',
+        license: 'CC-BY 3.0',
+        modification: 'First two seconds extracted from Metal_sounds.wav'
+    });
+    expect((await request.get('http://127.0.0.1:5500/assets/audio/sfx/powerup-wrench-metal.wav')).ok()).toBe(true);
+    expect((await request.get('http://127.0.0.1:5500/assets/audio/sfx/powerup-wrench-toolbox.wav')).status()).toBe(404);
+});
+
 test('verified imported audio assets are available at their production paths', async ({ request }) => {
     for (const file of [
         'gameplay-rooftop-trance.mp3',
@@ -409,7 +423,7 @@ test('verified imported audio assets are available at their production paths', a
         'sfx/hazard-synthetic-fart.wav',
         'sfx/freesound_community-spray-48068.mp3',
         'sfx/dragon-studio-alien-song-323613.mp3',
-        'sfx/powerup-wrench-toolbox.wav',
+          'sfx/powerup-wrench-metal.wav',
         'sfx/powerup-double-decker-robot-step.wav',
         'sfx/powerup-open-plan-metal.wav',
         'sfx/hazard-metal-interaction.wav',

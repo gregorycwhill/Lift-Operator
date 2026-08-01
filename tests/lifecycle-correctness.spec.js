@@ -1093,8 +1093,8 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
-    expect(result.r2SpawnStart).toBe(0.45);
-    expect(result.r2SpawnEnd).toBe(0.5625);
+    expect(result.r2SpawnStart).toBe(0.3375);
+    expect(result.r2SpawnEnd).toBe(0.421875);
     expect(result.version).toBe('0.2.9-capsule-dispatch');
 });
 

@@ -34,7 +34,8 @@ The following programme is the current delivery scope. It restores the design-to
 ### Accepted decisions
 
 - Unattended all-Sweep must fail every fixed gate seed in every authored round from R2 through R25. R1 remains the
-  onboarding exception. The 25% R2 spawn-rate accessibility change is implemented but currently violates this invariant
+  onboarding exception. The further 25% R2 spawn-rate accessibility change (43.75% total from the original values) is
+  implemented but currently violates this invariant
   (2/5 R2 all-Sweep seeds survive); resolving that conflict requires an explicit product decision rather than hidden
   counter-tuning.
 - R12 expresses that rule as an endurance ceiling: all-Sweep loses its twentieth life before 240 seconds, while a
@@ -98,10 +99,9 @@ These are genuine unresolved implementation or diagnosis items, not historical c
    - Treat the all-Sweep setup, fixed seeds, and R12 bounds as immutable policy. The simulator gate passes only when
      all-Sweep fails every seed. Intended profiles require trace/disposition review and browser/playtest evidence, but
      their survival rate is diagnostic rather than a release threshold.
-   Current evidence: profile and trace infrastructure is implemented. After the requested R2 25% spawn-rate reduction,
-   the full gate is 23/24 all-Sweep rounds and 10/24 intended diagnostic-positive rounds. R2 is the sole all-Sweep
-   violation (2/5 survivors). The full report is
-   authoritative for individual seeds and must be regenerated as one complete R2–R25 run. Virtual runs are now
+   Current evidence: profile and trace infrastructure is implemented. After the further 25% R2 spawn-rate reduction,
+   all-Sweep survives every fixed R2 seed (5/5), while the remaining rounds retain the negative-control result. The
+   current report is authoritative for individual seeds. Virtual runs are now
    synchronous, realm-unique, and wall-clock pinned, with regression coverage for subset/full run-order invariance. R2 is explicitly
    deferred for this phase. R3–R6 remain the next staged recovery slice; later-family
    failures are currently classified as profile-model gaps where event-specific criteria are required before balance

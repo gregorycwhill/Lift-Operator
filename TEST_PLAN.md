@@ -31,9 +31,9 @@ Recent focused evidence:
 - The 25-round balance acceptance harness, canonical economy projection, event-persistence resolver, production-faithful
   simulator routing, and representative reproducibility command are now implemented. All-Sweep is the hard simulator
   gate; intended-strategy profiles are diagnostic evidence pending human round-level difficulty reports.
-- The acceptance harness now records a versioned intended profile ID and diagnostic trace for every intended seed. After
-  the requested R2 reduction, the current full report is 23/24 all-Sweep and 10/24 intended: R2 is the sole all-Sweep
-  violation, with 2/5 survivors. The intended result is diagnostic only and is not a
+- The acceptance harness now records a versioned intended profile ID and diagnostic trace for every intended seed. The
+  current report confirms all-Sweep survives all five fixed R2 seeds after the further reduction; intended results
+  remain diagnostic only and are not a
   release gate. The checked-in full report is the authoritative per-seed result. Simulation runs no
   longer yield to browser timers, and a regression test proves that an R6 acceptance run is invariant alone and after
   R2–R5. R2 is explicitly deferred by the current
@@ -71,10 +71,10 @@ result; run it in an environment with a longer job allowance before release prom
 
 ## Full-campaign balance and economy acceptance
 
-**Current decision point:** the requested R2 25% spawn-rate reduction makes it friendlier for the blocked playtester,
-but leaves all-Sweep alive in 2/5 fixed R2 seeds. This is an explicit conflict with the R2–R25 all-Sweep invariant;
-Product must choose a different R2 intervention or make R2 an explicit onboarding exception. Do not silently alter the
-fixed seeds, accept the failed gate, or counter-tune arrival pressure.
+**Current decision point:** the further 25% R2 spawn-rate reduction (43.75% total from the original values) unblocks
+playtesting, but all-Sweep now survives all five fixed R2 seeds. Product must choose a different R2 intervention or
+make R2 an explicit onboarding exception; do not silently alter the fixed seeds, accept a failed gate, or counter-tune
+arrival pressure.
 
 The existing R2–R13 reports are historical diagnostic evidence only. They are not a 1.0 balance pass.
 

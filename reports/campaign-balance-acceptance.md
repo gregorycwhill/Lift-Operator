@@ -5,7 +5,7 @@ Policy: All-Sweep must fail every fixed gate seed from R2 through R25; productio
 
 | Round | All-Sweep accepted | Intended accepted | All-Sweep survivors | Intended survivors |
 | ---: | --- | --- | ---: | ---: |
-| 2 | NO | NO | 2/5 | 4/5 |
+| 2 | NO | NO | 5/5 | 5/5 |
 | 3 | yes | NO | 0/5 | 4/5 |
 | 4 | yes | NO | 0/5 | 5/5 |
 | 5 | yes | NO | 0/5 | 5/5 |

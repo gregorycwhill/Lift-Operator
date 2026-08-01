@@ -2,7 +2,7 @@
 
 **Status:** Active licensing and attribution record  
 **Owner class:** Product and engineering  
-**Last reviewed:** 25 July 2026
+**Last reviewed:** 1 August 2026
 
 The title/menu context uses:
 
@@ -48,7 +48,7 @@ Additional provisional CC0 assets:
 - “Alien Song” by DRAGON-STUDIO ([source](https://pixabay.com/sound-effects/film-special-effects-alien-song-323613/)),
   Pixabay Content License. Attribution is optional; stored as `assets/audio/sfx/dragon-studio-alien-song-323613.mp3`.
 - “Tools in plastic toolbox” by Soundsnap ([source](https://opengameart.org/content/tools-in-plastic-toolbox)), GPL-3.0.
-  Stored as `assets/audio/sfx/powerup-wrench-toolbox.wav`.
+  Retired before wider testing; this GPL-3.0 file is no longer distributed.
 - “Robotic mechanic step sounds” by Lee Barkovich, submitted by qubodup
   ([source](https://opengameart.org/content/robotic-mechanic-step-sounds)), CC-BY 3.0. Stored as
   `assets/audio/sfx/powerup-double-decker-robot-step.wav`.
@@ -66,6 +66,11 @@ Additional provisional CC0 assets:
 - “UI Failed or Error” by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0.
   Credit “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”; stored as
   `assets/audio/sfx/ui-error-failed.mp3`.
+
+The former GPL-3.0 Wrench file is retired and no longer used or distributed. The replacement is “Metal sounds” by
+Vinrax ([source](https://opengameart.org/content/metal-sounds)), CC-BY 3.0: the first two seconds of
+`Metal_sounds.wav` are stored as `assets/audio/sfx/powerup-wrench-metal.wav`. Credit Vinrax and note the excerpt
+modification in distributed builds.
 
 Before importing music or sound effects, add one entry for every manifest asset with its title, author, source URL,
 license/version, modification note, and the exact attribution text required by the license. Prefer CC0 or CC BY.
