@@ -278,6 +278,10 @@ VIP, Rooftop, Stink, Gym, jam, and Checkout become persistent campaign vocabular
 eligible in every subsequent conventional round unless that round explicitly excludes them. A round's named challenge
 describes its primary pressure, not an automatic exclusion of previously introduced mechanics.
 
+Checkout eligibility does not replace ordinary traffic: each eligible standard spawn independently uses the canonical
+Checkout probability (currently 50%). The remaining guests retain ordinary, varied floor-to-floor journeys. Rooftop
+redirection is a separate temporary event and likewise leaves unaffected guests on their ordinary journeys.
+
 Canonical balance data must record event introductions and explicit round exclusions. Runtime systems must resolve the
 same effective event set rather than mixing per-event thresholds with isolated inclusion flags. Capsule rounds retain
 their documented exclusions.

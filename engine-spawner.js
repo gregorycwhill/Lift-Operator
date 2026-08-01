@@ -11,7 +11,7 @@ window.forceFirstSpawn = function(now) {
     let start = pickFloor();
     let dest;
     let isCheckout = false;
-    if (window.isRoundEventEnabled(roundDefinition, 'checkout') || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
+    if (window.isRoundEventEnabled(roundDefinition, 'checkout') && seededRandom() < Config.checkoutChance) {
         dest = 0;
         isCheckout = true;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
@@ -144,7 +144,7 @@ window.runSpawnerTick = function(now) {
             let dest;
             let isCheckout = false;
             
-            if (window.isRoundEventEnabled(roundDefinition, 'checkout') || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
+            if (window.isRoundEventEnabled(roundDefinition, 'checkout') && seededRandom() < Config.checkoutChance) {
                 dest = 0;
                 isCheckout = true;
                 if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);

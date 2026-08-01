@@ -1276,6 +1276,32 @@ test('event persistence uses canonical introductions and explicit capsule exclus
     expect(result.r24).toEqual({ jam: true, checkout: false, vip: false, rooftop: false, stink: false, gym: false, roomService: false });
 });
 
+test('persistent Checkout remains a 50 percent guest mix instead of replacing ordinary destinations', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const sampleRound = round => {
+            skipToRound(round, { showBriefing: false });
+            Registry.sunsetTargetTime = Number.MAX_SAFE_INTEGER;
+            const guests = [];
+            for (let index = 0; index < 120; index++) {
+                forceFirstSpawn(index * 1000);
+                guests.push(...Registry.floors.flatMap(floor => floor.waitingGuests.splice(0)));
+            }
+            return {
+                checkout: guests.filter(guest => guest.isCheckout && guest.dest === 0).length,
+                ordinary: guests.filter(guest => !guest.isCheckout && guest.dest > 0).length
+            };
+        };
+        return { r7: sampleRound(7), r9: sampleRound(9) };
+    });
+
+    for (const mix of [result.r7, result.r9]) {
+        expect(mix.checkout).toBeGreaterThan(0);
+        expect(mix.ordinary).toBeGreaterThan(0);
+        expect(mix.checkout / (mix.checkout + mix.ordinary)).toBeGreaterThan(0.35);
+        expect(mix.checkout / (mix.checkout + mix.ordinary)).toBeLessThan(0.65);
+    }
+});
+
 test('golden onboarding seed rewards Sweep over an idle manual lift', async ({ page }) => {
     const result = await page.evaluate(async () => {
         const seeds = await fetch('/tests/golden-seeds.json').then(response => response.json());

@@ -109,6 +109,10 @@ The existing R2–R13 reports are historical diagnostic evidence only. They are 
 
 ### Round-by-round custom acceptance criteria
 
+Persistent event coverage must include traffic-mix checks: an eligible Checkout round retains ordinary non-G
+destinations at the canonical probability, and an active Rooftop event redirects only its configured share. A named
+event must never silently replace every standard guest journey unless its authored round definition says so.
+
 The generic survival comparator is not sufficient for every round. This matrix records where authored mechanics need
 additional evidence. A custom criterion supplements the all-Sweep gate; it never relaxes that gate or changes the fixed
 seed set.
