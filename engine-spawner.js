@@ -11,7 +11,7 @@ window.forceFirstSpawn = function(now) {
     let start = pickFloor();
     let dest;
     let isCheckout = false;
-    if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
+    if (window.isRoundEventEnabled(roundDefinition, 'checkout') || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
         dest = 0;
         isCheckout = true;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
@@ -19,8 +19,8 @@ window.forceFirstSpawn = function(now) {
         dest = pickFloor();
         while (dest === start) dest = pickFloor();
     }
-    let isGym = !roundDefinition.capsuleMode && !isCheckout && (start === Registry.gymFloor);
-    let isRoomService = !roundDefinition.capsuleMode && (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
+    let isGym = window.isRoundEventEnabled(roundDefinition, 'gym') && !isCheckout && (start === Registry.gymFloor);
+    let isRoomService = !isCheckout && window.isRoundEventEnabled(roundDefinition, 'roomService') && seededRandom() < (Config.roomServiceChance || 0.05);
     
     Registry.floors[start].waitingGuests.push({
         id: `guest-${++Registry.guestSequence}`,
@@ -66,7 +66,7 @@ window.runSpawnerTick = function(now) {
     }
 
     // 2. VIP Event Orchestration
-    if (!roundDefinition.capsuleMode && Registry.stats.round >= 8 && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
+    if (window.isRoundEventEnabled(roundDefinition, 'vip') && !Registry.vipSpawned && now >= Registry.vipTargetTime && Registry.vipTargetTime !== 0) {
         const start = 0;
         const maxFloor = Math.max(1, Config.numFloors - 1);
         const roomFloor = window.getRandomInt(1, maxFloor);
@@ -94,7 +94,7 @@ window.runSpawnerTick = function(now) {
     }
 
     // 3. Sunset Happy Hour Event Logic
-    if (!roundDefinition.capsuleMode && Registry.stats.round >= 9) {
+    if (window.isRoundEventEnabled(roundDefinition, 'rooftop')) {
         if (Registry.sunsetActive) {
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;
@@ -144,7 +144,7 @@ window.runSpawnerTick = function(now) {
             let dest;
             let isCheckout = false;
             
-            if (roundDefinition.checkoutEvent || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
+            if (window.isRoundEventEnabled(roundDefinition, 'checkout') || (Registry.stats.round === 7 && seededRandom() < Config.checkoutChance)) {
                 dest = 0;
                 isCheckout = true;
                 if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
@@ -153,8 +153,8 @@ window.runSpawnerTick = function(now) {
                 while (dest === start) dest = pickFloor();
             }
             
-            let isGym = !roundDefinition.capsuleMode && !isCheckout && (start === Registry.gymFloor);
-            let isRoomService = !roundDefinition.capsuleMode && (Registry.stats.round >= 3 && seededRandom() < (Config.roomServiceChance || 0.05));
+            let isGym = window.isRoundEventEnabled(roundDefinition, 'gym') && !isCheckout && (start === Registry.gymFloor);
+            let isRoomService = !isCheckout && window.isRoundEventEnabled(roundDefinition, 'roomService') && seededRandom() < (Config.roomServiceChance || 0.05);
             
             let newGuest = {
                 id: `guest-${++Registry.guestSequence}`,

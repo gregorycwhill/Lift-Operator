@@ -84,12 +84,12 @@
       "attribution": ""
     },
     "stink": {
-      "file": "assets/audio/sfx/hazard-gastric-distress.wav",
-      "source": "https://opengameart.org/content/gastric-distress",
-      "author": "LFA",
-      "license": "CC0",
-      "modification": "None; downloaded WAV retained",
-      "attribution": ""
+      "file": "assets/audio/sfx/hazard-synthetic-fart.wav",
+      "source": "https://opengameart.org/content/synthetic-farts",
+      "author": "dklon",
+      "license": "CC-BY 3.0",
+      "modification": "Selected whoopee_1.wav from the supplied ZIP; output remains capped at 2 seconds",
+      "attribution": "Synthetic Farts by dklon"
     },
     "freshener": {
       "file": "assets/audio/sfx/freesound_community-spray-48068.mp3",
@@ -204,7 +204,7 @@
     "hazard_started": {
       "assetsByPayloadId": {
         "jam": "assets/audio/sfx/hazard-metal-interaction.wav",
-        "stink": "assets/audio/sfx/hazard-gastric-distress.wav"
+        "stink": "assets/audio/sfx/hazard-synthetic-fart.wav"
       },
       "fallback": "hazard",
       "uniquePerPayloadId": true

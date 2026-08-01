@@ -439,8 +439,7 @@ test('factory produces equivalent structures for normal, retry, and simulation s
             lives: Registry.stats.lives,
             timeLeft: Registry.stats.timeLeft,
             spawnChance: Registry.stats.currentSpawnChance,
-            vipTargetTime: Registry.vipTargetTime,
-            sunsetTargetTime: Registry.sunsetTargetTime,
+            vipToSunsetOffset: Registry.vipTargetTime - Registry.sunsetTargetTime,
             gymFloor: Registry.gymFloor
         });
 
@@ -615,7 +614,7 @@ test('built-in simulation comparators do not inject manual rescue actions', asyn
     expect(result.roundStats.manualClicks).toBe(0);
 });
 
-test('idealized campaign comparator uses production movement without player clicks', async ({ page }) => {
+test('idealized campaign comparator uses production-routed manual commands', async ({ page }) => {
     const result = await page.evaluate(() => window.Game.Simulator.runRound(
         1234,
         { 0: 'manual', 1: 'manual' },
@@ -624,8 +623,41 @@ test('idealized campaign comparator uses production movement without player clic
     ));
 
     expect(result.error).toBeUndefined();
-    expect(result.roundStats.manualClicks).toBe(0);
+    expect(result.roundStats.manualClicks).toBeGreaterThan(0);
     expect(result.designTelemetry.samples.length).toBeGreaterThan(0);
+});
+
+test('acceptance simulation is invariant when earlier rounds have run', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+        const loadout = ['doors', 'wrench', 'turbo', 'musak', 'freshener']
+            .flatMap(id => [{ id, tier: 0 }, { id, tier: 0 }]);
+        const intendedOptions = {
+            profileId: 'r4-r6-triage',
+            strategy: 'resource-supported',
+            loadout,
+            interventionIntervalSec: 12,
+            manualTargetLimit: 12,
+            trace: true
+        };
+        const scriptsFor = round => Object.fromEntries(
+            Array.from({ length: Config.GAME_DATA.rounds[round].lifts }, (_, index) => [index, 'priority-sweep'])
+        );
+        const summarize = run => ({
+            success: run.success,
+            elapsedSeconds: run.elapsedSeconds,
+            served: run.served,
+            livesRemaining: run.livesRemaining,
+            manualClicks: run.roundStats.manualClicks
+        });
+        const alone = summarize(await Game.Simulator.runRound(6060, scriptsFor(6), 6, intendedOptions));
+        for (let round = 2; round <= 5; round++) {
+            await Game.Simulator.runRound(6060, scriptsFor(round), round, intendedOptions);
+        }
+        const afterEarlierRounds = summarize(await Game.Simulator.runRound(6060, scriptsFor(6), 6, intendedOptions));
+        return { alone, afterEarlierRounds };
+    });
+
+    expect(result.afterEarlierRounds).toEqual(result.alone);
 });
 
 test('resource-supported comparator combines declared inventory with manual rescues', async ({ page }) => {
@@ -831,9 +863,9 @@ test('capsule rounds render narrow cars and use seeded continuous demand current
     expect(result.liftCount).toBe(10);
     expect(result.capsuleCars).toBe(10);
     expect(result.capsuleCable).toBe('none');
-    expect(result.tubeBoundaryWidth).toBe('3px');
-    expect(result.shaftWidth).toBe(30);
-    expect(result.liftWidth).toBe(28);
+    expect(result.tubeBoundaryWidth).toBe('4px');
+    expect(result.shaftWidth).toBe(34);
+    expect(result.liftWidth).toBe(26);
     expect(result.r25LiftCount).toBe(20);
     expect(result.r25CapsuleCars).toBe(20);
     expect(result.groundPresent).toBe(true);
@@ -1048,7 +1080,7 @@ test('Endless alpha generates deterministic pre-checked operations and can enter
     expect(result.lifts).toBeGreaterThanOrEqual(5);
 });
 
-test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
+test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
     const result = await page.evaluate(() => {
         const capacities = [1, 2, 3, 4].map(round => {
             initializeRound(round, { showBriefing: false });
@@ -1065,8 +1097,8 @@ test('playtest capacity and Round 2 final spawn tuning are scoped to Rounds 1-3'
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
-    expect(result.r2SpawnStart).toBe(0.4);
-    expect(result.r2SpawnEnd).toBe(0.468);
+    expect(result.r2SpawnStart).toBe(0.6);
+    expect(result.r2SpawnEnd).toBe(0.75);
     expect(result.version).toBe('0.2.9-capsule-dispatch');
 });
 
@@ -1194,6 +1226,19 @@ test('canonical payout parameters drive standard and Endurance awards', async ({
     expect(result.capped).toBe(50);
 });
 
+test('R14 onward applies the canonical 50 percent credit uplift', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const pointsFor = round => {
+            Registry.stats.round = round;
+            Registry.stats.timeLeft = 0;
+            Registry.roundStats.servedThisRound = 100;
+            return PowerUps.calculateRoundPoints();
+        };
+        return { r13: pointsFor(13), r14: pointsFor(14), r25: pointsFor(25) };
+    });
+    expect(result).toEqual({ r13: 10, r14: 15, r25: 15 });
+});
+
 test('party guests remain at the rooftop until the event releases them', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = { passengers: [], automation: 'manual', manualOverride: false, sweepDirection: 1 };
@@ -1218,6 +1263,21 @@ test('Gym Floor persists after introduction and jam duration stays within 20 sec
     expect(result.floors.every(item => item.gymFloor > 0 && item.gymFloor < 14)).toBe(true);
     expect(result.jamMax).toBe(20);
     expect(result.multiplier).toBe(0.1);
+});
+
+test('event persistence uses canonical introductions and explicit capsule exclusions', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const events = ['jam', 'checkout', 'vip', 'rooftop', 'stink', 'gym', 'roomService'];
+        const snapshot = round => {
+            const definition = Config.GAME_DATA.rounds[round];
+            return Object.fromEntries(events.map(event => [event, isRoundEventEnabled({ round, ...definition }, event)]));
+        };
+        return { r5: snapshot(5), r14: snapshot(14), r23: snapshot(23), r24: snapshot(24) };
+    });
+    expect(result.r5).toEqual({ jam: false, checkout: false, vip: false, rooftop: false, stink: false, gym: false, roomService: true });
+    expect(result.r14).toEqual({ jam: true, checkout: true, vip: true, rooftop: true, stink: true, gym: true, roomService: true });
+    expect(result.r23).toEqual({ jam: true, checkout: true, vip: true, rooftop: true, stink: true, gym: true, roomService: true });
+    expect(result.r24).toEqual({ jam: true, checkout: false, vip: false, rooftop: false, stink: false, gym: false, roomService: false });
 });
 
 test('golden onboarding seed rewards Sweep over an idle manual lift', async ({ page }) => {
@@ -1540,17 +1600,40 @@ test('rocket duration is canonical and lasts ten gameplay seconds', async ({ pag
     const result = await page.evaluate(() => {
         initializeRound(7, { showBriefing: false });
         Registry.gameActive = true;
+        Game.virtualTime = 100000;
         const lift = Registry.lifts[0];
         const duration = Config.GAME_DATA.powerups.turbo.tiers[0].duration;
         PowerUps.catalog.turbo.tiers[0].execute(0, 0);
         const activated = lift.turboTimer;
-        for (let tick = 0; tick < duration - 1; tick++) gameTick(100000 + tick * 1000);
+        for (let tick = 1; tick < duration; tick++) gameTick(100000 + tick * 1000);
         const beforeExpiry = lift.turboTimer;
-        gameTick(100000 + (duration - 1) * 1000);
+        gameTick(100000 + duration * 1000);
         return { duration, activated, beforeExpiry, expired: lift.turboTimer };
     });
 
     expect(result).toEqual({ duration: 10, activated: 10, beforeExpiry: 1, expired: 0 });
+});
+
+test('timed power-ups expire from wall-clock time rather than callback count', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(22, { showBriefing: false });
+        Registry.gameActive = true;
+        Game.virtualTime = 500000;
+        const lift = Registry.lifts[0];
+        const timers = [
+            ['turboTimer', 10], ['freshenerTimer', 10], ['musakTimer', 10],
+            ['tardisTimer', 10], ['doubleDeckerTimer', 10], ['openPlanTimer', 10]
+        ];
+        timers.forEach(([key, duration]) => PowerUps.setLiftTimer(lift, key, duration));
+        PowerUps.setGlobalTimer('globalTurbo', 10);
+        PowerUps.tick(509999);
+        const justBefore = timers.map(([key]) => lift[key]);
+        PowerUps.tick(510000);
+        return { justBefore, expired: timers.map(([key]) => lift[key]), global: PowerUps.timers.globalTurbo };
+    });
+    expect(result.justBefore).toEqual([1, 1, 1, 1, 1, 1]);
+    expect(result.expired).toEqual([0, 0, 0, 0, 0, 0]);
+    expect(result.global).toBe(0);
 });
 
 test('rooftop event has a long seeded schedule and releases guests to their original rooms', async ({ page }) => {
@@ -1645,6 +1728,21 @@ test('countdown start-now control begins the round immediately', async ({ page }
     expect(result.countdown).toBe(false);
     expect(result.active).toBe(true);
     expect(result.timer).toBe(null);
+});
+
+test('round-start countdown is 10 seconds only for Round 2 and 5 seconds otherwise', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const requested = [];
+        const original = window.startRoundCountdown;
+        window.startRoundCountdown = seconds => requested.push(seconds);
+        initializeRound(2, { showBriefing: false });
+        beginSelectedRound();
+        initializeRound(3, { showBriefing: false });
+        beginSelectedRound();
+        window.startRoundCountdown = original;
+        return requested;
+    });
+    expect(result).toEqual([10, 5]);
 });
 
 test('late-round fleet layout fits the game area and countdown skip is icon-only', async ({ page }) => {
@@ -1814,6 +1912,44 @@ test('checkout guests and Gym Bros are mutually exclusive', async ({ page }) => 
     expect(result.some(guest => guest.isCheckout && guest.isGymBro)).toBe(false);
 });
 
+test('Room Service is never generated as a Checkout guest', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(7, { showBriefing: false });
+        Config.roomServiceChance = 1;
+        const samples = [];
+        for (let index = 0; index < 12; index++) {
+            forceFirstSpawn(index * 1000);
+            samples.push(...Registry.floors.flatMap(floor => floor.waitingGuests.splice(0)));
+        }
+        return samples.map(guest => ({ checkout: guest.isCheckout, roomService: guest.isRoomService }));
+    });
+    expect(result.length).toBeGreaterThan(0);
+    expect(result.some(guest => guest.checkout && guest.roomService)).toBe(false);
+});
+
+test('Gym Bros board an otherwise compatible stinky lift', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(11, { showBriefing: false });
+        Registry.gameActive = true;
+        const floor = 1;
+        const lift = Registry.lifts[0];
+        lift.pos = floor * Registry.floorHeight;
+        lift.targetFloor = floor;
+        lift.state = 'BOARDING';
+        lift.stateProgress = 1;
+        lift.passengers = [];
+        lift.stinkTimer = 4;
+        Registry.floors[floor].waitingGuests = [{
+            id: 'stinky-gym-bro', dest: 4, status: GuestStatus.HAPPY,
+            spawnTime: 0, isVip: false, isGymBro: true, isCheckout: false,
+            isRoomService: false, boardingWeight: 2
+        }];
+        Game.Engine.animationTick(1000);
+        return { boarded: lift.passengers.map(guest => guest.id), waiting: Registry.floors[floor].waitingGuests.length };
+    });
+    expect(result).toEqual({ boarded: ['stinky-gym-bro'], waiting: 0 });
+});
+
 test('automation teaching cues extend to custom and shared script discovery', async ({ page }) => {
     const result = await page.evaluate(() => {
         const unlockRound = Config.GAME_DATA.automationUnlocks.custom;
@@ -1846,12 +1982,13 @@ test('capacity modifiers announce activation and expiry without a permanent HUD 
     const result = await page.evaluate(() => {
         buildWorld();
         const lift = Registry.lifts[0];
-        lift.tardisTimer = 1;
+        PowerUps.setLiftTimer(lift, 'tardisTimer', 1);
         PowerUps.announceLiftCapacity(0);
         const activated = document.querySelector('[data-capacity-lift="0"]')?.textContent;
         lift.lastEffectiveCapacity = 999;
         Registry.gameActive = true;
-        gameTick(Date.now());
+        const now = PowerUps.timerNow();
+        gameTick(now + 1000);
         Registry.gameActive = false;
         const expired = document.querySelector('[data-capacity-lift="0"]')?.textContent;
         return {
@@ -1929,6 +2066,47 @@ test('manual floor selection overrides Sweep direction for every waiting guest',
         automatic: { upward: true, downward: false },
         manuallySelected: { upward: true, downward: true }
     });
+});
+
+test('R22 manual stop boards a compatible waiting guest before Sweep resumes', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(22, { showBriefing: false });
+        Registry.gameActive = true;
+        const floor = 5;
+        const lift = Registry.lifts[0];
+        const partner = Registry.lifts[lift.counterweightPartner];
+        const now = 1000000;
+        setLiftAutomation(lift.id, 'sweep');
+        lift.pos = floor * Registry.floorHeight;
+        lift.targetFloor = floor;
+        lift.state = 'IDLE';
+        lift.stateProgress = 0;
+        lift.passengers = [];
+        partner.pos = (Config.numFloors - 1 - floor) * Registry.floorHeight;
+        partner.targetFloor = Config.numFloors - 1 - floor;
+        partner.state = 'IDLE';
+        partner.stateProgress = 0;
+        Registry.floors[floor].waitingGuests = [{
+            id: 'manual-stop-guest', dest: 10, status: GuestStatus.HAPPY,
+            spawnTime: now, boardingWeight: 1, isVip: false, isGymBro: false
+        }];
+
+        setLiftTarget(lift.id, floor);
+        for (let tick = 0; tick < 160 && lift.passengers.length === 0; tick++) {
+            Game.Engine.animationTick(now + tick * 16);
+        }
+        return {
+            boarded: lift.passengers.map(guest => guest.id),
+            waiting: Registry.floors[floor].waitingGuests.map(guest => guest.id),
+            manualOverride: lift.manualOverride,
+            partnerTarget: partner.targetFloor
+        };
+    });
+
+    expect(result.boarded).toEqual(['manual-stop-guest']);
+    expect(result.waiting).toEqual([]);
+    expect(result.manualOverride).toBe(true);
+    expect(result.partnerTarget).toBe(9);
 });
 
 test('Hands-Free accepts custom automation only and rejects built-in policies', async ({ page }) => {

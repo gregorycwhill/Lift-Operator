@@ -224,8 +224,16 @@ body {
 .shaft:hover { background: #e0e6e9; }
 .capsule-bank .shaft {
     position: relative;
-    border-right: 3px solid #536d78;
+    border-right: 4px solid #536d78;
     background: linear-gradient(90deg, rgba(220, 239, 247, 0.72), rgba(176, 211, 224, 0.38), rgba(220, 239, 247, 0.72));
+}
+.zoning-active .shaft.zone-served {
+    background: linear-gradient(90deg, rgba(46, 204, 113, .22), rgba(46, 204, 113, .08), rgba(46, 204, 113, .22));
+    box-shadow: inset 0 0 0 2px rgba(46, 204, 113, .22);
+}
+.zoning-active .shaft.zone-unserved {
+    background: linear-gradient(90deg, rgba(127, 140, 141, .18), rgba(127, 140, 141, .06), rgba(127, 140, 141, .18));
+    opacity: .62;
 }
 .capsule-bank .shaft::after {
     display: none;
@@ -311,6 +319,9 @@ body {
     padding: 2px;
 }
 .lift.capsule-car::before {
+    display: none;
+}
+.capsule-bank .lift::before {
     display: none;
 }
 .lift::before { 

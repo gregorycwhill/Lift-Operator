@@ -15,6 +15,17 @@ window.isSupplyClosetAvailable = function(round) {
             .some(tiers => tiers.some(unlockRound => unlockRound <= currentRound));
 };
 
+window.getRoundChallengeSummary = function(round) {
+    const definition = Config.GAME_DATA.rounds[round] || {};
+    const labels = {
+        roomService: 'Room Service', checkout: 'Checkout', vip: 'VIP', rooftop: 'Rooftop Party',
+        jam: 'Jams', stink: 'Stink', gym: 'Gym Bros'
+    };
+    return Object.keys(labels)
+        .filter(event => window.isRoundEventEnabled?.({ ...definition, round }, event))
+        .map(event => labels[event]);
+};
+
 /**
  * Open the round briefing modal with contextually relevant instructions.
  */
@@ -68,18 +79,23 @@ window.showRoundModal = function(round) {
     else if (round === 12) { title.innerText = `Round 12: Endurance (${rank})`; instructions.innerText = "NO TIMER. You have the usual 20 lives. Keep operating until the 20th defenestration, earn as many points as you can, then advance to the final round."; }
     else if (round === 13) { title.innerText = `Round 13: Pedal Power (${rank})`; instructions.innerText = "The power is out! Lift motors are running on backups. Gravity slows loaded climbs, so keep lifts light and use your power-ups carefully."; }
     else if (round === 14) { title.innerText = `Round 14: Elite Operations (${rank})`; instructions.innerText = "This 20-floor round introduces Service Zoning. Arrivals rise from 1.5 to 1.9 per second across lower, middle, and upper bands; all lifts can still reach G, which is three times more likely than an average floor. Choose Zoned Low or Zoned High in the Automation Dock, then click lifts to deploy it; use the Workshop to adapt the routine. Keep one route for G and overlap adjacent bands when needed."; }
-    else if (round === 15) { title.innerText = `Round 15: Split-Level Pressure (${rank})`; instructions.innerText = "The building is taller and arrivals are faster. Use zoning to divide coverage, then keep a lift available for Ground traffic."; }
+    else if (round === 15) { title.innerText = `Round 15: VIP Rooftop Gala (${rank})`; instructions.innerText = "VIP traffic and the Rooftop Party now overlap. Use zoning to divide coverage, then keep a lift available for Ground and VIP journeys."; }
     else if (round === 16) { title.innerText = `Round 16: Stink Control (${rank})`; instructions.innerText = "Farts and heavy guests create capacity traps. Freshener, capacity, and flexible automation choices will protect your throughput."; }
     else if (round === 17) { title.innerText = `Round 17: Express Check-Out (${rank})`; instructions.innerText = "This 25-floor, six-lift round is a checkout challenge: guests are travelling to G at high volume. Use zoning or direct routes to keep ground-floor service reliable while automations manage the upper floors."; }
     else if (round === 18) { title.innerText = `Round 18: Festival Weekend (${rank})`; instructions.innerText = "Rooftop demand, VIP travel, Gym Bros, and stink interact at scale. Prepare exception-safe zones and a flexible lift."; }
     else if (round === 19) { title.innerText = `Round 19: Fleet Expansion (${rank})`; instructions.innerText = "More lifts and floors increase coordination costs. Use automations and capacity power-ups to prevent queues from concentrating."; }
-    else if (round === 20) { title.innerText = `Round 20: Final Campaign Test (${rank})`; instructions.innerText = "The campaign’s final authored round combines the late-game traffic hazards. Spend credits deliberately and keep every lift useful."; }
+    else if (round === 20) { title.innerText = `Round 20: Grand Hotel Network (${rank})`; instructions.innerText = "This large conventional fleet combines the late-game traffic hazards. Spend Credits deliberately, use zoning, and keep every lift useful before the counterweight and capsule rounds."; }
     else if (round === 21) { title.innerText = `Round 21: Counterweight Basics (${rank})`; instructions.innerText = "These lifts share a counterweight loop. Move one car and its adjacent partner moves in the opposite direction. Both cabins carry their own guests; plan for the pair."; }
     else if (round === 22) { title.innerText = `Round 22: Counterweight Crossovers (${rank})`; instructions.innerText = "The counterweight pairs remain linked. Open Plan now lets compatible guests transfer between an active lift and either adjacent lift at the same floor. Use it to repair passenger distribution."; }
     else if (round === 23) { title.innerText = `Round 23: Counterweight Network (${rank})`; instructions.innerText = "Eight counterweighted lifts and 29 floors demand a network plan. Use zoning, Open Plan, and your power-ups to keep the coupled fleet resilient."; }
     else if (round === 24) { title.innerText = `Round 24: SciiFi Dispatch (${rank})`; instructions.innerText = "Ten single-person capsule lifts serve 15 floors in about 3 seconds. Demand currents shift continuously, so use Zoned High/Low or a custom automation. Jams are shorter but common; Wrench can recover them. Some familiar power-ups are unavailable."; }
     else if (round === 25) { title.innerText = `Round 25: SciiFi Overdrive (${rank})`; instructions.innerText = "Twenty capsule lifts serve 30 floors in about 6 seconds. Overlapping demand currents will shift throughout the round. Automations are essential; jams are shorter but common, and some familiar power-ups are unavailable."; }
     else if (round > 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "Service Zoning is available from the Automation Dock. Keep coverage practical as the building grows; adapt Zoned Low or Zoned High in the Workshop when needed."; }
+
+    if (round >= 14) {
+        const challenges = window.getRoundChallengeSummary(round);
+        if (challenges.length) instructions.innerText += ` Active challenge systems: ${challenges.join(', ')}.`;
+    }
 
     let shopDiv = document.getElementById('shopContainer');
     if (!shopDiv && btn) {

@@ -33,16 +33,21 @@ window.isGuestDirectionCompatible = function(lift, guest, floor) {
     return true;
 };
 
-window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity) {
-    if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.canLiftDirectlyServe(lift, floor, guest.dest)) return false;
-    if (guest.isPartying) return false;
+window.getGuestBoardingRejectionReason = function(lift, guest, floor, isStinky, maxCapacity) {
+    if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.canLiftDirectlyServe(lift, floor, guest.dest)) return 'zone-or-route';
+    if (guest.isPartying) return 'party-state';
     const guestWeight = guest.boardingWeight || (guest.type === 'room-service' ? 3 : (guest.isGymBro ? 2 : 1));
-    if (Registry.getLiftWeight(lift) + guestWeight > maxCapacity) return false;
-    if (guest.status === GuestStatus.RAGE) return false;
-    if (isStinky && !guest.isGymBro) return false;
-    if (lift.passengers.some(passenger => passenger.isVip)) return false;
-    if (guest.isVip && lift.passengers.length > 0) return false;
-    return window.isGuestDirectionCompatible(lift, guest, floor);
+    if (Registry.getLiftWeight(lift) + guestWeight > maxCapacity) return 'capacity';
+    if (guest.status === GuestStatus.RAGE) return 'rage';
+    if (isStinky && !guest.isGymBro) return 'stink';
+    if (lift.passengers.some(passenger => passenger.isVip)) return 'vip-occupied';
+    if (guest.isVip && lift.passengers.length > 0) return 'vip-queue';
+    if (!window.isGuestDirectionCompatible(lift, guest, floor)) return 'direction';
+    return null;
+};
+
+window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity) {
+    return window.getGuestBoardingRejectionReason(lift, guest, floor, isStinky, maxCapacity) === null;
 };
 
 window.processOpenPlanTransfers = function() {
@@ -99,7 +104,7 @@ window.gameTick = function(timestamp) {
         console.error("Physics Crash", e);
     }
 
-    if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick();
+    if (typeof PowerUps !== 'undefined' && PowerUps.tick) PowerUps.tick(now);
 
     Registry.lifts.forEach(lift => {
         if (lift.openPlanTimer > 0) lift.openPlanTimer--;
@@ -161,15 +166,7 @@ window.gameTick = function(timestamp) {
         }
 
         if (lift.stinkTimer > 0) lift.stinkTimer--;
-        if (lift.tardisTimer > 0) {
-            lift.tardisTimer--;
-            if (lift.tardisTimer === 0) lift.tardisExpiryExodus = true;
-        }
-        if (lift.turboTimer > 0) lift.turboTimer--; 
-        if (lift.freshenerTimer > 0) lift.freshenerTimer--;
-        if (lift.musakTimer > 0) lift.musakTimer--;
-        if (lift.doubleDeckerTimer > 0) lift.doubleDeckerTimer--;
-        else lift.isDoubleDecker = false;
+        if (lift.doubleDeckerTimer <= 0) lift.isDoubleDecker = false;
         if (wasJamActive && lift.jamTimer <= 0 && !lift.isJammed) window.Game.Audio?.publish('hazard_ended', { id: 'jam', liftId: lift.id });
         if (wasStinkActive && lift.stinkTimer <= 0) window.Game.Audio?.publish('hazard_ended', { id: 'stink', liftId: lift.id });
 
@@ -223,7 +220,7 @@ window.gameTick = function(timestamp) {
             lift.effects = lift.effects.filter(eff => (now - eff.startTime) < eff.duration);
         }
         
-        if (Registry.stats.round >= 6) {
+        if (window.isRoundEventEnabled(roundConfig, 'jam')) {
             let jamImmune = typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0;
             if (lift.jamTimer <= 0 && seededRandom() < Config.jamChancePerSec && !jamImmune) {
                 const jamMin = Number(roundConfig.jamMinSec || Config.jamMinSec);
@@ -232,7 +229,7 @@ window.gameTick = function(timestamp) {
                 window.Game.Audio?.publish('hazard_started', { id: 'jam', liftId: lift.id });
             }
             
-            if (!roundConfig.capsuleMode && Registry.stats.round >= 9 && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
+            if (window.isRoundEventEnabled(roundConfig, 'stink') && lift.stinkTimer <= 0 && lift.passengers.length > 0) {
                 let stinkImmune = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
                 if (seededRandom() < Config.fartChancePerSec && !stinkImmune) {
                     lift.stinkTimer = Config.fartStinkSec; // gameTick decrements once per second
@@ -338,6 +335,7 @@ window.gameTick = function(timestamp) {
 };
 
 window.animationTick = function(timestamp) {
+    Registry.counterweightPolicyFrame = (Registry.counterweightPolicyFrame || 0) + 1;
     // Browser frame timestamps are page-relative; guest spawn times are epoch
     // based. Simulations provide an epoch-like virtual clock.
     const now = window.Game.virtualTime || Date.now();
@@ -544,9 +542,12 @@ window.animationTick = function(timestamp) {
             lift.stateProgress = 0;
         } else {
             // SNAP TO FLOOR logic
-            if (Math.abs(lift.pos - targetPos) < (Config.GAME_DATA.system.lateralTolerance * Registry.floorHeight)) {
-                lift.pos = targetPos; 
-            }
+            // The movement branch is entered when the remaining distance is no
+            // greater than one frame's step. Always snap: the boarding arbiter
+            // uses a stricter parked-position test than the visual floor test.
+            // Leaving a fractional remainder here makes a Turbo car appear at a
+            // floor while silently refusing every guest there.
+            lift.pos = targetPos;
             
             const f = lift.targetFloor;
 
@@ -663,10 +664,15 @@ window.animationTick = function(timestamp) {
                         }
 
                         if (boardableGuestIndex !== -1) {
-                            let parkedLifts = Registry.lifts.filter(l => l.targetFloor === f && Math.abs(l.pos - f * Registry.floorHeight) < 1 && Registry.getLiftWeight(l) < (typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity) && l.jamTimer <= 0 && l.stinkTimer <= 0);
+                            const guestToBoard = Registry.floors[targetFloorToBoard].waitingGuests[boardableGuestIndex];
+                            let parkedLifts = Registry.lifts.filter(l => {
+                                if (l.targetFloor !== f || Math.abs(l.pos - f * Registry.floorHeight) >= 1 || l.jamTimer > 0) return false;
+                                const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity;
+                                return Registry.getLiftWeight(l) < capacity && window.canGuestBoardLift(l, guestToBoard, targetFloorToBoard, l.stinkTimer > 0, capacity);
+                            });
                             parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
                             if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
-                                const guestToBoard = Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1)[0];
+                                Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1);
                                 if (lift.passengers.length === 0 && ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(lift.automation)) {
                                     lift.sweepDirection = guestToBoard.dest > targetFloorToBoard ? 1 : -1;
                                 }
@@ -680,7 +686,26 @@ window.animationTick = function(timestamp) {
                     }
 
                     if (!performedAction) {
-                        if (Registry.floors[f].waitingGuests.length > 0) window.Game.Audio?.publish('guest_refused', { liftId: lift.id, floor: f, reason: 'no-compatible-guest' });
+                        if (Registry.floors[f].waitingGuests.length > 0) {
+                            const rejectionReasons = {};
+                            const refusalCapacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+                            Registry.floors[f].waitingGuests.forEach(guest => {
+                                const reason = window.getGuestBoardingRejectionReason(lift, guest, f, isStinky, refusalCapacity);
+                                if (reason) rejectionReasons[reason] = (rejectionReasons[reason] || 0) + 1;
+                            });
+                            window.Game.Audio?.publish('guest_refused', {
+                            liftId: lift.id,
+                            floor: f,
+                            reason: 'no-compatible-guest',
+                            targetFloor: lift.targetFloor,
+                            sweepDirection: lift.sweepDirection,
+                            passengers: lift.passengers.length,
+                            capacity: refusalCapacity,
+                            jammed: lift.jamTimer > 0,
+                            stinky: isStinky,
+                            rejectionReasons
+                            });
+                        }
                         lift.state = 'DOORS_CLOSING';
                         lift.stateProgress = 0;
                     }

@@ -406,7 +406,7 @@ test('verified imported audio assets are available at their production paths', a
         'sfx/musak-electronic-jazz.mp3',
         'sfx/tardis-air-whoosh.wav',
         'sfx/wide-doors-old-elevator.mp3',
-        'sfx/hazard-gastric-distress.wav',
+        'sfx/hazard-synthetic-fart.wav',
         'sfx/freesound_community-spray-48068.mp3',
         'sfx/dragon-studio-alien-song-323613.mp3',
         'sfx/powerup-wrench-toolbox.wav',

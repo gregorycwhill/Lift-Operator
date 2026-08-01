@@ -3,6 +3,29 @@
 // Balance version: 0.2.9-capsule-dispatch
 window.GameBalanceData = {
   "balanceVersion": "0.2.9-capsule-dispatch",
+  "events": {
+    "jam": {
+      "introducedRound": 6
+    },
+    "checkout": {
+      "introducedRound": 7
+    },
+    "vip": {
+      "introducedRound": 8
+    },
+    "rooftop": {
+      "introducedRound": 9
+    },
+    "stink": {
+      "introducedRound": 9
+    },
+    "gym": {
+      "introducedRound": 11
+    },
+    "roomService": {
+      "introducedRound": 3
+    }
+  },
   "payouts": {
     "standard": {
       "pointsPerGuest": 1,
@@ -369,6 +392,10 @@ window.GameBalanceData = {
   "system": {
     "showcaseLimit": 6,
     "lateralTolerance": 0.2,
+    "maxSpawnDelaySec": 3,
+    "vipArrivalDelayMinRatio": 0.25,
+    "vipArrivalDelayMaxRatio": 0.35,
+    "gravityFallbackScalar": 0.4,
     "vipHeadstartSec": 20,
     "roundTime": 180,
     "startingLives": 20,
@@ -416,8 +443,8 @@ window.GameBalanceData = {
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.4,
-      "spawnEnd": 0.468,
+      "spawnStart": 0.6,
+      "spawnEnd": 0.75,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -426,7 +453,7 @@ window.GameBalanceData = {
       "lifts": 2,
       "liftCapacity": 15,
       "spawnStart": 1,
-      "spawnEnd": 1.2,
+      "spawnEnd": 1.3,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -442,15 +469,15 @@ window.GameBalanceData = {
       "floors": 10,
       "lifts": 3,
       "spawnStart": 1.47,
-      "spawnEnd": 1.68,
+      "spawnEnd": 1.8,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
     "6": {
       "floors": 15,
       "lifts": 3,
-      "spawnStart": 0.9,
-      "spawnEnd": 1.05,
+      "spawnStart": 1.2,
+      "spawnEnd": 1.5,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -473,9 +500,9 @@ window.GameBalanceData = {
     "9": {
       "floors": 15,
       "lifts": 5,
-      "liftCapacity": 15,
+      "liftCapacity": 20,
       "spawnStart": 1,
-      "spawnEnd": 1.6,
+      "spawnEnd": 1.7,
       "objective": "SURVIVAL",
       "gravityScalar": 0
     },
@@ -518,6 +545,7 @@ window.GameBalanceData = {
       "spawnEnd": 1.9,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "zoningEnabled": true
     },
     "15": {
@@ -527,6 +555,7 @@ window.GameBalanceData = {
       "spawnEnd": 2,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "vipEvent": true,
       "rooftopEvent": true
@@ -538,6 +567,7 @@ window.GameBalanceData = {
       "spawnEnd": 2.1,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "jamEvent": true,
       "stinkEvent": true
@@ -549,6 +579,7 @@ window.GameBalanceData = {
       "spawnEnd": 2.2,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "checkoutEvent": true
     },
@@ -559,6 +590,7 @@ window.GameBalanceData = {
       "spawnEnd": 2.3,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "vipEvent": true,
       "rooftopEvent": true,
@@ -572,6 +604,7 @@ window.GameBalanceData = {
       "spawnEnd": 2.4,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "vipEvent": true,
       "rooftopEvent": true,
@@ -598,6 +631,7 @@ window.GameBalanceData = {
       "spawnEnd": 0.4,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "counterweightEnabled": true,
       "counterweightIntro": true
     },
@@ -608,6 +642,7 @@ window.GameBalanceData = {
       "spawnEnd": 0.75,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "counterweightEnabled": true,
       "openPlanIntro": true
     },
@@ -618,6 +653,7 @@ window.GameBalanceData = {
       "spawnEnd": 1.2,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "counterweightEnabled": true,
       "zoningEnabled": true,
       "openPlanIntro": true
@@ -626,29 +662,47 @@ window.GameBalanceData = {
       "floors": 15,
       "lifts": 10,
       "liftCapacity": 1,
-      "spawnStart": 1.6,
-      "spawnEnd": 2.4,
+      "spawnStart": 2.8,
+      "spawnEnd": 3.6,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "capsuleMode": true,
       "capsuleTravelSecPerFloor": 0.2,
       "jamMinSec": 6,
       "jamMaxSec": 10,
-      "demandCurrents": 2
+      "demandCurrents": 2,
+      "eventExclusions": [
+        "checkout",
+        "vip",
+        "rooftop",
+        "stink",
+        "gym",
+        "roomService"
+      ]
     },
     "25": {
       "floors": 30,
       "lifts": 20,
       "liftCapacity": 1,
-      "spawnStart": 2.2,
-      "spawnEnd": 3.2,
+      "spawnStart": 4,
+      "spawnEnd": 5,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "creditMultiplier": 0.15,
       "capsuleMode": true,
       "capsuleTravelSecPerFloor": 0.2,
       "jamMinSec": 6,
       "jamMaxSec": 10,
-      "demandCurrents": 2.5
+      "demandCurrents": 2.5,
+      "eventExclusions": [
+        "checkout",
+        "vip",
+        "rooftop",
+        "stink",
+        "gym",
+        "roomService"
+      ]
     }
   }
 };

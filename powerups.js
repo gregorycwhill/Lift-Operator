@@ -17,28 +17,59 @@ const PowerUps = {
         wideDoors: 0
     },
 
+    timerNow: function() {
+        return (window.Game && Number.isFinite(window.Game.virtualTime)) ? window.Game.virtualTime : Date.now();
+    },
+
+    setLiftTimer: function(lift, key, duration) {
+        const seconds = Math.max(0, Number(duration) || 0);
+        lift[key] = seconds;
+        lift[`${key}ExpiresAt`] = this.timerNow() + seconds * 1000;
+    },
+
+    setGlobalTimer: function(key, duration) {
+        const seconds = Math.max(0, Number(duration) || 0);
+        this.timers[key] = seconds;
+        const expiry = this.timerNow() + seconds * 1000;
+        this.timerExpiresAt[key] = expiry;
+        this.timers[`${key}ExpiresAt`] = expiry;
+    },
+
+    timerExpiresAt: {},
+
+    shiftTimers: function(durationMs) {
+        const shift = Math.max(0, Number(durationMs) || 0);
+        if (!shift) return;
+        Object.keys(this.timerExpiresAt).forEach(key => { this.timerExpiresAt[key] += shift; });
+        Object.keys(this.timers).filter(key => key.endsWith('ExpiresAt')).forEach(key => { this.timers[key] += shift; });
+        Registry.lifts.forEach(lift => Object.keys(lift).filter(key => key.endsWith('ExpiresAt')).forEach(key => { lift[key] += shift; }));
+    },
+
+    refreshTimer: function(holder, key, now) {
+        const expiryKey = `${key}ExpiresAt`;
+        if (!Number.isFinite(holder[expiryKey])) {
+            if (Number(holder[key]) > 0) holder[expiryKey] = now + Number(holder[key]) * 1000;
+            else return;
+        }
+        const before = holder[key] || 0;
+        holder[key] = Math.max(0, Math.ceil((holder[expiryKey] - now) / 1000));
+        if (before > 0 && holder[key] <= 0 && key === 'tardisTimer') holder.tardisExpiryExodus = true;
+    },
+
     init: function() {
         // Initialization can remain empty as we moved away from floor arrays
     },
 
-    tick: function() {
+    tick: function(now = this.timerNow()) {
         if (!Registry.gameActive) return;
-        
-        // Decrement Global Tier 3 Timers
-        if (this.timers.jamImmunity > 0) this.timers.jamImmunity--;
-        if (this.timers.stinkImmunity > 0) this.timers.stinkImmunity--;
-        if (this.timers.globalAngerPause > 0) this.timers.globalAngerPause--;
-        if (this.timers.globalTurbo > 0) this.timers.globalTurbo--;
-        if (this.timers.globalTardis > 0) {
-            this.timers.globalTardis--;
-            if (this.timers.globalTardis === 0) Registry.lifts.forEach(lift => { lift.tardisExpiryExodus = true; });
+        // Expiry is derived from the active gameplay clock, not from the
+        // number of setInterval callbacks received by the browser.
+        ['jamImmunity', 'stinkImmunity', 'globalAngerPause', 'globalTurbo', 'globalTardis', 'wideDoors'].forEach(key => this.refreshTimer(this.timers, key, now));
+        Registry.lifts.forEach(lift => ['tardisTimer', 'turboTimer', 'freshenerTimer', 'musakTimer', 'doubleDeckerTimer', 'openPlanTimer'].forEach(key => this.refreshTimer(lift, key, now)));
+        if (this.timers.globalTardis <= 0 && this.timerExpiresAt.globalTardis && this.timerExpiresAt.globalTardis <= now) {
+            Registry.lifts.forEach(lift => { lift.tardisExpiryExodus = true; });
         }
-        if (this.timers.wideDoors > 0) {
-            this.timers.wideDoors--;
-            if (this.timers.wideDoors <= 0) {
-                Config.boardingSpeedMultiplier = 1.0;
-            }
-        }
+        if (this.timers.wideDoors <= 0) Config.boardingSpeedMultiplier = 1.0;
     },
 
     calculateRoundPoints: function() {
@@ -55,7 +86,8 @@ const PowerUps = {
         if (Registry.stats.timeLeft > 0) {
             points += Math.floor(Registry.stats.timeLeft / standard.remainingTimeIntervalSec);
         }
-        return Math.floor(points * (standard.creditMultiplier || 1));
+        const roundMultiplier = Number(Config.GAME_DATA.rounds[Registry.stats.round]?.creditMultiplier);
+        return Math.floor(points * (Number.isFinite(roundMultiplier) ? roundMultiplier : (standard.creditMultiplier || 1)));
     },
 
     showEffectOnLift: function(liftId, icon) {
@@ -140,30 +172,30 @@ const PowerUps = {
                 { cost: window.Config.GAME_DATA.powerups.wrench.tiers[1].cost, desc: 'Instantly fix ALL jammed lifts.', target: 'instant', 
                   execute: () => { Registry.lifts.forEach(l => { l.jamTimer = 0; PowerUps.showEffectOnLift(l.id, '🔧'); }); } },
                 { cost: window.Config.GAME_DATA.powerups.wrench.tiers[2].cost, desc: `Fix ALL lifts + ${window.Config.GAME_DATA.powerups.wrench.tiers[2].duration}s Global Jam Immunity.`, target: 'instant', 
-                  execute: () => { Registry.lifts.forEach(l => { l.jamTimer = 0; PowerUps.showEffectOnLift(l.id, '🔧'); }); PowerUps.timers.jamImmunity = window.Config.GAME_DATA.powerups.wrench.tiers[2].duration; } }
+                  execute: () => { Registry.lifts.forEach(l => { l.jamTimer = 0; PowerUps.showEffectOnLift(l.id, '🔧'); }); PowerUps.setGlobalTimer('jamImmunity', window.Config.GAME_DATA.powerups.wrench.tiers[2].duration); } }
             ]
         },
         freshener: {
             id: 'freshener', name: 'Air Freshener', icon: '🌲',
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.freshener.tiers[0].cost, desc: `Clears stink + ${window.Config.GAME_DATA.powerups.freshener.tiers[0].duration}s Immunity to 1 lift.`, target: 'lift', 
-                  execute: (liftId, floorId) => { Registry.lifts[liftId].stinkTimer = 0; Registry.lifts[liftId].freshenerTimer = window.Config.GAME_DATA.powerups.freshener.tiers[0].duration; PowerUps.showEffectOnLift(liftId, '🌲'); } },
+                  execute: (liftId, floorId) => { Registry.lifts[liftId].stinkTimer = 0; PowerUps.setLiftTimer(Registry.lifts[liftId], 'freshenerTimer', window.Config.GAME_DATA.powerups.freshener.tiers[0].duration); PowerUps.showEffectOnLift(liftId, '🌲'); } },
                 { cost: window.Config.GAME_DATA.powerups.freshener.tiers[1].cost, desc: `Clears stink + ${window.Config.GAME_DATA.powerups.freshener.tiers[1].duration}s Immunity to ALL lifts.`, target: 'instant', 
-                  execute: () => { Registry.lifts.forEach(l => { l.stinkTimer = 0; l.freshenerTimer = window.Config.GAME_DATA.powerups.freshener.tiers[1].duration; PowerUps.showEffectOnLift(l.id, '🌲'); }); } },
+                  execute: () => { Registry.lifts.forEach(l => { l.stinkTimer = 0; PowerUps.setLiftTimer(l, 'freshenerTimer', window.Config.GAME_DATA.powerups.freshener.tiers[1].duration); PowerUps.showEffectOnLift(l.id, '🌲'); }); } },
                 { cost: window.Config.GAME_DATA.powerups.freshener.tiers[2].cost, desc: `Clears ALL lifts + ${window.Config.GAME_DATA.powerups.freshener.tiers[2].duration}s Global Stink Immunity.`, target: 'instant', 
-                  execute: () => { Registry.lifts.forEach(l => { l.stinkTimer = 0; PowerUps.showEffectOnLift(l.id, '🌲'); }); PowerUps.timers.stinkImmunity = window.Config.GAME_DATA.powerups.freshener.tiers[2].duration; } }
+                  execute: () => { Registry.lifts.forEach(l => { l.stinkTimer = 0; PowerUps.showEffectOnLift(l.id, '🌲'); }); PowerUps.setGlobalTimer('stinkImmunity', window.Config.GAME_DATA.powerups.freshener.tiers[2].duration); } }
             ]
         },
         musak: {
             id: 'musak', name: 'Calming Musak', icon: '🎵',
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.musak.tiers[0].cost, desc: `Pauses anger timers in 1 lift for ${window.Config.GAME_DATA.powerups.musak.tiers[0].duration}s.`, target: 'lift', 
-                  execute: (liftId, floorId) => { Registry.lifts[liftId].musakTimer = window.Config.GAME_DATA.powerups.musak.tiers[0].duration; PowerUps.showEffectOnLift(liftId, '🎵'); } },
+                  execute: (liftId, floorId) => { PowerUps.setLiftTimer(Registry.lifts[liftId], 'musakTimer', window.Config.GAME_DATA.powerups.musak.tiers[0].duration); PowerUps.showEffectOnLift(liftId, '🎵'); } },
                 { cost: window.Config.GAME_DATA.powerups.musak.tiers[1].cost, desc: `Pauses anger timers in ALL lifts for ${window.Config.GAME_DATA.powerups.musak.tiers[1].duration}s.`, target: 'instant', 
-                  execute: () => { Registry.lifts.forEach(l => { l.musakTimer = window.Config.GAME_DATA.powerups.musak.tiers[1].duration; PowerUps.showEffectOnLift(l.id, '🎵'); }); } },
+                  execute: () => { Registry.lifts.forEach(l => { PowerUps.setLiftTimer(l, 'musakTimer', window.Config.GAME_DATA.powerups.musak.tiers[1].duration); PowerUps.showEffectOnLift(l.id, '🎵'); }); } },
                 { cost: window.Config.GAME_DATA.powerups.musak.tiers[2].cost, desc: `Pauses EVERYTHING for ${window.Config.GAME_DATA.powerups.musak.tiers[2].duration}s & reduces anger by 1 level.`, target: 'instant', 
                   execute: () => { 
-                      PowerUps.timers.globalAngerPause = window.Config.GAME_DATA.powerups.musak.tiers[2].duration; 
+                      PowerUps.setGlobalTimer('globalAngerPause', window.Config.GAME_DATA.powerups.musak.tiers[2].duration);
                       Registry.lifts.forEach(l => PowerUps.showEffectOnLift(l.id, '🎵'));
                       const soothe = (g) => {
                           if (g.status === GuestStatus.CRITICAL) { g.status = GuestStatus.ANNOYED; g.spawnTime += (Config.annoyedSec - Config.happySec) * 1000; }
@@ -179,21 +211,21 @@ const PowerUps = {
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.turbo.tiers[0].cost, desc: `1 lift travels at Turbo speed (${window.Config.GAME_DATA.powerups.turbo.tiers[0].scalar}) for ${window.Config.GAME_DATA.powerups.turbo.tiers[0].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].turboTimer = window.Config.GAME_DATA.powerups.turbo.tiers[0].duration; 
+                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'turboTimer', window.Config.GAME_DATA.powerups.turbo.tiers[0].duration);
                       Registry.lifts[liftId].activeTurboSpeed = window.Config.GAME_DATA.powerups.turbo.tiers[0].scalar;
                       PowerUps.showEffectOnLift(liftId, '🚀'); 
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.turbo.tiers[1].cost, desc: `1 lift travels at Max Turbo speed (${window.Config.GAME_DATA.powerups.turbo.tiers[1].scalar}) for ${window.Config.GAME_DATA.powerups.turbo.tiers[1].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].turboTimer = window.Config.GAME_DATA.powerups.turbo.tiers[1].duration; 
+                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'turboTimer', window.Config.GAME_DATA.powerups.turbo.tiers[1].duration);
                       Registry.lifts[liftId].activeTurboSpeed = window.Config.GAME_DATA.powerups.turbo.tiers[1].scalar;
                       PowerUps.showEffectOnLift(liftId, '🚀'); 
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.turbo.tiers[2].cost, desc: `ALL lifts travel at Max Turbo speed (${window.Config.GAME_DATA.powerups.turbo.tiers[2].scalar}) for ${window.Config.GAME_DATA.powerups.turbo.tiers[2].duration}s.`, target: 'instant', 
                   execute: () => { 
-                      PowerUps.timers.globalTurbo = window.Config.GAME_DATA.powerups.turbo.tiers[2].duration; 
+                      PowerUps.setGlobalTimer('globalTurbo', window.Config.GAME_DATA.powerups.turbo.tiers[2].duration);
                       Registry.lifts.forEach(l => PowerUps.showEffectOnLift(l.id, '🚀')); 
                   } 
                 }
@@ -203,22 +235,22 @@ const PowerUps = {
             id: 'tardis', name: 'TARDIS Mode', icon: '🌌',
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.tardis.tiers[0].cost, desc: `1 lift gets infinite capacity for ${window.Config.GAME_DATA.powerups.tardis.tiers[0].duration}s.`, target: 'lift', 
-                  execute: (liftId, floorId) => { Registry.lifts[liftId].tardisTimer = window.Config.GAME_DATA.powerups.tardis.tiers[0].duration; PowerUps.showEffectOnLift(liftId, '🌌'); PowerUps.announceLiftCapacity(liftId); } },
+                  execute: (liftId, floorId) => { PowerUps.setLiftTimer(Registry.lifts[liftId], 'tardisTimer', window.Config.GAME_DATA.powerups.tardis.tiers[0].duration); PowerUps.showEffectOnLift(liftId, '🌌'); PowerUps.announceLiftCapacity(liftId); } },
                 { cost: window.Config.GAME_DATA.powerups.tardis.tiers[1].cost, desc: `ALL lifts get infinite capacity for ${window.Config.GAME_DATA.powerups.tardis.tiers[1].duration}s.`, target: 'instant', 
-                  execute: () => { Registry.lifts.forEach(l => { l.tardisTimer = window.Config.GAME_DATA.powerups.tardis.tiers[1].duration; PowerUps.showEffectOnLift(l.id, '🌌'); PowerUps.announceLiftCapacity(l.id); }); } },
+                  execute: () => { Registry.lifts.forEach(l => { PowerUps.setLiftTimer(l, 'tardisTimer', window.Config.GAME_DATA.powerups.tardis.tiers[1].duration); PowerUps.showEffectOnLift(l.id, '🌌'); PowerUps.announceLiftCapacity(l.id); }); } },
                 { cost: window.Config.GAME_DATA.powerups.tardis.tiers[2].cost, desc: `ALL lifts get infinite capacity for ${window.Config.GAME_DATA.powerups.tardis.tiers[2].duration}s.`, target: 'instant', 
-                  execute: () => { PowerUps.timers.globalTardis = window.Config.GAME_DATA.powerups.tardis.tiers[2].duration; Registry.lifts.forEach(l => { PowerUps.showEffectOnLift(l.id, '🌌'); PowerUps.announceLiftCapacity(l.id); }); } }
+                  execute: () => { PowerUps.setGlobalTimer('globalTardis', window.Config.GAME_DATA.powerups.tardis.tiers[2].duration); Registry.lifts.forEach(l => { PowerUps.showEffectOnLift(l.id, '🌌'); PowerUps.announceLiftCapacity(l.id); }); } }
             ]
         },
         doors: {
             id: 'doors', name: 'Wide Doors', icon: '🚪',
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.doors.tiers[0].cost, desc: `Increase boarding speed (${window.Config.GAME_DATA.powerups.doors.tiers[0].scalar}x delay) for ${window.Config.GAME_DATA.powerups.doors.tiers[0].duration}s.`, target: 'instant', 
-                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[0].scalar; PowerUps.timers.wideDoors = window.Config.GAME_DATA.powerups.doors.tiers[0].duration; PowerUps.flashScreen('rgba(241, 196, 15, 0.4)'); } },
+                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[0].scalar; PowerUps.setGlobalTimer('wideDoors', window.Config.GAME_DATA.powerups.doors.tiers[0].duration); PowerUps.flashScreen('rgba(241, 196, 15, 0.4)'); } },
                 { cost: window.Config.GAME_DATA.powerups.doors.tiers[1].cost, desc: `Further increase boarding speed (${window.Config.GAME_DATA.powerups.doors.tiers[1].scalar}x delay) for ${window.Config.GAME_DATA.powerups.doors.tiers[1].duration}s.`, target: 'instant', 
-                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[1].scalar; PowerUps.timers.wideDoors = window.Config.GAME_DATA.powerups.doors.tiers[1].duration; PowerUps.flashScreen('rgba(241, 196, 15, 0.5)'); } },
+                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[1].scalar; PowerUps.setGlobalTimer('wideDoors', window.Config.GAME_DATA.powerups.doors.tiers[1].duration); PowerUps.flashScreen('rgba(241, 196, 15, 0.5)'); } },
                 { cost: window.Config.GAME_DATA.powerups.doors.tiers[2].cost, desc: `Instantly board/unboard all guests for ${window.Config.GAME_DATA.powerups.doors.tiers[2].duration}s.`, target: 'instant', 
-                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[2].scalar; PowerUps.timers.wideDoors = window.Config.GAME_DATA.powerups.doors.tiers[2].duration; PowerUps.flashScreen('rgba(241, 196, 15, 0.7)'); } }
+                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[2].scalar; PowerUps.setGlobalTimer('wideDoors', window.Config.GAME_DATA.powerups.doors.tiers[2].duration); PowerUps.flashScreen('rgba(241, 196, 15, 0.7)'); } }
             ]
         },
         groupThink: {
@@ -303,7 +335,7 @@ const PowerUps = {
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].cost, desc: `Bronze: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration;
+                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration);
                       Registry.lifts[liftId].isDoubleDecker = true;
                       PowerUps.showEffectOnLift(liftId, '🚡'); 
                       PowerUps.announceLiftCapacity(liftId);
@@ -311,7 +343,7 @@ const PowerUps = {
                 },
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].cost, desc: `Silver: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration;
+                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration);
                       Registry.lifts[liftId].isDoubleDecker = true;
                       PowerUps.showEffectOnLift(liftId, '🚡'); 
                       PowerUps.announceLiftCapacity(liftId);
@@ -320,7 +352,7 @@ const PowerUps = {
                 { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].cost, desc: `Gold: ALL lifts gain double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration}s.`, target: 'instant', 
                   execute: () => { 
                       Registry.lifts.forEach(l => {
-                          l.doubleDeckerTimer = window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration;
+                          PowerUps.setLiftTimer(l, 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration);
                           l.isDoubleDecker = true;
                           PowerUps.showEffectOnLift(l.id, '🚡');
                           PowerUps.announceLiftCapacity(l.id);
@@ -334,20 +366,20 @@ const PowerUps = {
             tiers: [
                 { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[0].cost, desc: `Bronze: One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration;
+                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration);
                       PowerUps.showEffectOnLift(liftId, '↔️'); 
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[1].cost, desc: `Silver: One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration}s.`, target: 'lift', 
                   execute: (liftId, floorId) => { 
-                      Registry.lifts[liftId].openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration;
+                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration);
                       PowerUps.showEffectOnLift(liftId, '↔️'); 
                   } 
                 },
                 { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[2].cost, desc: `Gold: ALL lifts allow lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration}s.`, target: 'instant', 
                   execute: () => { 
                       Registry.lifts.forEach(l => {
-                          l.openPlanTimer = window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration;
+                          PowerUps.setLiftTimer(l, 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration);
                           PowerUps.showEffectOnLift(l.id, '↔️');
                       });
                   } 

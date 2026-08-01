@@ -233,7 +233,7 @@ window.initializeUI = function() {
         const roundOverlay = document.getElementById("roundModalOverlay");
         if (roundOverlay) roundOverlay.style.display = "none";
         
-        window.startRoundCountdown(Math.max(5, Registry.lifts.length * 3));
+        window.startRoundCountdown(Registry.stats.round === 2 ? 10 : 5);
     };
     window.beginSelectedRound = beginSelectedRound;
 

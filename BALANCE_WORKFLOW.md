@@ -2,7 +2,7 @@
 
 **Status:** Active enduring process reference  
 **Owner class:** Product, design, and engineering  
-**Last reviewed:** 25 July 2026
+**Last reviewed:** 1 August 2026
 
 ## 1. Objective
 
@@ -35,7 +35,7 @@ Accept, revise, or reject
 
 ## 2. Sources of truth
 
-The final system should use:
+The active system uses:
 
 - `Game Play Map.md` for round intent and readable target tables.
 - `Game Economy.md` for payout, prices, unlocks, and retry rules.
@@ -43,6 +43,9 @@ The final system should use:
 - Generated `config.js` data consumed by the engine.
 
 Markdown should explain and review the design. The machine-readable file should prevent transcription ambiguity.
+
+Runtime parameters belong in `design/game-balance.v1.json`. Non-runtime acceptance thresholds, fixed seed matrices,
+and strategy profiles belong in versioned test data so they can be reviewed without becoming browser configuration.
 
 ## 3. Proposed data pipeline
 
@@ -186,7 +189,30 @@ Runs fixed seeds using defined strategy profiles:
 
 Simulation should identify impossibility, dominance, and sensitivity. It should not declare a round fun.
 
-All-Sweep is the principal behavioural floor: every lift uses Sweep with no manual targeting, policy changes, or power-ups. It must fail every campaign round from Round 2 onward. For Round 2 it should fail late and be recoverable with minimal high-leverage intervention; later rounds should show increasingly clear separation between all-Sweep and the intended strategy. Round 12 compares survival duration rather than completion.
+All-Sweep is the principal behavioural floor: every lift uses Sweep with no manual targeting, policy changes, custom
+automation, or power-ups. It must fail every fixed gate seed in every campaign round from R2 through R25. For R2 it
+should fail late and be recoverable with minimal high-leverage intervention. R12 is measured by endurance duration:
+all-Sweep loses its twentieth life before 240 seconds, while a competent strategy survives 240–480 seconds. The
+all-Sweep negative control must fail every fixed seed; every intended-profile failure requires trace review
+and a human-evidence disposition.
+
+### Intended-profile remediation phase
+
+The positive comparator must be a versioned model of the lesson each round teaches, not a generic rescue heuristic.
+Profiles are grouped as: hybrid rescue (R2–R3), triage/redundancy (R4–R6), event handling (R7–R9), advanced control
+(R10–R13), zoned fleet (R14–R20), counterweight/Open Plan (R21–R23), and capsule dispatch (R24–R25). Each profile
+declares lift automation, bounded manual decisions, allowed power-ups, event response, and success metric outside
+runtime game data.
+
+Recover positive acceptance sequentially: defer R2 for the current phase, then R3–R6, then each later family. Change one canonical parameter family
+at a time and retain before/after acceptance reports. Do not alter the fixed all-Sweep seed set, all-Sweep setup, or
+R12 timing bounds to obtain a pass.
+
+Every failed intended seed needs a compact causal trace: automation transitions; manual-target acceptance or rejection
+with reason; boarding/refusal; power-up and event lifecycle; life-loss cause; and current zoning/counterweight state.
+Classify it as profile defect, engine defect, accepted variance, or canonical tuning candidate. A round is balance
+accepted only after all-Sweep fails every seed. Intended profile results are retained with traces for diagnosis and
+human playtest comparison; they are not a simulator release gate or a substitute for observed player performance.
 
 For each intended strategy, report improvement over all-Sweep in survival time, first peril crossing, time below Survival Index 1, delivery deficit, P90 journey time, critical exposure, and manual decisions required.
 
@@ -196,7 +222,11 @@ Run the committed all-Sweep matrix with:
 npm.cmd run balance:matrix
 ```
 
-The command executes three fixed seeds for Rounds 2–13 and regenerates `reports/all-sweep-baseline.json` plus its readable Markdown summary. `npm.cmd run balance:report:check` verifies that the committed report matches both canonical balance data and the matrix definition. Known balance violations remain report findings rather than making the general correctness suite fail.
+The legacy command currently executes three fixed seeds for Rounds 2–13 and regenerates
+`reports/all-sweep-baseline.json`. It is historical diagnostic evidence until replaced by the R2–R25 acceptance matrix.
+The replacement has two distinct commands: one validates evidence integrity and provenance; the other fails when the
+all-Sweep negative-control rule is unmet. A well-formed report containing intended-profile weaknesses remains valid
+diagnostic evidence.
 
 ### Early-round candidate experiments
 
@@ -216,7 +246,10 @@ Rounds 4 and 5 candidate experiments also remain exploratory. Increased traffic 
 
 ### Campaign economy simulation
 
-Models struggling, typical, and expert spending paths across all rounds.
+The replacement campaign economy model covers struggling, typical, and expert paths across all 25 authored rounds. It
+uses actual canonical payout, unlock, retry, consumable, and achievement rules, then reports affordability, savings,
+dominant-purchase share, and permanent-progression risk. Current canonical prices remain for the 1.0 release candidate;
+inflation is measured and documented rather than silently corrected.
 
 ### Campaign envelope
 
@@ -232,7 +265,7 @@ The strong result is selected per seed from a small, auditable portfolio rather 
 
 Resource-supported profiles select items from observed conditions rather than inventory order: Wrench for jams, Freshener for stink, Musak for critical exposure, and throughput items for large queues. Where available, the portfolio compares Sweep, Priority Sweep, and Weighted Voting. A band-wide pressure change is rejected wholesale if it creates unattended survivors without establishing competent survival.
 
-Resource-supported profiles also perform bounded manual rescues: when visible pressure crosses the intervention threshold, one available lift is redirected to the highest-scoring urgent queue. This represents the intended hybrid play loop rather than treating power-up activation alone as competent play. The July 2026 late-campaign 20% pressure experiment failed the batch gate—Rounds 7 and 8 gained unattended survivors while Rounds 9–11 and 13 still lacked competent survival—and was rolled back. Further late-round experiments should add event-specific response logic or improve the leverage of the introduced solution before changing arrival curves.
+Resource-supported profiles also perform bounded manual rescues: when visible pressure crosses the intervention threshold, one available lift is redirected to the highest-scoring urgent queue. This represents the intended hybrid play loop rather than treating power-up activation alone as competent play. The current full report is 24/24 all-Sweep and 9/24 intended; the intended result is diagnostic only. Virtual acceptance runs are synchronous, use a unique realm identity, and pin wall-clock fallbacks to virtual time, so browser timers cannot contaminate fixed-seed results. First-pass event-aware, zoned, and pair-aware controllers use the same production target route, bounded intervention budgets, party-state filtering, priority queue scoring, and classified guest/VIP life-loss traces. Their current failures are evidence for further controller-policy and human-playtest work, not for changing arrival curves or capacities.
 
 ## 7. Human playtest protocol
 

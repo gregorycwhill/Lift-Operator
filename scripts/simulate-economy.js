@@ -20,7 +20,7 @@ function simulateProfile(name, scenario) {
         const round = index + 1;
         const beforePayout = bank;
         bank += payout;
-        const affordable = availableItems(Math.min(13, round + 1), tier).filter(item => item.cost <= bank);
+        const affordable = availableItems(Math.min(Object.keys(balance.rounds).length, round + 1), tier).filter(item => item.cost <= bank);
         const purchase = affordable.length ? affordable[affordable.length - 1] : null;
         if (purchase) bank -= purchase.cost;
         return { round, beforePayout, payout, purchase, endingBank: bank };
@@ -28,11 +28,14 @@ function simulateProfile(name, scenario) {
     return { name, preference: scenario.preference, endingBank: bank, rounds };
 }
 
-const results = Object.entries(scenarios).map(([name, scenario]) => simulateProfile(name, scenario));
+const results = Object.entries(scenarios).map(([name, scenario]) => ({ ...simulateProfile(name, scenario), scenario }));
 const errors = [];
 results.forEach(profile => {
     if (profile.rounds.some(round => round.endingBank < 0)) errors.push(`${profile.name}: negative bank.`);
-    if (profile.rounds.length !== 13) errors.push(`${profile.name}: expected 13 rounds.`);
+    if (profile.rounds.length !== 25) errors.push(`${profile.name}: expected 25 rounds.`);
+    if (profile.scenario.achievementRewards !== undefined && profile.scenario.achievementRewards.some(reward => reward < 0)) {
+        errors.push(`${profile.name}: negative achievement reward.`);
+    }
 });
 
 // A failed attempt is a rollback transaction: provisional spend and attempt income disappear.

@@ -4,7 +4,7 @@
 **Campaign scope:** 25 implemented authored rounds; tuning remains evidence-led
 **Status:** Active product design reference; not a delivery-status or test-evidence record
 **Owner class:** Product and design
-**Last reviewed:** 31 July 2026
+**Last reviewed:** 1 August 2026
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
 **Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
@@ -47,13 +47,16 @@ numbers live in `design/game-balance.v1.json`; current delivery evidence belongs
 9. Every mastery wall must support multiple solution classes.
 10. A new lift increases coordination complexity and should not coincide with too many other introductions.
 11. Built-in automation is a force multiplier, never an autoplay button.
-12. From Round 2 onward, unattended all-Sweep play with no manual intervention or power-ups must fail every campaign round.
+12. From Round 2 onward, unattended all-Sweep play with every lift on Sweep and no manual intervention, policy change,
+    custom automation, or power-up must fail every fixed gate seed through Round 25.
 13. Intended strategies must materially outperform all-Sweep through timely intervention, specialization, policy changes, or resource use.
 14. Hands-Free completion is an advanced custom-automation mastery outcome; built-in automations never qualify.
 
 ### Round-start orientation contract
 
-Every attempt begins with a visible five-second countdown after the briefing closes. The round timer and guest spawning remain frozen, while lift automation controls are usable. This preserves arcade pressure while giving the player a short orientation and role-assignment window.
+Every attempt begins with a visible countdown after the briefing closes: ten seconds in Round 2 to teach automation,
+and five seconds in every other round. The round timer and guest spawning remain frozen, while lift automation controls
+are usable. The countdown can be dismissed through its dedicated start-now control.
 
 Teaching cues are transient rather than permanent HUD elements. When built-in automation first becomes available, its controls pulse in a friendly, colourful way. The same cue system must support first-use discovery of player-authored custom automation and automations shared with the player. Interaction acknowledges a cue so it does not repeatedly nag an established player.
 
@@ -68,6 +71,10 @@ Lift capacity appears as a floating effect above each lift during the countdown,
 
 ### All-Sweep behavioural floor
 
+From Round 14 onward, welcome briefings identify active inherited challenge systems so loadout choices are informed by
+the actual round composition. Room Service guests are never Checkout guests; Gym Bros may board a stinky lift because
+they are immune to stink.
+
 The minimum competent automated behaviour is:
 
 ```text
@@ -77,11 +84,16 @@ No automation changes
 No power-ups
 ```
 
-This baseline must not complete any round from Round 2 onward. It proves that the player must remain engaged rather than select Automation once and watch the round complete.
+This baseline must not complete any fixed gate seed from Round 2 onward. It proves that the player must remain engaged
+rather than select Automation once and watch the round complete.
 
 This rule applies to built-in policies. From the custom-automation phase onward, a player-authored policy may complete an eligible round unattended and earn Hands-Free recognition because designing that policy is itself the player intervention and mastery challenge.
 
-Failure timing still matters. Round 2 all-Sweep should fail late enough for Sweep's workload benefit to be obvious and should be recoverable through a small number of perceptive manual interventions. Later rounds should defeat all-Sweep through their specific, diagnosable bottleneck. Round 12 measures materially shorter Endurance survival rather than binary completion.
+Failure timing still matters. Round 2 all-Sweep should fail late enough for Sweep's workload benefit to be obvious and
+should be recoverable through a small number of perceptive manual interventions. Later rounds should defeat all-Sweep
+through their specific, diagnosable bottleneck. Round 12 measures endurance duration: all-Sweep loses its twentieth life
+before 240 seconds, while a competent strategy survives 240–480 seconds. Intended strategies must survive at least 80%
+of their fixed seed set; remaining deterministic failures require trace and human-evidence review.
 
 ## 4. Mechanic introduction sequence
 
@@ -136,11 +148,11 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | R | Theme | Objective | Floors | Lifts | Spawn start→end | Primary introduction | Shop unlock |
 | ---: | --- | --- | ---: | ---: | ---: | --- | --- |
 | 1 | First Shift | Survive 180s | 10 | 1 | 0.15→0.30 | Manual routing | None |
-| 2 | Let It Sweep | Survive 180s | 10 | 1 | 0.40→0.52 | Sweep | None |
+| 2 | Let It Sweep | Survive 180s | 10 | 1 | 0.60→0.75 | Sweep | None |
 | 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
 | 4 | Triage Protocol | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
 | 5 | Democracy | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
-| 6 | Maintenance Crisis | Survive 180s | 15 | 3 | 0.90→1.05 | Lift jams, redundancy | Wrench |
+| 6 | Maintenance Crisis | Survive 180s | 15 | 3 | 1.00→1.20 | Lift jams, redundancy | Wrench |
 | 7 | Checkout Rush | Survive 150s | 12 | 4 | 1.00→1.30 | Ground-floor funnel | Turbo |
 | 8 | VIP Security | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
 | 9 | Happy Hour | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |

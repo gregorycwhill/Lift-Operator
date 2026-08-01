@@ -43,7 +43,25 @@ for (let round = 1; round <= 25; round++) {
     assert(value.spawnStart > 0 && value.spawnEnd > 0, `Round ${round}: invalid spawn curve.`);
     assert(value.spawnEnd >= value.spawnStart, `Round ${round}: spawn curve decreases.`);
     assert(['SURVIVAL', 'ENDURANCE', 'PEDAL_SURVIVAL', 'QUOTA'].includes(value.objective), `Round ${round}: invalid objective.`);
+    if (value.counterweightEnabled) {
+        assert(value.floors % 2 === 1, `Round ${round}: counterweight buildings must have an odd floor count.`);
+        assert(value.lifts % 2 === 0, `Round ${round}: counterweight lifts must form complete pairs.`);
+    }
+    if (value.capsuleMode) {
+        assert(value.liftCapacity === 1, `Round ${round}: capsule lifts must have capacity one.`);
+        assert(Array.isArray(value.eventExclusions), `Round ${round}: capsule rounds must declare event exclusions.`);
+    }
 }
+
+const eventIds = new Set(['jam', 'checkout', 'vip', 'rooftop', 'stink', 'gym', 'roomService']);
+Object.entries(design.events || {}).forEach(([id, rule]) => {
+    assert(eventIds.has(id), `${id}: unknown event rule.`);
+    assert(Number.isInteger(rule.introducedRound) && rule.introducedRound >= 1 && rule.introducedRound <= 25,
+        `${id}: invalid introduction round.`);
+});
+Object.entries(rounds).forEach(([round, definition]) => {
+    (definition.eventExclusions || []).forEach(id => assert(eventIds.has(id), `Round ${round}: unknown event exclusion ${id}.`));
+});
 
 assert(rounds[12].objective === 'ENDURANCE', 'Round 12 must be Endurance.');
 assert(rounds[12].quota === undefined, 'Round 12 must not have a quota.');

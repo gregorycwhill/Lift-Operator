@@ -1,11 +1,11 @@
 # Major Release Candidate Delivery Plan
 
 **Document role:** Current implementation and release scope only
-**Status:** Active release-candidate hardening
+**Status:** Active release-candidate hardening — not promotable until the balance gate and human-device evidence are complete
 **Release target:** `1.0` (no release tag has been created)
 **Owner class:** Product and engineering
-**Last reviewed:** 31 July 2026
-**Implementation baseline:** `0822d81` on `master`
+**Last reviewed:** 1 August 2026
+**Implementation baseline:** Active remediation working tree based on `3dbfc5d` on `master`
 
 ## Outcome
 
@@ -26,22 +26,97 @@ commands, evidence, and playtest acceptance belong in `TEST_PLAN.md`. Completed 
 - Persistent Credits, Supply Closet loadouts, tiered power-ups, Settings, achievements, Leaderboard, and audio controls.
 - Desktop browser delivery through GitHub Pages from `master`.
 
+## Remediation programme
+
+The following programme is the current delivery scope. It restores the design-to-data-to-evidence chain for the full
+25-round campaign; it is not a new feature expansion.
+
+### Accepted decisions
+
+- Unattended all-Sweep must fail every fixed gate seed in every authored round from R2 through R25. R1 remains the
+  onboarding exception.
+- R12 expresses that rule as an endurance ceiling: all-Sweep loses its twentieth life before 240 seconds, while a
+  competent strategy survives for 240–480 seconds.
+- Intended-strategy profiles remain diagnostic comparators. Their failures require trace review, but do not block this
+  release candidate; human playtest reports determine whether a round is too easy, too hard, or appropriately tuned.
+- The current canonical power-up prices remain for the 1.0 release candidate. The scarcity-price redesign is deferred;
+  current inflation is documented and measured rather than silently retuned.
+
+### Balance, simulation, and economy recovery
+
+1. **Full-campaign balance acceptance:** versioned non-runtime acceptance data, fixed seeds, all-Sweep requirements,
+   intended/feasibility profiles, and R12 timing bounds are implemented. The enforceable gate is now the source of truth;
+   its current result is recorded in `reports/campaign-balance-acceptance.md`; it passes the all-Sweep negative-control
+   requirement while retaining intended-strategy outcomes for diagnosis.
+2. **Production-faithful simulation:** profiles now cover zoning, counterweights/Open Plan, and capsules; all-Sweep assigns
+   every lift; simulated commands use production targeting; reproducibility covers representative rounds. The hash-only
+   replay and placeholder robustness commands are retired from the supported npm surface pending a real action-log replay.
+3. **Economy evidence:** replace the fixed 13-round payout calculator with a 25-round current-price projection using
+   canonical payouts, unlocks, consumable use, retries, achievement rewards, and challenge-appropriate loadouts.
+   It must report affordability, savings, dominant purchases, and permanent-progression risk without changing prices.
+4. **Configuration authority:** move remaining active balance parameters into canonical data, remove or repair dead
+   compatibility/debug controls, and extend validation for event exclusions, counterweight geometry, capsule rules,
+   unlock availability, and required mechanic support.
+5. **Content parity:** completed for the current authored campaign. Canonical round data, the Gameplay Map, and player
+   briefings agree on R1–R25; the R15 VIP/Rooftop omission and R20's obsolete “final authored round” claim are
+   resolved. Re-audit only when a round definition or briefing changes.
+
+### Tooling and release hygiene
+
+6. Repair, complete, relabel, or retire the stale simulation utilities: the broken completion audit, hash-only replay,
+   placeholder robustness command, and misleading batch defaults.
+7. Separate correctness, balance, economy, and browser-performance gates. Add representative R24/R25 browser traces;
+   the headless simulator cannot prove frame rate, layout stability, or touch/click usability.
+8. Update enduring balance/testing guidance and archive superseded R2–R13-only reports as historical evidence.
+
 ## Remaining engineering work
 
 These are genuine unresolved implementation or diagnosis items, not historical checklist residue.
 
-1. **R22 manual-stop boarding:** reproduce the report deterministically and identify whether any remaining refusal is
-   caused by parking arbitration, capacity, zoning, passenger state, or another rule. Stale asynchronous Sweep targets
-   are already blocked; do not broaden boarding rules without a reproducible failing case.
-2. **Authored event gating:** implement the confirmed persistence rule consistently. Once an event is introduced, it
-   remains eligible in subsequent conventional rounds unless that round explicitly excludes it. Current runtime logic
-   already persists jam, Stink, and Gym through thresholds, but VIP/Rooftop scheduling still depends on introduction or
-   explicit inclusion flags. Canonical data needs explicit exclusions and one shared resolver for all event types.
-3. **R24/R25 performance evidence:** profile a representative R25 run. Target 60fps on the reference desktop, accept no
+1. **Balance acceptance remediation:** all-Sweep now fails all fixed seeds in R2–R25, but the positive comparator is
+   not yet a credible model of intended play. Execute the following phase without weakening the gate or silently
+   regenerating its seed set:
+   - Define versioned, round-family intended profiles: R2–R3 hybrid rescue; R4–R6 triage/redundancy; R7–R9 event
+     handling; R10–R13 advanced control; R14–R20 zoned fleet; R21–R23 counterweight/Open Plan; and R24–R25 capsule
+     dispatch. Each declares automation, bounded manual intervention, permitted loadout, timing rules, and win metric.
+   - Add compact failed-run traces: automation changes, accepted/rejected manual targets and reasons, boarding/refusal
+     reasons, power-up lifecycle, event lifecycle, life-loss cause, and zoning/counterweight state.
+   - Recover acceptance in sequence: R2 is deferred for the current phase; begin with R3–R6, then progress through each
+     later family only after the preceding family reaches its threshold. Preserve before/after reports and traces for
+     every canonical tuning change.
+   - Treat the all-Sweep setup, fixed seeds, and R12 bounds as immutable policy. The simulator gate passes only when
+     all-Sweep fails every seed. Intended profiles require trace/disposition review and browser/playtest evidence, but
+     their survival rate is diagnostic rather than a release threshold.
+   Current evidence: profile and trace infrastructure is implemented. The full gate is 24/24 all-Sweep rounds and
+   9/24 intended diagnostic-positive rounds: R3–R9 and R24–R25 are currently positive; R2 and R10–R23 are not. The full report is
+   authoritative for individual seeds and must be regenerated as one complete R2–R25 run. Virtual runs are now
+   synchronous, realm-unique, and wall-clock pinned, with regression coverage for subset/full run-order invariance. R2 is explicitly
+   deferred for this phase. R3–R6 remain the next staged recovery slice; later-family
+   failures are currently classified as profile-model gaps where event-specific criteria are required before balance
+   parameters are altered. The intended-strategy percentage is diagnostic only; the release gate is all-Sweep failure
+   in every required round. The complete round-by-round criteria are in `TEST_PLAN.md`.
+   First-pass event-aware (R10–R13), zoned (R14–R20), and pair-aware (R21–R23) controllers are implemented and their
+   traces now classify guest versus VIP life loss. They have not improved late-family acceptance yet: VIP penalties and
+   Rooftop release pressure remain the dominant evidence, so the next remediation is controller policy and human
+   validation, not spawn-rate or capacity changes.
+2. **R24/R25 performance evidence:** profile a representative R25 run. Target 60fps on the reference desktop, accept no
    sustained rate below 45fps, and investigate repeated long tasks above 50ms. Optimize only measured hotspots.
-4. **Release automation duration:** the long Auto-Pilot Alpha protocol takes approximately eight minutes and can make the
+3. **Release automation duration:** the long Auto-Pilot Alpha protocol takes approximately eight minutes and can make the
    aggregate local command exceed a ten-minute wrapper. Decide whether CI should retain the long gate, split it into a
    separate job, or use a shorter release smoke while keeping the long protocol scheduled.
+
+## Current release-candidate decision
+
+| Gate | Current evidence | Decision |
+| --- | --- | --- |
+| Engineering correctness | Syntax, docs, config, economy, unit, mechanics, integration, 124 broad Playwright tests, and Alpha/Beta/Gamma all pass. | Pass |
+| Evidence provenance | The full R2–R25 / five-seed acceptance report is current and passes integrity validation. | Pass |
+| Balance acceptance | All-Sweep is rejected in 24/24 required rounds; intended profiles are diagnostic (9/24 currently positive). | Pass for playtest; tuning remains open |
+| Capsule device performance | Deterministic headless smoke passes; reference-device frame and long-task evidence is not captured. | **Block** |
+| Broad playtest | Session protocol is ready; broader external feedback has not yet been recorded against this working tree. | **Block** |
+
+The implementation is therefore a tested release candidate *candidate*, not a promotable 1.0 release candidate. The
+balance threshold is intentionally not waived.
 
 ## Release acceptance requiring human evidence
 

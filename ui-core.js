@@ -4,7 +4,10 @@
 
 window.getLiftLayoutMetrics = function() {
     if (Registry.capsuleMode) {
-        return { shaftWidth: 30, liftWidth: 28, baseLeft: 415 };
+        // Keep a symmetric clearance around the capsule despite the 3px tube
+        // divider. The old 30/28 geometry put the car 4px right of centre and
+        // let its border overlap the divider.
+        return { shaftWidth: 34, liftWidth: 26, baseLeft: 412 };
     }
     const compact = Registry.lifts.length >= 8;
     return {
@@ -20,6 +23,7 @@ window.buildWorld = function() {
     if (!world) return;
     world.innerHTML = ''; 
     world.classList.toggle('capsule-bank', Boolean(Registry.capsuleMode));
+    world.classList.toggle('zoning-active', Boolean(Registry.isZoningEnabled?.()));
     
     const FIXED_BOARD_HEIGHT = 600; 
     const layout = window.getLiftLayoutMetrics();
@@ -66,6 +70,11 @@ window.buildWorld = function() {
             shaft.className = 'shaft';
             shaft.dataset.liftIndex = index;
             shaft.dataset.floorIndex = f;
+            const shaftLift = Registry.lifts[index];
+            if (Registry.isZoningEnabled?.()) {
+                shaft.classList.toggle('zone-served', Registry.isFloorInLiftZone(shaftLift, f));
+                shaft.classList.toggle('zone-unserved', !Registry.isFloorInLiftZone(shaftLift, f));
+            }
             row.appendChild(shaft);
         });
         world.appendChild(row);
@@ -214,6 +223,18 @@ window.updateLiftAutomationUI = function(liftIndex, mode) {
     const status = document.querySelector(`.automation-status[data-lift-index="${liftIndex}"]`);
     const policy = window.Game.AutomationController?.getPolicy?.(mode);
     if (status) status.textContent = `${policy?.name || mode}`;
+    window.updateZoneVisuals?.();
+};
+
+window.updateZoneVisuals = function() {
+    const zoning = Boolean(Registry.isZoningEnabled?.());
+    document.getElementById('world')?.classList.toggle('zoning-active', zoning);
+    document.querySelectorAll('.shaft[data-lift-index][data-floor-index]').forEach(shaft => {
+        const lift = Registry.lifts[Number(shaft.dataset.liftIndex)];
+        const floor = Number(shaft.dataset.floorIndex);
+        shaft.classList.toggle('zone-served', zoning && Registry.isFloorInLiftZone(lift, floor));
+        shaft.classList.toggle('zone-unserved', zoning && !Registry.isFloorInLiftZone(lift, floor));
+    });
 };
 
 window.updateLiftVisualState = function(lift, index, carEl) {

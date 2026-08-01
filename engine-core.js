@@ -131,6 +131,7 @@ window.resumeGame = function() {
         });
         Registry.parentTickTime += duration;
         Registry.lastSpawnTime += duration;
+        PowerUps.shiftTimers?.(duration);
         if (Registry.vipTargetTime > 0) Registry.vipTargetTime += duration;
         if (Registry.vipNextJourneyTime > 0) Registry.vipNextJourneyTime += duration;
         if (Registry.sunsetTargetTime > 0) Registry.sunsetTargetTime += duration;
@@ -145,6 +146,14 @@ window.resumeGame = function() {
 window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
     const lift = Registry.lifts[liftIndex];
     if (!lift) return false;
+    const isPolicyCommand = options.manualOverride === false;
+    const pair = Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)
+        ? Registry.lifts[lift.counterweightPartner]
+        : null;
+    if (isPolicyCommand && pair && Number.isFinite(Registry.counterweightLastPolicyFrame) &&
+        Registry.counterweightPolicyFrame === Registry.counterweightLastPolicyFrame) {
+        return false;
+    }
     const maxFloor = Math.max(0, Config.numFloors - 1);
     const target = Math.max(0, Math.min(maxFloor, Math.round(Number(targetFloor))));
     const setTarget = (targetLift, floor) => {
@@ -160,6 +169,7 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
         const partner = Registry.lifts[lift.counterweightPartner];
         if (partner) setTarget(partner, maxFloor - target);
     }
+    if (isPolicyCommand && pair) Registry.counterweightLastPolicyFrame = Registry.counterweightPolicyFrame;
     return true;
 };
 
@@ -247,11 +257,26 @@ window.getRoundDefinition = function(round, operation = null) {
     const supportedRound = Math.max(1, Math.min(25, parseInt(round) || 1));
     const configured = Config.GAME_DATA.rounds[supportedRound];
     const liftOverride = Number(Config[`liftsR${supportedRound}`]);
+    const spawnStartOverride = Number(Config[`spawnR${supportedRound}Start`]);
+    const spawnEndOverride = Number(Config[`spawnR${supportedRound}End`]);
+    const debugOverlay = Config.debugMode ? {
+        ...(Number.isFinite(spawnStartOverride) ? { spawnStart: spawnStartOverride } : {}),
+        ...(Number.isFinite(spawnEndOverride) ? { spawnEnd: spawnEndOverride } : {})
+    } : {};
     return {
         round: supportedRound,
         ...configured,
+        ...debugOverlay,
         lifts: Number.isFinite(liftOverride) && Config.debugMode ? Math.max(1, Math.min(20, liftOverride)) : configured.lifts
     };
+};
+
+window.isRoundEventEnabled = function(roundDefinition, eventId) {
+    const rules = Config.GAME_DATA.events || {};
+    const rule = rules[eventId];
+    const round = Number(roundDefinition?.round || Registry?.stats?.round || 0);
+    if (!rule || round < Number(rule.introducedRound || 1)) return false;
+    return !(roundDefinition.eventExclusions || []).includes(eventId);
 };
 
 window.createLiftState = function(id) {
@@ -307,16 +332,16 @@ window.createRoundState = function(round, seed, options = {}) {
         gymFloor: -1
     };
 
-    if (definition.round === 8 || definition.vipEvent === true) {
-        const minVipDelay = Math.max(10, Math.floor(Config.roundTime * 0.25));
-        const maxVipDelay = Math.max(minVipDelay, Math.floor(Config.roundTime * 0.35));
+    if (window.isRoundEventEnabled(definition, 'vip')) {
+        const minVipDelay = Math.max(10, Math.floor(Config.roundTime * Number(Config.GAME_DATA.system.vipArrivalDelayMinRatio || 0.25)));
+        const maxVipDelay = Math.max(minVipDelay, Math.floor(Config.roundTime * Number(Config.GAME_DATA.system.vipArrivalDelayMaxRatio || 0.35)));
         state.vipTargetTime = now + (window.getRandomInt(minVipDelay, maxVipDelay) * 1000);
         state.vipStage = 0;
     }
-    if (definition.round === 9 || definition.rooftopEvent === true) {
+    if (window.isRoundEventEnabled(definition, 'rooftop')) {
         state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
     }
-    if (definition.round >= 11 && !definition.capsuleMode) {
+    if (window.isRoundEventEnabled(definition, 'gym')) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
     }
 
@@ -408,6 +433,8 @@ window.clearAttemptInventory = function() {
     PowerUps.inventory = [];
     PowerUps.activeTargeting = null;
     Object.keys(PowerUps.timers).forEach(k => PowerUps.timers[k] = 0);
+    PowerUps.timerExpiresAt = {};
+    Registry.lifts.forEach(lift => Object.keys(lift).filter(key => key.endsWith('ExpiresAt')).forEach(key => delete lift[key]));
     Config.boardingSpeedMultiplier = 1.0;
 };
 

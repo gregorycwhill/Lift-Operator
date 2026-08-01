@@ -2,7 +2,7 @@
 
 **Status:** Active enduring test strategy  
 **Owner class:** Engineering and playtest  
-**Last reviewed:** 25 July 2026
+**Last reviewed:** 1 August 2026
 
 **Objective:** Produce trustworthy evidence that the engine is correct, deterministic, resilient to accidental misuse, and suitable for balance iteration.
 
@@ -36,12 +36,13 @@ No single suite answers all four.
 Validate:
 
 - Balance data schema.
-- All 13 rounds exist.
+- All 25 authored rounds exist.
 - Mechanic IDs and unlocks are valid.
 - Price tiers increase.
 - Probabilities and durations are in range.
 - Required mechanics are implemented.
-- No duplicate balance sources remain.
+- Canonical runtime values have no competing active balance source; compatibility and Debug overlays are explicitly
+  identified and tested.
 - Production HTML excludes test-only scripts.
 - Source files use UTF-8.
 
@@ -97,7 +98,9 @@ For each representative seed, run strategy profiles:
 - Manual approximation.
 - Sweep only.
 - Mixed built-ins.
-- Specialist strategy matching the intended lesson.
+- Specialist strategy matching the intended lesson. For campaign balance acceptance, this is a versioned profile with
+  declared automation, bounded manual intervention, permitted loadout, event response, and a traceable success metric;
+  it is not a generic simulation heuristic.
 - Deliberately poor strategy.
 
 Assertions should include:
@@ -105,8 +108,12 @@ Assertions should include:
 - No crash or `NaN`.
 - Same inputs produce identical results.
 - Intended specialist strategy materially outperforms poor strategy.
-- Unattended all-Sweep fails every campaign round from Round 2 onward.
+- Unattended all-Sweep fails every fixed gate seed in every campaign round from Round 2 through Round 25. It assigns
+  Sweep to every lift and uses no manual targets, policy changes, custom automation, or power-ups.
 - Round 2 hybrid Sweep survives with minimal, high-leverage manual intervention while unattended Sweep fails late.
+- Round 12 all-Sweep loses its twentieth life before 240 seconds; a competent strategy survives 240–480 seconds.
+- Intended strategies are measured across the fixed seed set for diagnostic traces and human-evidence comparison; their
+  survival rate is not a release gate.
 - Built-in automations cannot earn Hands-Free; only an eligible player-authored custom policy can.
 - Round is neither impossible nor trivial across the seed set.
 - Outcome differences are caused by strategy rather than random-stream consumption.
@@ -127,6 +134,8 @@ Verify:
 - Failed retries do not farm or destroy currency.
 - Achievements do not dominate income.
 - No power-up has overwhelming purchase share without a deliberate design reason.
+- The model covers all 25 authored rounds, actual canonical payout/unlock rules, retries, consumables, and achievement
+  rewards. Current prices may be retained while inflation is measured as a documented release risk.
 
 ## 8. Layer 6 — Browser E2E
 
@@ -216,6 +225,7 @@ Engine/config changes:
 
 - Golden simulations
 - Economy checks
+- Full-campaign balance acceptance when a balance-affecting value changes
 
 Lifecycle/UI changes:
 
@@ -246,5 +256,9 @@ Every run reports:
 - Seed set.
 - Pass/fail.
 - Relevant telemetry deltas.
+
+Balance-report integrity and balance acceptance are separate gates. The hard simulator balance invariant is deliberate
+all-Sweep failure in every required authored round; intended-strategy simulator profiles are diagnostic evidence only
+until experienced playtesters provide round-level difficulty reports.
 
 The production UI regression scorecard may remain as a developer convenience, but it must not be the authoritative CI result.

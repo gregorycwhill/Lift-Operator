@@ -3,8 +3,12 @@
 **Document role:** Active economy design reference for earning, spending, retry, and progression
 **Status:** Active design; numerical authority remains `design/game-balance.v1.json`
 **Owner class:** Product and design
-**Last reviewed:** 31 July 2026
+**Last reviewed:** 1 August 2026
 **Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
+
+**1.0 decision:** Retain the current canonical power-up prices for the release candidate. The candidate scarcity-price
+bands below remain future design work, not approved runtime values. The 1.0 evidence task is to measure and document
+inflation across the full 25-round campaign using current prices.
 
 ## 1. Economy goals
 
@@ -197,6 +201,12 @@ The correct cap should be chosen after observing plausible survival times.
 
 Gold must not be universally best. A precise Bronze item used at the correct time should often outperform a mistimed Gold item.
 
+### 5.1.1 Late-campaign credit uplift
+
+Rounds 14-25 apply a canonical `creditMultiplier` of `0.15`, versus the standard `0.10` multiplier. This is the
+approved 50% increase in Credits awarded from the zoning and late-campaign arcs onward. Prices remain unchanged for
+the 1.0 release candidate; affordability and purchase mix remain playtest evidence questions.
+
 ### 5.2 Candidate price bands
 
 | Tier | Candidate cost range | Intended affordability |
@@ -313,6 +323,10 @@ Round 2 or later. Built-in-only unattended completion does not qualify.
 ## 11. Economic balance tests
 
 For each campaign version, simulate at least three player profiles:
+
+For the 1.0 release candidate, the model must cover all 25 authored rounds and use canonical payouts, unlocks,
+consumable purchases, retries, and achievement rewards. It must report affordability, savings, dominant-purchase share,
+and permanent-progression risk. A fixed 13-round payout table is historical diagnostic evidence only.
 
 ### Struggling player
 
