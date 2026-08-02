@@ -23,11 +23,12 @@ The campaign currently includes:
 - R14–R20 Service Zoning and increasingly large fleet-architecture challenges;
 - R21–R23 counterweight/Open Plan puzzle rounds;
 - R24–R25 fast single-passenger capsule dispatch;
-- the permanent Automation Dock, Settings, audio controls, and Leaderboard.
+- the permanent Automation Dock, Settings, audio controls, Leaderboard, and a planned local campaign-resume shell.
 
 The current product work is validation and tuning: resolve reproducible correctness gaps, confirm the legacy event
-matrix, profile the capsule fleet, and gather structured human evidence across all five campaign arcs. Implementation
-scope and release gates are owned by `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
+matrix, profile the capsule fleet, add a lightweight local campaign-resume shell, and gather structured human evidence
+across all five campaign arcs. Implementation scope and release gates are owned by `DELIVERY_PLAN.md` and
+`TEST_PLAN.md`.
 
 **Gate:** Broad feedback shows that players can understand the campaign's progression, diagnose failures, operate the
 Automation Dock, and complete representative zoning, counterweight, and capsule rounds on supported desktop hardware.

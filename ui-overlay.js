@@ -81,6 +81,16 @@ window.startRoundCountdown = function(seconds = 5) {
 /**
  * Update the locking status of UI buttons and selectors based on progression.
  */
+window.getRoundCountdownSeconds = function(round = Registry.stats.round, liftCount = Registry.lifts.length) {
+    const countdown = Config.GAME_DATA.system.countdown || {};
+    const override = Number(countdown.roundOverrides?.[round]);
+    if (Number.isFinite(override) && override > 0) return override;
+    const secondsPerLift = Number(countdown.secondsPerLift || 3);
+    const minimum = Number(countdown.minimumSeconds || 5);
+    const maximum = Number(countdown.maximumSeconds || 30);
+    return Math.max(minimum, Math.min(maximum, Math.max(1, Number(liftCount) || 1) * secondsPerLift));
+};
+
 window.updateLocksUI = function() {
     if (!Registry.highestUnlockedRound) Registry.highestUnlockedRound = 1;
     const availableRounds = Object.keys(Config.GAME_DATA.rounds || {})
@@ -233,7 +243,7 @@ window.initializeUI = function() {
         const roundOverlay = document.getElementById("roundModalOverlay");
         if (roundOverlay) roundOverlay.style.display = "none";
         
-        window.startRoundCountdown(Registry.stats.round === 2 ? 10 : 5);
+        window.startRoundCountdown(window.getRoundCountdownSeconds());
     };
     window.beginSelectedRound = beginSelectedRound;
 
@@ -476,7 +486,7 @@ window.UI = window.UI || {};
     "showLeaderboard", "showSettings", "renderDebugMenu", "openDebugModal", "processNextManifestItem", "initializeUI",
     "buildWorld", "draw", "updateLiftAutomationUI", "updateLiftVisualState",
     "triggerDefenestration", "updateScoreboardUI", "getGuestText",
-    "startRoundCountdown"
+    "startRoundCountdown", "getRoundCountdownSeconds"
 ].forEach(key => {
     window.UI[key] = window[key];
 });

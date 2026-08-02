@@ -50,6 +50,7 @@ the service-hosted full transcript. `docs/archive/PLAYTEST_ARCHIVE.md` retains i
 | `IMPLEMENTATION_PLAN.md`, `REFACTOR_PLAN.md`, `STABILIZATION_PLAN.md`, `ORIENTATION_IMPLEMENTATION_PLAN.md` | Completed phase plans | Current delivery/test plans and code |
 | `PLAYTEST_ARCHIVE.md` | Imported verbatim and retrospective playtest evidence | `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` for new intake/disposition |
 | `RELEASE_HISTORY.md` | Concise completed-slice and release evidence | No replacement; append only when a slice closes |
+| `docs/archive/reports/` | Superseded balance experiments, envelopes, smoke captures, and baselines | Current `reports/campaign-balance-acceptance.{json,md}` and active test commands |
 
 ## Status vocabulary
 

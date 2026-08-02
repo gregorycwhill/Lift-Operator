@@ -28,15 +28,15 @@ Firefox is not currently a supported browser.
 - Built-in and Workshop-authored automations, including Service Zoning.
 - Power-ups, VIP journeys, Checkout demand, Rooftop Parties, counterweights, and capsule tubes.
 - Persistent Credits and deterministic seeds for repeatable problem-solving.
-- Audio controls, attributions, Settings, and an in-game feedback action that copies diagnostics locally before opening a form.
+- Audio controls, attributions, Settings, and an in-game feedback action that pre-fills the form with game details and copies them locally.
 
 ## Help improve it
 
-- Use **Give Feedback** in Settings or Round Review. It copies a compact diagnostic string to your clipboard, then opens
-  the feedback destination. No diagnostic data is sent automatically.
+- Use **Give Feedback** in Settings or Round Review. It opens the feedback form with a compact diagnostic pre-filled
+  and also copies that string to your clipboard. Nothing is submitted until you choose **Submit** in the form.
 - Feedback is collected through the configured Google Form for player, technical, balance, and accessibility reports.
-  Until its published URL is added to `release-config.js`, Give Feedback still copies the diagnostic string but does
-  not open an external page.
+  Give Feedback sends its diagnostic only as part of the player-initiated form opening; it never submits a response
+  automatically.
 - See the concise [RC1 Playtest Pack](docs/playtest/RC1_PLAYTEST_PACK.md) for current priorities and a report template.
 
 ## Contributors and project documentation

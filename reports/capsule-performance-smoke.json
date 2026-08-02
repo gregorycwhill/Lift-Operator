@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "kind": "headless-capsule-pressure-smoke",
   "round": 25,
-  "capturedAt": "2026-08-01T15:46:40.980Z",
+  "capturedAt": "2026-08-02T02:06:12.066Z",
   "environment": {
     "browser": "Chromium headless",
     "viewport": {
@@ -18,22 +18,22 @@
         "lifts": 10,
         "floors": 15,
         "capsuleCars": 10,
-        "domNodes": 452,
+        "domNodes": 470,
         "horizontalOverflow": false,
-        "averageTickMs": 0.139166666418314,
-        "p95TickMs": 0.20000001788139343,
-        "maxTickMs": 10.100000023841858
+        "averageTickMs": 0.09133333325386048,
+        "p95TickMs": 0.19999998807907104,
+        "maxTickMs": 3.300000011920929
       },
       {
         "round": 25,
         "lifts": 20,
         "floors": 30,
         "capsuleCars": 20,
-        "domNodes": 1067,
+        "domNodes": 1095,
         "horizontalOverflow": false,
-        "averageTickMs": 0.22866666674613953,
-        "p95TickMs": 0.3999999761581421,
-        "maxTickMs": 0.9000000059604645
+        "averageTickMs": 0.16800000001986823,
+        "p95TickMs": 0.30000001192092896,
+        "maxTickMs": 1
       }
     ]
   },

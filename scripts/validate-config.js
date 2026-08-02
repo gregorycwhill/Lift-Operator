@@ -143,6 +143,17 @@ assert(
     'Patience thresholds must increase.'
 );
 
+const countdown = design.system.countdown;
+assert(countdown && Number.isFinite(countdown.secondsPerLift) && countdown.secondsPerLift > 0,
+    'Countdown secondsPerLift must be positive.');
+assert(countdown && Number.isFinite(countdown.minimumSeconds) && Number.isFinite(countdown.maximumSeconds) &&
+    countdown.minimumSeconds > 0 && countdown.maximumSeconds >= countdown.minimumSeconds,
+    'Countdown bounds are invalid.');
+Object.entries(countdown?.roundOverrides || {}).forEach(([round, seconds]) => {
+    assert(Number.isInteger(Number(round)) && Number(round) >= 1 && Number(round) <= 25 && Number.isFinite(seconds) && seconds > 0,
+        `Countdown override for round ${round} is invalid.`);
+});
+
 if (errors.length) {
     console.error(errors.map(error => `- ${error}`).join('\n'));
     process.exit(1);

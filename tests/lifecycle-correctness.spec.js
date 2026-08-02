@@ -1095,7 +1095,7 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
     ]);
     expect(result.r2SpawnStart).toBe(0.3375);
     expect(result.r2SpawnEnd).toBe(0.421875);
-    expect(result.version).toBe('0.2.9-capsule-dispatch');
+    expect(result.version).toBe('0.2.10-fleet-onboarding');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -1394,6 +1394,7 @@ test('Automation Dock policy-first assignment is immediate and armed', async ({ 
             armedAfterAssignment,
             disarmedAfterToggle: document.querySelector('.automation-dock')?.dataset.armedPolicy || '',
             selectedAfterAssignment: document.querySelectorAll('.automation-status.selected').length,
+            assignedTooltip: statuses[0].title,
             retainedPolicy: document.querySelector('.automation-carousel-card')?.textContent || '',
             hasVerboseTitle: Boolean(document.querySelector('.automation-dock-title, .automation-dock-policy')),
             policyStripDisplay: document.querySelector('.automation-dock-pinned') ? getComputedStyle(document.querySelector('.automation-dock-pinned')).display : 'none',
@@ -1411,6 +1412,7 @@ test('Automation Dock policy-first assignment is immediate and armed', async ({ 
     expect(result.armedAfterAssignment).toBe('sweep');
     expect(result.disarmedAfterToggle).toBe('');
     expect(result.selectedAfterAssignment).toBe(0);
+    expect(result.assignedTooltip).toContain('Sweep');
     expect(result.retainedPolicy).toContain('Sweep');
     expect(result.hasVerboseTitle).toBe(false);
     expect(result.policyStripDisplay).toBe('none');
@@ -1609,7 +1611,11 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     const result = await page.evaluate(async () => {
         initializeRound(9, { showBriefing: false });
         buildWorld();
-        window.LiftOperatorRelease = { ...window.LiftOperatorRelease, feedbackFormUrl: 'https://docs.google.com/forms/d/e/test-form/viewform' };
+        window.LiftOperatorRelease = {
+            ...window.LiftOperatorRelease,
+            feedbackFormUrl: 'https://docs.google.com/forms/d/e/test-form/viewform',
+            feedbackDiagnosticEntry: 'entry.1033382669'
+        };
         let copied = '';
         let opened = '';
         Object.defineProperty(navigator, 'clipboard', {
@@ -1627,9 +1633,12 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
         };
     });
 
-    expect(result.opened).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
+    const feedbackUrl = new URL(result.opened);
+    expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
+    expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
+    expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
     expect(result.copied).toContain('build=RC1.0-playtest');
-    expect(result.copied).toContain('balance=0.2.9-capsule-dispatch');
+    expect(result.copied).toContain('balance=0.2.10-fleet-onboarding');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
     expect(result.copied).toContain('seed=');
@@ -1817,7 +1826,7 @@ test('countdown start-now control begins the round immediately', async ({ page }
     expect(result.timer).toBe(null);
 });
 
-test('round-start countdown is 10 seconds only for Round 2 and 5 seconds otherwise', async ({ page }) => {
+test('round-start countdown uses the Round 2 teaching override and bounded three-seconds-per-lift rule', async ({ page }) => {
     const result = await page.evaluate(() => {
         const requested = [];
         const original = window.startRoundCountdown;
@@ -1826,10 +1835,27 @@ test('round-start countdown is 10 seconds only for Round 2 and 5 seconds otherwi
         beginSelectedRound();
         initializeRound(3, { showBriefing: false });
         beginSelectedRound();
+        initializeRound(19, { showBriefing: false });
+        beginSelectedRound();
+        initializeRound(25, { showBriefing: false });
+        beginSelectedRound();
         window.startRoundCountdown = original;
         return requested;
     });
-    expect(result).toEqual([10, 5]);
+    expect(result).toEqual([10, 6, 24, 30]);
+});
+
+test('five-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(8, { showBriefing: false });
+        const smallerFleet = Registry.lifts.map(lift => lift.automation);
+        initializeRound(9, { showBriefing: false });
+        const largerFleet = Registry.lifts.map(lift => lift.automation);
+        return { smallerFleet, largerFleet };
+    });
+    expect(result.smallerFleet).toEqual(['manual', 'manual', 'manual', 'manual']);
+    expect(result.largerFleet).toHaveLength(5);
+    expect(result.largerFleet.every(mode => mode === 'sweep')).toBe(true);
 });
 
 test('late-round fleet layout fits the game area and countdown skip is icon-only', async ({ page }) => {

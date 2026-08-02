@@ -237,14 +237,40 @@ record.
 - [ ] README Play Now link, all six campaign captures, and social-preview metadata resolve from the deployed GitHub
   Pages build.
 - [x] Settings and Round Review expose Give Feedback with a visible build/balance identifier.
-- [x] Give Feedback copies build, balance version, round, seed, browser, and viewport locally before opening only the
-  configurable form URL; it does not transmit diagnostics automatically.
-- [ ] Add and test the published Google Form URL in `release-config.js`; confirm it is suitable for player and
-  technical reports without an unintended account or permission requirement.
+- [x] Give Feedback opens the configurable Google Form with build, balance version, round, seed, browser, and viewport
+  pre-filled, and copies the same diagnostic locally. It does not submit a response automatically.
+- [x] Published Google Form URL configured in `release-config.js` for player and technical reports. External
+  responder access and no unintended sign-in requirement remain a release-owner acceptance check.
 - [x] `THIRD_PARTY_NOTICES.md` records code, audio, font, and visual-asset audit findings; GPL-3.0-only applies to
   first-party project code while third-party assets retain their own terms.
 - [ ] Build and open an itch.io ZIP from the final release commit; check `index.html`, audio, media, and notices in the
   archive before upload.
+
+## Campaign shell and persistence acceptance
+
+- [ ] First visit shows Welcome before the existing Round 1 briefing; Play reaches the player-name flow and the shell
+  never appears automatically between rounds.
+- [ ] A schema-valid saved campaign presents Continue; Continue restores player name, seed, resumable round, unlocks,
+  lives, Credits, and owned inventory at that round's briefing.
+- [ ] Reload during active play returns to the pre-round checkpoint rather than serializing live guests, cars, timers,
+  event state, or a pending shop cart.
+- [ ] Invalid, stale, or malformed save data is discarded safely and falls back to a new campaign without breaking
+  audio preferences, Workshop scripts, Automation Dock pins, or the local leaderboard.
+- [ ] New Game confirms intent and clears campaign progress only; it does not clear scripts, pins, audio settings, or
+  leaderboard records.
+- [ ] How to Play and Credits & Licences are reachable from Welcome and Settings; Credits & Licences is also reachable
+  at campaign completion and names Gregory Hill and Marie Barnard correctly.
+- [ ] R25 opens Campaign Complete rather than only the legacy Leaderboard; it offers Leaderboard, feedback, credits,
+  and Play Again.
+- [ ] Feedback diagnostics include outcome and failure reason where applicable; configured Google Form opening and
+  popup-blocked fallback remain opt-in and locally visible.
+
+## Fleet baseline and countdown acceptance
+
+- [x] Automation-controller text, tooltip, and accessible name update together after an automation assignment.
+- [x] Rounds with fewer than five lifts start Manual; five-or-more-lift rounds start every lift on Sweep.
+- [x] Countdown is three seconds per lift, with a five-second minimum and thirty-second maximum; Round 2 remains a
+  ten-second automation-teaching exception.
 
 For every session record: commit, balance version, browser/device, round, seed, starting Credits, purchases, automation
 layout, result, observed failure cause, and the tester's own explanation.

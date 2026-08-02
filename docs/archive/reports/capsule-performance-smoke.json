@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "kind": "headless-capsule-pressure-smoke",
+  "round": 25,
+  "capturedAt": "2026-08-01T15:46:40.980Z",
+  "environment": {
+    "browser": "Chromium headless",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    }
+  },
+  "scenario": "R24 and R25 capsule pressure, zoned automations, three waiting guests on every non-ground floor, 600 animation ticks",
+  "metrics": {
+    "rounds": [
+      {
+        "round": 24,
+        "lifts": 10,
+        "floors": 15,
+        "capsuleCars": 10,
+        "domNodes": 452,
+        "horizontalOverflow": false,
+        "averageTickMs": 0.139166666418314,
+        "p95TickMs": 0.20000001788139343,
+        "maxTickMs": 10.100000023841858
+      },
+      {
+        "round": 25,
+        "lifts": 20,
+        "floors": 30,
+        "capsuleCars": 20,
+        "domNodes": 1067,
+        "horizontalOverflow": false,
+        "averageTickMs": 0.22866666674613953,
+        "p95TickMs": 0.3999999761581421,
+        "maxTickMs": 0.9000000059604645
+      }
+    ]
+  },
+  "limitation": "This is a deterministic headless tick-cost smoke, not a hardware frame-rate certification. The browser/device 45fps release criterion remains in TEST_PLAN.md."
+}

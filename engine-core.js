@@ -354,6 +354,12 @@ window.createRoundState = function(round, seed, options = {}) {
         gymFloor: -1
     };
 
+    // Larger fleets begin in a safe operational baseline. Players can still
+    // replace any Sweep assignment during the pre-round countdown.
+    if (state.lifts.length >= 5) {
+        state.lifts.forEach(lift => { lift.automation = 'sweep'; });
+    }
+
     if (window.isRoundEventEnabled(definition, 'vip')) {
         const minVipDelay = Math.max(10, Math.floor(Config.roundTime * Number(Config.GAME_DATA.system.vipArrivalDelayMinRatio || 0.25)));
         const maxVipDelay = Math.max(minVipDelay, Math.floor(Config.roundTime * Number(Config.GAME_DATA.system.vipArrivalDelayMaxRatio || 0.35)));

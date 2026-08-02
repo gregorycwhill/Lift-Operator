@@ -223,7 +223,12 @@ window.updateLiftAutomationUI = function(liftIndex, mode) {
 
     const status = document.querySelector(`.automation-status[data-lift-index="${liftIndex}"]`);
     const policy = window.Game.AutomationController?.getPolicy?.(mode);
-    if (status) status.textContent = `${policy?.name || mode}`;
+    if (status) {
+        const automationName = policy?.name || mode;
+        status.textContent = automationName;
+        status.title = `Lift ${liftIndex + 1}: ${automationName}`;
+        status.setAttribute('aria-label', `Lift ${liftIndex + 1}, automation ${automationName}`);
+    }
     window.updateZoneVisuals?.();
 };
 

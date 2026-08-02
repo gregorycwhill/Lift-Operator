@@ -341,7 +341,12 @@ window.Game = window.Game || {};
         const refreshStatuses = targets => targets.forEach(index => {
             const status = statusRow.querySelector(`[data-lift-index="${index}"]`);
             const lift = Registry.lifts[index];
-            if (status && lift) status.textContent = `${api.getPolicy(lift.automation)?.name || lift.automation}`;
+            if (status && lift) {
+                const automationName = api.getPolicy(lift.automation)?.name || lift.automation;
+                status.textContent = automationName;
+                status.title = `Lift ${index + 1}: ${automationName}`;
+                status.setAttribute('aria-label', `Lift ${index + 1}, automation ${automationName}`);
+            }
         });
         const assignTo = (policy, targets, clearBatch = false) => {
             const result = api.assign(policy, targets);

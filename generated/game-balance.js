@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.9-capsule-dispatch
+// Balance version: 0.2.10-fleet-onboarding
 window.GameBalanceData = {
-  "balanceVersion": "0.2.9-capsule-dispatch",
+  "balanceVersion": "0.2.10-fleet-onboarding",
   "events": {
     "jam": {
       "introducedRound": 6
@@ -398,6 +398,14 @@ window.GameBalanceData = {
     "gravityFallbackScalar": 0.4,
     "vipHeadstartSec": 20,
     "roundTime": 180,
+    "countdown": {
+      "secondsPerLift": 3,
+      "minimumSeconds": 5,
+      "maximumSeconds": 30,
+      "roundOverrides": {
+        "2": 10
+      }
+    },
     "startingLives": 20,
     "liftCapacity": 10,
     "liftSpeedSec": 0.5,

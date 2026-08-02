@@ -14,8 +14,8 @@ window.Game.Feedback.getDiagnostic = function(context = 'gameplay') {
     return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | seed=${seed} | browser=${navigator.userAgent} | viewport=${viewport}`;
 };
 
-window.Game.Feedback.copyDiagnostic = async function(context) {
-    const diagnostic = window.Game.Feedback.getDiagnostic(context);
+window.Game.Feedback.copyDiagnostic = async function(context, suppliedDiagnostic) {
+    const diagnostic = suppliedDiagnostic || window.Game.Feedback.getDiagnostic(context);
     try {
         if (navigator.clipboard?.writeText) {
             await navigator.clipboard.writeText(diagnostic);
@@ -37,14 +37,32 @@ window.Game.Feedback.copyDiagnostic = async function(context) {
     return { diagnostic, copied };
 };
 
+window.Game.Feedback.getFormUrl = function(diagnostic) {
+    const release = window.LiftOperatorRelease || {};
+    if (!release.feedbackFormUrl) return '';
+    try {
+        const formUrl = new URL(release.feedbackFormUrl, window.location.href);
+        if (release.feedbackDiagnosticEntry) {
+            formUrl.searchParams.set('usp', 'pp_url');
+            formUrl.searchParams.set(release.feedbackDiagnosticEntry, diagnostic);
+        }
+        return formUrl.toString();
+    } catch (_) {
+        return release.feedbackFormUrl;
+    }
+};
+
 window.Game.Feedback.open = async function(context) {
-    const result = await window.Game.Feedback.copyDiagnostic(context);
-    const url = window.LiftOperatorRelease?.feedbackFormUrl;
+    const diagnostic = window.Game.Feedback.getDiagnostic(context);
+    const url = window.Game.Feedback.getFormUrl(diagnostic);
+    // Open during the trusted click gesture. Awaiting clipboard access first can
+    // cause browsers to treat this as an unsolicited popup.
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
+    const result = await window.Game.Feedback.copyDiagnostic(context, diagnostic);
     if (url) {
-        window.open(url, '_blank', 'noopener,noreferrer');
         window.showToast?.(result.copied
-            ? 'Diagnostics copied. Paste them into the Google Form.'
-            : 'Google Form opened. Copy diagnostics from the browser if needed.');
+            ? 'Feedback form opened with game details pre-filled. Diagnostics copied too.'
+            : 'Feedback form opened with game details pre-filled.');
     } else {
         window.showToast?.(result.copied
             ? 'Diagnostics copied. Google Form URL is not configured yet.'

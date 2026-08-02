@@ -67,8 +67,9 @@ The following programme is the current delivery scope. It restores the design-to
 
 ### Tooling and release hygiene
 
-6. Repair, complete, relabel, or retire the stale simulation utilities: the broken completion audit, hash-only replay,
-   placeholder robustness command, and misleading batch defaults.
+6. **Completed cleanup:** retire the broken completion audit, hash-only replay, placeholder robustness command, legacy
+   browser test harnesses, and superseded balance-search commands. Preserve only the current acceptance, trace,
+   performance, packaging, and documented test commands; historical reports live under `docs/archive/reports/`.
 7. Separate correctness, balance, economy, and browser-performance gates. Add representative R24/R25 browser traces;
    the headless simulator cannot prove frame rate, layout stability, or touch/click usability.
 8. Update enduring balance/testing guidance and archive superseded R2–R13-only reports as historical evidence.
@@ -81,6 +82,31 @@ supported inspection controls only; non-player-facing simulation, UNIT_01, Endle
 controls are retired. Supported verification remains the documented npm/Playwright command set. Endless Operations is
 a roadmap investigation, not an RC1.0 mode.
 
+### Campaign shell and persistence
+
+RC1.0 includes a lightweight outer shell that makes the existing campaign approachable without interrupting round-to-
+round flow. It adds a first-visit Welcome view, How to Play, Credits & Licences, a campaign-completion view, and
+locally persisted campaign progress. The credit line is **Created by Gregory Hill** and **Lead playtester: Marie
+Barnard**, followed by **Made with ♥ in Melbourne, Australia**.
+
+Campaign persistence is a versioned, validated local checkpoint rather than a live-world save. It records only stable
+campaign-boundary state: player name, campaign seed, current/resumable round, highest unlocked round, lives, Credits,
+and owned inventory. It deliberately excludes guest/lift positions, event and power-up timers, pending shop-cart UI,
+modal state, Debug state, automation-controller transient selection, and live audio state. Reloading therefore resumes
+at the saved round's briefing with deterministic round setup, not halfway through a live shift.
+
+- Welcome: first visit shows Play; a valid saved campaign shows Continue and New Game. Play uses the current Round 1
+  player-name flow; Continue restores the checkpoint; New Game requires confirmation and clears only campaign progress.
+- Checkpoints: write after a campaign is safely initialised for a round and after successful progression; retain the
+  pre-round checkpoint through failures so retry/reload cannot serialize a damaged live world.
+- Credits & Licences: reusable from Welcome, Settings, and campaign completion; present the attribution, build and
+  balance identifiers, repository link, GPL-3.0-only summary, and links to `LICENSE`, `THIRD_PARTY_NOTICES.md`, and
+  `assets/audio/ATTRIBUTION.md` without duplicating long legal text.
+- Feedback: retain Settings access; Round Review becomes contextual and includes outcome/failure reason in its copied
+  diagnostic. The published Google Form receives that diagnostic as a user-initiated pre-filled URL value, but no form
+  response is submitted automatically. Campaign completion presents feedback prominently.
+- Scope guard: milestone feedback prompts and animated shell backgrounds are P1 polish, not prerequisites for RC1.0.
+
 ### Distribution and feedback release slice
 
 This slice makes the existing GitHub Pages build understandable and actionable for broader testers without changing
@@ -89,9 +115,9 @@ gameplay rules or transmitting player data automatically.
 - Player-facing README: one-line hook, Play Now link, desktop status, six curated campaign captures, feature
   summary, feedback links, and concise contributor/documentation guidance.
 - Live build metadata: Open Graph/Twitter fields and a 1200×630 first-party social-preview image.
-- Opt-in feedback: Settings and Round Review copy a compact local diagnostic string, then open the Google Form URL in
-  `release-config.js`. The URL is intentionally blank until the published Form is supplied; no diagnostic data is sent
-  automatically.
+- Opt-in feedback: Settings and Round Review open the published Google Form URL in `release-config.js` with a compact
+  diagnostic pre-filled, then also copy it locally. The diagnostic travels only when the player activates Give
+  Feedback; no response is submitted automatically.
 - Intake: Google Forms collect player, technical, balance, and accessibility reports; the repository feedback log
   remains the authoritative internal record.
 - Distribution: `package:itch` produces an HTML5 ZIP from the current commit, while GitHub Pages remains canonical.
@@ -101,6 +127,13 @@ gameplay rules or transmitting player data automatically.
 Release acceptance for this slice: all feedback actions are opt-in, diagnostic contents are visible/copiable locally,
 media paths resolve from the Pages build, an itch ZIP opens `index.html`, and the licence audit has no undisclosed
 bundled-material gap.
+
+### Fleet baseline and countdown correction
+
+Every authored round with five or more lifts begins with each lift on Sweep, so large-fleet rounds start in a usable
+operational state while remaining fully editable during the countdown. The countdown is canonical balance data: three
+seconds per lift, bounded to five through thirty seconds, with the agreed ten-second Round 2 automation-teaching
+override. Automation controller status text, tooltip, and accessible name must always describe the same current policy.
 
 ### RC hardening control plan
 

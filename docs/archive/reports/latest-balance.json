@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "status": "exploratory-baseline",
+  "balanceVersion": "0.2.2-round-2-accessibility",
+  "source": "design/game-balance.v1.json",
+  "promotion": "blocked",
+  "blockingReasons": [
+    "Round 2 has no feasible unattended-failure/low-intervention hybrid candidate",
+    "Human campaign evidence has not been collected"
+  ],
+  "ownerDecisions": {
+    "economyBands": "accepted-provisionally",
+    "round10CustomAutomation": "optional-with-measurable-advantage"
+  }
+}
