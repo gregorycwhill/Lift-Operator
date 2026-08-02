@@ -27,10 +27,22 @@ window.getRoundChallengeSummary = function(round) {
         .map(challenge => labels[challenge] || challenge);
 };
 
+window.getCampaignRank = function(round) {
+    return Config.GAME_DATA.rounds[round]?.briefing?.rank || 'Trainee';
+};
+
+window.getRoundObjectiveCopy = function(round) {
+    const definition = Config.GAME_DATA.rounds[round] || {};
+    if (definition.objective === 'ENDURANCE') return 'Keep operating until all 20 lives are lost.';
+    if (definition.objective === 'PEDAL_SURVIVAL') return `Survive for ${Config.roundTime} seconds under pedal power.`;
+    if (definition.objective === 'QUOTA') return 'Complete the assigned delivery quota.';
+    return `Survive for ${Config.roundTime} seconds.`;
+};
+
 /**
  * Open the round briefing modal with contextually relevant instructions.
  */
-window.showRoundModal = function(round) {
+window.showRoundModal = function(round, options = {}) {
     const engine = GameEngine();
     const ui = GameUI();
     if (typeof engine.pause === 'function') engine.pause();
@@ -50,13 +62,6 @@ window.showRoundModal = function(round) {
     if (nameContainer) nameContainer.style.display = isRound1 ? "flex" : "none";
     if (gameIdContainer) gameIdContainer.style.display = "none";
 
-    let numLifts = 1;
-    if (typeof Registry !== 'undefined') {
-        if (Registry.lifts && Registry.lifts.length > 0) {
-            numLifts = Registry.lifts.length;
-        }
-    }
-    const rank = typeof ui.getRankByLifts === 'function' ? ui.getRankByLifts(numLifts) : window.getRankByLifts(numLifts);
     if (typeof ui.updatePilotNameDisplay === 'function') ui.updatePilotNameDisplay();
 
     if (round === 1) {
@@ -66,15 +71,39 @@ window.showRoundModal = function(round) {
         btn.className = 'btn btn-green btn-large btn-full-width';
     }
 
-    const briefing = Config.GAME_DATA.rounds[round]?.briefing;
-    if (!briefing?.title || !briefing?.teaching || !briefing?.emphasis) {
+    const definition = Config.GAME_DATA.rounds[round];
+    const briefing = definition?.briefing;
+    if (!briefing?.rank || !briefing?.title || !briefing?.narrative || !briefing?.learningFocus ||
+        !Object.prototype.hasOwnProperty.call(briefing, 'ruleCard')) {
         throw new Error(`Missing authored briefing for round ${round}`);
     }
-    title.innerText = `Round ${round}: ${briefing.title} (${rank})`;
-    instructions.innerText = `${briefing.teaching} ${briefing.emphasis}`;
-
+    const roundRank = document.getElementById('roundRank');
+    const ruleCard = document.getElementById('roundRuleCard');
+    const ruleHeading = document.getElementById('roundRuleHeading');
+    const ruleBody = document.getElementById('roundRuleBody');
+    const objective = document.getElementById('roundObjective');
+    const challengeList = document.getElementById('roundChallengeList');
+    const loadoutHint = document.getElementById('roundLoadoutHint');
+    if (roundRank) roundRank.innerText = `${briefing.rank} · Round ${round}`;
+    title.innerText = briefing.title;
+    instructions.innerText = briefing.narrative;
+    if (ruleCard) ruleCard.classList.toggle('hidden', !briefing.ruleCard);
+    if (briefing.ruleCard) {
+        if (ruleHeading) ruleHeading.innerText = briefing.ruleCard.heading;
+        if (ruleBody) ruleBody.innerText = briefing.ruleCard.body;
+    }
+    if (objective) objective.innerText = window.getRoundObjectiveCopy(round);
     const challenges = window.getRoundChallengeSummary(round);
-    if (challenges.length) instructions.innerText += ` Active challenges: ${challenges.join(', ')}.`;
+    if (challengeList) {
+        challengeList.replaceChildren();
+        const labels = challenges.length ? challenges : ['No special challenges'];
+        labels.forEach(label => {
+            const chip = document.createElement('span');
+            chip.className = 'challenge-chip';
+            chip.innerText = label;
+            challengeList.appendChild(chip);
+        });
+    }
 
     let shopDiv = document.getElementById('shopContainer');
     if (!shopDiv && btn) {
@@ -84,6 +113,9 @@ window.showRoundModal = function(round) {
     }
     
     const hasShopUnlocks = window.isSupplyClosetAvailable(round);
+    if (loadoutHint) loadoutHint.innerText = hasShopUnlocks
+        ? 'Available loadout: choose power-ups in the Supply Closet below. Credits carry forward between rounds.'
+        : 'No Supply Closet is available for this round.';
     if (hasShopUnlocks) {
         if (shopDiv) shopDiv.style.display = 'block';
         if (typeof ui.renderShop === 'function') ui.renderShop();
@@ -99,6 +131,25 @@ window.showRoundModal = function(round) {
             btn.innerText = `Start Round ${round}`;
             btn.className = 'btn btn-green btn-large btn-full-width';
         }
+    }
+
+    const promotionBanner = document.getElementById('promotionBanner');
+    const promotionHeading = document.getElementById('promotionHeading');
+    const promotionCopy = document.getElementById('promotionCopy');
+    const dismissPromotion = document.getElementById('dismissPromotionBtn');
+    const modalContent = document.querySelector('#roundModalOverlay .round-briefing-modal');
+    const shouldShowPromotion = Boolean(options.showPromotion && briefing.promotion &&
+        window.Game.Campaign?.shouldShowPromotion?.(round));
+    if (promotionBanner) promotionBanner.classList.toggle('hidden', !shouldShowPromotion);
+    if (modalContent) modalContent.classList.toggle('promotion-pending', shouldShowPromotion);
+    if (shouldShowPromotion) {
+        if (promotionHeading) promotionHeading.innerText = `${briefing.promotion.label} — ${briefing.promotion.rank}`;
+        if (promotionCopy) promotionCopy.innerText = briefing.promotion.copy;
+        if (dismissPromotion) dismissPromotion.onclick = () => {
+            window.Game.Campaign?.acknowledgePromotion?.(round);
+            promotionBanner?.classList.add('hidden');
+            modalContent?.classList.remove('promotion-pending');
+        };
     }
 
     window.Game.Audio?.setContext('menu');

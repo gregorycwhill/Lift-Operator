@@ -131,7 +131,7 @@ runtime behaviour must be derived.
 | 6 | ✓ | — | — | — | — | — | — | — | ✓ | — | — | — | — |
 | 7 | ✓ | — | ✓ | — | — | — | — | — | ✓ | — | — | — | — |
 | 8 | ✓ | — | — | — | ✓ | — | — | — | ✓ | — | — | — | — |
-| 9 | ✓ | — | — | ✓ | — | — | — | — | ✓ | — | — | — | — |
+| 9 | ✓ | — | — | ✓ | — | — | — | — | ✓ | ✓ | — | — | — |
 | 10 | ✓ | — | ✓ | — | ✓ | — | — | — | ✓ | ✓ | — | — | — |
 | 11 | ✓ | ✓ | — | ✓ | — | — | — | — | ✓ | ✓ | — | — | — |
 | 12 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | — | — | ✓ |
@@ -200,60 +200,80 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | R | Theme | Objective | Floors | Lifts | Spawn start→end | Primary introduction | Shop unlock |
 | ---: | --- | --- | ---: | ---: | ---: | --- | --- |
 | 1 | First Shift | Survive 180s | 10 | 1 | 0.15→0.30 | Manual routing | None |
-| 2 | Let It Sweep | Survive 180s | 10 | 1 | 0.60→0.75 | Sweep | None |
-| 3 | Rush Delivery | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
-| 4 | Triage Protocol | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
-| 5 | Democracy | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
-| 6 | Maintenance Crisis | Survive 180s | 15 | 3 | 1.00→1.20 | Lift jams, redundancy | Wrench |
-| 7 | Checkout Rush | Survive 150s | 12 | 4 | 1.00→1.30 | Ground-floor funnel | Turbo |
-| 8 | VIP Security | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
-| 9 | Happy Hour | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |
-| 10 | Automation Workshop | Deliver 40 | 15 | 5 | 1.20→1.50 | Custom scripts | TARDIS, Group Think |
-| 11 | Heavy Lifting | Survive 180s | 15 | 5 | 1.35→1.70 | Gym Bros and mixed weight | Double-Decker |
-| 12 | Endurance Operations | Survive until 20 lives are lost | 15 | 4 | 0.80→1.00 | Resource endurance and recombination | Higher tiers |
-| 13 | Pedal Power | Deliver 50 | 15 | 5 | 1.20→1.55 | Gravity and load optimization | Full catalog |
+| 2 | Probation by Automation | Survive 180s | 10 | 1 | 0.60→0.75 | Sweep | None |
+| 3 | Room Service, Going Up | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
+| 4 | Code Red | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
+| 5 | The Guests Have Spoken | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
+| 6 | Out of Service | Survive 180s | 15 | 3 | 1.00→1.20 | Lift jams, redundancy | Wrench |
+| 7 | Everybody Out | Survive 150s | 12 | 4 | 1.00→1.30 | Ground-floor funnel | Turbo |
+| 8 | The Important Guest | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
+| 9 | Party at the Top | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |
+| 10 | Build It Yourself | Deliver 40 | 15 | 5 | 1.20→1.50 | Custom scripts | TARDIS, Group Think |
+| 11 | Peak Performance | Survive 180s | 15 | 5 | 1.35→1.70 | Gym Bros and mixed weight | Double-Decker |
+| 12 | The Longest Shift | Survive until 20 lives are lost | 15 | 4 | 0.80→1.00 | Resource endurance and recombination | Higher tiers |
+| 13 | Uphill Battle | Deliver 50 | 15 | 5 | 1.20→1.55 | Gravity and load optimization | Full catalog |
 
 These figures are the next accepted tuning targets where they differ from the current canonical balance; implementation
 must update the canonical source and generated artifact together.
 
 ## 5.1 Player briefing contract
 
-Every authored round has one unique player-facing title. Its briefing must state the new tool or rule where applicable,
-then name the active challenges from the matrix above before the player chooses a loadout. The wording should explain
-the decision pressure without prescribing a solution. The active-challenge list, title, and teaching copy are now read
-from the canonical round data; `ui-briefing.js` is only the renderer.
+Every authored round has a rank, unique title, narrative briefing, learning focus, optional first-use rule card, and
+active-challenge list before the player chooses a loadout. The narrative describes decision pressure without replacing
+contractual rules. The following is the human authoring source; each record is transcribed into canonical round data and
+`ui-briefing.js` is only the renderer.
 
-| R | Player-facing title | New or reinforced learning | Challenge emphasis |
-| ---: | --- | --- | --- |
-| 1 | First Shift | Manual shaft control; red guests cost lives; boarding and alighting take time. | Basic mixed destinations. |
-| 2 | Let It Sweep | Sweep automation and the Automation Dock. | One lift; learn to deploy automation during the extended countdown. |
-| 3 | Rush Delivery | A second lift and Room Service carts. | Heavy Room Service deliveries amid rising ordinary demand. |
-| 4 | Triage Protocol | Priority Sweep. | Rescue Critical guests without abandoning the rest of the hotel. |
-| 5 | Democracy | Voting and Weighted Voting. | Allocate three lifts across competing queue concentrations. |
-| 6 | Maintenance Crisis | Wrench and jam recovery. | Jams create temporary fleet gaps across fifteen floors. |
-| 7 | Checkout Rush | Checkout routing and Turbo. | A probabilistic share of guests needs Ground; retain ordinary service. |
-| 8 | VIP Security | VIP rules and Musak. | A Happy VIP makes three timed legs and takes priority when boardable. |
-| 9 | Happy Hour | Rooftop Party and Freshener. | Rooftop demand changes traffic; Jams remain active. |
-| 10 | Workshop Under Pressure | Custom Workshop scripts, TARDIS, and Group Think. | Checkout, VIP, Jams, and Stink combine with Room Service. |
-| 11 | Heavy Lifting | Gym Bros and Double-Decker. | Gym Bros, Rooftop traffic, Jams, and Stink test capacity decisions. |
-| 12 | Endurance Operations | Endurance scoring and higher-tier resources. | No completion timer: survive a multi-event hotel until all lives are lost. |
-| 13 | Pedal Power | Gravity-aware dispatch. | Heavy upward cars slow down while Room Service, Gym Bros, Jams, and Stink persist. |
-| 14 | Split-Level Service | Service Zoning; Zoned Low and Zoned High. | Zoning begins amid Checkout, VIP, Gym Bros, Jams, and Stink. |
-| 15 | VIP Rooftop Gala | Scale zoning to six lifts. | Rooftop demand and VIP traffic share a zoned fleet. |
-| 16 | Maintenance Blackout | Overlapping zone recovery. | Checkout, VIP, Jams, and Stink stress six-lift resilience. |
-| 17 | Rooftop Express | Express coverage across twenty-five floors. | Rooftop and VIP pressure, plus Jams/Stink, require legible zones. |
-| 18 | Festival Weekend | Exception-safe zoning. | Checkout, VIP, Gym Bros, Jams, and Stink interact at scale. |
-| 19 | The Vertical City | Eight-lift zone architecture. | Rooftop/VIP demand, Gym Bros, Jams, and Stink across thirty floors. |
-| 20 | Grand Hotel Network | Ten-lift fleet management. | Checkout/VIP demand, Gym Bros, Jams, and Stink in the largest conventional fleet. |
-| 21 | Counterweight Basics | Adjacent lifts move in opposite directions. | A low-pressure pair puzzle with only Jams and Stink as hazards. |
-| 22 | Counterweight Crossovers | Open Plan transfers. | Four paired lifts; Gym Bros, Jams, and Stink complicate passenger placement. |
-| 23 | Counterweight Network | Counterweights, Zoning, and Open Plan at fleet scale. | Room Service, VIP, Gym Bros, Jams, and Stink in an eight-lift network. |
-| 24 | SciiFi Dispatch | Single-person capsule lifts and demand currents. | VIP pressure and short Jams; automations must manage ten capsules. |
-| 25 | SciiFi Overdrive | Twenty-capsule automation fleet. | Rooftop, VIP, Zoning, and short Jams combine under changing demand. |
+| R | Rank | Player-facing title | Narrative briefing | Learning focus |
+| ---: | --- | --- | --- | --- |
+| 1 | Trainee | First Shift | Welcome to the Grand Hotel. Click a floor to send the lift, collect waiting guests and deliver them before their patience runs out. Boarding and alighting take time; guests who turn red are one bad wait away from costing you a life. | Manual shaft control; guest patience; boarding and alighting; mixed destinations. |
+| 2 | Trainee | Probation by Automation | Management has installed an Automation Dock and confidently described it as “self-managing”. Use the extended countdown to deploy Sweep, then stay alert: automation can handle routine movement, but it cannot recognise every developing crisis for you. | Automation Dock; Sweep; automation as assistance rather than autoplay. |
+| 3 | Operator | Room Service, Going Up | Your promotion comes with a second lift—and a procession of bulky Room Service carts. They are heavy and slow to board, so sending whichever car is nearest will not always work. Divide the workload and consider giving each lift a distinct role. | Second lift; Room Service; lift specialisation; Wide Doors. |
+| 4 | Operator | Code Red | Dinner service is peaking and several guests are approaching breaking point. Priority Sweep can seek out Critical passengers, but rescuing every emergency while neglecting ordinary queues only creates the next emergency. | Priority Sweep; triage without starving routine service. |
+| 5 | Operator | The Guests Have Spoken | Three lifts now serve floors that all believe their queue is the most important in the hotel. Voting responds to concentrated demand; Weighted Voting listens more closely to urgency. Decide how much democracy the transport system can withstand. | Voting; Weighted Voting; allocating policies across three lifts. |
+| 6 | Manager | Out of Service | The maintenance budget has delivered its verdict: lifts can now jam. A disabled car leaves a hole in the fleet while queues continue to grow across fifteen floors. Use the Wrench, preserve redundancy and avoid plans that work only while everything works. | Jams; Wrench; redundancy and recovery. |
+| 7 | Manager | Everybody Out | Checkout has begun. Many guests are funnelling toward Ground, but the rest of the hotel has not stopped moving just because reception is busy. Turbo can recover distance quickly; your real task is deciding which lifts serve the funnel and which preserve ordinary traffic. | Checkout traffic; directional funnels; Turbo. |
+| 8 | Manager | The Important Guest | A VIP has arrived with an itinerary, a schedule and no interest in sharing a cabin. She takes priority when a suitable empty lift reaches her. Calming Musak may buy patience elsewhere while you provide the discreet three-leg service management promised. | VIP priority and empty-cabin rule; three-leg journey; Calming Musak. |
+| 9 | Manager | Party at the Top | The rooftop bar has declared Happy Hour, pulling traffic sharply upward. Worse, one inconsiderate passenger can now contaminate a cabin so badly that most guests refuse to enter. Redirect the surge, quarantine bad air and deploy Air Freshener before one foul lift poisons the network. | Rooftop Party; Stink; Air Freshener; temporary traffic redirection. |
+| 10 | Engineer | Build It Yourself | Standard policies have taken you this far. The Automation Workshop is now open, and management expects you to turn operational insight into actual logic. Build or adapt a custom policy while Checkout traffic, a VIP, breakdowns and contaminated cabins compete for attention. | Custom Workshop automation; TARDIS Mode; Group Think. |
+| 11 | Engineer | Peak Performance | The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate heavy passengers, increase capacity or redesign the fleet’s work. | Gym Bros; mixed passenger weights; Double-Decker. |
+| 12 | Engineer | The Longest Shift | There is no tidy finish tonight. Every familiar problem is active, resources are scarce and the only question is how long you can keep the Grand Hotel operating before the twentieth guest gives up spectacularly. Spend for endurance and turn inevitable defeat into a record shift. | Endurance scoring; higher-tier resources; death as the completion condition. |
+| 13 | Engineer | Uphill Battle | Sustainability consultants have connected the lift system to pedal power. Heavy cars now climb more slowly, so filling every cabin is no longer automatically efficient. Balance load against upward travel while familiar carts, Gym Bros, jams and contaminated cabins test your command of the whole system. | Gravity; load versus upward speed; full-system optimisation. |
+| 14 | Director | Divide and Conquer | The tower is now too large for every lift to serve every floor effectively. Service Zoning lets you assign Low and High service bands, reducing wasteful cross-building travel. Ground remains part of every zone, and a poor boundary can strand demand as effectively as no plan at all. | Service Zoning; Zoned Low; Zoned High; zone boundaries. |
+| 15 | Director | The Sky Lounge Gala | A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, heavy gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand. | Scaling zoning to six lifts; shared rooftop and VIP pressure. |
+| 16 | Director | No Zone Is an Island | Maintenance failures are striking inside a carefully divided fleet. A perfect zone with one working lift is not a resilient zone. Build overlapping coverage, preserve recovery paths and keep Checkout traffic moving when a jam removes the car your plan depended on most. | Overlapping zones; resilient coverage; recovery design. |
+| 17 | Director | Rooftop Express | Twenty-five floors now stand between the lobby and the party. The VIP expects priority, rooftop guests expect speed and everyone else expects not to be abandoned midway. Create local service and express coverage without allowing your fastest route to consume the whole fleet. | Express roles inside a zoned fleet; long-distance service. |
+| 18 | Director | Festival Weekend | The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, heavy passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue. | Exception-safe zoning; large-scale recombination. |
+| 19 | Architect | The Vertical City | Thirty floors and eight lifts have turned the hotel into a small city standing on end. Local service, rooftop demand and VIP movement now require an architecture rather than a collection of settings. Design roles that remain legible when failures begin tearing holes in the plan. | Eight-lift zone architecture; legible fleet roles. |
+| 20 | Architect | The Grand Network | This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, heavy traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode. | Ten-lift conventional fleet mastery; whole-network design. |
+| 21 | Executive | Joined at the Cable | Engineering has installed a counterweight pair. Move one lift upward and its neighbour moves down, whether that helps your plan or ruins it. The cabins remain independent, but a jam stops travel for the pair. Learn the geometry while demand is restrained and mistakes are still educational. | Counterweighted pairs; complementary motion; paired jam behaviour. |
+| 22 | Executive | Meet in the Middle | Four paired lifts have created a passenger-placement problem: the right guest can easily end up in the wrong car. Open Plan temporarily permits destination-aware transfers between adjacent lifts stopped at the same floor. Use it to repair the network, not to avoid planning one. | Open Plan; timed adjacent-lift transfers; passenger redistribution. |
+| 23 | Executive | The Entangled Hotel | The prototype is now an eight-lift counterweight network carrying real hotel traffic. Zoning determines where cars should serve; linked motion determines where they can be; Open Plan provides a brief chance to correct passenger placement. The laboratory conditions are officially over. | Counterweights, Zoning and Open Plan at fleet scale. |
+| 24 | Commissioner | Welcome to the Future | The old shafts have been replaced by ten high-speed, single-passenger capsules. They cross the building quickly, but each carries only one guest, so manual control cannot keep pace with the demand currents for long. Dispatch through automation, protect VIP service and recover from frequent short jams. | Capsule lifts; single-passenger capacity; continuous demand currents. |
+| 25 | Commissioner | Terminal Velocity | Twenty capsules. Thirty floors. One final live demonstration for the board. Demand shifts between ordinary travel, VIP movements and rooftop surges, while zoning must give the fleet enough structure to respond without becoming rigid. You began by clicking one lift; now design the nervous system of an entire building. | Twenty-capsule fleet mastery; capsule zoning; final campaign synthesis. |
 
-**Briefing derivation rule:** challenge names and availability are generated from `activeChallenges`; titles and teaching
-copy come from each round's canonical `briefing` record. Any change to a briefing requires a focused snapshot for the
-affected round and a matrix parity check for all 25 rounds.
+| Before round | New rank | Promotion copy |
+| ---: | --- | --- |
+| 1 | Trainee | **Appointment — Trainee** · Welcome to the Grand Hotel Vertical Transport Department. Please avoid losing guests during your induction. |
+| 3 | Operator | **Promotion — Operator** · You have demonstrated the two qualities management values most: basic competence and continued attendance. |
+| 6 | Manager | **Promotion — Manager** · You are now responsible not only for moving guests, but for explaining why they were not moved sooner. |
+| 10 | Engineer | **Promotion — Engineer** · Repeated success with unreliable machinery has qualified you to design more unreliable machinery. |
+| 14 | Director | **Promotion — Director** · You no longer operate lifts. You operate the people, policies and machinery that operate lifts. |
+| 19 | Architect | **Promotion — Architect** · The hotel has expanded your remit to include several parts of the skyline. |
+| 21 | Executive | **Promotion — Executive** · Conventional lift operations are now beneath your pay grade. Safety has been informed. |
+| 24 | Commissioner | **Appointment — Commissioner** · You have successfully operated every lift the hotel owns. Engineering has therefore removed the lifts. |
+
+**Briefing derivation rule:** challenge names and availability are generated from `activeChallenges`. The rank, title,
+narrative, learning focus, rule card, and promotion copy above are transcribed into each canonical `briefing` record.
+Any change requires a focused snapshot for the affected round and a matrix parity check for all 25 rounds.
+
+**R11 Rooftop evacuation rule:** R11 retains the authored Rooftop Party and its long, unpredictable-feeling event,
+but the event start is constrained to leave a 45-second post-party evacuation window inside the three-minute round.
+R11's arrival curve is 25% below the prior authored values while this release candidate is re-engaged with playtesting.
+R11 remains a five-lift, fifteen-floor challenge with Room Service, Gym Bros, Rooftop, Jams, and Stink active.
+
+**Standard-building travel bands:** conventional buildings up to 15 floors use the short-building travel band
+(0.45 seconds per floor); conventional buildings above 15 floors use the tall-building band (0.4166666667 seconds per
+floor). Counterweight and capsule rounds retain their dedicated movement rules.
 
 ## 6. Detailed round designs
 
@@ -581,13 +601,13 @@ direct-service band for each lift.
 
 | Round | Title | Floors | Lifts | Structural challenge | Zoning/Workshop lesson |
 | --- | --- | ---: | ---: | --- | --- |
-| 14 | Split-Level Service | 20 | 5 | Rising arrivals across lower, middle, and upper traffic bands | Configure direct local zones including G while preserving flexible Ground coverage |
-| 15 | VIP Rooftop Gala | 20 | 6 | VIP traffic combined with Rooftop Party | Preserve direct VIP and rooftop coverage |
-| 16 | Maintenance Blackout | 20 | 6 | Jams and stink create temporary fleet gaps | Keep overlapping rescue coverage |
+| 14 | Divide and Conquer | 20 | 5 | Rising arrivals across lower, middle, and upper traffic bands | Configure direct local zones including G while preserving flexible Ground coverage |
+| 15 | The Sky Lounge Gala | 20 | 6 | VIP traffic combined with Rooftop Party | Preserve direct VIP and rooftop coverage |
+| 16 | No Zone Is an Island | 20 | 6 | Jams and stink create temporary fleet gaps | Keep overlapping rescue coverage |
 | 17 | Rooftop Express | 25 | 6 | Rooftop and VIP traffic combine with Jams and Stink | Use local and express zones while retaining flexible recovery coverage |
 | 18 | Festival Weekend | 25 | 7 | Checkout, VIP, Gym Bros, Jams, and Stink interact | Configure exception-safe zones and a flexible lift |
 | 19 | The Vertical City | 30 | 8 | Rooftop and VIP pressure compete with Gym Bros, Jams, and Stink | Make Workshop zoning strategically advantageous |
-| 20 | Grand Hotel Network | 30 | 10 | Checkout and VIP pressure combine with Gym Bros, Jams, and Stink | Master direct-service fleet architecture |
+| 20 | The Grand Network | 30 | 10 | Checkout and VIP pressure combine with Gym Bros, Jams, and Stink | Master direct-service fleet architecture |
 
 The current screen renders approximately seven lifts comfortably. R14–R18 should remain usable within that limit;
 R19–R20 use a compact large-fleet layout so all eight lifts remain visible on supported desktop widths.
@@ -602,9 +622,9 @@ warned, restricted, or given a master/slave interface.
 
 | Round | Title | Floors | Lifts | Role in arc | Intended solution space |
 | --- | --- | ---: | ---: | --- | --- |
-| 21 | Counterweight Basics | 11 | 2 | Teach paired movement as a low-pressure spatial puzzle | Manual anticipation, cabin-load planning, and recovery from a bad command |
-| 22 | Counterweight Crossovers | 15 | 4 | Introduce Open Plan after the player has experienced misplaced passenger load | Timed adjacent-lift transfers, pair positioning, and power-up timing |
-| 23 | Counterweight Network | 29 | 8 | Scale paired movement into fleet architecture | Zoned automation, zone overlap, Open Plan, loadouts, and manual recovery |
+| 21 | Joined at the Cable | 11 | 2 | Teach paired movement as a low-pressure spatial puzzle | Manual anticipation, cabin-load planning, and recovery from a bad command |
+| 22 | Meet in the Middle | 15 | 4 | Introduce Open Plan after the player has experienced misplaced passenger load | Timed adjacent-lift transfers, pair positioning, and power-up timing |
+| 23 | The Entangled Hotel | 29 | 8 | Scale paired movement into fleet architecture | Zoned automation, zone overlap, Open Plan, loadouts, and manual recovery |
 
 ### Counterweight operating rules
 
@@ -640,8 +660,8 @@ trip; R25 uses 20 pods over 30 floors and targets six seconds, preserving the sa
 
 | Round | Title | Floors | Capsules | Traffic design | Intended solution space |
 | --- | --- | ---: | ---: | --- | --- |
-| 24 | SciiFi Dispatch | 15 | 10 | Continuous seeded currents, initially readable and lightly overlapping | Batch-assign existing Zoned Low/High/custom policies; retain flexible G coverage |
-| 25 | SciiFi Overdrive | 30 | 20 | Multiple overlapping currents with persistent G pressure | Rebalance a large automation fleet, recover from jams, and use selective manual rescue |
+| 24 | Welcome to the Future | 15 | 10 | Continuous seeded currents, initially readable and lightly overlapping | Batch-assign existing Zoned Low/High/custom policies; retain flexible G coverage |
+| 25 | Terminal Velocity | 30 | 20 | Multiple overlapping currents with persistent G pressure | Rebalance a large automation fleet, recover from jams, and use selective manual rescue |
 
 The briefing states that demand patterns will change, but there are no in-round wave announcements. Default campaign
 objective, lives, and economy apply initially and are tuning targets rather than locked balance claims.

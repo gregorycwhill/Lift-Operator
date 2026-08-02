@@ -26,22 +26,70 @@ test('every authored round renders its canonical briefing title and active chall
         };
         return Object.entries(Config.GAME_DATA.rounds).map(([round, definition]) => {
             showRoundModal(Number(round));
-            const instructions = document.getElementById('roundInstructions').innerText;
+            const renderedChallenges = Array.from(document.querySelectorAll('#roundChallengeList .challenge-chip'))
+                .map(chip => chip.innerText);
             return {
                 round: Number(round),
                 title: document.getElementById('roundTitle').innerText,
                 expectedTitle: definition.briefing.title,
+                rank: document.getElementById('roundRank').innerText,
+                expectedRank: definition.briefing.rank,
                 missingChallenges: (definition.activeChallenges || [])
                     .map(challenge => labels[challenge] || challenge)
-                    .filter(label => !instructions.includes(label))
+                    .filter(label => !renderedChallenges.includes(label))
             };
         });
     });
     expect(new Set(result.map(row => row.expectedTitle)).size).toBe(25);
     for (const row of result) {
         expect(row.title).toContain(row.expectedTitle);
+        expect(row.rank).toContain(row.expectedRank.toUpperCase());
         expect(row.missingChallenges, `Round ${row.round} briefing omitted an active challenge`).toEqual([]);
     }
+});
+
+test('campaign promotions appear only at approved progression boundaries and persist acknowledgement', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.playerName = 'Promotion Test';
+        Registry.promotionAcknowledgements = [];
+        showRoundModal(3, { showPromotion: true });
+        const first = {
+            banner: !document.getElementById('promotionBanner').classList.contains('hidden'),
+            detailsHidden: document.querySelector('.round-briefing-modal').classList.contains('promotion-pending'),
+            heading: document.getElementById('promotionHeading').innerText
+        };
+        document.getElementById('dismissPromotionBtn').click();
+        const acknowledged = [...Registry.promotionAcknowledgements];
+        showRoundModal(3, { showPromotion: true });
+        const repeated = !document.getElementById('promotionBanner').classList.contains('hidden');
+        showRoundModal(4, { showPromotion: true });
+        const nonTransition = !document.getElementById('promotionBanner').classList.contains('hidden');
+        showRoundModal(6, { showPromotion: false });
+        const directEntry = !document.getElementById('promotionBanner').classList.contains('hidden');
+        return { first, acknowledged, repeated, nonTransition, directEntry };
+    });
+    expect(result.first).toEqual({ banner: true, detailsHidden: true, heading: 'PROMOTION — OPERATOR' });
+    expect(result.acknowledged).toEqual([3]);
+    expect(result.repeated).toBe(false);
+    expect(result.nonTransition).toBe(false);
+    expect(result.directEntry).toBe(false);
+});
+
+test('structured briefing uses the wider modal while keeping Supply Closet items three across', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(10, { showBriefing: false });
+        showRoundModal(10);
+        const modal = document.querySelector('.round-briefing-modal');
+        const grid = document.querySelector('#shopContainer .shop-items-grid');
+        return {
+            width: modal.getBoundingClientRect().width,
+            gridDisplay: getComputedStyle(grid).display,
+            gridColumns: getComputedStyle(grid).gridTemplateColumns.split(' ').length
+        };
+    });
+    expect(result.width).toBeGreaterThanOrEqual(650);
+    expect(result.gridDisplay).toBe('grid');
+    expect(result.gridColumns).toBe(3);
 });
 
 test('campaign shell restores only a validated pre-round checkpoint', async ({ page }) => {
@@ -285,7 +333,7 @@ test('failed attempt review awards nothing and continues to same-round shop', as
     await page.click('#continueToBriefingBtn');
     await expect(page.locator('#roundModalOverlay')).toBeVisible();
     expect(await page.evaluate(() => Registry.stats.round)).toBe(2);
-    await expect(page.locator('#roundTitle')).toContainText('Round 2');
+    await expect(page.locator('#roundTitle')).toContainText('Probation by Automation');
 });
 
 test('successful review explicitly celebrates the completed round and next unlock', async ({ page }) => {
@@ -888,6 +936,65 @@ test('Service Zoning reports coverage, overlap, and reproducible direct-route ga
         invalidBlank: false,
         invalidReversed: false
     });
+});
+
+test('short and tall standard buildings use the accepted speed bands while special arcs retain baseline rules', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        baseline: Config.GAME_DATA.system.liftSpeedSec,
+        short: Config.GAME_DATA.system.shortBuildingLiftSpeedSec,
+        tall: Config.GAME_DATA.system.tallBuildingLiftSpeedSec,
+        threshold: Config.GAME_DATA.system.shortBuildingMaxFloors,
+        r11Floors: Config.GAME_DATA.rounds[11].floors,
+        r20Floors: Config.GAME_DATA.rounds[20].floors,
+        r21Counterweight: Config.GAME_DATA.rounds[21].counterweightEnabled,
+        r24Capsule: Config.GAME_DATA.rounds[24].capsuleMode
+    }));
+    expect(result).toEqual({
+        baseline: 0.5,
+        short: 0.45,
+        tall: 0.4166666667,
+        threshold: 15,
+        r11Floors: 15,
+        r20Floors: 30,
+        r21Counterweight: true,
+        r24Capsule: true
+    });
+});
+
+test('Infinite Capacity boards every compatible waiting guest before closing', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(11, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        const floor = 3;
+        const now = 1000000;
+        Registry.lifts.slice(1).forEach(other => { other.automation = 'manual'; other.targetFloor = 0; });
+        lift.pos = floor * Registry.floorHeight;
+        lift.targetFloor = floor;
+        lift.automation = 'manual';
+        lift.state = 'IDLE';
+        lift.stateProgress = 0;
+        lift.manualOverride = true;
+        lift.tardisTimer = 10;
+        Registry.floors[floor].waitingGuests = [1, 2, 3].map(id => ({
+            id: `infinite-${id}`, dest: 8, status: GuestStatus.HAPPY, spawnTime: now,
+            isVip: false, isGymBro: false, isPartying: false, boardingWeight: 1
+        }));
+        for (let tick = 0; tick < 1200 && Registry.floors[floor].waitingGuests.length; tick++) {
+            Game.Engine.animationTick(now + tick * 16);
+        }
+        return {
+            boarded: lift.passengers.map(guest => guest.id),
+            waiting: Registry.floors[floor].waitingGuests.length,
+            capacity: PowerUps.getLiftCapacity(lift.id),
+            state: lift.state,
+            manualOverride: lift.manualOverride,
+            targetFloor: lift.targetFloor
+        };
+    });
+    expect(result.capacity).toBe(999);
+    expect(result.boarded).toEqual(['infinite-1', 'infinite-2', 'infinite-3']);
+    expect(result.waiting).toBe(0);
 });
 
 test('counterweight trilogy has canonical scale and Open Plan timing', async ({ page }) => {
@@ -1939,6 +2046,19 @@ test('round-start countdown uses the Round 2 teaching override and bounded three
         return requested;
     });
     expect(result).toEqual([10, 6, 24, 30]);
+});
+
+test('Round 2 shows the basement automation instruction during its extended countdown', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(2, { showBriefing: false });
+        startRoundCountdown(10);
+        return {
+            countdownVisible: !document.getElementById('roundCountdown').classList.contains('hidden'),
+            toast: document.getElementById('game-toast')?.innerText || ''
+        };
+    });
+    expect(result.countdownVisible).toBe(true);
+    expect(result.toast).toBe('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
 });
 
 test('five-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {

@@ -603,8 +603,8 @@ window.updateScoreboardUI = function() {
     if (document.getElementById('round-display')) document.getElementById('round-display').innerText = Registry.stats.round;
     
     const subTitle = document.getElementById('round-subtitle');
-    if (subTitle && Config.roundTitles) {
-        subTitle.innerText = Config.roundTitles[Registry.stats.round] || "";
+    if (subTitle) {
+        subTitle.innerText = Config.GAME_DATA.rounds[Registry.stats.round]?.briefing?.title || "";
     }
 
     if (document.getElementById('lives-display')) document.getElementById('lives-display').innerText = `Lives: ❤️ ${Registry.stats.lives}`;

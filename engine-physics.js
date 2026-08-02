@@ -467,9 +467,14 @@ window.animationTick = function(timestamp) {
         }
     }
 
+    const roundTravelSec = Registry.counterweightEnabled
+        ? Config.liftSpeedSec
+        : (Number(roundConfig.floors) <= Number(Config.GAME_DATA.system.shortBuildingMaxFloors)
+            ? Number(Config.GAME_DATA.system.shortBuildingLiftSpeedSec)
+            : Number(Config.GAME_DATA.system.tallBuildingLiftSpeedSec));
     const travelSec = Registry.capsuleMode
         ? (Registry.capsuleTravelSecPerFloor || 0.2)
-        : Config.liftSpeedSec;
+        : roundTravelSec;
     const pixelsPerSecond = Registry.floorHeight / travelSec;
     const basePixelsPerTick = pixelsPerSecond * (16 / 1000);
 

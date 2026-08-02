@@ -51,6 +51,7 @@ const Registry = {
     roundEvaluation: null,
     pendingFailedRetry: null,
     roundCheckpoint: null,
+    promotionAcknowledgements: [],
     enduranceSeconds: 0,
     customScriptTicks: 0,
     lastLobbyRenderTime: 0,

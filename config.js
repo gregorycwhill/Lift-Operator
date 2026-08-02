@@ -172,34 +172,6 @@ window.Config = {
     roomServiceChance: BalanceSystem.roomServiceChance,
     gravityConstant: BalanceSystem.gravityFallbackScalar,
     
-    roundTitles: {
-        1: "Welcome Pilot",
-        2: "Automation 101",
-        3: "Trainee Rush",
-        4: "Triage Protocol",
-        5: "Democratic Flow",
-        6: "Maintenance Crisis",
-        7: "Check-out Challenge",
-        8: "VIP Security",
-        9: "Happy Hour",
-        10: "Workshop Sandbox",
-        11: "Heavy Lifting",
-        12: "Endurance Test",
-        13: "Pedal Power",
-        14: "Split-Level Service",
-        15: "VIP Rooftop Gala",
-        16: "Maintenance Blackout",
-        17: "Express Check-Out",
-        18: "Festival Weekend",
-        19: "The Vertical City",
-        20: "Grand Hotel Network",
-        21: "Counterweight Basics",
-        22: "Counterweight Crossovers",
-        23: "Counterweight Network",
-        24: "SciiFi Dispatch",
-        25: "SciiFi Overdrive"
-    },
-
     // GAME_DATA: The single source of truth for all game balancing
     GAME_DATA: BalanceData
 };

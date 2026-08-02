@@ -3,24 +3,20 @@
 // ============================================================================
 
 /**
- * Get the pilot rank title based on lift count.
+ * Get the campaign rank title from authored round progression.
  */
-window.getRankByLifts = function(numLifts) {
-    if (numLifts <= 1) return "Operator";
-    if (numLifts === 2) return "Manager";
-    if (numLifts === 3) return "Director";
-    if (numLifts === 4) return "Captain";
-    if (numLifts === 5) return "Marshal";
-    return "Supremo";
+window.getCampaignRank = function(round = Registry?.stats?.round) {
+    return Config.GAME_DATA.rounds[round]?.briefing?.rank || 'Trainee';
 };
 
 /**
  * Update the pilot name display in the sidebar.
  */
 window.updatePilotNameDisplay = function() {
-    const numLifts = (typeof Registry !== 'undefined' && Registry.lifts) ? Registry.lifts.length : 1;
     const ui = GameUI();
-    const rank = (typeof ui.getRankByLifts === 'function') ? ui.getRankByLifts(numLifts) : window.getRankByLifts(numLifts);
+    const rank = (typeof ui.getCampaignRank === 'function')
+        ? ui.getCampaignRank(Registry?.stats?.round)
+        : window.getCampaignRank(Registry?.stats?.round);
     const name = (typeof Registry !== 'undefined' && Registry.playerName) ? Registry.playerName : "Pilot";
     
     const pilotDisplay = document.getElementById('pilotNameDisplay');

@@ -66,6 +66,16 @@ The following programme is the current delivery scope. It restores the design-to
    co-active. The renderer has no independent round-title/body switch, and the 25-round browser parity test guards the
    authored records.
 
+6. **Round-based campaign presentation:** all 25 canonical briefing records carry the approved rank, title, narrative,
+   learning focus, optional first-use rule card, and promotion boundary. The runtime renders those records directly;
+   rank is based on round rather than lift count. Promotion acknowledgement is persisted at normal campaign boundaries,
+   while restored and direct Debug entry go straight to the briefing. The wider briefing preserves a three-column Supply
+   Closet grid.
+7. **Current R11 playtest re-engagement:** R2's countdown instruction now names the basement Automation Dock and
+   glowing controllers; R11's spawn curve is reduced by 25% and its Rooftop schedule reserves a 45-second evacuation
+   window. Standard buildings use the accepted short/tall travel bands; counterweight and capsule movement remain
+   unchanged. Infinite Capacity has an explicit compatible-guest boarding regression.
+
 ### Tooling and release hygiene
 
 6. **Completed cleanup:** retire the broken completion audit, hash-only replay, placeholder robustness command, legacy

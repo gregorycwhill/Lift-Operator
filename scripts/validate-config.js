@@ -35,6 +35,16 @@ assert(
 
 const rounds = design.rounds;
 const briefingTitles = new Set();
+const promotionRounds = new Set([1, 3, 6, 10, 14, 19, 21, 24]);
+const firstUseRuleRounds = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22, 24]);
+const rankForRound = (round) => round <= 2 ? 'Trainee'
+    : round <= 5 ? 'Operator'
+        : round <= 9 ? 'Manager'
+            : round <= 13 ? 'Engineer'
+                : round <= 18 ? 'Director'
+                    : round <= 20 ? 'Architect'
+                        : round <= 23 ? 'Executive'
+                            : 'Commissioner';
 for (let round = 1; round <= 25; round++) {
     const value = rounds[round];
     assert(value, `Missing round ${round}.`);
@@ -49,8 +59,22 @@ for (let round = 1; round <= 25; round++) {
     assert(Array.isArray(value.activeChallenges), `Round ${round}: activeChallenges must be explicit.`);
     const briefing = value.briefing;
     assert(briefing && typeof briefing.title === 'string' && briefing.title.trim(), `Round ${round}: briefing title is required.`);
-    assert(briefing && typeof briefing.teaching === 'string' && briefing.teaching.trim(), `Round ${round}: briefing teaching copy is required.`);
-    assert(briefing && typeof briefing.emphasis === 'string' && briefing.emphasis.trim(), `Round ${round}: briefing challenge emphasis is required.`);
+    assert(briefing && briefing.rank === rankForRound(round), `Round ${round}: briefing rank must be ${rankForRound(round)}.`);
+    assert(briefing && typeof briefing.narrative === 'string' && briefing.narrative.trim(), `Round ${round}: briefing narrative is required.`);
+    assert(briefing && typeof briefing.learningFocus === 'string' && briefing.learningFocus.trim(), `Round ${round}: briefing learning focus is required.`);
+    assert(briefing && Object.prototype.hasOwnProperty.call(briefing, 'ruleCard'), `Round ${round}: ruleCard must be explicit.`);
+    assert(briefing && Object.prototype.hasOwnProperty.call(briefing, 'promotion'), `Round ${round}: promotion must be explicit.`);
+    if (briefing?.ruleCard) {
+        assert(typeof briefing.ruleCard.heading === 'string' && briefing.ruleCard.heading.trim(), `Round ${round}: rule-card heading is required.`);
+        assert(typeof briefing.ruleCard.body === 'string' && briefing.ruleCard.body.trim(), `Round ${round}: rule-card body is required.`);
+    }
+    assert(firstUseRuleRounds.has(round) === Boolean(briefing?.ruleCard), `Round ${round}: first-use rule-card presence is incorrect.`);
+    assert(promotionRounds.has(round) === Boolean(briefing?.promotion), `Round ${round}: promotion presence is incorrect.`);
+    if (briefing?.promotion) {
+        assert(briefing.promotion.rank === briefing.rank, `Round ${round}: promotion rank must match briefing rank.`);
+        assert(typeof briefing.promotion.label === 'string' && briefing.promotion.label.trim(), `Round ${round}: promotion label is required.`);
+        assert(typeof briefing.promotion.copy === 'string' && briefing.promotion.copy.trim(), `Round ${round}: promotion copy is required.`);
+    }
     if (briefing?.title) {
         assert(!briefingTitles.has(briefing.title), `Round ${round}: briefing title must be unique.`);
         briefingTitles.add(briefing.title);
@@ -80,6 +104,12 @@ Object.entries(rounds).forEach(([round, definition]) => {
 
 assert(rounds[12].objective === 'ENDURANCE', 'Round 12 must be Endurance.');
 assert(rounds[12].quota === undefined, 'Round 12 must not have a quota.');
+assert(design.system.shortBuildingLiftSpeedSec < design.system.liftSpeedSec, 'Short-building lift speed must be faster than baseline.');
+assert(design.system.tallBuildingLiftSpeedSec < design.system.shortBuildingLiftSpeedSec, 'Tall-building lift speed must be faster than short-building speed.');
+assert(design.system.shortBuildingMaxFloors === 15, 'Short-building threshold must remain 15 floors.');
+assert(rounds[11].rooftopReleaseBufferSec === 45, 'R11 must reserve a rooftop evacuation window.');
+assert(rounds[11].rooftopReleaseBufferSec + design.system.sunset.durationSec + design.system.sunset.minSec <= design.system.roundTime,
+    'R11 rooftop release schedule must fit inside the round.');
 
 Object.entries(design.powerups).forEach(([id, powerup]) => {
     assert(Array.isArray(powerup.tiers) && powerup.tiers.length === 3, `${id}: expected three tiers.`);

@@ -369,7 +369,10 @@ window.createRoundState = function(round, seed, options = {}) {
         state.vipStage = 0;
     }
     if (window.isRoundEventEnabled(definition, 'rooftop')) {
-        state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, Config.sunsetMaxSec) * 1000);
+        const releaseBuffer = Math.max(0, Number(definition.rooftopReleaseBufferSec || 0));
+        const latestStart = Math.max(Config.sunsetMinSec, Math.min(Config.sunsetMaxSec,
+            Config.roundTime - Config.sunsetDurationSec - releaseBuffer));
+        state.sunsetTargetTime = now + (window.getRandomInt(Config.sunsetMinSec, latestStart) * 1000);
     }
     if (window.isRoundEventEnabled(definition, 'gym')) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
@@ -453,9 +456,10 @@ window.initializeRound = function(round, options = {}) {
     const ui = GameUI();
     if (typeof ui.buildWorld === 'function') ui.buildWorld();
     if (typeof ui.updateScoreboardUI === 'function') ui.updateScoreboardUI();
+    if (typeof ui.updatePilotNameDisplay === 'function') ui.updatePilotNameDisplay();
     if (typeof ui.draw === 'function') ui.draw();
     if (options.showBriefing !== false && typeof ui.showRoundModal === 'function') {
-        ui.showRoundModal(state.definition.round);
+        ui.showRoundModal(state.definition.round, { showPromotion: options.showPromotion === true });
     }
     return state;
 };
@@ -555,7 +559,7 @@ window.advanceToRound = function(targetRound) {
         window.Game.Shell?.showCampaignComplete?.();
         return;
     }
-    window.skipToRound(targetRound);
+    window.skipToRound(targetRound, { showPromotion: true });
 };
 
 window.resetGame = function(options = {}) {

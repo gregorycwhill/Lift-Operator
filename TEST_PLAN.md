@@ -142,7 +142,7 @@ seed set.
 | R8 | VIP | VIP priority/queue rules, three-leg tour timing, and unsuitable/occupied-lift refusal. | Meets threshold |
 | R9 | Rooftop / stink | Party lifecycle, pressure duration, rooftop-only effects, and stink mitigation. | Meets threshold |
 | R10 | Advanced control | Custom automation usefulness, inherited event eligibility, power-up lifecycle, and refusal attribution. | Event-aware profile implemented; below threshold |
-| R11 | Advanced control / weight | Weight-aware lift selection, capacity/load trace, and inherited-event interaction. | Event-aware profile implemented; below threshold |
+| R11 | Advanced control / weight | Weight-aware lift selection, capacity/load trace, inherited-event interaction, and a bounded Rooftop evacuation window. | Spawn rate reduced 25%; evacuation and human capacity evidence pending |
 | R12 | Endurance | All-Sweep loses its twentieth life before 240 seconds; intended strategy survives 240–480 seconds; event pressure reported separately. | Event-aware profile implemented; 0/5 |
 | R13 | Pedal / gravity | Gravity, pedal availability, spawn pressure, power-up affordability, and practical manual override. | Event-aware profile implemented; below threshold |
 | R14 | Service Zoning | Zoning unlock/briefing, overlapping G coverage, zone return after override, and affordability. | Zoned profile implemented; 0/5 |
@@ -198,6 +198,16 @@ capacity fault. Improve and validate those policies before canonical balance par
 
 ### Canonical data, content, and tooling hygiene
 
+### Current playtest remediation slice
+
+- [x] R2 countdown displays the approved basement-level automation instruction while the ten-second teaching countdown is visible.
+- [x] R11 spawn curve reduced by 25%: 1.3125â€“1.5 guests/second.
+- [x] R11 reserves a 45-second post-party evacuation buffer; its Rooftop start is still randomized within the remaining legal window.
+- [x] Standard lift travel uses the accepted geometry bands: 0.45 seconds/floor through 15 floors and 0.4166666667 seconds/floor above 15 floors.
+- [x] Counterweight and capsule movement retain their dedicated movement rules.
+- [x] Infinite Capacity regression coverage requires every compatible queued guest to board before the lift closes; direction, Stink, zoning, VIP, and party-state refusals remain valid exclusions.
+- [ ] Human replay R11 with the reduced arrival curve and evacuation buffer; report rooftop queue size at release, guests recovered, and whether ordinary traffic remains serviceable.
+
 - [x] Move remaining active mechanic parameters out of compatibility/debug aliases and into canonical data, or remove
   the unused aliases.
 - [ ] Debug controls either alter a documented temporary round overlay or are removed; no visible control may silently
@@ -214,9 +224,12 @@ capacity fault. Improve and validate those policies before canonical balance par
   canonical gate. `balance:acceptance:integrity` verifies the committed report's schema, provenance, seeds, and traces;
   `balance:acceptance:check` remains the active full-campaign release gate and rejects unmet thresholds.
 
-**Briefing-authoring follow-up: complete.** Canonical `briefing` records now contain the unique title, teaching copy,
-and challenge emphasis for all 25 rounds. The focused browser parity test covers the rendered title and active challenge
-labels; future authored changes must update canonical data and that test's evidence together.
+**Briefing-and-rank authoring follow-up: complete.** Canonical `briefing` records now contain the round-based rank,
+unique title, approved narrative, learning focus, first-use rule card where applicable, promotion record at each
+approved boundary, and active-challenge emphasis for all 25 rounds. Promotion acknowledgement persists at campaign
+boundaries, is not replayed after acknowledgement, and is suppressed for restored or direct Debug entry. The focused
+browser coverage verifies the rendered title/rank/challenge labels, promotion flow, wider briefing layout, and the
+three-column Supply Closet grid; future authored changes must update canonical data and that evidence together.
 
 ### Retired Auto-Pilot automation
 

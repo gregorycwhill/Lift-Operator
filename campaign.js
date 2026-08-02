@@ -8,6 +8,9 @@
         ? inventory.filter(item => item && typeof item.id === 'string' && Number.isInteger(item.tier))
             .map(item => ({ id: item.id, tier: item.tier }))
         : [];
+    const clonePromotions = (promotions) => Array.isArray(promotions)
+        ? [...new Set(promotions.filter(round => Number.isInteger(round) && Config.GAME_DATA.rounds[round]?.briefing?.promotion))]
+        : [];
 
     const parse = () => {
         const raw = Game.Storage.get(Game.Keys.CAMPAIGN, '');
@@ -25,7 +28,20 @@
 
     Game.Campaign = {
         load: parse,
-        clear: () => { try { localStorage.removeItem(Game.Keys.CAMPAIGN); } catch (error) {} },
+        clear: () => {
+            Registry.promotionAcknowledgements = [];
+            try { localStorage.removeItem(Game.Keys.CAMPAIGN); } catch (error) {}
+        },
+        shouldShowPromotion: (round) => Boolean(
+            Config.GAME_DATA.rounds[round]?.briefing?.promotion &&
+            !clonePromotions(Registry.promotionAcknowledgements).includes(round)
+        ),
+        acknowledgePromotion: (round) => {
+            if (!Config.GAME_DATA.rounds[round]?.briefing?.promotion) return false;
+            Registry.promotionAcknowledgements = clonePromotions([...Registry.promotionAcknowledgements, round]);
+            if (Registry.playerName) Game.Campaign.saveCurrent();
+            return true;
+        },
         saveCurrent: (options = {}) => {
             if (!Registry.playerName) return null;
             const record = {
@@ -38,6 +54,7 @@
                 lives: Math.max(0, Number(options.lives ?? Registry.stats.lives) || 0),
                 points: Math.max(0, Number(options.points ?? Registry.points) || 0),
                 inventory: cloneInventory(options.inventory ?? (typeof PowerUps !== 'undefined' ? PowerUps.inventory : [])),
+                promotionAcknowledgements: clonePromotions(options.promotionAcknowledgements ?? Registry.promotionAcknowledgements),
                 completed: Boolean(options.completed)
             };
             Game.Storage.set(Game.Keys.CAMPAIGN, JSON.stringify(record));
@@ -49,6 +66,7 @@
             Registry.seed = record.seed;
             Registry.points = record.points;
             Registry.highestUnlockedRound = record.highestUnlockedRound;
+            Registry.promotionAcknowledgements = clonePromotions(record.promotionAcknowledgements);
             Game.Storage.set(Game.Keys.PLAYER, record.playerName);
             window.initializeRound(record.round, {
                 showBriefing: false,
@@ -61,7 +79,7 @@
             ui.updateLocksUI?.();
             ui.updateInventoryUI?.();
             if (record.completed) Game.Shell?.showCampaignComplete?.();
-            else ui.showRoundModal?.(record.round);
+            else ui.showRoundModal?.(record.round, { showPromotion: false });
             return true;
         }
     };
@@ -80,7 +98,8 @@
         start: () => {
             const save = Game.Campaign.load();
             if (save) return Game.Campaign.restore(save);
-            show('roundModalOverlay');
+            const ui = GameUI();
+            ui.showRoundModal?.(Registry.stats.round, { showPromotion: Registry.stats.round === 1 });
             return true;
         },
         requestNewGame: () => show('newGameConfirmOverlay'),

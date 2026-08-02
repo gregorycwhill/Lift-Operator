@@ -123,25 +123,46 @@
         </div>
 
         <div class="overlay" id="roundModalOverlay">
-            <div class="modal-content">
-                <h2 id="roundTitle">Welcome Pilot</h2>
-                <p id="roundInstructions" class="modal-instructions">Click on a lift shaft to send the car to that floor.</p>
-                
-                <div class="modal-form-row" id="playerNameContainer">
-                    <label class="modal-form-label">Player:</label>
-                    <div class="modal-form-input-group">
-                        <input type="text" id="playerName" placeholder="Enter Name" class="player-name-input">
+            <div class="modal-content round-briefing-modal">
+                <section id="promotionBanner" class="promotion-banner hidden" aria-live="polite">
+                    <p id="promotionHeading" class="promotion-heading"></p>
+                    <p id="promotionCopy" class="promotion-copy"></p>
+                    <button id="dismissPromotionBtn" class="btn btn-green btn-full-width">Continue to Round Briefing</button>
+                </section>
+                <div id="briefingDetails">
+                    <p id="roundRank" class="round-rank"></p>
+                    <h2 id="roundTitle">First Shift</h2>
+                    <p id="roundInstructions" class="modal-instructions">Click on a lift shaft to send the car to that floor.</p>
+                    <section id="roundRuleCard" class="briefing-card hidden">
+                        <h3 id="roundRuleHeading">New operating rule</h3>
+                        <p id="roundRuleBody"></p>
+                    </section>
+                    <section class="briefing-card briefing-objective">
+                        <h3>Objective</h3>
+                        <p id="roundObjective"></p>
+                    </section>
+                    <section class="briefing-challenges">
+                        <h3>Active challenges</h3>
+                        <div id="roundChallengeList" class="challenge-chips"></div>
+                    </section>
+                    <p id="roundLoadoutHint" class="modal-help"></p>
+
+                    <div class="modal-form-row" id="playerNameContainer">
+                        <label class="modal-form-label">Player:</label>
+                        <div class="modal-form-input-group">
+                            <input type="text" id="playerName" placeholder="Enter Name" class="player-name-input">
+                        </div>
                     </div>
-                </div>
-                
-                <div class="modal-form-row" id="gameIdContainer">
-                    <label class="modal-form-label">Game ID:</label>
-                    <div class="modal-form-input-group">
-                        <input type="text" id="gameSeed" class="game-id-input">
+
+                    <div class="modal-form-row" id="gameIdContainer">
+                        <label class="modal-form-label">Game ID:</label>
+                        <div class="modal-form-input-group">
+                            <input type="text" id="gameSeed" class="game-id-input">
+                        </div>
                     </div>
+                    
+                    <button id="startRoundBtn" class="btn btn-green btn-large btn-full-width">Start Round</button>
                 </div>
-                
-                <button id="startRoundBtn" class="btn btn-green btn-large btn-full-width">Start Round</button>
             </div>
         </div>
 

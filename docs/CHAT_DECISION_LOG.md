@@ -40,6 +40,8 @@ document after the decision is applied there.
 | DEC-023 | 2 August 2026 | The Game Play Map must explicitly enumerate the active challenges for every authored round. Canonical event activation, runtime behaviour, and player briefings are derived from that schedule; challenges do not inherit automatically from their introduction. | `Game Play Map.md` is the source; implementation and acceptance work are tracked in `DELIVERY_PLAN.md` and `TEST_PLAN.md`. |
 | DEC-024 | 2 August 2026 | The approved R1–R25 active-challenge matrix restores a lighter Counterweight puzzle arc (R21–R23) and retains VIP, but excludes Room Service and Gym Bros, in the capsule arc (R24–R25). | `Game Play Map.md` Active-challenge matrix. |
 
+| DEC-025 | 2 August 2026 | Campaign progression uses eight round-based ranks, not lift size: Trainee (R1-R2), Operator (R3-R5), Manager (R6-R9), Engineer (R10-R13), Director (R14-R18), Architect (R19-R20), Executive (R21-R23), and Commissioner (R24-R25). The approved structured copy is canonical; promotions appear only on normal first arrival at R1/R3/R6/R10/R14/R19/R21/R24 and are locally acknowledged. R9 explicitly includes Stink. | `Game Play Map.md`, `design/game-balance.v1.json`, `TEST_PLAN.md`. |
+
 ## Chat persistence limitation
 
 The complete source conversation is retained by the chat service, outside this repository. This file is a curated
