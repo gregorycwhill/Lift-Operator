@@ -34,6 +34,7 @@ assert(
 );
 
 const rounds = design.rounds;
+const briefingTitles = new Set();
 for (let round = 1; round <= 25; round++) {
     const value = rounds[round];
     assert(value, `Missing round ${round}.`);
@@ -46,6 +47,14 @@ for (let round = 1; round <= 25; round++) {
     const challengeIds = new Set(value.activeChallenges || []);
     const allowedChallenges = new Set(['roomService', 'gym', 'checkout', 'rooftop', 'vip', 'gravity', 'counterweights', 'capsule', 'jam', 'stink', 'zoning', 'openPlan', 'endurance']);
     assert(Array.isArray(value.activeChallenges), `Round ${round}: activeChallenges must be explicit.`);
+    const briefing = value.briefing;
+    assert(briefing && typeof briefing.title === 'string' && briefing.title.trim(), `Round ${round}: briefing title is required.`);
+    assert(briefing && typeof briefing.teaching === 'string' && briefing.teaching.trim(), `Round ${round}: briefing teaching copy is required.`);
+    assert(briefing && typeof briefing.emphasis === 'string' && briefing.emphasis.trim(), `Round ${round}: briefing challenge emphasis is required.`);
+    if (briefing?.title) {
+        assert(!briefingTitles.has(briefing.title), `Round ${round}: briefing title must be unique.`);
+        briefingTitles.add(briefing.title);
+    }
     (value.activeChallenges || []).forEach(id => assert(allowedChallenges.has(id), `Round ${round}: unknown active challenge ${id}.`));
     assert(!(challengeIds.has('checkout') && challengeIds.has('rooftop')), `Round ${round}: Checkout and Rooftop cannot be co-active.`);
     if (value.capsuleMode) {

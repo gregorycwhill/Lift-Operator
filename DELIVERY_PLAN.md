@@ -59,12 +59,12 @@ The following programme is the current delivery scope. It restores the design-to
    affordability, savings, and dominant purchases without changing prices. Achievements are deferred and contribute no
    runtime or modelled Credits in 1.0.
 4. **Configuration authority:** move remaining active balance parameters into canonical data, remove or repair dead
-   compatibility/debug controls, and extend validation for event exclusions, counterweight geometry, capsule rules,
+   compatibility/debug controls, and extend validation for explicit challenge matrices, counterweight geometry, capsule rules,
    unlock availability, and required mechanic support.
-5. **Explicit event schedule and content parity:** replace persistent event inheritance/exclusions with the Game Play
-   Map's explicit R1–R25 active-challenge matrix. Generate or validate canonical data, runtime activation, and player
-   briefing content from that one source. Checkout and Rooftop must never be co-active. The exact matrix is a required
-   design input before implementation; current parity claims are provisional while inheritance remains in production.
+5. **Explicit event schedule and content parity:** the Game Play Map's explicit R1–R25 active-challenge matrix and
+   canonical per-round briefing records drive runtime activation and briefing content; Checkout and Rooftop cannot be
+   co-active. The renderer has no independent round-title/body switch, and the 25-round browser parity test guards the
+   authored records.
 
 ### Tooling and release hygiene
 

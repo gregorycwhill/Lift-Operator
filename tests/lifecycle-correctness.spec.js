@@ -16,6 +16,34 @@ test.beforeEach(async ({ page }) => {
     await page.goto(GAME_URL);
 });
 
+test('every authored round renders its canonical briefing title and active challenges', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const labels = {
+            roomService: 'Room Service', checkout: 'Checkout', vip: 'VIP', rooftop: 'Rooftop Party',
+            jam: 'Jams', stink: 'Stink', gym: 'Gym Bros', gravity: 'Gravity',
+            counterweights: 'Counterweights', capsule: 'Capsule lifts', zoning: 'Zoning',
+            openPlan: 'Open Plan', endurance: 'Endurance'
+        };
+        return Object.entries(Config.GAME_DATA.rounds).map(([round, definition]) => {
+            showRoundModal(Number(round));
+            const instructions = document.getElementById('roundInstructions').innerText;
+            return {
+                round: Number(round),
+                title: document.getElementById('roundTitle').innerText,
+                expectedTitle: definition.briefing.title,
+                missingChallenges: (definition.activeChallenges || [])
+                    .map(challenge => labels[challenge] || challenge)
+                    .filter(label => !instructions.includes(label))
+            };
+        });
+    });
+    expect(new Set(result.map(row => row.expectedTitle)).size).toBe(25);
+    for (const row of result) {
+        expect(row.title).toContain(row.expectedTitle);
+        expect(row.missingChallenges, `Round ${row.round} briefing omitted an active challenge`).toEqual([]);
+    }
+});
+
 test('campaign shell restores only a validated pre-round checkpoint', async ({ page }) => {
     const result = await page.evaluate(() => {
         localStorage.removeItem(Game.Keys.CAMPAIGN);
@@ -491,6 +519,8 @@ test('all supported rounds have explicit factory configuration', async ({ page }
 
 test('factory produces equivalent structures for normal, retry, and simulation setup', async ({ page }) => {
     const structures = await page.evaluate(() => {
+        const originalNow = Date.now;
+        Date.now = () => 100000;
         const summarize = () => ({
             round: Registry.stats.round,
             seed: Registry.seed,
@@ -503,20 +533,24 @@ test('factory produces equivalent structures for normal, retry, and simulation s
             gymFloor: Registry.gymFloor
         });
 
-        Registry.seed = 7777;
-        initializeRound(11, { now: 100000, showBriefing: false });
-        const normal = summarize();
+        try {
+            Registry.seed = 7777;
+            initializeRound(11, { now: 100000, showBriefing: false });
+            const normal = summarize();
 
-        Registry.roundCheckpoint = { round: 11, seed: 7777, points: Registry.points };
-        Registry.roundTerminalHandled = false;
-        handleOrdinaryDeath();
-        retryFailedRound();
-        const retry = summarize();
+            Registry.roundCheckpoint = { round: 11, seed: 7777, points: Registry.points };
+            Registry.roundTerminalHandled = false;
+            handleOrdinaryDeath();
+            retryFailedRound();
+            const retry = summarize();
 
-        initializeRound(11, { now: 100000, showBriefing: false });
-        const simulation = summarize();
+            initializeRound(11, { now: 100000, showBriefing: false });
+            const simulation = summarize();
 
-        return { normal, retry, simulation };
+            return { normal, retry, simulation };
+        } finally {
+            Date.now = originalNow;
+        }
     });
 
     expect(structures.retry).toEqual(structures.normal);

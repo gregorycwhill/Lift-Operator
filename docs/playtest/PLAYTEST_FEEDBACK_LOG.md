@@ -46,10 +46,10 @@ feedback belongs here.
 | PTF-016 | chat reconstruction — date unavailable | Gym Bros should board stinky lifts regardless of whether stink came from a fart or another source; Room Service must never be Checkout. | Guest rules | Implemented historically; retain regression coverage/observation. |
 | PTF-017 | chat reconstruction — date unavailable | Every power-up should have its intended wall-clock duration; fart sound should be capped at two seconds; R14+ needed 50% more credits. | Power-ups, economy | Implemented/tuned historically; duration telemetry and human replay remain relevant. |
 | PTF-018 | chat reconstruction — date unavailable | Zoning needed visible shaft colour for serviceable floors. | R14+ Service Zoning | Implemented historically; H1 discovery/readability check. |
-| PTF-019 | chat reconstruction — date unavailable | The native blue suitcase is illegible on a green Happy guest background. Replace Checkout guests' native `🧳` marker with the explicitly text-presented briefcase `💼︎` and render it black on supported Chrome/Edge desktop. | Checkout guest marker, R7/R17 and persistent Checkout | **Planned for the next release.** Use `U+1F4BC U+FE0E` only for Checkout guests; do not change the guest-status background or Checkout routing semantics. |
-| PTF-020 | chat reconstruction — date unavailable | “Made with ♥ in Melbourne, Australia” should use a pink heart. Audio credits should scroll on a compact tracker instead of taking up a whole modal/page. | RC1.0 shell Credits & Licences, Settings/Leaderboard attribution | **Planned for next-release design and implementation.** Keep the complete, accessible attribution text available; replace the space-heavy visible presentation with a compact scrolling tracker/disclosure treatment. |
+| PTF-019 | chat reconstruction — date unavailable | The native blue suitcase is illegible on a green Happy guest background. Replace Checkout guests' native `🧳` marker with the explicitly text-presented briefcase `💼︎` and render it black on supported Chrome/Edge desktop. | Checkout guest marker, R7/R17 and persistent Checkout | **Implemented—awaiting visual confirmation.** Uses `U+1F4BC U+FE0E` only for Checkout guests; guest-status backgrounds and Checkout routing semantics are unchanged. |
+| PTF-020 | chat reconstruction — date unavailable | “Made with ♥ in Melbourne, Australia” should use a pink heart. Audio credits should scroll on a compact tracker instead of taking up a whole modal/page. | RC1.0 shell Credits & Licences, Settings/Leaderboard attribution | **Implemented—awaiting visual confirmation.** Complete accessible attribution text remains available through the compact scrolling tracker/disclosure treatment. |
 | PTF-021 | code inspection — 2 August 2026 | VIP legs correctly begin Annoyed with about 40 seconds of active patience, but canonical `system.vipHeadstartSec` is unused; the runtime derives the same 20-second head start indirectly from general guest patience. | VIP configuration / R8+ | **Implemented.** Removed the dead parameter; VIP starts Happy on every leg, then follows normal patience thresholds, with the approved inter-leg pause and 10-life rage-quit penalty retained. |
-| PTF-022 | chat reconstruction — 2 August 2026 | A round can appear to contain the wrong challenge because events inherit after introduction and the briefing is maintained separately. | R7+, especially Checkout/Rooftop interpretation | **Design complete; implementation planned.** The approved Game Play Map R1–R25 matrix replaces inherited eligibility; runtime activation and briefing content must derive from it. |
+| PTF-022 | chat reconstruction — 2 August 2026 | A round can appear to contain the wrong challenge because events inherit after introduction and the briefing is maintained separately. | R7+, especially Checkout/Rooftop interpretation | **Implemented—awaiting visual confirmation.** The approved Game Play Map R1–R25 matrix and canonical briefing records drive runtime activation and briefing content; focused parity coverage passes. |
 
 ## Current intake boundary
 
@@ -67,11 +67,14 @@ Every reconstructed entry has a disposition. The only open or human-evidence-dep
 | PTF-015 | Open | Exact reproduction context for any remaining refusal “bong”. |
 | PTF-007, PTF-018 | Implemented—awaiting H1 evidence | R9–R15 briefing, loadout, and zoning-discovery observations. |
 | PTF-010–PTF-012 | Implemented—awaiting later evidence | H2/H3 desktop layout, counterweight, and capsule-device checks. |
-| PTF-019 | Planned | Chrome/Edge visual check: Checkout briefcase is black and legible on Happy, Annoyed, and Critical guests; ordinary G-bound guests remain `G`. |
-| PTF-020 | Planned | Credits show a clearly pink heart; CC-BY credit text remains accessible while the normal in-game presentation is compact and does not dominate the modal. |
+| PTF-019 | Implemented—awaiting visual evidence | Chrome/Edge visual check: Checkout briefcase is black and legible on Happy, Annoyed, and Critical guests; ordinary G-bound guests remain `G`. |
+| PTF-020 | Implemented—awaiting visual evidence | Credits show a clearly pink heart; CC-BY credit text remains accessible while the normal in-game presentation is compact and does not dominate the modal. |
 | PTF-021 | Implemented | Focused lifecycle/audio checks confirm the VIP starts Happy, repeat legs retain the 10–30 second pause, and the 10-life rage-quit penalty remains configured. |
 
 Implementation update: PTF-019 (black briefcase), PTF-020 (pink heart and compact audio credits), and PTF-022
 (explicit challenge matrix feeding runtime and briefings) are implemented and awaiting visual/playtest confirmation.
+
+**Status correction:** PTF-019 and PTF-020 are implemented and await visual/playtest confirmation, not future-release
+work. PTF-022 is implemented in code and canonical data; visual/playtest confirmation remains the only follow-up.
 
 All other entries are implemented historically, explicitly deferred, or retained as regression-sensitive observations.

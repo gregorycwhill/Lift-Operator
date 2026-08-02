@@ -204,14 +204,19 @@ capacity fault. Improve and validate those policies before canonical balance par
   fail to affect the round definition.
 - [x] Validate event exclusions, counterweight odd-floor geometry, capsule constraints, unlock availability, and
   required mechanic support.
-- [ ] Reconcile all R1–R25 Gameplay Map rows, canonical data, and briefings through the explicit active-challenge
-  matrix. The earlier inheritance-based reconciliation is superseded by this requirement.
+- [x] Reconcile all R1–R25 Gameplay Map rows, canonical data, and briefings through the explicit active-challenge
+  matrix and canonical briefing records. The 25-round browser parity test verifies unique titles, authored teaching
+  copy, and active challenge labels; the earlier inheritance-based reconciliation is superseded.
 - [x] Repair, complete, relabel, or retire the broken completion audit, hash-only replay, placeholder robustness command,
   and misleading simulation-batch default.
 - [x] Retire the stale `balance:report:check` from the active verification surface. It is retained as the explicitly
   historical `balance:legacy:report:check`; `test:full` no longer treats an archived R2â€“R13 baseline as a current
   canonical gate. `balance:acceptance:integrity` verifies the committed report's schema, provenance, seeds, and traces;
   `balance:acceptance:check` remains the active full-campaign release gate and rejects unmet thresholds.
+
+**Briefing-authoring follow-up: complete.** Canonical `briefing` records now contain the unique title, teaching copy,
+and challenge emphasis for all 25 rounds. The focused browser parity test covers the rendered title and active challenge
+labels; future authored changes must update canonical data and that test's evidence together.
 
 ### Retired Auto-Pilot automation
 
@@ -293,9 +298,9 @@ Cross-cutting observations:
 - [ ] Audio: first gesture, menu resume, pressure fade, Rooftop lifecycle, Musak duration, one-shot SFX caps, mute, and
   independent volume controls; CC-BY credits remain accessible through a compact scrolling tracker/disclosure rather
   than expanding the primary modal.
-- [x] VIP configuration: the dead `vipHeadstartSec` offset is removed; each leg
-  begins Annoyed, becomes Critical after roughly 20 active seconds, rage-quits after roughly 40 active seconds, and
-  retains the approved 10–30 second between-leg pause and 10-life penalty.
+- [x] VIP configuration: the dead `vipHeadstartSec` offset is removed; each leg begins Happy, then follows the
+  standard Happy → Annoyed → Critical → rage lifecycle. The approved 10–30 second between-leg pause and 10-life
+  rage-quit penalty remain configured.
 - [ ] Visual stability: top-floor icons, tube/cable treatment, capacity labels, Checkout's black text-presented `💼︎`
   marker remains legible on Happy/Annoyed/Critical backgrounds, the Credits line uses a pink heart, rooftop decoration,
   board jitter, and supported viewport fit.

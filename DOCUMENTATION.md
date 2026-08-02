@@ -14,7 +14,7 @@ plan as current work authority just because it contains useful detail.
 | Question | Authoritative document | Update when |
 | --- | --- | --- |
 | What durable experience and rules are we building? | `Lift-Operator_GDD.md` | Product vision or cross-system rules change |
-| What does each authored round teach? | `Game Play Map.md` | Round progression or learning intent changes |
+| What does each authored round teach and how is it briefed? | `Game Play Map.md` | Round progression, active challenges, or briefing intent changes |
 | How do Credits, purchases, and progression work? | `Game Economy.md` | Economy rules change |
 | How do Workshop and Automation Dock work? | `Automation_Workshop_Spec.md` | Automation authoring/deployment rules change |
 | What outcome comes next and why? | `ROADMAP.md` | A product phase starts, finishes, or is reprioritized |

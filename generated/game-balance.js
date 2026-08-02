@@ -445,7 +445,12 @@ window.GameBalanceData = {
       "spawnEnd": 0.3,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": []
+      "activeChallenges": [],
+      "briefing": {
+        "title": "First Shift",
+        "teaching": "Manual shaft control; red guests cost lives; boarding and alighting take time.",
+        "emphasis": "Basic mixed destinations."
+      }
     },
     "2": {
       "floors": 10,
@@ -455,7 +460,12 @@ window.GameBalanceData = {
       "spawnEnd": 0.3375,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": []
+      "activeChallenges": [],
+      "briefing": {
+        "title": "Let It Sweep",
+        "teaching": "Sweep automation and the Automation Dock.",
+        "emphasis": "One lift; learn to deploy automation during the extended countdown."
+      }
     },
     "3": {
       "floors": 10,
@@ -467,7 +477,12 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "activeChallenges": [
         "roomService"
-      ]
+      ],
+      "briefing": {
+        "title": "Rush Delivery",
+        "teaching": "A second lift and Room Service carts.",
+        "emphasis": "Heavy Room Service deliveries amid rising ordinary demand."
+      }
     },
     "4": {
       "floors": 10,
@@ -478,7 +493,12 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "activeChallenges": [
         "roomService"
-      ]
+      ],
+      "briefing": {
+        "title": "Triage Protocol",
+        "teaching": "Priority Sweep.",
+        "emphasis": "Rescue Critical guests without abandoning the rest of the hotel."
+      }
     },
     "5": {
       "floors": 10,
@@ -489,7 +509,12 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "activeChallenges": [
         "roomService"
-      ]
+      ],
+      "briefing": {
+        "title": "Democracy",
+        "teaching": "Voting and Weighted Voting.",
+        "emphasis": "Allocate three lifts across competing queue concentrations."
+      }
     },
     "6": {
       "floors": 15,
@@ -501,7 +526,12 @@ window.GameBalanceData = {
       "activeChallenges": [
         "roomService",
         "jam"
-      ]
+      ],
+      "briefing": {
+        "title": "Maintenance Crisis",
+        "teaching": "Wrench and jam recovery.",
+        "emphasis": "Jams create temporary fleet gaps across fifteen floors."
+      }
     },
     "7": {
       "floors": 15,
@@ -514,7 +544,12 @@ window.GameBalanceData = {
         "roomService",
         "checkout",
         "jam"
-      ]
+      ],
+      "briefing": {
+        "title": "Checkout Rush",
+        "teaching": "Checkout routing and Turbo.",
+        "emphasis": "A probabilistic share of guests needs Ground; retain ordinary service."
+      }
     },
     "8": {
       "floors": 15,
@@ -527,7 +562,12 @@ window.GameBalanceData = {
         "roomService",
         "vip",
         "jam"
-      ]
+      ],
+      "briefing": {
+        "title": "VIP Security",
+        "teaching": "VIP rules and Musak.",
+        "emphasis": "A Happy VIP makes three timed legs and takes priority when boardable."
+      }
     },
     "9": {
       "floors": 15,
@@ -541,7 +581,12 @@ window.GameBalanceData = {
         "roomService",
         "rooftop",
         "jam"
-      ]
+      ],
+      "briefing": {
+        "title": "Happy Hour",
+        "teaching": "Rooftop Party and Freshener.",
+        "emphasis": "Rooftop demand changes traffic; Jams remain active."
+      }
     },
     "10": {
       "floors": 15,
@@ -556,7 +601,12 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink"
-      ]
+      ],
+      "briefing": {
+        "title": "Workshop Under Pressure",
+        "teaching": "Custom Workshop scripts, TARDIS, and Group Think.",
+        "emphasis": "Checkout, VIP, Jams, and Stink combine with Room Service."
+      }
     },
     "11": {
       "floors": 15,
@@ -571,7 +621,12 @@ window.GameBalanceData = {
         "rooftop",
         "jam",
         "stink"
-      ]
+      ],
+      "briefing": {
+        "title": "Heavy Lifting",
+        "teaching": "Gym Bros and Double-Decker.",
+        "emphasis": "Gym Bros, Rooftop traffic, Jams, and Stink test capacity decisions."
+      }
     },
     "12": {
       "floors": 15,
@@ -588,7 +643,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "endurance"
-      ]
+      ],
+      "briefing": {
+        "title": "Endurance Operations",
+        "teaching": "Endurance scoring and higher-tier resources.",
+        "emphasis": "No completion timer: survive a multi-event hotel until all lives are lost."
+      }
     },
     "13": {
       "floors": 15,
@@ -603,7 +663,12 @@ window.GameBalanceData = {
         "gravity",
         "jam",
         "stink"
-      ]
+      ],
+      "briefing": {
+        "title": "Pedal Power",
+        "teaching": "Gravity-aware dispatch.",
+        "emphasis": "Heavy upward cars slow down while Room Service, Gym Bros, Jams, and Stink persist."
+      }
     },
     "14": {
       "floors": 20,
@@ -622,7 +687,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "Split-Level Service",
+        "teaching": "Service Zoning; Zoned Low and Zoned High.",
+        "emphasis": "Zoning begins amid Checkout, VIP, Gym Bros, Jams, and Stink."
+      }
     },
     "15": {
       "floors": 20,
@@ -643,7 +713,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "VIP Rooftop Gala",
+        "teaching": "Scale zoning to six lifts.",
+        "emphasis": "Rooftop demand and VIP traffic share a zoned fleet."
+      }
     },
     "16": {
       "floors": 20,
@@ -664,7 +739,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "Maintenance Blackout",
+        "teaching": "Overlapping zone recovery.",
+        "emphasis": "Checkout, VIP, Jams, and Stink stress six-lift resilience."
+      }
     },
     "17": {
       "floors": 25,
@@ -684,7 +764,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "Rooftop Express",
+        "teaching": "Express coverage across twenty-five floors.",
+        "emphasis": "Rooftop and VIP pressure, plus Jams/Stink, require legible zones."
+      }
     },
     "18": {
       "floors": 25,
@@ -707,7 +792,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "Festival Weekend",
+        "teaching": "Exception-safe zoning.",
+        "emphasis": "Checkout, VIP, Gym Bros, Jams, and Stink interact at scale."
+      }
     },
     "19": {
       "floors": 30,
@@ -730,7 +820,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "The Vertical City",
+        "teaching": "Eight-lift zone architecture.",
+        "emphasis": "Rooftop/VIP demand, Gym Bros, Jams, and Stink across thirty floors."
+      }
     },
     "20": {
       "floors": 30,
@@ -752,7 +847,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "Grand Hotel Network",
+        "teaching": "Ten-lift fleet management.",
+        "emphasis": "Checkout/VIP demand, Gym Bros, Jams, and Stink in the largest conventional fleet."
+      }
     },
     "21": {
       "floors": 11,
@@ -768,7 +868,12 @@ window.GameBalanceData = {
         "counterweights",
         "jam",
         "stink"
-      ]
+      ],
+      "briefing": {
+        "title": "Counterweight Basics",
+        "teaching": "Adjacent lifts move in opposite directions.",
+        "emphasis": "A low-pressure pair puzzle with only Jams and Stink as hazards."
+      }
     },
     "22": {
       "floors": 15,
@@ -786,7 +891,12 @@ window.GameBalanceData = {
         "jam",
         "stink",
         "openPlan"
-      ]
+      ],
+      "briefing": {
+        "title": "Counterweight Crossovers",
+        "teaching": "Open Plan transfers.",
+        "emphasis": "Four paired lifts; Gym Bros, Jams, and Stink complicate passenger placement."
+      }
     },
     "23": {
       "floors": 29,
@@ -808,7 +918,12 @@ window.GameBalanceData = {
         "stink",
         "zoning",
         "openPlan"
-      ]
+      ],
+      "briefing": {
+        "title": "Counterweight Network",
+        "teaching": "Counterweights, Zoning, and Open Plan at fleet scale.",
+        "emphasis": "Room Service, VIP, Gym Bros, Jams, and Stink in an eight-lift network."
+      }
     },
     "24": {
       "floors": 15,
@@ -828,7 +943,12 @@ window.GameBalanceData = {
         "vip",
         "capsule",
         "jam"
-      ]
+      ],
+      "briefing": {
+        "title": "SciiFi Dispatch",
+        "teaching": "Single-person capsule lifts and demand currents.",
+        "emphasis": "VIP pressure and short Jams; automations must manage ten capsules."
+      }
     },
     "25": {
       "floors": 30,
@@ -850,7 +970,12 @@ window.GameBalanceData = {
         "capsule",
         "jam",
         "zoning"
-      ]
+      ],
+      "briefing": {
+        "title": "SciiFi Overdrive",
+        "teaching": "Twenty-capsule automation fleet.",
+        "emphasis": "Rooftop, VIP, Zoning, and short Jams combine under changing demand."
+      }
     }
   }
 };

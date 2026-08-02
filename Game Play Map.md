@@ -216,6 +216,45 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 These figures are the next accepted tuning targets where they differ from the current canonical balance; implementation
 must update the canonical source and generated artifact together.
 
+## 5.1 Player briefing contract
+
+Every authored round has one unique player-facing title. Its briefing must state the new tool or rule where applicable,
+then name the active challenges from the matrix above before the player chooses a loadout. The wording should explain
+the decision pressure without prescribing a solution. The active-challenge list, title, and teaching copy are now read
+from the canonical round data; `ui-briefing.js` is only the renderer.
+
+| R | Player-facing title | New or reinforced learning | Challenge emphasis |
+| ---: | --- | --- | --- |
+| 1 | First Shift | Manual shaft control; red guests cost lives; boarding and alighting take time. | Basic mixed destinations. |
+| 2 | Let It Sweep | Sweep automation and the Automation Dock. | One lift; learn to deploy automation during the extended countdown. |
+| 3 | Rush Delivery | A second lift and Room Service carts. | Heavy Room Service deliveries amid rising ordinary demand. |
+| 4 | Triage Protocol | Priority Sweep. | Rescue Critical guests without abandoning the rest of the hotel. |
+| 5 | Democracy | Voting and Weighted Voting. | Allocate three lifts across competing queue concentrations. |
+| 6 | Maintenance Crisis | Wrench and jam recovery. | Jams create temporary fleet gaps across fifteen floors. |
+| 7 | Checkout Rush | Checkout routing and Turbo. | A probabilistic share of guests needs Ground; retain ordinary service. |
+| 8 | VIP Security | VIP rules and Musak. | A Happy VIP makes three timed legs and takes priority when boardable. |
+| 9 | Happy Hour | Rooftop Party and Freshener. | Rooftop demand changes traffic; Jams remain active. |
+| 10 | Workshop Under Pressure | Custom Workshop scripts, TARDIS, and Group Think. | Checkout, VIP, Jams, and Stink combine with Room Service. |
+| 11 | Heavy Lifting | Gym Bros and Double-Decker. | Gym Bros, Rooftop traffic, Jams, and Stink test capacity decisions. |
+| 12 | Endurance Operations | Endurance scoring and higher-tier resources. | No completion timer: survive a multi-event hotel until all lives are lost. |
+| 13 | Pedal Power | Gravity-aware dispatch. | Heavy upward cars slow down while Room Service, Gym Bros, Jams, and Stink persist. |
+| 14 | Split-Level Service | Service Zoning; Zoned Low and Zoned High. | Zoning begins amid Checkout, VIP, Gym Bros, Jams, and Stink. |
+| 15 | VIP Rooftop Gala | Scale zoning to six lifts. | Rooftop demand and VIP traffic share a zoned fleet. |
+| 16 | Maintenance Blackout | Overlapping zone recovery. | Checkout, VIP, Jams, and Stink stress six-lift resilience. |
+| 17 | Rooftop Express | Express coverage across twenty-five floors. | Rooftop and VIP pressure, plus Jams/Stink, require legible zones. |
+| 18 | Festival Weekend | Exception-safe zoning. | Checkout, VIP, Gym Bros, Jams, and Stink interact at scale. |
+| 19 | The Vertical City | Eight-lift zone architecture. | Rooftop/VIP demand, Gym Bros, Jams, and Stink across thirty floors. |
+| 20 | Grand Hotel Network | Ten-lift fleet management. | Checkout/VIP demand, Gym Bros, Jams, and Stink in the largest conventional fleet. |
+| 21 | Counterweight Basics | Adjacent lifts move in opposite directions. | A low-pressure pair puzzle with only Jams and Stink as hazards. |
+| 22 | Counterweight Crossovers | Open Plan transfers. | Four paired lifts; Gym Bros, Jams, and Stink complicate passenger placement. |
+| 23 | Counterweight Network | Counterweights, Zoning, and Open Plan at fleet scale. | Room Service, VIP, Gym Bros, Jams, and Stink in an eight-lift network. |
+| 24 | SciiFi Dispatch | Single-person capsule lifts and demand currents. | VIP pressure and short Jams; automations must manage ten capsules. |
+| 25 | SciiFi Overdrive | Twenty-capsule automation fleet. | Rooftop, VIP, Zoning, and short Jams combine under changing demand. |
+
+**Briefing derivation rule:** challenge names and availability are generated from `activeChallenges`; titles and teaching
+copy come from each round's canonical `briefing` record. Any change to a briefing requires a focused snapshot for the
+affected round and a matrix parity check for all 25 rounds.
+
 ## 6. Detailed round designs
 
 ### Round 1 — First Shift
@@ -545,10 +584,10 @@ direct-service band for each lift.
 | 14 | Split-Level Service | 20 | 5 | Rising arrivals across lower, middle, and upper traffic bands | Configure direct local zones including G while preserving flexible Ground coverage |
 | 15 | VIP Rooftop Gala | 20 | 6 | VIP traffic combined with Rooftop Party | Preserve direct VIP and rooftop coverage |
 | 16 | Maintenance Blackout | 20 | 6 | Jams and stink create temporary fleet gaps | Keep overlapping rescue coverage |
-| 17 | Express Check-Out | 25 | 6 | Checkout traffic concentrates at special/G floors | Use local and express direct zones |
-| 18 | Festival Weekend | 25 | 7 | Rooftop, VIP, Gym Bros, and stink interact | Configure exception-safe zones and a flexible lift |
-| 19 | The Vertical City | 30 | 8 | Long distances and competing service bands | Make Workshop zoning strategically advantageous |
-| 20 | Grand Hotel Network | 30 | 10 | Full combination of traffic, hazards, and scale | Master direct-service fleet architecture |
+| 17 | Rooftop Express | 25 | 6 | Rooftop and VIP traffic combine with Jams and Stink | Use local and express zones while retaining flexible recovery coverage |
+| 18 | Festival Weekend | 25 | 7 | Checkout, VIP, Gym Bros, Jams, and Stink interact | Configure exception-safe zones and a flexible lift |
+| 19 | The Vertical City | 30 | 8 | Rooftop and VIP pressure compete with Gym Bros, Jams, and Stink | Make Workshop zoning strategically advantageous |
+| 20 | Grand Hotel Network | 30 | 10 | Checkout and VIP pressure combine with Gym Bros, Jams, and Stink | Master direct-service fleet architecture |
 
 The current screen renders approximately seven lifts comfortably. R14–R18 should remain usable within that limit;
 R19–R20 use a compact large-fleet layout so all eight lifts remain visible on supported desktop widths.
@@ -612,8 +651,8 @@ objective, lives, and economy apply initially and are tuning targets rather than
 - Capsules render as compact cars inside tubes, with no cables, pulleys, or counterweight visual language.
 - Manual targeting remains legal, but these rounds must make automation the practical primary operating model.
 - Existing Service Zoning and custom Workshop policies are sufficient; no capsule-specific automation primitive is added.
-- VIPs, Gym Bros, Room Service, and Stink/farter events are excluded. Freshener, TARDIS, and Double-Decker are not
-  offered in the shop.
+- Room Service, Gym Bros, and Stink/farter events are excluded; VIP remains active in both rounds and Rooftop is active
+  in R25. Freshener, TARDIS, and Double-Decker are not offered in the shop.
 - Jams remain common but use a shorter authored duration; passengers stay in the jammed capsule normally. Wrench
   remains useful because fleet redundancy lowers the consequence without removing the disruption.
 - Open Plan remains legal under its normal adjacent, same-floor rule, but is deliberately niche. Turbo remains visible,
