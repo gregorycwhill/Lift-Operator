@@ -25,6 +25,7 @@ plan as current work authority just because it contains useful detail.
 | How should an external tester run and report an RC session? | `docs/playtest/RC1_PLAYTEST_PACK.md` | The test window, reporting fields, or release-readiness guidance changes |
 | What shipped in completed delivery slices? | `docs/archive/RELEASE_HISTORY.md` | A release candidate or material delivery slice completes |
 | What audio assets may ship and how are they credited? | `assets/audio/ATTRIBUTION.md` | An audio source, licence, or local asset changes |
+| What third-party material is bundled and what blocks a project licence? | `THIRD_PARTY_NOTICES.md` | A bundled dependency, asset, provenance record, or licence decision changes |
 | What does the code currently expose? | Code, `package.json`, generated balance data, and focused tests | Code is always primary; write a short baseline note only for material behavior |
 | How do balance and quality practices work? | `BALANCE_WORKFLOW.md`, `TESTING_STRATEGY.md` | Enduring process changes |
 

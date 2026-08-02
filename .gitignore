@@ -13,6 +13,8 @@ node_modules/
 test-results/
 playwright-report/
 .playwright-output/
+dist/
+.itch-staging/
 
 # Ignore OS files
 .DS_Store

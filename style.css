@@ -803,6 +803,7 @@ body {
     box-sizing: border-box;
 }
 .workshop-textarea { height: 60px; resize: none; font-family: inherit; }
+.build-version { margin: 12px 0 0; color: #5d6d7e; font-size: 11px; text-align: center; }
 
 .workshop-actions {
     display: flex;

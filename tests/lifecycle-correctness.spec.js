@@ -1605,6 +1605,39 @@ test('Settings links to the scoreboard without presenting deferred achievements'
     expect(result).toEqual({ settingsOpen: true, hasAchievements: false, leaderboardOpen: true, settingsClosed: true });
 });
 
+test('Give Feedback copies local diagnostics and opens only the configured external form', async ({ page }) => {
+    const result = await page.evaluate(async () => {
+        initializeRound(9, { showBriefing: false });
+        buildWorld();
+        let copied = '';
+        let opened = '';
+        Object.defineProperty(navigator, 'clipboard', {
+            configurable: true,
+            value: { writeText: async text => { copied = text; } }
+        });
+        window.open = url => { opened = url; return null; };
+        await Game.Feedback.open('settings');
+        return {
+            copied,
+            opened,
+            settingsButton: document.getElementById('settingsFeedbackBtn')?.textContent,
+            reviewButton: document.getElementById('reviewFeedbackBtn')?.textContent,
+            build: document.querySelector('[data-build-version]')?.textContent
+        };
+    });
+
+    expect(result.opened).toBe('https://github.com/gregorycwhill/Lift-Operator/issues/new/choose');
+    expect(result.copied).toContain('build=RC1.0-playtest');
+    expect(result.copied).toContain('balance=0.2.9-capsule-dispatch');
+    expect(result.copied).toContain('context=settings');
+    expect(result.copied).toContain('round=9');
+    expect(result.copied).toContain('seed=');
+    expect(result.copied).toContain('viewport=');
+    expect(result.settingsButton).toBe('Give Feedback');
+    expect(result.reviewButton).toBe('Give Feedback');
+    expect(result.build).toContain('RC1.0-playtest');
+});
+
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(14, { showBriefing: false });

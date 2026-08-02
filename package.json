@@ -18,6 +18,8 @@
     "balance:acceptance:check": "node scripts/validate-balance-acceptance.js",
     "balance:traces": "node scripts/analyze-balance-traces.js",
     "perf:capsule": "node scripts/capture-capsule-performance.js",
+    "capture:media": "node scripts/capture-release-media.js",
+    "package:itch": "powershell -ExecutionPolicy Bypass -File scripts/package-itch.ps1",
     "balance:experiment:early": "node scripts/run-early-balance-experiments.js",
     "balance:envelope": "node scripts/run-campaign-envelope.js",
     "balance:legacy:report:check": "node scripts/validate-balance-report.js",

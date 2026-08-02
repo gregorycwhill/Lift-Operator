@@ -1,0 +1,28 @@
+name: Accessibility or device report
+description: Report readability, input, browser/device, performance, or assistive-technology issues.
+title: "[Accessibility/device]: "
+labels: [accessibility, device]
+body:
+  - type: textarea
+    id: diagnostic
+    attributes:
+      label: Diagnostic string
+      description: Paste the string copied by Give Feedback.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Device, browser, viewport, and assistive technology
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: What was difficult or impossible?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested improvement or workaround

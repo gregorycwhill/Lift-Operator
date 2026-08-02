@@ -1,0 +1,31 @@
+name: Round or balance report
+description: Report whether a round is too easy, too hard, unclear, or inconsistent with its briefing.
+title: "[Round]: "
+labels: [balance, playtest]
+body:
+  - type: textarea
+    id: diagnostic
+    attributes:
+      label: Diagnostic string
+      description: Paste the string copied by Give Feedback.
+    validations:
+      required: true
+  - type: input
+    id: difficulty
+    attributes:
+      label: Difficulty rating
+      description: "1 = very easy; 3 = about right; 5 = very hard"
+    validations:
+      required: true
+  - type: textarea
+    id: loadout
+    attributes:
+      label: Credits, purchases, and automation used
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: What happened and what did you expect?
+    validations:
+      required: true

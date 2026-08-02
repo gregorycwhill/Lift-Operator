@@ -7,6 +7,7 @@ const required = [
     'ROADMAP.md',
     'DELIVERY_PLAN.md',
     'TEST_PLAN.md',
+    'THIRD_PARTY_NOTICES.md',
     'docs/CHAT_DECISION_LOG.md',
     'docs/playtest/PLAYTEST_FEEDBACK_LOG.md',
     'docs/playtest/RC1_PLAYTEST_PACK.md'

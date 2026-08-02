@@ -13,9 +13,9 @@ The active remediation working tree is based on `d9247aa` on `master`; the next 
 
 Recent focused evidence:
 
-- `npm.cmd run test:full` passed on 2 August 2026 in 174 seconds: syntax (64 files), documentation (27 Markdown
-  files), config, balance freshness/integrity, economy, UTF-8 (112 first-party files), unit, mechanics (19/19),
-  integration (3/3), audio (25/25), and the supported Playwright suite (132/132).
+- `npm.cmd run test:full` passed on 2 August 2026 in 150 seconds: syntax (67 files), documentation (28 Markdown
+  files), config, balance freshness/integrity, economy, UTF-8 (117 first-party files), unit, mechanics (19/19),
+  integration (3/3), audio (25/25), and the supported Playwright suite (133/133).
 - `guest_refused` is telemetry-only and has no sound asset or fallback.
 - Integration suite: 3/3 passed.
 - Capsule rendering regression passed: capsule cars have no cable pseudo-element and tube separators use the intended
@@ -231,6 +231,21 @@ capacity fault. Improve and validate those policies before canonical balance par
 Use `docs/playtest/RC1_PLAYTEST_PACK.md` for tester-facing instructions, report fields, known limitations, and the
 audio attribution/distribution checklist. Use `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` as the authoritative intake
 record.
+
+## Distribution and feedback acceptance
+
+- [ ] README Play Now link, all four campaign captures, and social-preview metadata resolve from the deployed GitHub
+  Pages build.
+- [x] Settings and Round Review expose Give Feedback with a visible build/balance identifier.
+- [x] Give Feedback copies build, balance version, round, seed, browser, and viewport locally before opening only the
+  configurable form URL; it does not transmit diagnostics automatically.
+- [ ] Confirm the selected feedback-form URL is appropriate for external testers and does not require an unintended
+  account or permission.
+- [x] GitHub Issue Forms exist for bug, round/balance, and accessibility/device reports.
+- [x] `THIRD_PARTY_NOTICES.md` records code, audio, font, and visual-asset audit findings; it does not select a final
+  project licence.
+- [ ] Build and open an itch.io ZIP from the final release commit; check `index.html`, audio, media, and notices in the
+  archive before upload.
 
 For every session record: commit, balance version, browser/device, round, seed, starting Credits, purchases, automation
 layout, result, observed failure cause, and the tester's own explanation.

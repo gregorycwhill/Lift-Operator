@@ -206,6 +206,7 @@ window.buildWorld = function() {
 
     if (typeof updateInventoryUI === 'function') updateInventoryUI();
     if (typeof updateLocksUI === 'function') updateLocksUI();
+    window.Game.Feedback?.renderBuildLabels?.();
 };
 
 

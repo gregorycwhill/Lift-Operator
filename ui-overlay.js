@@ -297,6 +297,9 @@ window.initializeUI = function() {
         if (typeof ui.showLeaderboard === "function") ui.showLeaderboard("Paused");
     });
 
+    bind("settingsFeedbackBtn", () => window.Game.Feedback?.open('settings'));
+    bind("reviewFeedbackBtn", () => window.Game.Feedback?.open('round-review'));
+
     bind("closeLbBtn", () => {
         const lbOverlay = document.getElementById("leaderboardOverlay");
         if (lbOverlay) lbOverlay.style.display = "none";

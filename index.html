@@ -3,7 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lift Operator</title>
+    <title>Lift Operator — keep the hotel moving</title>
+    <meta name="description" content="A fast elevator-management game that grows into an automation and routing puzzle.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Lift Operator — keep the hotel moving">
+    <meta property="og:description" content="Route a growing hotel, automate the fleet, and survive the pressure.">
+    <meta property="og:url" content="https://gregorycwhill.github.io/Lift-Operator/">
+    <meta property="og:image" content="https://gregorycwhill.github.io/Lift-Operator/assets/media/social-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Lift Operator — keep the hotel moving">
+    <meta name="twitter:description" content="A fast elevator-management game that grows into an automation puzzle.">
+    <meta name="twitter:image" content="https://gregorycwhill.github.io/Lift-Operator/assets/media/social-preview.png">
     
     <script src="lib/blockly_compressed.js"></script>
     <script src="lib/blocks_compressed.js"></script>
@@ -196,6 +208,8 @@
                     <label>SFX <input type="range" id="settingsAudioSfx" min="0" max="1" step="0.05"></label>
                 </section>
                 <details class="audio-credits"><summary>Attributions</summary><p id="settingsAudioAttribution">Procedural fallback tones by Lift Operator. Licensed asset credits are listed in the project audio manifest.</p></details>
+                <p class="build-version" data-build-version>Build</p>
+                <button id="settingsFeedbackBtn" class="btn btn-purple btn-full-width btn-margin-top">Give Feedback</button>
                 <button id="settingsLeaderboardBtn" class="btn btn-blue btn-full-width btn-margin-top">Leaderboard</button>
                 <button id="closeSettingsBtn" class="btn btn-gray btn-full-width btn-margin-top">Resume</button>
             </div>
@@ -258,6 +272,8 @@
                         </div>
                     </div>
                 </div>
+                <p class="build-version" data-build-version>Build</p>
+                <button id="reviewFeedbackBtn" class="btn btn-purple btn-full-width btn-margin-top">Give Feedback</button>
                 
                 <button id="continueToBriefingBtn" class="btn btn-green btn-large btn-full-width">Supply Closet & Next Round</button>
             </div>
@@ -275,6 +291,7 @@
 
     <script src="utils.js"></script>
     <script src="generated/game-balance.js"></script>
+    <script src="release-config.js"></script>
     <script src="config.js"></script>
     <script src="state.js"></script>
     <script src="balance-telemetry.js"></script>
@@ -297,6 +314,7 @@
     <script src="ui-leaderboard.js"></script>
     <script src="ui-briefing.js"></script>
     <script src="ui-debug.js"></script>
+    <script src="ui-feedback.js"></script>
     <script src="ui-overlay.js"></script>
 
 </body>
