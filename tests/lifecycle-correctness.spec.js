@@ -1609,6 +1609,7 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     const result = await page.evaluate(async () => {
         initializeRound(9, { showBriefing: false });
         buildWorld();
+        window.LiftOperatorRelease = { ...window.LiftOperatorRelease, feedbackFormUrl: 'https://docs.google.com/forms/d/e/test-form/viewform' };
         let copied = '';
         let opened = '';
         Object.defineProperty(navigator, 'clipboard', {
@@ -1626,7 +1627,7 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
         };
     });
 
-    expect(result.opened).toBe('https://github.com/gregorycwhill/Lift-Operator/issues/new/choose');
+    expect(result.opened).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(result.copied).toContain('build=RC1.0-playtest');
     expect(result.copied).toContain('balance=0.2.9-capsule-dispatch');
     expect(result.copied).toContain('context=settings');

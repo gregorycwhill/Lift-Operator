@@ -234,16 +234,15 @@ record.
 
 ## Distribution and feedback acceptance
 
-- [ ] README Play Now link, all four campaign captures, and social-preview metadata resolve from the deployed GitHub
+- [ ] README Play Now link, all six campaign captures, and social-preview metadata resolve from the deployed GitHub
   Pages build.
 - [x] Settings and Round Review expose Give Feedback with a visible build/balance identifier.
 - [x] Give Feedback copies build, balance version, round, seed, browser, and viewport locally before opening only the
   configurable form URL; it does not transmit diagnostics automatically.
-- [ ] Confirm the selected feedback-form URL is appropriate for external testers and does not require an unintended
-  account or permission.
-- [x] GitHub Issue Forms exist for bug, round/balance, and accessibility/device reports.
-- [x] `THIRD_PARTY_NOTICES.md` records code, audio, font, and visual-asset audit findings; it does not select a final
-  project licence.
+- [ ] Add and test the published Google Form URL in `release-config.js`; confirm it is suitable for player and
+  technical reports without an unintended account or permission requirement.
+- [x] `THIRD_PARTY_NOTICES.md` records code, audio, font, and visual-asset audit findings; GPL-3.0-only applies to
+  first-party project code while third-party assets retain their own terms.
 - [ ] Build and open an itch.io ZIP from the final release commit; check `index.html`, audio, media, and notices in the
   archive before upload.
 

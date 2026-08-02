@@ -86,17 +86,17 @@ a roadmap investigation, not an RC1.0 mode.
 This slice makes the existing GitHub Pages build understandable and actionable for broader testers without changing
 gameplay rules or transmitting player data automatically.
 
-- Player-facing README: one-line hook, Play Now link, desktop status, four deterministic campaign captures, feature
+- Player-facing README: one-line hook, Play Now link, desktop status, six curated campaign captures, feature
   summary, feedback links, and concise contributor/documentation guidance.
 - Live build metadata: Open Graph/Twitter fields and a 1200×630 first-party social-preview image.
-- Opt-in feedback: Settings and Round Review copy a compact local diagnostic string, then open the URL in
-  `release-config.js`. The checked-in default is GitHub Issue Forms; a hosted external form can replace it without
-  changing game logic.
-- Intake: GitHub forms for bug, round/balance, and accessibility/device reports; the repository feedback log remains
-  the authoritative internal record.
+- Opt-in feedback: Settings and Round Review copy a compact local diagnostic string, then open the Google Form URL in
+  `release-config.js`. The URL is intentionally blank until the published Form is supplied; no diagnostic data is sent
+  automatically.
+- Intake: Google Forms collect player, technical, balance, and accessibility reports; the repository feedback log
+  remains the authoritative internal record.
 - Distribution: `package:itch` produces an HTML5 ZIP from the current commit, while GitHub Pages remains canonical.
-- Licensing: `THIRD_PARTY_NOTICES.md` audits bundled material and deliberately defers a final project licence until
-  provenance gaps are closed.
+- Licensing: first-party project code is GPL-3.0-only. `THIRD_PARTY_NOTICES.md` audits bundled material and retains
+  the separate third-party provenance/attribution gaps.
 
 Release acceptance for this slice: all feedback actions are opt-in, diagnostic contents are visible/copiable locally,
 media paths resolve from the Pages build, an itch ZIP opens `index.html`, and the licence audit has no undisclosed

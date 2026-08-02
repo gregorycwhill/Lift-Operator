@@ -40,10 +40,16 @@ window.Game.Feedback.copyDiagnostic = async function(context) {
 window.Game.Feedback.open = async function(context) {
     const result = await window.Game.Feedback.copyDiagnostic(context);
     const url = window.LiftOperatorRelease?.feedbackFormUrl;
-    if (url) window.open(url, '_blank', 'noopener,noreferrer');
-    window.showToast?.(result.copied
-        ? 'Diagnostics copied. Paste them into the feedback form.'
-        : 'Feedback form opened. Copy diagnostics from the browser if needed.');
+    if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+        window.showToast?.(result.copied
+            ? 'Diagnostics copied. Paste them into the Google Form.'
+            : 'Google Form opened. Copy diagnostics from the browser if needed.');
+    } else {
+        window.showToast?.(result.copied
+            ? 'Diagnostics copied. Google Form URL is not configured yet.'
+            : 'Google Form URL is not configured yet.');
+    }
     return result;
 };
 

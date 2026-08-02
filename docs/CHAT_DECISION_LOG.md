@@ -32,6 +32,7 @@ document after the decision is applied there.
 | DEC-015 | 1 August 2026 | Major RC hardening proceeds in playtest boundaries: stabilise R9, then gather feedback through R15, R20, and R25; each cycle is expected to be mostly polish. | `DELIVERY_PLAN.md` H0–H4. |
 | DEC-016 | 1 August 2026 | Specific feedback must have its own source document; broader material chat instructions/decisions must be curated in a separate decision log. | This file and `docs/playtest/PLAYTEST_FEEDBACK_LOG.md`. |
 | DEC-017 | 2 August 2026 | Add a Distribution and Feedback release slice: player-facing README/media, opt-in diagnostics and form launch, GitHub Issue Forms, licence audit, build identifiers, and itch.io packaging. Keep Pages canonical and defer the final project licence pending compatibility/provenance review. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, `THIRD_PARTY_NOTICES.md`. |
+| DEC-018 | 2 August 2026 | RC1.0 first-party code is GPL-3.0-only. Use one configurable Google Form for player and technical feedback; feedback diagnostics remain local/copiable and the published URL must be supplied before launch. Firefox is not supported for this release. Curated supplied screenshots replace the README gallery. | `LICENSE`, `release-config.js`, `README.md`, `THIRD_PARTY_NOTICES.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
 
 ## Chat persistence limitation
 

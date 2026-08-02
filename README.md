@@ -4,16 +4,22 @@
 
 ## [▶ Play Now — GitHub Pages](https://gregorycwhill.github.io/Lift-Operator/)
 
-**Status:** RC1.0 desktop playtest · 25-round campaign · best in current Chrome or Edge on a desktop/laptop.
+**Status:** RC1.0 desktop playtest · 25-round campaign · supported on current Chrome or Edge on a desktop/laptop.
+Firefox is not currently a supported browser.
 
-| First shift | Rooftop pressure |
+| First dispatch | Supply Closet |
 | --- | --- |
-| ![Onboarding round: hotel floors and lift controls](assets/media/campaign-onboarding.png) | ![Rooftop Party round: guests head to the rooftop](assets/media/campaign-rooftop.png) |
-| Learn direct control, guests, and the first automation. | Keep ordinary traffic moving while the party pulls guests upstairs. |
+| ![First dispatch: guests and a manually controlled lift](assets/media/campaign-basic-dispatch.png) | ![Supply Closet: round briefing and power-up choices](assets/media/campaign-supply-closet.png) |
+| Read the building, dispatch the first car, and keep guests calm. | Choose a loadout that matches the next round’s challenge. |
 
-| Counterweight puzzle | Capsule dispatch |
+| Automation Workshop | Zoned fleet |
 | --- | --- |
-| ![Counterweight round: paired lift cars](assets/media/campaign-counterweights.png) | ![Capsule round: high-density narrow lift tubes](assets/media/campaign-capsules.png) |
+| ![Automation Workshop: Blockly policy editor](assets/media/campaign-workshop.png) | ![Zoned fleet: wide building with visible service zones](assets/media/campaign-zoning-fleet.png) |
+| Turn operational ideas into lift policies with Blockly. | Assign a growing fleet to overlapping service zones. |
+
+| Counterweight puzzle | Capsule dispatch at scale |
+| --- | --- |
+| ![Counterweight round: paired lift cars and pulley loops](assets/media/campaign-counterweights-live.png) | ![Capsule dispatch: wide dashboard and high-speed tubes](assets/media/campaign-capsule-operations.png) |
 | Paired cars move in opposition; Open Plan becomes a lifeline. | Twenty single-passenger capsules reward smart automation over frantic clicking. |
 
 ## What’s in the campaign
@@ -28,18 +34,17 @@
 
 - Use **Give Feedback** in Settings or Round Review. It copies a compact diagnostic string to your clipboard, then opens
   the feedback destination. No diagnostic data is sent automatically.
-- For structured reports, use the [GitHub Issue Forms](https://github.com/gregorycwhill/Lift-Operator/issues/new/choose):
-  [bug](https://github.com/gregorycwhill/Lift-Operator/issues/new?template=bug.yml),
-  [round/balance](https://github.com/gregorycwhill/Lift-Operator/issues/new?template=round-balance.yml), or
-  [accessibility/device](https://github.com/gregorycwhill/Lift-Operator/issues/new?template=accessibility-device.yml).
+- Feedback is collected through the configured Google Form for player, technical, balance, and accessibility reports.
+  Until its published URL is added to `release-config.js`, Give Feedback still copies the diagnostic string but does
+  not open an external page.
 - See the concise [RC1 Playtest Pack](docs/playtest/RC1_PLAYTEST_PACK.md) for current priorities and a report template.
 
 ## Contributors and project documentation
 
 Lift Operator is a hobby project designed to help children move from Scratch into purposeful programming. The current
 release work is correctness, performance, balance, usability, and device acceptance—not feature expansion. Start with
-[DOCUMENTATION.md](DOCUMENTATION.md) for document roles, then see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
-before redistributing a build.
+[DOCUMENTATION.md](DOCUMENTATION.md) for document roles, then see [LICENSE](LICENSE) and
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing a build.
 
 | Need | Document |
 | --- | --- |
