@@ -19,11 +19,12 @@ window.getRoundChallengeSummary = function(round) {
     const definition = Config.GAME_DATA.rounds[round] || {};
     const labels = {
         roomService: 'Room Service', checkout: 'Checkout', vip: 'VIP', rooftop: 'Rooftop Party',
-        jam: 'Jams', stink: 'Stink', gym: 'Gym Bros'
+        jam: 'Jams', stink: 'Stink', gym: 'Gym Bros', gravity: 'Gravity',
+        counterweights: 'Counterweights', capsule: 'Capsule lifts', zoning: 'Zoning',
+        openPlan: 'Open Plan', endurance: 'Endurance'
     };
-    return Object.keys(labels)
-        .filter(event => window.isRoundEventEnabled?.({ ...definition, round }, event))
-        .map(event => labels[event]);
+    return (window.getRoundChallengeIds?.({ ...definition, round }) || [])
+        .map(challenge => labels[challenge] || challenge);
 };
 
 /**
@@ -60,13 +61,13 @@ window.showRoundModal = function(round) {
 
     if (round === 1) {
         title.innerText = `Welcome ${rank}`;
-        instructions.innerText = "Click on a lift shaft to send the car to that floor. Don't leave guests waiting too long!";
+        instructions.innerText = "Click on a lift shaft to send the car to that floor. Guests lose lives when they pass red, and boarding and alighting take time, so wait for the doors.";
         const savedPlayer = window.Game.Storage.get(window.Game.Keys.PLAYER, Registry.fallbackName || "Pilot 1");
         if (document.getElementById('playerName')) document.getElementById('playerName').value = savedPlayer;
         btn.innerText = `Start Session: Round ${round}`;
         btn.className = 'btn btn-green btn-large btn-full-width';
     } 
-    else if (round === 2) { title.innerText = `Round 2: Automations Unlocked (${rank})`; instructions.innerText = "Manual control is tough! Activate 'Sweep' to let the lift manage itself."; }
+    else if (round === 2) { title.innerText = `Round 2: Automations Unlocked (${rank})`; instructions.innerText = "Manual control is tough! Activate 'Sweep' to let the lift manage itself. During the countdown, choose an automation and click a lift controller to deploy it."; }
     else if (round === 3) { title.innerText = `Round 3: Rush Hour (${rank})`; instructions.innerText = "Management approved a second lift! Room Service carts carry heavier deliveries and need extra lift capacity. The spawn rate is climbing."; }
     else if (round === 4) { title.innerText = `Round 4: Triage (${rank})`; instructions.innerText = "New automation: 'Priority Sweep'. It ignores everyone else to save Critical (Red) guests."; }
     else if (round === 5) { title.innerText = `Round 5: Democracy (${rank})`; instructions.innerText = "Three lifts! 'Voting' automations added. They act as express trains to the floor with the most votes."; }
@@ -81,7 +82,7 @@ window.showRoundModal = function(round) {
     else if (round === 14) { title.innerText = `Round 14: Elite Operations (${rank})`; instructions.innerText = "This 20-floor round introduces Service Zoning. Arrivals rise from 1.5 to 1.9 per second across lower, middle, and upper bands; all lifts can still reach G, which is three times more likely than an average floor. Choose Zoned Low or Zoned High in the Automation Dock, then click lifts to deploy it; use the Workshop to adapt the routine. Keep one route for G and overlap adjacent bands when needed."; }
     else if (round === 15) { title.innerText = `Round 15: VIP Rooftop Gala (${rank})`; instructions.innerText = "VIP traffic and the Rooftop Party now overlap. Use zoning to divide coverage, then keep a lift available for Ground and VIP journeys."; }
     else if (round === 16) { title.innerText = `Round 16: Stink Control (${rank})`; instructions.innerText = "Farts and heavy guests create capacity traps. Freshener, capacity, and flexible automation choices will protect your throughput."; }
-    else if (round === 17) { title.innerText = `Round 17: Express Check-Out (${rank})`; instructions.innerText = "This 25-floor, six-lift round is a checkout challenge: guests are travelling to G at high volume. Use zoning or direct routes to keep ground-floor service reliable while automations manage the upper floors."; }
+    else if (round === 17) { title.innerText = `Round 17: Rooftop Express (${rank})`; instructions.innerText = "Rooftop demand now competes with normal hotel traffic across 25 floors. Use zoning or direct routes to keep coverage reliable while automations manage the upper floors."; }
     else if (round === 18) { title.innerText = `Round 18: Festival Weekend (${rank})`; instructions.innerText = "Rooftop demand, VIP travel, Gym Bros, and stink interact at scale. Prepare exception-safe zones and a flexible lift."; }
     else if (round === 19) { title.innerText = `Round 19: Fleet Expansion (${rank})`; instructions.innerText = "More lifts and floors increase coordination costs. Use automations and capacity power-ups to prevent queues from concentrating."; }
     else if (round === 20) { title.innerText = `Round 20: Grand Hotel Network (${rank})`; instructions.innerText = "This large conventional fleet combines the late-game traffic hazards. Spend Credits deliberately, use zoning, and keep every lift useful before the counterweight and capsule rounds."; }
@@ -92,10 +93,8 @@ window.showRoundModal = function(round) {
     else if (round === 25) { title.innerText = `Round 25: SciiFi Overdrive (${rank})`; instructions.innerText = "Twenty capsule lifts serve 30 floors in about 6 seconds. Overlapping demand currents will shift throughout the round. Automations are essential; jams are shorter but common, and some familiar power-ups are unavailable."; }
     else if (round > 14) { title.innerText = `Round ${round}: Elite Operations (${rank})`; instructions.innerText = "Service Zoning is available from the Automation Dock. Keep coverage practical as the building grows; adapt Zoned Low or Zoned High in the Workshop when needed."; }
 
-    if (round >= 14) {
-        const challenges = window.getRoundChallengeSummary(round);
-        if (challenges.length) instructions.innerText += ` Active challenge systems: ${challenges.join(', ')}.`;
-    }
+    const challenges = window.getRoundChallengeSummary(round);
+    if (challenges.length) instructions.innerText += ` Active challenges: ${challenges.join(', ')}.`;
 
     let shopDiv = document.getElementById('shopContainer');
     if (!shopDiv && btn) {

@@ -294,11 +294,13 @@ window.getRoundDefinition = function(round, operation = null) {
 };
 
 window.isRoundEventEnabled = function(roundDefinition, eventId) {
-    const rules = Config.GAME_DATA.events || {};
-    const rule = rules[eventId];
-    const round = Number(roundDefinition?.round || Registry?.stats?.round || 0);
-    if (!rule || round < Number(rule.introducedRound || 1)) return false;
-    return !(roundDefinition.eventExclusions || []).includes(eventId);
+    const activeChallenges = roundDefinition?.activeChallenges;
+    if (Array.isArray(activeChallenges)) return activeChallenges.includes(eventId);
+    return false;
+};
+
+window.getRoundChallengeIds = function(roundDefinition) {
+    return Array.isArray(roundDefinition?.activeChallenges) ? [...roundDefinition.activeChallenges] : [];
 };
 
 window.createLiftState = function(id) {

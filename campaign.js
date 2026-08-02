@@ -89,7 +89,11 @@
                 .find(candidate => document.getElementById(candidate)?.style.display === 'flex');
             Game.Shell.infoReturnId = current || 'welcomeOverlay';
             show(id);
-            if (id === 'creditsOverlay') Game.Audio?.renderAttributions?.();
+            if (id === 'creditsOverlay') {
+                const creditLines = document.querySelectorAll('#creditsOverlay .shell-modal > p');
+                if (creditLines[2]) creditLines[2].innerHTML = 'Made with <span class="melbourne-heart" aria-label="love">♥</span> in Melbourne, Australia.';
+                Game.Audio?.renderAttributions?.();
+            }
         },
         closeInfo: () => show(Game.Shell.infoReturnId || 'welcomeOverlay'),
         beginNewGame: () => {

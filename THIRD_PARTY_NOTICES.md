@@ -26,8 +26,8 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 | Licence family | Bundled use | Distribution requirement |
 | --- | --- | --- |
 | CC0 | Several music and SFX assets | May be distributed without attribution; retain provenance record. |
-| CC-BY 3.0 / 4.0 | Menu music, gameplay music, Rocket, Synthetic Farts, Wrench metal, Double-Decker, VIP fanfare, urgency, UI error, and other listed assets | Preserve author/title/source/licence notice and state any modification. A project licence cannot remove this obligation. |
-| Pixabay Content License | Freshener and Group Think | Preserve source/provenance. Do not distribute the sound as a stand-alone asset or imply ownership; check current Pixabay terms before a commercial/public launch. |
+| CC-BY 3.0 / 4.0 | Menu music, gameplay music, Rocket, Wrench metal, Double-Decker, VIP fanfare, urgency, UI error, and other listed assets | Preserve author/title/source/licence notice and state any modification. A project licence cannot remove this obligation. |
+| Pixabay Content License | Freshener, Group Think, and Toot Effect | Preserve source/provenance. Do not distribute the sound as a stand-alone asset or imply ownership; check current Pixabay terms before a commercial/public launch. |
 
 ### Audio provenance gaps and blockers
 

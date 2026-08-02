@@ -71,7 +71,7 @@ Lift capacity appears as a floating effect above each lift during the countdown,
 
 ### All-Sweep behavioural floor
 
-From Round 14 onward, welcome briefings identify active inherited challenge systems so loadout choices are informed by
+From Round 14 onward, welcome briefings identify every active challenge system so loadout choices are informed by
 the actual round composition. Room Service guests are never Checkout guests; Gym Bros may board a stinky lift because
 they are immune to stink.
 
@@ -98,8 +98,60 @@ of their fixed seed set; remaining deterministic failures require trace and huma
 ## 4. Mechanic introduction sequence
 
 “Introduced” means explained and intentionally relevant. “Recombined” means previously learned behaviour becomes important again.
-Once VIP, Rooftop, Stink, Gym, jam, or Checkout is introduced, it remains eligible in later conventional rounds unless
-that round explicitly excludes it. The table identifies teaching emphasis, not the complete event set active in a round.
+The table identifies teaching emphasis, not the complete event set active in a round.
+
+### Active-challenge authority
+
+The Game Play Map is the authoritative source for each authored round's active challenges. Every round must explicitly
+list its active challenges in the round matrix below; an omitted challenge is inactive. Challenges do **not** inherit
+merely because they were introduced in an earlier round. The canonical balance data, runtime event resolver, and
+player briefing must be derived from this same matrix rather than maintaining separate eligibility or exclusion rules.
+
+Checkout and Rooftop Party are mutually exclusive. Checkout remains a probabilistic share of otherwise ordinary guest
+traffic; Rooftop Party redirects only its authored share. Room Service is never Checkout, Gym Bros are never Checkout,
+and Gym Bros may board any stinky lift. This section supersedes the former persistent-event eligibility rule.
+
+The matrix below is now the implemented authority. The generated balance artifact, runtime resolver, and briefing
+composer must remain synchronized with it; changes to a round's active challenges require focused config, runtime, and
+briefing tests before release.
+
+### Active-challenge matrix
+
+This is the approved authored schedule. `—` means the challenge is inactive in that round. The matrix is deliberately
+explicit: it replaces inferred persistence and is the source from which canonical activation, round briefings, and
+runtime behaviour must be derived.
+
+| R | Room Service | Gym Bros | Checkout | Rooftop | VIP | Gravity | Counterweights | Capsule lifts | Jams | Stink | Zoning | Open Plan | Endurance |
+| ---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| 1 | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| 2 | — | — | — | — | — | — | — | — | — | — | — | — | — |
+| 3 | ✓ | — | — | — | — | — | — | — | — | — | — | — | — |
+| 4 | ✓ | — | — | — | — | — | — | — | — | — | — | — | — |
+| 5 | ✓ | — | — | — | — | — | — | — | — | — | — | — | — |
+| 6 | ✓ | — | — | — | — | — | — | — | ✓ | — | — | — | — |
+| 7 | ✓ | — | ✓ | — | — | — | — | — | ✓ | — | — | — | — |
+| 8 | ✓ | — | — | — | ✓ | — | — | — | ✓ | — | — | — | — |
+| 9 | ✓ | — | — | ✓ | — | — | — | — | ✓ | — | — | — | — |
+| 10 | ✓ | — | ✓ | — | ✓ | — | — | — | ✓ | ✓ | — | — | — |
+| 11 | ✓ | ✓ | — | ✓ | — | — | — | — | ✓ | ✓ | — | — | — |
+| 12 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | — | — | ✓ |
+| 13 | ✓ | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | — | — | — |
+| 14 | ✓ | ✓ | ✓ | — | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 15 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 16 | ✓ | ✓ | ✓ | — | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 17 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 18 | ✓ | ✓ | ✓ | — | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 19 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 20 | ✓ | ✓ | ✓ | — | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
+| 21 | — | — | — | — | — | — | ✓ | — | ✓ | ✓ | — | — | — |
+| 22 | — | ✓ | — | — | — | — | ✓ | — | ✓ | ✓ | — | ✓ | — |
+| 23 | ✓ | ✓ | — | — | ✓ | — | ✓ | — | ✓ | ✓ | ✓ | ✓ | — |
+| 24 | — | — | — | — | ✓ | — | — | ✓ | ✓ | — | — | — | — |
+| 25 | — | — | — | ✓ | ✓ | — | — | ✓ | ✓ | — | ✓ | — | — |
+
+Capsule rounds deliberately exclude Room Service and Gym Bros while retaining VIP pressure. Counterweight Round 21
+is a restrained puzzle introduction; R22 adds Open Plan, and R23 is the scaled mastery combination. R25 is the
+capsule finale, combining Rooftop, VIP, Jams, and Zoning.
 
 | Mechanic | Introduce | First pressure test | Late mastery use |
 | --- | ---: | ---: | ---: |

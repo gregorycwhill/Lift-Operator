@@ -17,13 +17,13 @@ window.Game.Audio = (function () {
     const eventMap = {
         lift_arrived: 'ding', guest_boarded: 'ding',
         powerup_used: 'powerup', hazard_started: 'hazard', hazard_ended: 'ding',
-        victory: 'victory', vip_arrival: 'vipArrival',
+        victory: 'victory', vip_arrival: 'vipArrival', vip_journey: 'vipArrival',
         purchase_confirmed: 'purchase', ui_error: 'uiError', error: 'uiError',
         guest_served: 'ding', guest_defenestrated: 'defenestration', shop_item_selected: 'purchase', round_started: 'ding', failure: 'uiError', retry_started: 'ding'
     };
     let context = null, masterGain = null, musicGain = null, sfxGain = null, menuBuffer = null, menuSource = null, menuSourceStartedAt = 0, menuOffset = 0, rooftopSource = null, pressureLayerGain = null, musakSource = null, musakStopTimer = null;
     const buffers = {}, failedAssets = new Map(), musicSources = [];
-    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-dream-raid.mp3', pressure: 'assets/audio/gameplay-orbital-colossus.mp3', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-metal.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-synthetic-fart.wav', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
+    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-dream-raid.mp3', pressure: 'assets/audio/gameplay-orbital-colossus.mp3', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-metal.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-tooteffect-90578.mp3', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
     let initialized = false, currentContext = 'menu', psi = 1, pressureBand = 'calm', musicTimer = null, rooftopActive = false, acceptedEventCount = 0;
     let settings = { muted: false, music: 0.22, sfx: 0.50 };
     const listeners = new Map();
@@ -92,7 +92,7 @@ window.Game.Audio = (function () {
     function applyVolumes() {
         if (!masterGain) return;
         masterGain.gain.value = settings.muted ? 0 : 1;
-        musicGain.gain.value = settings.music; sfxGain.gain.value = settings.sfx;
+        musicGain.gain.value = settings.music * (currentContext === 'menu' ? 0.75 : 1); sfxGain.gain.value = settings.sfx;
     }
     function tone(name, destination = sfxGain, variation = '') {
         if (!initialized || !context || !destination || settings.muted) return;
@@ -136,16 +136,17 @@ window.Game.Audio = (function () {
     }
     function playBuffer(name, destination = sfxGain, volume = 1, options = {}) {
         if (!initialized || !buffers[name] || settings.muted) return false;
-        const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; source.loop = !!options.loop; gain.gain.value = volume; source.connect(gain); gain.connect(destination); source.start();
+        const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; const loop = options.loop || name === 'stink'; source.loop = !!loop; gain.gain.value = volume * (name === 'defenestration' ? 0.8 : 1); source.connect(gain); gain.connect(destination); source.start();
         const durationMs = Number.isFinite(options.durationMs) ? options.durationMs : 5000;
-        if (!options.loop || Number.isFinite(options.durationMs)) {
-            const stopMs = Math.min(durationMs, Math.max(1, buffers[name].duration * 1000));
+        if (!loop || Number.isFinite(options.durationMs)) {
+            const stopMs = loop ? durationMs : Math.min(durationMs, Math.max(1, buffers[name].duration * 1000));
             setTimeout(() => { try { source.stop(); } catch (_) {} }, stopMs);
         }
         return true;
     }
     function startMusic() {
         if (musicTimer) clearInterval(musicTimer);
+        if (musicGain) musicGain.gain.value = settings.music * (currentContext === 'menu' ? 0.75 : 1);
         stopMenuTrack(); stopMusicTracks(); stopRooftopMusic();
         if (currentContext === 'menu' && menuBuffer && initialized && !settings.muted) {
             menuSource = context.createBufferSource(); menuSource.buffer = menuBuffer; menuSource.loop = true;

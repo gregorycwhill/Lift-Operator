@@ -39,8 +39,10 @@ Additional provisional CC0 assets:
   `assets/audio/sfx/tardis-air-whoosh.wav`.
 - “Old Elevator Door” by sinny ([source](https://opengameart.org/content/old-elevator-door)), CC0. The local MP3 is
   `assets/audio/sfx/wide-doors-old-elevator.mp3`.
-- “Gastric Distress” by LFA ([source](https://opengameart.org/content/gastric-distress)), CC0. The local WAV is
-  `assets/audio/sfx/hazard-gastric-distress.wav`.
+- “Toot Effect” by freesound_community
+  ([source](https://pixabay.com/sound-effects/film-special-effects-tooteffect-90578/)), Pixabay Content License.
+  Attribution is optional; stored as `assets/audio/sfx/hazard-tooteffect-90578.mp3` and capped at two seconds during
+  stink playback.
 - UI Error by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0. If imported,
   credit: “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”.
 - “Film Special Effects: Spray” ([source](https://pixabay.com/sound-effects/film-special-effects-spray-48068/)), Pixabay

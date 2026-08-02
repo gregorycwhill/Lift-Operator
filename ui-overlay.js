@@ -47,6 +47,7 @@ window.startRoundCountdown = function(seconds = 5) {
         if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(index, Math.max(1800, remaining * 1000 - 150));
     });
     if (typeof ui.applyAutomationTeachingCue === 'function') ui.applyAutomationTeachingCue();
+    if (Registry.stats.round === 2) window.showToast?.('Automation tip: choose an automation, then click a lift controller to deploy it.');
 
     const begin = () => {
         if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);

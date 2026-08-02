@@ -61,9 +61,10 @@ The following programme is the current delivery scope. It restores the design-to
 4. **Configuration authority:** move remaining active balance parameters into canonical data, remove or repair dead
    compatibility/debug controls, and extend validation for event exclusions, counterweight geometry, capsule rules,
    unlock availability, and required mechanic support.
-5. **Content parity:** completed for the current authored campaign. Canonical round data, the Gameplay Map, and player
-   briefings agree on R1–R25; the R15 VIP/Rooftop omission and R20's obsolete “final authored round” claim are
-   resolved. Re-audit only when a round definition or briefing changes.
+5. **Explicit event schedule and content parity:** replace persistent event inheritance/exclusions with the Game Play
+   Map's explicit R1–R25 active-challenge matrix. Generate or validate canonical data, runtime activation, and player
+   briefing content from that one source. Checkout and Rooftop must never be co-active. The exact matrix is a required
+   design input before implementation; current parity claims are provisional while inheritance remains in production.
 
 ### Tooling and release hygiene
 
@@ -153,6 +154,9 @@ items, classifies them, and releases the verified fixes to `master` before the n
 | ID | Source | Classification | Required evidence | Status |
 | --- | --- | --- | --- | --- |
 | RC-TRAF-01 | R7/R9 standard guests became all Checkout traffic; R9 ceased to read as a Rooftop round. | P0 correctness | Both normal and max-delay spawn paths retain ordinary journeys; Checkout and Rooftop shares are bounded. | Implemented; focused browser coverage |
+| RC-VIS-02 | Native blue Checkout suitcase is illegible on a Happy guest's green background. | P1 visual accessibility | Replace the Checkout guest marker with text-presented `💼︎` (`U+1F4BC U+FE0E`) and apply black text on supported Chrome/Edge desktop; retain status backgrounds and ordinary `G` markers. | Implemented; awaiting visual replay |
+| RC-CONFIG-03 | Canonical `vipHeadstartSec` was unused after the VIP timing decision changed. | P1 configuration integrity | Remove the dead parameter; VIP starts Happy on each leg and uses the normal patience thresholds plus the approved 10-life penalty and 10–30 second inter-leg pause. | Implemented; focused lifecycle/audio coverage |
+| RC-CONTENT-04 | Event inheritance makes a round's real challenge set indirect and can drift from its briefing. | P0 authored-content correctness | The approved Game Play Map R1–R25 active-challenge matrix defines activation; derive canonical runtime and briefings from it, and reject Checkout/Rooftop co-activation. | Implemented; focused config/lifecycle coverage |
 
 Issue rule: P0 is a progression blocker, lost input/state, or broken authored rule; P1 is repeated clarity or
 accessibility friction; P2 is polish or isolated balance feedback. Only P0/P1 fixes and low-risk P2 polish enter a

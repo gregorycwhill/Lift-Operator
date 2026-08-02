@@ -1155,8 +1155,8 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
-    expect(result.r2SpawnStart).toBe(0.3375);
-    expect(result.r2SpawnEnd).toBe(0.421875);
+    expect(result.r2SpawnStart).toBe(0.27);
+    expect(result.r2SpawnEnd).toBe(0.3375);
     expect(result.version).toBe('0.2.10-fleet-onboarding');
 });
 
@@ -1323,7 +1323,7 @@ test('Gym Floor persists after introduction and jam duration stays within 20 sec
     expect(result.multiplier).toBe(0.1);
 });
 
-test('event persistence uses canonical introductions and explicit capsule exclusions', async ({ page }) => {
+test('explicit round challenge matrix drives runtime event activation', async ({ page }) => {
     const result = await page.evaluate(() => {
         const events = ['jam', 'checkout', 'vip', 'rooftop', 'stink', 'gym', 'roomService'];
         const snapshot = round => {
@@ -1333,9 +1333,9 @@ test('event persistence uses canonical introductions and explicit capsule exclus
         return { r5: snapshot(5), r14: snapshot(14), r23: snapshot(23), r24: snapshot(24) };
     });
     expect(result.r5).toEqual({ jam: false, checkout: false, vip: false, rooftop: false, stink: false, gym: false, roomService: true });
-    expect(result.r14).toEqual({ jam: true, checkout: true, vip: true, rooftop: true, stink: true, gym: true, roomService: true });
-    expect(result.r23).toEqual({ jam: true, checkout: true, vip: true, rooftop: true, stink: true, gym: true, roomService: true });
-    expect(result.r24).toEqual({ jam: true, checkout: false, vip: false, rooftop: false, stink: false, gym: false, roomService: false });
+    expect(result.r14).toEqual({ jam: true, checkout: true, vip: true, rooftop: false, stink: true, gym: true, roomService: true });
+    expect(result.r23).toEqual({ jam: true, checkout: false, vip: true, rooftop: false, stink: true, gym: true, roomService: true });
+    expect(result.r24).toEqual({ jam: true, checkout: false, vip: true, rooftop: false, stink: false, gym: false, roomService: false });
 });
 
 test('persistent Checkout remains a 50 percent guest mix instead of replacing ordinary destinations', async ({ page }) => {
@@ -1356,7 +1356,7 @@ test('persistent Checkout remains a 50 percent guest mix instead of replacing or
         return { r7: sampleRound(7), r9: sampleRound(9) };
     });
 
-    for (const mix of [result.r7, result.r9]) {
+    for (const mix of [result.r7]) {
         expect(mix.checkout).toBeGreaterThan(0);
         expect(mix.ordinary).toBeGreaterThan(0);
         expect(mix.checkout / (mix.checkout + mix.ordinary)).toBeGreaterThan(0.35);
@@ -1655,7 +1655,7 @@ test('checkout guests heading to Ground use suitcase text only when marked check
         checkoutUpper: getGuestText({ dest: 4, isCheckout: true, status: GuestStatus.HAPPY })
     }));
 
-    expect(result).toEqual({ checkout: '🧳', ordinaryGround: 'G', checkoutUpper: 4 });
+    expect(result).toEqual({ checkout: '💼︎', ordinaryGround: 'G', checkoutUpper: 4 });
 });
 
 test('Settings links to the scoreboard without presenting deferred achievements', async ({ page }) => {

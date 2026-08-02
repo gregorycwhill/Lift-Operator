@@ -396,7 +396,6 @@ window.GameBalanceData = {
     "vipArrivalDelayMinRatio": 0.25,
     "vipArrivalDelayMaxRatio": 0.35,
     "gravityFallbackScalar": 0.4,
-    "vipHeadstartSec": 20,
     "roundTime": 180,
     "countdown": {
       "secondsPerLift": 3,
@@ -445,16 +444,18 @@ window.GameBalanceData = {
       "spawnStart": 0.15,
       "spawnEnd": 0.3,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": []
     },
     "2": {
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.3375,
-      "spawnEnd": 0.421875,
+      "spawnStart": 0.27,
+      "spawnEnd": 0.3375,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": []
     },
     "3": {
       "floors": 10,
@@ -463,7 +464,10 @@ window.GameBalanceData = {
       "spawnStart": 1,
       "spawnEnd": 1.3,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService"
+      ]
     },
     "4": {
       "floors": 10,
@@ -471,7 +475,10 @@ window.GameBalanceData = {
       "spawnStart": 0.99,
       "spawnEnd": 1.17,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService"
+      ]
     },
     "5": {
       "floors": 10,
@@ -479,7 +486,10 @@ window.GameBalanceData = {
       "spawnStart": 1.47,
       "spawnEnd": 1.8,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService"
+      ]
     },
     "6": {
       "floors": 15,
@@ -487,7 +497,11 @@ window.GameBalanceData = {
       "spawnStart": 1.2,
       "spawnEnd": 1.5,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "jam"
+      ]
     },
     "7": {
       "floors": 15,
@@ -495,7 +509,12 @@ window.GameBalanceData = {
       "spawnStart": 1.25,
       "spawnEnd": 1.4,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "checkout",
+        "jam"
+      ]
     },
     "8": {
       "floors": 15,
@@ -503,7 +522,12 @@ window.GameBalanceData = {
       "spawnStart": 1,
       "spawnEnd": 1.25,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "vip",
+        "jam"
+      ]
     },
     "9": {
       "floors": 15,
@@ -512,7 +536,12 @@ window.GameBalanceData = {
       "spawnStart": 1,
       "spawnEnd": 1.7,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "rooftop",
+        "jam"
+      ]
     },
     "10": {
       "floors": 15,
@@ -520,7 +549,14 @@ window.GameBalanceData = {
       "spawnStart": 1.5,
       "spawnEnd": 1.75,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "checkout",
+        "vip",
+        "jam",
+        "stink"
+      ]
     },
     "11": {
       "floors": 15,
@@ -528,7 +564,14 @@ window.GameBalanceData = {
       "spawnStart": 1.75,
       "spawnEnd": 2,
       "objective": "SURVIVAL",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "rooftop",
+        "jam",
+        "stink"
+      ]
     },
     "12": {
       "floors": 15,
@@ -536,7 +579,16 @@ window.GameBalanceData = {
       "spawnStart": 0.5,
       "spawnEnd": 2.6,
       "objective": "ENDURANCE",
-      "gravityScalar": 0
+      "gravityScalar": 0,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "rooftop",
+        "vip",
+        "jam",
+        "stink",
+        "endurance"
+      ]
     },
     "13": {
       "floors": 15,
@@ -544,7 +596,14 @@ window.GameBalanceData = {
       "spawnStart": 0.9,
       "spawnEnd": 1.05,
       "objective": "PEDAL_SURVIVAL",
-      "gravityScalar": 1.12
+      "gravityScalar": 1.12,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "gravity",
+        "jam",
+        "stink"
+      ]
     },
     "14": {
       "floors": 20,
@@ -554,7 +613,16 @@ window.GameBalanceData = {
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "zoningEnabled": true
+      "zoningEnabled": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "checkout",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "15": {
       "floors": 20,
@@ -566,7 +634,16 @@ window.GameBalanceData = {
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "vipEvent": true,
-      "rooftopEvent": true
+      "rooftopEvent": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "rooftop",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "16": {
       "floors": 20,
@@ -578,7 +655,16 @@ window.GameBalanceData = {
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
       "jamEvent": true,
-      "stinkEvent": true
+      "stinkEvent": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "checkout",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "17": {
       "floors": 25,
@@ -589,7 +675,16 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
-      "checkoutEvent": true
+      "checkoutEvent": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "rooftop",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "18": {
       "floors": 25,
@@ -603,7 +698,16 @@ window.GameBalanceData = {
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
-      "gymEvent": true
+      "gymEvent": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "checkout",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "19": {
       "floors": 30,
@@ -617,7 +721,16 @@ window.GameBalanceData = {
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
-      "gymEvent": true
+      "gymEvent": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "rooftop",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "20": {
       "floors": 30,
@@ -630,7 +743,16 @@ window.GameBalanceData = {
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
-      "gymEvent": true
+      "gymEvent": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "checkout",
+        "vip",
+        "jam",
+        "stink",
+        "zoning"
+      ]
     },
     "21": {
       "floors": 11,
@@ -641,7 +763,12 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "counterweightEnabled": true,
-      "counterweightIntro": true
+      "counterweightIntro": true,
+      "activeChallenges": [
+        "counterweights",
+        "jam",
+        "stink"
+      ]
     },
     "22": {
       "floors": 15,
@@ -652,7 +779,14 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "counterweightEnabled": true,
-      "openPlanIntro": true
+      "openPlanIntro": true,
+      "activeChallenges": [
+        "gym",
+        "counterweights",
+        "jam",
+        "stink",
+        "openPlan"
+      ]
     },
     "23": {
       "floors": 29,
@@ -664,7 +798,17 @@ window.GameBalanceData = {
       "creditMultiplier": 0.15,
       "counterweightEnabled": true,
       "zoningEnabled": true,
-      "openPlanIntro": true
+      "openPlanIntro": true,
+      "activeChallenges": [
+        "roomService",
+        "gym",
+        "vip",
+        "counterweights",
+        "jam",
+        "stink",
+        "zoning",
+        "openPlan"
+      ]
     },
     "24": {
       "floors": 15,
@@ -680,13 +824,10 @@ window.GameBalanceData = {
       "jamMinSec": 6,
       "jamMaxSec": 10,
       "demandCurrents": 2,
-      "eventExclusions": [
-        "checkout",
+      "activeChallenges": [
         "vip",
-        "rooftop",
-        "stink",
-        "gym",
-        "roomService"
+        "capsule",
+        "jam"
       ]
     },
     "25": {
@@ -703,13 +844,12 @@ window.GameBalanceData = {
       "jamMinSec": 6,
       "jamMaxSec": 10,
       "demandCurrents": 2.5,
-      "eventExclusions": [
-        "checkout",
-        "vip",
+      "activeChallenges": [
         "rooftop",
-        "stink",
-        "gym",
-        "roomService"
+        "vip",
+        "capsule",
+        "jam",
+        "zoning"
       ]
     }
   }

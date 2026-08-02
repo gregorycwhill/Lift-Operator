@@ -144,10 +144,17 @@ test('production spawner, hazard, and shop flows publish mapped events', async (
         const originalPublish = audio.publish;
         audio.publish = name => received.push(name);
 
-        Registry.stats.round = 9;
+        Registry.stats.round = 8;
         Registry.stats.timeLeft = 120;
         Registry.vipSpawned = false;
         Registry.vipTargetTime = 1;
+        Registry.sunsetHasHappened = false;
+        Registry.sunsetActive = false;
+        Registry.sunsetTargetTime = 1;
+        runSpawnerTick(2000);
+
+        Registry.stats.round = 9;
+        Registry.vipTargetTime = Number.MAX_SAFE_INTEGER;
         Registry.sunsetHasHappened = false;
         Registry.sunsetActive = false;
         Registry.sunsetTargetTime = 1;
@@ -422,7 +429,7 @@ test('verified imported audio assets are available at their production paths', a
         'sfx/musak-electronic-jazz.mp3',
         'sfx/tardis-air-whoosh.wav',
         'sfx/wide-doors-old-elevator.mp3',
-        'sfx/hazard-synthetic-fart.wav',
+        'sfx/hazard-tooteffect-90578.mp3',
         'sfx/freesound_community-spray-48068.mp3',
         'sfx/dragon-studio-alien-song-323613.mp3',
           'sfx/powerup-wrench-metal.wav',

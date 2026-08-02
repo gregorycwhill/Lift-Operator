@@ -224,8 +224,8 @@ body {
 .shaft:hover { background: #e0e6e9; }
 .capsule-bank .shaft {
     position: relative;
-    border-right: 4px solid #536d78;
-    background: linear-gradient(90deg, rgba(220, 239, 247, 0.72), rgba(176, 211, 224, 0.38), rgba(220, 239, 247, 0.72));
+    border-right: 4px solid #34495e;
+    background: linear-gradient(90deg, rgba(236, 240, 241, 0.84), rgba(189, 195, 199, 0.5), rgba(236, 240, 241, 0.84));
 }
 .zoning-active .shaft.zone-served {
     background: linear-gradient(90deg, rgba(46, 204, 113, .22), rgba(46, 204, 113, .08), rgba(46, 204, 113, .22));
@@ -361,6 +361,7 @@ body {
 /* Status Colors & Guest Modifiers */
 .happy { background: #2ecc71; }
 .checkout-ground { color: #f8f9fa; border: 1px solid rgba(255,255,255,0.8); text-shadow: 0 1px 2px rgba(0,0,0,0.55); }
+.checkout-ground { color: #111 !important; text-shadow: none; }
 .annoyed { background: #f1c40f; color: #333; }
 .critical { background: #e74c3c; animation: pulse 1s infinite; }
 .rage { background: #000; animation: shake 0.5s infinite; }
@@ -437,6 +438,10 @@ body {
 .jammed { border-color: #e74c3c; box-shadow: 0 0 15px rgba(231, 76, 60, 0.8); }
 .jammed-alert { display: inline-block; color: #f1c40f; font-weight: 900; text-shadow: 0 0 8px #f1c40f; animation: flashJam 0.4s infinite alternate; }
 .lift.capacity-full { border-color: #8e44ad !important; border-width: 3px; box-shadow: 0 0 12px rgba(142, 68, 173, 0.85); }
+.automation-controls-locked { opacity: .45; filter: grayscale(1); }
+.automation-controls-locked .automation-status { cursor: not-allowed; }
+#world.final-life-warning { animation: finalLifeWarning .65s ease-in-out infinite alternate; }
+@keyframes finalLifeWarning { from { border-color: #8e2020; box-shadow: 0 0 0 rgba(231, 76, 60, 0); } to { border-color: #e74c3c; box-shadow: 0 0 22px rgba(231, 76, 60, .95); } }
 
 .stinky { background: #d7e0c3; border-color: #82b541; }
 .stinky::after {
@@ -636,6 +641,8 @@ body {
 .audio-attribution-list a { color:#1e6ea7; }
 .audio-attribution-scroller { overflow:hidden; white-space:nowrap; font-size:10px; color:#889; margin:4px 0 8px; }
 .audio-attribution-scroller span { display:inline-block; animation: audioCreditsScroll 22s linear infinite; }
+.melbourne-heart { color: #ff4f9a; }
+.audio-credits > div[id] { max-height: 120px; overflow-y: auto; padding-right: 4px; }
 @keyframes audioCreditsScroll { from { transform:translateX(100%); } to { transform:translateX(-100%); } }
 
 /* Round Review Layout Framework */

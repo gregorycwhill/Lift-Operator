@@ -42,8 +42,7 @@ window.buildWorld = function() {
         row.className = 'floor floor-row';
         row.id = `floor-row-${f}`;
         
-        const isCheckoutRound = Boolean(Config.GAME_DATA.rounds[Registry.stats.round]?.checkoutEvent) || Registry.stats.round === 7;
-        const labelText = (f === 0 ? (isCheckoutRound ? '🧳' : 'G') : f);
+        const labelText = (f === 0 ? 'G' : f);
         const label = document.createElement('div');
         label.className = 'label';
         if (f === Config.numFloors - 1 && Registry.sunsetActive) {
@@ -137,6 +136,10 @@ window.buildWorld = function() {
     controlRow.appendChild(autoLobby);
 
     window.Game.AutomationController?.renderDock({ autoLobby, controlRow });
+    if (Registry.stats.round === 1) {
+        controlRow.classList.add('automation-controls-locked');
+        controlRow.querySelectorAll('button, input').forEach(control => { control.disabled = true; control.setAttribute('aria-disabled', 'true'); });
+    }
     world.appendChild(controlRow);
 
     Registry.lifts.forEach((lift, index) => {
@@ -611,7 +614,7 @@ window.getGuestText = function(g) {
     if (g.status === GuestStatus.RAGE) return '💀';
     if (g.isVip) return '⭐';
     
-    let txt = g.isCheckout && g.dest === 0 ? '🧳' : (g.dest === 0 ? 'G' : g.dest);
+    let txt = g.isCheckout && g.dest === 0 ? '💼︎' : (g.dest === 0 ? 'G' : g.dest);
     
     if (g.isRoomService) return `🍽️${txt}`;
     if (g.isGymBro) return `💪${txt}`;

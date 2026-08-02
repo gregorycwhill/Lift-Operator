@@ -315,6 +315,14 @@ window.gameTick = function(timestamp) {
     const balanceSample = window.Game.BalanceTelemetry?.sample(now);
     if (balanceSample && window.Game.Audio?.setPsi) {
         window.Game.Audio.setPsi(balanceSample.projectedSurvivalIndex ?? 1);
+        const world = document.getElementById('world');
+        if (world) {
+            const psi = Number(balanceSample.projectedSurvivalIndex);
+            const finalLifeThreat = Registry.stats.lives <= 1 && (balanceSample.imminentLives >= Registry.stats.lives || psi < 0.35);
+            const clearFinalLifeThreat = Registry.stats.lives > 1 || (psi > 0.45 && balanceSample.imminentLives < 1);
+            if (finalLifeThreat) world.classList.add('final-life-warning');
+            else if (clearFinalLifeThreat) world.classList.remove('final-life-warning');
+        }
     }
 
     if (Registry.stats.lives <= 0) {

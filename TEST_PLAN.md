@@ -174,11 +174,13 @@ capacity fault. Improve and validate those policies before canonical balance par
 
 ### Canonical event gating
 
-- [x] Product rule confirmed: after introduction, VIP, Rooftop, Stink, Gym, jam, and Checkout remain eligible in
-  subsequent conventional rounds unless a round explicitly excludes them.
-- [x] Canonical data records explicit exclusions and runtime event activation uses one shared persistence resolver.
-- [x] R17 retains Checkout as its primary authored challenge while inherited events continue unless explicitly excluded.
-- [x] Fixed-seed tests cover every event introduction, absence, and intended combination.
+- [x] Record the approved explicit R1–R25 active-challenge matrix in `Game Play Map.md`; absence means inactive.
+- [x] Derive canonical event activation and briefing challenge summaries from that matrix; remove event-introduction
+  inheritance and per-round exclusion logic once the generated/validated replacement is in place.
+- [x] Validate every round's configured runtime events against the Game Play Map and reject Checkout/Rooftop
+  co-activation, as well as Room Service/Gym Bro Checkout mixing.
+- [x] Add focused tests for an active and inactive example of each challenge, and browser assertions that the briefing
+  names exactly the active challenges before Supply Closet choices are made.
 
 ### Capsule performance
 
@@ -202,9 +204,8 @@ capacity fault. Improve and validate those policies before canonical balance par
   fail to affect the round definition.
 - [x] Validate event exclusions, counterweight odd-floor geometry, capsule constraints, unlock availability, and
   required mechanic support.
-- [x] Reconcile all R1–R25 Gameplay Map rows, canonical data, and briefings. The audited late briefings now identify
-  R15 VIP/Rooftop pressure, R17 Checkout demand, R20's post-conventional role, counterweight/capsule arcs, and the
-  current R24/R25 scale; R20 does not claim to be the final authored round.
+- [ ] Reconcile all R1–R25 Gameplay Map rows, canonical data, and briefings through the explicit active-challenge
+  matrix. The earlier inheritance-based reconciliation is superseded by this requirement.
 - [x] Repair, complete, relabel, or retire the broken completion audit, hash-only replay, placeholder robustness command,
   and misleading simulation-batch default.
 - [x] Retire the stale `balance:report:check` from the active verification surface. It is retained as the explicitly
@@ -290,8 +291,13 @@ Cross-cutting observations:
 
 - [ ] Automation Dock: policy-first, lift-first batch, disarm, Library toggle, pin persistence, keyboard, and touch.
 - [ ] Audio: first gesture, menu resume, pressure fade, Rooftop lifecycle, Musak duration, one-shot SFX caps, mute, and
-  independent volume controls.
-- [ ] Visual stability: top-floor icons, tube/cable treatment, capacity labels, suitcase contrast, rooftop decoration,
+  independent volume controls; CC-BY credits remain accessible through a compact scrolling tracker/disclosure rather
+  than expanding the primary modal.
+- [x] VIP configuration: the dead `vipHeadstartSec` offset is removed; each leg
+  begins Annoyed, becomes Critical after roughly 20 active seconds, rage-quits after roughly 40 active seconds, and
+  retains the approved 10–30 second between-leg pause and 10-life penalty.
+- [ ] Visual stability: top-floor icons, tube/cable treatment, capacity labels, Checkout's black text-presented `💼︎`
+  marker remains legible on Happy/Annoyed/Critical backgrounds, the Credits line uses a pink heart, rooftop decoration,
   board jitter, and supported viewport fit.
 - [ ] Economy: carried Credits are understood; no-spend confirmation appears only when a shop is available; loadouts
   create choices rather than mandatory purchases.

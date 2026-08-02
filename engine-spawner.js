@@ -94,8 +94,8 @@ window.runSpawnerTick = function(now) {
         Registry.floors[start].waitingGuests.push({
             id: `guest-${++Registry.guestSequence}`,
             dest: roomFloor,
-            status: GuestStatus.ANNOYED, 
-            spawnTime: now - (Config.happySec * 1000) - 100, 
+            status: GuestStatus.HAPPY,
+            spawnTime: now,
             isVip: true, 
             isFarter: false, 
             isSunset: false, 
@@ -186,8 +186,8 @@ window.Spawner.queueVipNextJourney = function(vip, floor, now) {
         Registry.vipStage = 2;
         vip.dest = randomFloor;
         vip.vipStage = 2;
-        vip.status = GuestStatus.ANNOYED;
-        vip.spawnTime = now - (Config.happySec * 1000) - 100;
+        vip.status = GuestStatus.HAPPY;
+        vip.spawnTime = now;
         Registry.vipPendingGuest = vip;
         Registry.vipPendingFloor = floor;
         Registry.vipNextJourneyTime = now + (window.getRandomInt(10, 30) * 1000);
@@ -197,8 +197,8 @@ window.Spawner.queueVipNextJourney = function(vip, floor, now) {
         Registry.vipStage = 3;
         vip.dest = 0;
         vip.vipStage = 3;
-        vip.status = GuestStatus.ANNOYED;
-        vip.spawnTime = now - (Config.happySec * 1000) - 100;
+        vip.status = GuestStatus.HAPPY;
+        vip.spawnTime = now;
         Registry.vipPendingGuest = vip;
         Registry.vipPendingFloor = floor;
         Registry.vipNextJourneyTime = now + (window.getRandomInt(10, 30) * 1000);
