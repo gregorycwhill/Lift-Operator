@@ -206,6 +206,10 @@ capacity fault. Improve and validate those policies before canonical balance par
 - [x] Standard lift travel uses the accepted geometry bands: 0.45 seconds/floor through 15 floors and 0.4166666667 seconds/floor above 15 floors.
 - [x] Counterweight and capsule movement retain their dedicated movement rules.
 - [x] Infinite Capacity regression coverage requires every compatible queued guest to board before the lift closes; direction, Stink, zoning, VIP, and party-state refusals remain valid exclusions.
+- [x] Briefings omit the redundant Objective and Available loadout cards; Endurance explains its changed objective in the operating-rule card.
+- [x] First-introduction terms only receive bold/icon treatment on their canonical campaign introduction round; later briefings remain uncluttered.
+- [x] Active-challenge chips include accessible icons and labels. Supply Closet tiers are named Bronze, Silver, and Gold.
+- [x] Supply Closet renders a permanent empty/filled cart rail on the right, three narrower shop cards across on the left, and one shared scroll region without nested scrollbars.
 - [ ] Human replay R11 with the reduced arrival curve and evacuation buffer; report rooftop queue size at release, guests recovered, and whether ordinary traffic remains serviceable.
 
 - [x] Move remaining active mechanic parameters out of compatibility/debug aliases and into canonical data, or remove

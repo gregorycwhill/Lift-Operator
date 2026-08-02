@@ -75,6 +75,10 @@ The following programme is the current delivery scope. It restores the design-to
    glowing controllers; R11's spawn curve is reduced by 25% and its Rooftop schedule reserves a 45-second evacuation
    window. Standard buildings use the accepted short/tall travel bands; counterweight and capsule movement remain
    unchanged. Infinite Capacity has an explicit compatible-guest boarding regression.
+8. **Briefing and Supply Closet presentation:** the redundant Objective/loadout copy is removed; Endurance's operating
+   rule carries its distinct objective. Campaign-introduction terms receive one bold/icon treatment only on their first
+   authored introduction, active-challenge chips include icons, and Supply Closet uses a permanent right-hand cart rail
+   beside a three-column left shop with one shared scroll region.
 
 ### Tooling and release hygiene
 

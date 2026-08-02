@@ -27,16 +27,63 @@ window.getRoundChallengeSummary = function(round) {
         .map(challenge => labels[challenge] || challenge);
 };
 
-window.getCampaignRank = function(round) {
-    return Config.GAME_DATA.rounds[round]?.briefing?.rank || 'Trainee';
+window.getRoundChallengePresentation = function(round) {
+    const definition = Config.GAME_DATA.rounds[round] || {};
+    const metadata = {
+        roomService: { label: 'Room Service', icon: '🛎️' }, checkout: { label: 'Checkout', icon: '💼' },
+        vip: { label: 'VIP', icon: '👑' }, rooftop: { label: 'Rooftop Party', icon: '🎉' },
+        jam: { label: 'Jams', icon: '⚠️' }, stink: { label: 'Stink', icon: '💨' },
+        gym: { label: 'Gym Bros', icon: '💪' }, gravity: { label: 'Gravity', icon: '⬆️' },
+        counterweights: { label: 'Counterweights', icon: '⚙⇅' }, capsule: { label: 'Capsule lifts', icon: '🚀' },
+        zoning: { label: 'Zoning', icon: '⚙️' }, openPlan: { label: 'Open Plan', icon: '↔️' },
+        endurance: { label: 'Endurance', icon: '⏱️' }
+    };
+    return (window.getRoundChallengeIds?.({ ...definition, round }) || [])
+        .map(challenge => ({ id: challenge, ...(metadata[challenge] || { label: challenge, icon: '•' }) }));
 };
 
-window.getRoundObjectiveCopy = function(round) {
-    const definition = Config.GAME_DATA.rounds[round] || {};
-    if (definition.objective === 'ENDURANCE') return 'Keep operating until all 20 lives are lost.';
-    if (definition.objective === 'PEDAL_SURVIVAL') return `Survive for ${Config.roundTime} seconds under pedal power.`;
-    if (definition.objective === 'QUOTA') return 'Complete the assigned delivery quota.';
-    return `Survive for ${Config.roundTime} seconds.`;
+window.getCampaignIntroductionTerms = function(round) {
+    const events = Config.GAME_DATA.events || {};
+    const shopUnlocks = Config.GAME_DATA.shopUnlocks || {};
+    const terms = [];
+    const challengeTerms = {
+        roomService: ['Room Service', '🛎️'], checkout: ['Checkout', '💼'], vip: ['VIP', '👑'],
+        rooftop: ['Rooftop Party', '🎉'], jam: ['Jams', '⚠️'], stink: ['Stink', '💨'],
+        gym: ['Gym Bros', '💪'], gravity: ['Gravity', '⬆️'], counterweights: ['Counterweight', '⚙⇅'],
+        capsule: ['capsules', '🚀'], zoning: ['Service Zoning', '⚙️'], openPlan: ['Open Plan', '↔️']
+    };
+    Object.entries(challengeTerms).forEach(([id, [label, icon]]) => {
+        const introducedRound = id === 'gravity' ? 13 : id === 'counterweights' ? 21 : id === 'capsule' ? 24 : id === 'zoning' ? 14 : id === 'openPlan' ? 22 : events[id]?.introducedRound;
+        if (introducedRound === round) terms.push({ label, icon });
+    });
+    const powerupTerms = {
+        wrench: ['Wrench', '🔧'], freshener: ['Air Freshener', '🧴'], musak: ['Musak', '🎵'], turbo: ['Turbo', '🚀'],
+        tardis: ['TARDIS Mode', '🌌'], doors: ['Wide Doors', '🚪'], groupThink: ['Group Think', '✨'],
+        doubleDecker: ['Double-Decker', '↕️'], openPlan: ['Open Plan', '↔️']
+    };
+    Object.entries(powerupTerms).forEach(([id, [label, icon]]) => {
+        const introducedRound = shopUnlocks[id]?.[0];
+        if (introducedRound === round) terms.push({ label, icon });
+    });
+    return terms.sort((a, b) => b.label.length - a.label.length);
+};
+
+window.renderBriefingCopy = function(text, round, seenTerms = new Set()) {
+    const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
+    let html = escape(text || '');
+    window.getCampaignIntroductionTerms(round).forEach(({ label, icon }) => {
+        if (seenTerms.has(label)) return;
+        const escapedLabel = escape(label);
+        const marker = new RegExp(escapedLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        if (!marker.test(html)) return;
+        html = html.replace(marker, `<span class="briefing-intro-term"><span class="briefing-intro-icon" aria-hidden="true">${icon}</span><strong>${escapedLabel}</strong></span>`);
+        seenTerms.add(label);
+    });
+    return html;
+};
+
+window.getCampaignRank = function(round) {
+    return Config.GAME_DATA.rounds[round]?.briefing?.rank || 'Trainee';
 };
 
 /**
@@ -81,26 +128,31 @@ window.showRoundModal = function(round, options = {}) {
     const ruleCard = document.getElementById('roundRuleCard');
     const ruleHeading = document.getElementById('roundRuleHeading');
     const ruleBody = document.getElementById('roundRuleBody');
-    const objective = document.getElementById('roundObjective');
     const challengeList = document.getElementById('roundChallengeList');
-    const loadoutHint = document.getElementById('roundLoadoutHint');
     if (roundRank) roundRank.innerText = `${briefing.rank} · Round ${round}`;
     title.innerText = briefing.title;
-    instructions.innerText = briefing.narrative;
+    const seenTerms = new Set();
+    instructions.innerHTML = window.renderBriefingCopy(briefing.narrative, round, seenTerms);
     if (ruleCard) ruleCard.classList.toggle('hidden', !briefing.ruleCard);
     if (briefing.ruleCard) {
         if (ruleHeading) ruleHeading.innerText = briefing.ruleCard.heading;
-        if (ruleBody) ruleBody.innerText = briefing.ruleCard.body;
+        if (ruleBody) ruleBody.innerHTML = window.renderBriefingCopy(briefing.ruleCard.body, round, seenTerms);
     }
-    if (objective) objective.innerText = window.getRoundObjectiveCopy(round);
-    const challenges = window.getRoundChallengeSummary(round);
+    const challenges = window.getRoundChallengePresentation(round);
     if (challengeList) {
         challengeList.replaceChildren();
-        const labels = challenges.length ? challenges : ['No special challenges'];
-        labels.forEach(label => {
+        const labels = challenges.length ? challenges : [{ label: 'No special challenges', icon: '' }];
+        labels.forEach(({ label, icon }) => {
             const chip = document.createElement('span');
             chip.className = 'challenge-chip';
-            chip.innerText = label;
+            if (icon) {
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'challenge-chip-icon';
+                iconSpan.setAttribute('aria-hidden', 'true');
+                iconSpan.innerText = icon;
+                chip.appendChild(iconSpan);
+            }
+            chip.appendChild(document.createTextNode(label));
             challengeList.appendChild(chip);
         });
     }
@@ -113,9 +165,6 @@ window.showRoundModal = function(round, options = {}) {
     }
     
     const hasShopUnlocks = window.isSupplyClosetAvailable(round);
-    if (loadoutHint) loadoutHint.innerText = hasShopUnlocks
-        ? 'Available loadout: choose power-ups in the Supply Closet below. Credits carry forward between rounds.'
-        : 'No Supply Closet is available for this round.';
     if (hasShopUnlocks) {
         if (shopDiv) shopDiv.style.display = 'block';
         if (typeof ui.renderShop === 'function') ui.renderShop();

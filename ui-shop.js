@@ -110,11 +110,8 @@ window.renderShop = function() {
     if (!shopDiv || typeof PowerUps === 'undefined') return;
 
     // Capture scroll positions to prevent jumping
-    const modalContent = shopDiv.closest('.modal-content');
-    const modalScroll = modalContent ? modalContent.scrollTop : 0;
-    
-    let listContainer = shopDiv.querySelector('.shop-items-grid');
-    let gridScroll = listContainer ? listContainer.scrollTop : 0;
+    const scrollRegion = shopDiv.querySelector('.shop-scroll-region');
+    const shopScroll = scrollRegion ? scrollRegion.scrollTop : 0;
 
     let currentCartTotal = PowerUps.cart.reduce((sum, item) => sum + PowerUps.catalog[item.id].tiers[item.tier].cost, 0);
     let remainingPoints = Registry.points - currentCartTotal;
@@ -134,6 +131,12 @@ window.renderShop = function() {
 
     const shopContainer = document.createElement('div');
     shopContainer.className = 'shop-container';
+
+    const scrollContainer = document.createElement('div');
+    scrollContainer.className = 'shop-scroll-region';
+
+    const shopLayout = document.createElement('div');
+    shopLayout.className = 'shop-layout';
 
     const itemsGrid = document.createElement('div');
     itemsGrid.className = 'shop-items-grid';
@@ -157,7 +160,7 @@ window.renderShop = function() {
             
             const tierDiv = document.createElement('div');
             tierDiv.className = 'shop-btn-tier';
-            tierDiv.textContent = `TIER ${index + 1}`;
+            tierDiv.textContent = ['Bronze', 'Silver', 'Gold'][index] || `Tier ${index + 1}`;
             
             const iconDiv = document.createElement('div');
             iconDiv.className = 'shop-btn-icon';
@@ -175,10 +178,7 @@ window.renderShop = function() {
             itemsGrid.appendChild(button);
         });
     });
-    shopContainer.appendChild(itemsGrid);
-
-    if (PowerUps.cart.length > 0) {
-        const cartContainer = document.createElement('div');
+    const cartContainer = document.createElement('aside');
         cartContainer.className = 'cart-container';
 
         const cartHeader = document.createElement('div');
@@ -204,7 +204,8 @@ window.renderShop = function() {
             const pu = PowerUps.catalog[item.id];
             const cartItem = document.createElement('div');
             cartItem.className = `cart-item cart-item-t${item.tier + 1}`;
-            cartItem.title = 'Click to remove';
+            const tierName = ['Bronze', 'Silver', 'Gold'][item.tier] || `Tier ${item.tier + 1}`;
+            cartItem.title = `${pu.name} — ${tierName}. Click to remove.`;
             
             const iconSpan = document.createElement('span');
             iconSpan.textContent = pu.icon;
@@ -213,7 +214,10 @@ window.renderShop = function() {
             removeSpan.className = 'cart-item-remove';
             removeSpan.textContent = '×';
             
-            cartItem.append(iconSpan, removeSpan);
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'cart-item-label';
+            labelSpan.textContent = `${pu.name} · ${tierName}`;
+            cartItem.append(iconSpan, labelSpan, removeSpan);
             cartItem.addEventListener('click', () => {
                 const ui = GameUI();
                 if (typeof ui.removeFromCart === 'function') ui.removeFromCart(idx);
@@ -236,12 +240,19 @@ window.renderShop = function() {
         };
         cartContainer.appendChild(checkoutBtn);
 
-        shopContainer.appendChild(cartContainer);
+    if (PowerUps.cart.length === 0) {
+        const emptyCart = document.createElement('div');
+        emptyCart.className = 'cart-empty';
+        emptyCart.textContent = 'Cart empty';
+        cartItemsGrid.appendChild(emptyCart);
     }
+
+    shopLayout.append(itemsGrid, cartContainer);
+    scrollContainer.appendChild(shopLayout);
+    shopContainer.appendChild(scrollContainer);
 
     shopDiv.appendChild(shopContainer);
 
     // Restore scroll positions
-    itemsGrid.scrollTop = gridScroll;
-    if (modalContent) modalContent.scrollTop = modalScroll;
+    scrollContainer.scrollTop = shopScroll;
 };

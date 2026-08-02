@@ -36,7 +36,7 @@ test('every authored round renders its canonical briefing title and active chall
                 expectedRank: definition.briefing.rank,
                 missingChallenges: (definition.activeChallenges || [])
                     .map(challenge => labels[challenge] || challenge)
-                    .filter(label => !renderedChallenges.includes(label))
+                    .filter(label => !renderedChallenges.some(rendered => rendered.includes(label)))
             };
         });
     });
@@ -90,6 +90,48 @@ test('structured briefing uses the wider modal while keeping Supply Closet items
     expect(result.width).toBeGreaterThanOrEqual(650);
     expect(result.gridDisplay).toBe('grid');
     expect(result.gridColumns).toBe(3);
+});
+
+test('briefing removes redundant objective/loadout copy and presents introductions and shop tiers', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(3, { showBriefing: false });
+        showRoundModal(3);
+        const roomServiceIntro = {
+            richText: document.getElementById('roundInstructions').innerHTML,
+            introTerms: document.querySelectorAll('.briefing-intro-term').length,
+            chips: Array.from(document.querySelectorAll('#roundChallengeList .challenge-chip')).map(chip => chip.innerText),
+            objectiveCard: document.querySelector('.briefing-objective'),
+            loadoutHint: document.getElementById('roundLoadoutHint'),
+            tierLabels: [],
+            cart: document.querySelector('.cart-container')?.innerText || ''
+        };
+        showRoundModal(4);
+        const laterRound = { introTerms: document.querySelectorAll('.briefing-intro-term').length };
+        skipToRound(12, { showBriefing: false });
+        showRoundModal(12);
+        const enduranceRule = document.getElementById('roundRuleBody')?.innerText || '';
+        roomServiceIntro.tierLabels = Array.from(document.querySelectorAll('.shop-btn-tier')).slice(0, 3).map(node => node.innerText);
+        roomServiceIntro.shopCardWidth = document.querySelector('.shop-btn')?.getBoundingClientRect().width || 0;
+        roomServiceIntro.sharedScroll = getComputedStyle(document.querySelector('.shop-scroll-region')).overflowY;
+        roomServiceIntro.nestedScroll = [
+            getComputedStyle(document.querySelector('.shop-items-grid')).overflowY,
+            getComputedStyle(document.querySelector('.cart-items-grid')).overflowY
+        ];
+        return { roomServiceIntro, laterRound, enduranceRule };
+    });
+    expect(result.roomServiceIntro.richText).toContain('Room Service');
+    expect(result.roomServiceIntro.richText).toContain('briefing-intro-icon');
+    expect(result.roomServiceIntro.introTerms).toBeGreaterThan(0);
+    expect(result.roomServiceIntro.chips.every(chip => /[🛎️]/u.test(chip))).toBe(true);
+    expect(result.roomServiceIntro.objectiveCard).toBe(null);
+    expect(result.roomServiceIntro.loadoutHint).toBe(null);
+    expect(result.roomServiceIntro.tierLabels).toEqual(['Bronze', 'Silver', 'Gold']);
+    expect(result.roomServiceIntro.cart).toContain('Cart empty');
+    expect(result.roomServiceIntro.shopCardWidth).toBeLessThanOrEqual(80);
+    expect(result.roomServiceIntro.sharedScroll).toBe('auto');
+    expect(result.roomServiceIntro.nestedScroll).toEqual(['visible', 'visible']);
+    expect(result.laterRound.introTerms).toBe(0);
+    expect(result.enduranceRule).toContain('twentieth life');
 });
 
 test('campaign shell restores only a validated pre-round checkpoint', async ({ page }) => {
