@@ -525,8 +525,8 @@ body {
     border-bottom: 2px solid #ecf0f1; 
     padding-bottom: 10px; 
 }
-.round-briefing-modal { width: 594px; max-width: calc(100vw - 32px); max-height: calc(100vh - 24px); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; text-align: left; position: relative; padding-bottom: 86px; }
-.round-briefing-modal #briefingDetails { min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.round-briefing-modal { width: 594px; height: calc(100vh - 24px); max-width: calc(100vw - 32px); max-height: calc(100vh - 24px); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; text-align: left; }
+.round-briefing-modal #briefingDetails { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .round-briefing-modal h2 { margin-bottom: 10px; }
 .round-rank, .promotion-heading { margin: 0; color: #6b7c85; font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
 .modal-instructions { line-height: 1.45; color: #2c3e50; margin: 12px 0; }
@@ -586,7 +586,7 @@ body {
     white-space: nowrap; 
     flex-shrink: 0;
 }
-.briefing-footer { position: absolute; left: 30px; right: 30px; bottom: 24px; z-index: 3; }
+.briefing-footer { position: static; margin-top: 10px; flex: 0 0 auto; }
 #startRoundBtn { margin-top: 0; flex: 0 0 auto; }
 
 .round-countdown {
@@ -919,7 +919,7 @@ body {
 .inv-btn-t3.active { box-shadow: 0 0 10px #3498db, 0 0 5px #f1c40f inset; }
 
 .shop-header { margin: 0 0 5px 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 16px; }
-.shop-container { display: flex; flex-direction: column; height: 261px; gap: 10px; margin-bottom: 10px; flex: 0 0 261px; }
+.shop-container { display: flex; flex-direction: column; height: auto; min-height: 0; gap: 10px; margin-bottom: 10px; flex: 1 1 261px; }
 .shop-scroll-region { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 5px; }
 .shop-layout { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(112px, .9fr); gap: 10px; align-items: start; }
 .shop-items-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-content: flex-start; padding: 5px 5px 5px 0; }

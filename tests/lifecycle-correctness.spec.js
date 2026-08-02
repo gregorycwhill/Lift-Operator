@@ -141,7 +141,7 @@ test('briefing removes redundant objective/loadout copy and presents introductio
     expect(result.roomServiceIntro.sharedScroll).toBe('auto');
     expect(result.roomServiceIntro.nestedScroll).toEqual(['visible', 'visible']);
     expect(result.roomServiceIntro.startButtonVisible).toBe(true);
-    expect(result.roomServiceIntro.footerPosition).toBe('absolute');
+    expect(result.roomServiceIntro.footerPosition).toBe('static');
     expect(result.roomServiceIntro.cartHeader).not.toContain('Cart');
     expect(result.roomServiceIntro.cartItem).toBe('Air Freshener');
     expect(result.roomServiceIntro.cartTotal.split(/\r?\n/)).toEqual(['Total Cost:', '1 Credits']);

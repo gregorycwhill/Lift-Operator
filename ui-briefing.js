@@ -88,7 +88,7 @@ window.getBriefingChallengePresentation = function(round) {
     const definition = Config.GAME_DATA.rounds[round] || {};
     const icon = (...codes) => String.fromCodePoint(...codes);
     const metadata = {
-        roomService: { label: 'Room Service', icon: icon(0x1f6ce, 0xfe0f) }, checkout: { label: 'Checkout', icon: icon(0x1f4bc) },
+        roomService: { label: 'Room Service', icon: icon(0x1f37d, 0xfe0f) }, checkout: { label: 'Checkout', icon: icon(0x1f4bc) },
         vip: { label: 'VIP', icon: icon(0x1f451) }, rooftop: { label: 'Rooftop Party', icon: icon(0x1f378) },
         jam: { label: 'Jams', icon: icon(0x26a0, 0xfe0f) }, stink: { label: 'Stink', icon: icon(0x1f4a8) },
         gym: { label: 'Gym Bros', icon: icon(0x1f4aa) }, gravity: { label: 'Gravity', icon: icon(0x2b06, 0xfe0f) },
@@ -105,7 +105,7 @@ window.getCampaignIntroductionTerms = function(round) {
     const shopUnlocks = Config.GAME_DATA.shopUnlocks || {};
     const icon = (...codes) => String.fromCodePoint(...codes);
     const challengeTerms = {
-        roomService: ['Room Service', icon(0x1f6ce, 0xfe0f)], checkout: ['Checkout', icon(0x1f4bc)], vip: ['VIP', icon(0x1f451)],
+        roomService: ['Room Service', icon(0x1f37d, 0xfe0f)], checkout: ['Checkout', icon(0x1f4bc)], vip: ['VIP', icon(0x1f451)],
         rooftop: ['Rooftop Party', icon(0x1f378)], jam: ['Jams', icon(0x26a0, 0xfe0f)], stink: ['Stink', icon(0x1f4a8)],
         gym: ['Gym Bros', icon(0x1f4aa)], gravity: ['Gravity', icon(0x2b06, 0xfe0f)],
         counterweights: ['Counterweight', icon(0x2699, 0x21c5)], capsule: ['capsules', icon(0x1f6d7)],
