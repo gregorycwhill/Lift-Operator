@@ -84,7 +84,7 @@ window.renderBriefingCopy = function(text, round, seenTerms = new Set()) {
 
 // Keep briefing symbols aligned with runtime power-up/effect icons. Challenge
 // icons without a runtime effect use this small, shared presentation vocabulary.
-window.getBriefingChallengePresentation = function(round) {
+window.getRoundChallengePresentation = function(round) {
     const definition = Config.GAME_DATA.rounds[round] || {};
     const icon = (...codes) => String.fromCodePoint(...codes);
     const metadata = {
@@ -213,7 +213,7 @@ window.showRoundModal = function(round, options = {}) {
     
     const hasShopUnlocks = window.isSupplyClosetAvailable(round);
     if (hasShopUnlocks) {
-        if (shopDiv) shopDiv.style.display = 'block';
+        if (shopDiv) shopDiv.style.display = 'flex';
         if (typeof ui.renderShop === 'function') ui.renderShop();
         if (btn) {
             btn.innerText = `Purchase Power-ups and Start Round ${round}`;
