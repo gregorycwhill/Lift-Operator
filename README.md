@@ -27,8 +27,8 @@ Firefox is not currently a supported browser.
 - Fast, readable lift dispatch that grows into fleet-management puzzles.
 - Built-in and Workshop-authored automations, including Service Zoning.
 - Power-ups, VIP journeys, Checkout demand, Rooftop Parties, counterweights, and capsule tubes.
-- Persistent Credits and deterministic seeds for repeatable problem-solving.
-- Audio controls, attributions, Settings, and an in-game feedback action that pre-fills the form with game details and copies them locally.
+- Persistent Credits, deterministic seeds, and local pre-round campaign resume for repeatable problem-solving.
+- Welcome, How to Play, Credits & Licences, audio controls, and an in-game feedback action that pre-fills the form with game details and copies them locally.
 
 ## Help improve it
 

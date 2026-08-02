@@ -84,6 +84,8 @@ a roadmap investigation, not an RC1.0 mode.
 
 ### Campaign shell and persistence
 
+**Status: implemented; browser and human acceptance remains.**
+
 RC1.0 includes a lightweight outer shell that makes the existing campaign approachable without interrupting round-to-
 round flow. It adds a first-visit Welcome view, How to Play, Credits & Licences, a campaign-completion view, and
 locally persisted campaign progress. The credit line is **Created by Gregory Hill** and **Lead playtester: Marie

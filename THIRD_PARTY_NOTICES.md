@@ -36,7 +36,9 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 - `gameplay-chiploop.mp3`, `gameplay-pressure-chip-bit-danger.mp3`, `powerup-special.wav`, and `powerup-turbo.wav` are
   bundled but are not individually described in the manifest. **Gap:** either remove unused files from release
   artifacts or add individual provenance/licence entries.
-- Confirm every CC-BY attribution in the visible Settings attribution surface matches the manifest before release.
+- Settings and campaign-completion Audio Credits & Licences render the CC-BY entries from the manifest, including
+  title, author, licence, modification note, and source link. Keep this surface synchronized with the manifest whenever
+  an audio asset changes.
 
 ## Fonts and visual assets
 

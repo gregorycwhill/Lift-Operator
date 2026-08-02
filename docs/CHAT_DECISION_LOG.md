@@ -36,6 +36,7 @@ document after the decision is applied there.
 | DEC-019 | 2 August 2026 | RC1.0 includes local campaign persistence and an outer campaign shell. Resume uses a validated round-boundary checkpoint, not a live-world save. Credits & Licences will credit Gregory Hill and Marie Barnard. | `ROADMAP.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
 | DEC-020 | 2 August 2026 | Give Feedback uses the production Google Form's long URL and pre-fills its diagnostic field on user action; it also copies the diagnostic and never submits a response automatically. Five-or-more-lift rounds begin in Sweep. Countdown is three seconds per lift, bounded 5–30 seconds, except for Round 2's ten-second teaching window. | `release-config.js`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
 | DEC-021 | 2 August 2026 | RC1.0 retains only supported release, acceptance, trace, performance, media, packaging, and human-protocol tooling. Deferred runtime prototypes and retired browser/CLI harnesses are removed; superseded balance evidence is archived separately from current reports. | `package.json`, `DOCUMENTATION.md`, `docs/archive/reports/`. |
+| DEC-022 | 2 August 2026 | RC1.0 implements the lightweight local campaign shell: first-visit Welcome, How to Play, Credits & Licences, verified pre-round resume, confirmed New Game, and Campaign Complete. The checkpoint is balance-version validated and excludes live-world state. | `campaign.js`, `index.html`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
 
 ## Chat persistence limitation
 

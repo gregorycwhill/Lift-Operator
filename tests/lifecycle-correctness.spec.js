@@ -16,6 +16,68 @@ test.beforeEach(async ({ page }) => {
     await page.goto(GAME_URL);
 });
 
+test('campaign shell restores only a validated pre-round checkpoint', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        localStorage.removeItem(Game.Keys.CAMPAIGN);
+        Registry.playerName = 'Campaign Test';
+        Registry.seed = 2468;
+        Registry.points = 17;
+        Registry.highestUnlockedRound = 9;
+        skipToRound(8, { showBriefing: false });
+        Registry.stats.lives = 14;
+        PowerUps.inventory = [{ id: 'turbo', tier: 0 }];
+        Game.Campaign.saveCurrent();
+        Registry.points = 0;
+        Registry.highestUnlockedRound = 1;
+        Registry.stats.lives = 1;
+        PowerUps.inventory = [];
+        const restored = Game.Campaign.restore();
+        return {
+            restored, round: Registry.stats.round, seed: Registry.seed, points: Registry.points,
+            unlock: Registry.highestUnlockedRound, lives: Registry.stats.lives,
+            inventory: PowerUps.inventory, briefing: document.getElementById('roundModalOverlay').style.display
+        };
+    });
+
+    expect(result).toMatchObject({ restored: true, round: 8, seed: 2468, points: 17, unlock: 9, lives: 14, briefing: 'flex' });
+    expect(result.inventory).toEqual([{ id: 'turbo', tier: 0 }]);
+});
+
+test('campaign shell rejects stale checkpoints and exposes credited completion', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        localStorage.setItem(Game.Keys.CAMPAIGN, JSON.stringify({ schemaVersion: 1, balanceVersion: 'stale', playerName: 'Old', seed: 1, round: 3, highestUnlockedRound: 3, lives: 20, points: 2 }));
+        const stale = Game.Campaign.load();
+        Game.Shell.showWelcome();
+        const playLabel = document.getElementById('welcomeStartBtn').textContent;
+        Game.Shell.showCampaignComplete();
+        return { stale, playLabel, completed: document.getElementById('campaignCompleteOverlay').style.display, credits: document.getElementById('creditsOverlay').textContent };
+    });
+
+    expect(result.stale).toBeNull();
+    expect(result.playLabel).toBe('Play');
+    expect(result.completed).toBe('flex');
+    expect(result.credits).toContain('Gregory Hill');
+    expect(result.credits).toContain('Marie Barnard');
+});
+
+test('campaign shell Play reaches Round 1 briefing and New Game only clears its checkpoint', async ({ page }) => {
+    await page.evaluate(() => {
+        localStorage.setItem(Game.Keys.CAMPAIGN, JSON.stringify({ schemaVersion: 1, balanceVersion: Config.balanceVersion, playerName: 'Saved', seed: 77, round: 4, highestUnlockedRound: 4, lives: 20, points: 4, inventory: [], completed: false }));
+        localStorage.setItem(Game.Keys.PLAYER, 'Saved');
+        localStorage.setItem('shell-preference', 'retain');
+        Game.Shell.showWelcome();
+    });
+    await page.locator('#welcomeNewGameBtn').click();
+    await page.locator('#confirmNewGameBtn').click();
+    const result = await page.evaluate(() => ({
+        checkpoint: localStorage.getItem(Game.Keys.CAMPAIGN),
+        preference: localStorage.getItem('shell-preference'),
+        briefing: document.getElementById('roundModalOverlay').style.display,
+        round: Registry.stats.round
+    }));
+    expect(result).toEqual({ checkpoint: null, preference: 'retain', briefing: 'flex', round: 1 });
+});
+
 test('round evaluation commits payout only once', async ({ page }) => {
     const result = await page.evaluate(() => {
         Registry.playerName = 'Evaluation Test';

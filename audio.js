@@ -30,10 +30,52 @@ window.Game.Audio = (function () {
     const fallbackMap = { vipArrival: 'victory', purchase: 'ding', uiError: 'error', defenestration: 'error' };
     const eventCooldownMs = { guest_urgency: 300 };
     const lastPlayedEventAt = new Map();
+    let attributionHtml = '';
+    let attributionLoad = null;
 
     try { settings = { ...settings, ...JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') }; } catch (_) { /* private mode */ }
     const persist = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch (_) {} };
     const emit = (name, payload = {}) => (listeners.get(name) || []).forEach(fn => { try { fn(payload); } catch (_) {} });
+    const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
+    const requiredCredits = manifest => Object.values(manifest?.assets || {}).filter(asset => /^CC-BY\s+[0-9.]+$/i.test(asset.license || ''));
+    const formatAttribution = asset => {
+        const title = escapeHtml(asset.title || asset.attribution || 'Untitled audio asset');
+        const author = escapeHtml(asset.author || 'Unknown author');
+        const license = escapeHtml(asset.license || 'Licence unavailable');
+        const modification = escapeHtml(asset.modification || 'No modification recorded');
+        const source = String(asset.source || '');
+        const sourceLink = /^https:\/\//i.test(source)
+            ? ` <a href="${escapeHtml(source)}" target="_blank" rel="noopener noreferrer">Source</a>`
+            : '';
+        return `<li><strong>${title}</strong> — ${author} (${license}). ${modification}.${sourceLink}</li>`;
+    };
+    const applyAttributions = html => {
+        ['settingsAudioAttribution', 'audioAttribution', 'shellAudioAttribution'].forEach(id => {
+            const target = document.getElementById(id);
+            if (target) target.innerHTML = html;
+        });
+    };
+    const renderAttributions = () => {
+        if (attributionHtml) { applyAttributions(attributionHtml); return Promise.resolve(attributionHtml); }
+        if (!attributionLoad) {
+            attributionLoad = fetch('assets/audio/manifest.json')
+                .then(response => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
+                .then(manifest => {
+                    const credits = requiredCredits(manifest);
+                    attributionHtml = credits.length
+                        ? `<p>CC-BY audio used by Lift Operator:</p><ul class="audio-attribution-list">${credits.map(formatAttribution).join('')}</ul><p>CC0 and Pixabay assets are recorded in the bundled audio attribution file.</p>`
+                        : '<p>No CC-BY audio assets are currently loaded.</p>';
+                    applyAttributions(attributionHtml);
+                    return attributionHtml;
+                })
+                .catch(() => {
+                    attributionHtml = '<p>Unable to load audio credits. See <code>assets/audio/ATTRIBUTION.md</code> in the distribution.</p>';
+                    applyAttributions(attributionHtml);
+                    return attributionHtml;
+                });
+        }
+        return attributionLoad;
+    };
 
     function init() {
         if (initialized) { if (context && context.state === 'suspended') context.resume().catch(() => {}); return true; }
@@ -144,7 +186,7 @@ window.Game.Audio = (function () {
     ['pointerdown', 'keydown', 'touchstart'].forEach(type => document.addEventListener(type, init, { once: true, passive: true }));
 
     function getStatus() { return { initialized, context: currentContext, rooftopActive, rooftopSourceActive: !!rooftopSource, menuSourceActive: !!menuSource, menuPositionSec: menuOffset, musicSourceCount: musicSources.length, pressureBand, acceptedEventCount, menuLoaded: !!buffers.menu, baseLoaded: !!buffers.base, pressureLoaded: !!buffers.pressure, rooftopLoaded: !!buffers.rooftop, victoryLoaded: !!buffers.victory, doorLoaded: !!buffers.door, loadedAssetCount: Object.keys(buffers).length, failedAssetCount: failedAssets.size, muted: settings.muted }; }
-    return { init, play, publish, on, setContext, setPsi, setMuted, setVolume, teardown, getSettings, getStatus };
+    return { init, play, publish, on, setContext, setPsi, setMuted, setVolume, teardown, getSettings, getStatus, renderAttributions };
 })();
 
 window.Game.AudioBus = window.Game.Audio;

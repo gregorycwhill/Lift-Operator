@@ -121,6 +121,7 @@ window.showLeaderboard = function(titleText) {
         const settings = audio.getSettings(); mute.checked = settings.muted; music.value = settings.music; sfx.value = settings.sfx;
         mute.onchange = () => audio.setMuted(mute.checked); music.oninput = () => audio.setVolume('music', music.value); sfx.oninput = () => audio.setVolume('sfx', sfx.value);
     }
+    audio?.renderAttributions?.();
     if (listContainer) {
         listContainer.innerHTML = '';
         const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));
@@ -155,6 +156,7 @@ window.showSettings = function() {
         music.oninput = () => audio.setVolume('music', music.value);
         sfx.oninput = () => audio.setVolume('sfx', sfx.value);
     }
+    audio?.renderAttributions?.();
     /* Retired RC1.0 achievement panel.
     const container = document.getElementById('settingsAchievements');
     if (container) {

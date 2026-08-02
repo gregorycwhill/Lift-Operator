@@ -11,7 +11,9 @@ window.Game.Feedback.getDiagnostic = function(context = 'gameplay') {
     const seed = window.Registry?.seed ?? 'unknown';
     const balance = window.Config?.balanceVersion ?? 'unknown';
     const viewport = `${window.innerWidth || 0}x${window.innerHeight || 0}`;
-    return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | seed=${seed} | browser=${navigator.userAgent} | viewport=${viewport}`;
+    const outcome = window.Registry?.lastRoundOutcome || 'in-progress';
+    const failure = window.Registry?.lastRoundFailureReason;
+    return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | seed=${seed} | outcome=${outcome}${failure ? ` | failure=${failure}` : ''} | browser=${navigator.userAgent} | viewport=${viewport}`;
 };
 
 window.Game.Feedback.copyDiagnostic = async function(context, suppliedDiagnostic) {

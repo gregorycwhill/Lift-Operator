@@ -21,7 +21,7 @@ window.showToast = function(message) {
 
 window.openModalExclusive = function(id) {
     window.Game.AutomationController?.closeLibrary?.();
-    ['roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
+    ['welcomeOverlay', 'howToPlayOverlay', 'creditsOverlay', 'newGameConfirmOverlay', 'campaignCompleteOverlay', 'roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
     const overlay = document.getElementById(id);
@@ -242,6 +242,7 @@ window.initializeUI = function() {
 
         const roundOverlay = document.getElementById("roundModalOverlay");
         if (roundOverlay) roundOverlay.style.display = "none";
+        window.Game.Campaign?.saveCurrent?.({ inventory: PowerUps?.inventory || [] });
         
         window.startRoundCountdown(window.getRoundCountdownSeconds());
     };
@@ -309,6 +310,22 @@ window.initializeUI = function() {
 
     bind("settingsFeedbackBtn", () => window.Game.Feedback?.open('settings'));
     bind("reviewFeedbackBtn", () => window.Game.Feedback?.open('round-review'));
+    bind('settingsHowToBtn', () => window.Game.Shell?.showInfo?.('howToPlayOverlay'));
+    bind('settingsCreditsBtn', () => window.Game.Shell?.showInfo?.('creditsOverlay'));
+
+    bind('welcomeStartBtn', () => window.Game.Shell?.start?.());
+    bind('welcomeNewGameBtn', () => window.Game.Shell?.requestNewGame?.());
+    bind('welcomeHowToBtn', () => window.Game.Shell?.showInfo?.('howToPlayOverlay'));
+    bind('welcomeCreditsBtn', () => window.Game.Shell?.showInfo?.('creditsOverlay'));
+    bind('welcomeFeedbackBtn', () => window.Game.Feedback?.open('welcome'));
+    bind('closeHowToBtn', () => window.Game.Shell?.closeInfo?.());
+    bind('closeCreditsBtn', () => window.Game.Shell?.closeInfo?.());
+    bind('confirmNewGameBtn', () => window.Game.Shell?.beginNewGame?.());
+    bind('cancelNewGameBtn', () => window.Game.Shell?.showWelcome?.());
+    bind('campaignLeaderboardBtn', () => ui.showLeaderboard?.('Campaign Complete'));
+    bind('campaignFeedbackBtn', () => window.Game.Feedback?.open('campaign-complete'));
+    bind('campaignCreditsBtn', () => window.Game.Shell?.showInfo?.('creditsOverlay'));
+    bind('campaignNewGameBtn', () => window.Game.Shell?.requestNewGame?.());
 
     bind("closeLbBtn", () => {
         const lbOverlay = document.getElementById("leaderboardOverlay");
@@ -321,19 +338,11 @@ window.initializeUI = function() {
     });
 
     bind("restartBtn", () => {
-        if (typeof engine.reset === "function") {
-             const lbOverlay = document.getElementById("leaderboardOverlay");
-             if (lbOverlay) lbOverlay.style.display = "none";
-             engine.reset();
-        }
+        window.Game.Shell?.requestNewGame?.();
     });
 
     bind("lbRestartBtn", () => {
-        if (typeof engine.reset === "function") {
-            const lbOverlay = document.getElementById("leaderboardOverlay");
-            if (lbOverlay) lbOverlay.style.display = "none";
-            engine.reset();
-        }
+        window.Game.Shell?.requestNewGame?.();
     });
 
     // DEBUG CONTROLS

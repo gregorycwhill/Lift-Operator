@@ -49,7 +49,8 @@ window.Game.Keys = {
     PLAYER: 'liftOp_v2_lastPlayer',
     ACHIEVEMENTS: 'liftOp_v2_achievements_',
     LEADERBOARD: 'liftOp_v2_arcadeBoard',
-    SCRIPTS: 'liftOp_v2_scripts_'
+    SCRIPTS: 'liftOp_v2_scripts_',
+    CAMPAIGN: 'liftOp_v2_campaign_v1'
 };
 
 // Shared Constants

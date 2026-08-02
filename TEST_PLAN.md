@@ -248,6 +248,9 @@ record.
 
 ## Campaign shell and persistence acceptance
 
+Automated lifecycle coverage now exercises schema validation, restoration, campaign completion, and shell credits.
+The following remain browser/human acceptance checks because they cover first-visit presentation and external-form UX.
+
 - [ ] First visit shows Welcome before the existing Round 1 briefing; Play reaches the player-name flow and the shell
   never appears automatically between rounds.
 - [ ] A schema-valid saved campaign presents Continue; Continue restores player name, seed, resumable round, unlocks,

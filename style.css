@@ -631,6 +631,9 @@ body {
 .audio-controls label { display:flex; gap:4px; align-items:center; }
 .audio-credits { margin-top:8px; font-size:11px; color:#667; text-align:left; }
 .audio-credits p { margin:5px 0; }
+.audio-attribution-list { margin:5px 0 5px 18px; padding:0; }
+.audio-attribution-list li { margin:4px 0; line-height:1.35; }
+.audio-attribution-list a { color:#1e6ea7; }
 .audio-attribution-scroller { overflow:hidden; white-space:nowrap; font-size:10px; color:#889; margin:4px 0 8px; }
 .audio-attribution-scroller span { display:inline-block; animation: audioCreditsScroll 22s linear infinite; }
 @keyframes audioCreditsScroll { from { transform:translateX(100%); } to { transform:translateX(-100%); } }
@@ -933,6 +936,10 @@ body {
     .floor.rooftop-party::after,
     #world.rooftop-party-board::before { animation: none; }
 }
+.shell-modal { max-width: 480px; }
+.shell-hook { font-size: 18px; line-height: 1.45; color: #34495e; margin: 24px 0; }
+.shell-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.shell-modal a { color: #2879b8; }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
 @keyframes flyOut {

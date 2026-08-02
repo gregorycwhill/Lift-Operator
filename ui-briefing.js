@@ -140,6 +140,16 @@ window.showRoundReview = function(completedRound, reason, suppliedEvaluation) {
     const destinationRound = failed ? completedRound : Math.min(finalAuthoredRound, completedRound + 1);
     const destinationHasShop = Object.values(Config.GAME_DATA.shopUnlocks || {})
         .some(tiers => tiers.some(unlockRound => unlockRound <= destinationRound));
+    Registry.lastRoundOutcome = reason;
+    Registry.lastRoundFailureReason = reason === 'failed' ? 'ordinary-death' : null;
+    if (!failed) {
+        window.Game.Campaign?.saveCurrent?.({
+            round: destinationRound,
+            lives: Registry.stats.lives,
+            points: evaluation.totalPoints,
+            inventory: []
+        });
+    }
     if (heading) heading.innerText = failed
         ? `Round ${completedRound} Attempt Failed`
         : `You Did It! Round ${completedRound} Complete!`;

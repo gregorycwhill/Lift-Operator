@@ -353,14 +353,16 @@ test('Settings button toggles its modal and menu music retains a position', asyn
     expect(closed).toEqual({ visible: false, context: 'gameplay' });
 });
 
-test('Settings exposes compact audio controls and attribution', async ({ page }) => {
+test('Settings exposes compact audio controls and required CC-BY attribution', async ({ page }) => {
     await page.goto(GAME_URL);
     await page.click('#settingsBtn');
     await expect(page.locator('#settingsAudioMute')).toBeVisible();
     await expect(page.locator('#settingsAudioMusic')).toBeVisible();
     await expect(page.locator('#settingsAudioSfx')).toBeVisible();
     await expect(page.locator('#settingsOverlay .audio-credits')).toBeVisible();
-    await expect(page.locator('#settingsOverlay .audio-credits')).toContainText('Attributions');
+    await expect(page.locator('#settingsOverlay .audio-credits')).toContainText('Audio Credits & Licences');
+    await expect(page.locator('#settingsAudioAttribution')).toContainText('Somewhere in the Elevator');
+    await expect(page.locator('#settingsAudioAttribution')).toContainText('CC-BY 4.0');
 });
 
 test('audio manifest and attribution are available', async ({ request }) => {

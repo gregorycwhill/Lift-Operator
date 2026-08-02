@@ -4,6 +4,7 @@
   "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Procedural fallback remains enabled for missing or unsupported assets.",
   "assets": {
     "menu": {
+      "title": "Somewhere in the Elevator",
       "file": "assets/audio/menu-somewhere-in-the-elevator.ogg",
       "source": "https://opengameart.org/content/somewhere-in-the-elevator",
       "author": "Peachtea@You're Perfect Studio",
@@ -12,6 +13,7 @@
       "attribution": "Somewhere in the Elevator by Peachtea@You're Perfect Studio"
     },
     "base": {
+      "title": "Dream Raid (Cinematic Action Soundtrack)",
       "file": "assets/audio/gameplay-dream-raid.mp3",
       "source": "https://opengameart.org/content/dream-raid-cinematic-action-soundtrack",
       "author": "Matthew Pablo",
@@ -20,6 +22,7 @@
       "attribution": ""
     },
     "pressure": {
+      "title": "Space Boss Battle Theme",
       "file": "assets/audio/gameplay-orbital-colossus.mp3",
       "source": "https://opengameart.org/content/space-boss-battle-theme",
       "author": "Matthew Pablo",
@@ -52,6 +55,7 @@
       "attribution": ""
     },
     "turbo": {
+      "title": "Rocket Launch",
       "file": "assets/audio/sfx/powerup-rocket-launch.wav",
       "source": "https://opengameart.org/content/rocket-launch-0",
       "author": "dklon",
@@ -84,6 +88,7 @@
       "attribution": ""
     },
     "stink": {
+      "title": "Synthetic Farts",
       "file": "assets/audio/sfx/hazard-synthetic-fart.wav",
       "source": "https://opengameart.org/content/synthetic-farts",
       "author": "dklon",
@@ -108,6 +113,7 @@
       "attribution": "Optional credit: Alien Song by DRAGON-STUDIO via Pixabay"
     },
     "wrench": {
+      "title": "Metal sounds",
       "file": "assets/audio/sfx/powerup-wrench-metal.wav",
       "source": "https://opengameart.org/content/metal-sounds",
       "author": "Vinrax",
@@ -116,6 +122,7 @@
       "attribution": "Metal sounds by Vinrax"
     },
     "doubleDecker": {
+      "title": "Robotic mechanic step sounds",
       "file": "assets/audio/sfx/powerup-double-decker-robot-step.wav",
       "source": "https://opengameart.org/content/robotic-mechanic-step-sounds",
       "author": "Lee Barkovich / qubodup",
@@ -140,6 +147,7 @@
       "attribution": ""
     },
     "vipArrival": {
+      "title": "Fanfare 2",
       "file": "assets/audio/sfx/event-vip-fanfare.wav",
       "source": "https://opengameart.org/content/fanfare-2",
       "author": "Spring Spring",
@@ -148,6 +156,7 @@
       "attribution": "Spring/Spring Enterprises"
     },
     "guestUrgency": {
+      "title": "aww scream",
       "file": "assets/audio/sfx/guest-urgency-aww.ogg",
       "source": "https://opengameart.org/content/aww-scream",
       "author": "bluszcz",
@@ -164,6 +173,7 @@
       "attribution": ""
     },
     "uiError": {
+      "title": "UI Failed or Error",
       "file": "assets/audio/sfx/ui-error-failed.mp3",
       "source": "https://opengameart.org/content/ui-failed-or-error",
       "author": "ViRiX / David McKee",
