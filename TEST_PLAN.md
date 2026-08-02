@@ -210,6 +210,8 @@ capacity fault. Improve and validate those policies before canonical balance par
 - [x] First-introduction terms only receive bold/icon treatment on their canonical campaign introduction round; later briefings remain uncluttered.
 - [x] Active-challenge chips include accessible icons and labels. Supply Closet tiers are named Bronze, Silver, and Gold.
 - [x] Supply Closet renders a permanent empty/filled cart rail on the right, three narrower shop cards across on the left, and one shared scroll region without nested scrollbars.
+- [x] Briefing modal uses the narrower 594px layout with no modal-level scrollbar; the Supply Closet is shortened and the primary start/purchase button remains in the modal footer.
+- [x] Briefing symbols use the runtime icon vocabulary: cocktail-glass Rooftop, Christmas-tree Air Freshener, runtime power-up icons, and gear-arrow zoning/counterweight symbols.
 - [ ] Human replay R11 with the reduced arrival curve and evacuation buffer; report rooftop queue size at release, guests recovered, and whether ordinary traffic remains serviceable.
 
 - [x] Move remaining active mechanic parameters out of compatibility/debug aliases and into canonical data, or remove

@@ -79,6 +79,10 @@ The following programme is the current delivery scope. It restores the design-to
    rule carries its distinct objective. Campaign-introduction terms receive one bold/icon treatment only on their first
    authored introduction, active-challenge chips include icons, and Supply Closet uses a permanent right-hand cart rail
    beside a three-column left shop with one shared scroll region.
+9. **Final briefing layout polish:** narrow the briefing modal to 594px, shorten the Supply Closet, hide modal-level
+   overflow, anchor the primary start/purchase action in the footer, let three shop cards consume the fluid left pane,
+   and align briefing icons with runtime power-up/effect symbols. Capsule uses the new elevator symbol; Rooftop uses
+   the cocktail glass.
 
 ### Tooling and release hygiene
 

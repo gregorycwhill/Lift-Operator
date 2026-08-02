@@ -83,11 +83,14 @@ test('structured briefing uses the wider modal while keeping Supply Closet items
         const grid = document.querySelector('#shopContainer .shop-items-grid');
         return {
             width: modal.getBoundingClientRect().width,
+            modalOverflow: getComputedStyle(modal).overflowY,
             gridDisplay: getComputedStyle(grid).display,
             gridColumns: getComputedStyle(grid).gridTemplateColumns.split(' ').length
         };
     });
-    expect(result.width).toBeGreaterThanOrEqual(650);
+    expect(result.width).toBeGreaterThanOrEqual(580);
+    expect(result.width).toBeLessThanOrEqual(610);
+    expect(result.modalOverflow).toBe('hidden');
     expect(result.gridDisplay).toBe('grid');
     expect(result.gridColumns).toBe(3);
 });
@@ -127,7 +130,7 @@ test('briefing removes redundant objective/loadout copy and presents introductio
     expect(result.roomServiceIntro.loadoutHint).toBe(null);
     expect(result.roomServiceIntro.tierLabels).toEqual(['Bronze', 'Silver', 'Gold']);
     expect(result.roomServiceIntro.cart).toContain('Cart empty');
-    expect(result.roomServiceIntro.shopCardWidth).toBeLessThanOrEqual(80);
+    expect(result.roomServiceIntro.shopCardWidth).toBeGreaterThan(80);
     expect(result.roomServiceIntro.sharedScroll).toBe('auto');
     expect(result.roomServiceIntro.nestedScroll).toEqual(['visible', 'visible']);
     expect(result.laterRound.introTerms).toBe(0);

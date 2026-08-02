@@ -82,6 +82,52 @@ window.renderBriefingCopy = function(text, round, seenTerms = new Set()) {
     return html;
 };
 
+// Keep briefing symbols aligned with runtime power-up/effect icons. Challenge
+// icons without a runtime effect use this small, shared presentation vocabulary.
+window.getBriefingChallengePresentation = function(round) {
+    const definition = Config.GAME_DATA.rounds[round] || {};
+    const icon = (...codes) => String.fromCodePoint(...codes);
+    const metadata = {
+        roomService: { label: 'Room Service', icon: icon(0x1f6ce, 0xfe0f) }, checkout: { label: 'Checkout', icon: icon(0x1f4bc) },
+        vip: { label: 'VIP', icon: icon(0x1f451) }, rooftop: { label: 'Rooftop Party', icon: icon(0x1f378) },
+        jam: { label: 'Jams', icon: icon(0x26a0, 0xfe0f) }, stink: { label: 'Stink', icon: icon(0x1f4a8) },
+        gym: { label: 'Gym Bros', icon: icon(0x1f4aa) }, gravity: { label: 'Gravity', icon: icon(0x2b06, 0xfe0f) },
+        counterweights: { label: 'Counterweights', icon: icon(0x2699, 0x21c5) }, capsule: { label: 'Capsule lifts', icon: icon(0x1f6d7) },
+        zoning: { label: 'Zoning', icon: icon(0x2699, 0x21c5) }, openPlan: { label: 'Open Plan', icon: icon(0x2194, 0xfe0f) },
+        endurance: { label: 'Endurance', icon: icon(0x23f1, 0xfe0f) }
+    };
+    return (window.getRoundChallengeIds?.({ ...definition, round }) || [])
+        .map(challenge => ({ id: challenge, ...(metadata[challenge] || { label: challenge, icon: '•' }) }));
+};
+
+window.getCampaignIntroductionTerms = function(round) {
+    const events = Config.GAME_DATA.events || {};
+    const shopUnlocks = Config.GAME_DATA.shopUnlocks || {};
+    const icon = (...codes) => String.fromCodePoint(...codes);
+    const challengeTerms = {
+        roomService: ['Room Service', icon(0x1f6ce, 0xfe0f)], checkout: ['Checkout', icon(0x1f4bc)], vip: ['VIP', icon(0x1f451)],
+        rooftop: ['Rooftop Party', icon(0x1f378)], jam: ['Jams', icon(0x26a0, 0xfe0f)], stink: ['Stink', icon(0x1f4a8)],
+        gym: ['Gym Bros', icon(0x1f4aa)], gravity: ['Gravity', icon(0x2b06, 0xfe0f)],
+        counterweights: ['Counterweight', icon(0x2699, 0x21c5)], capsule: ['capsules', icon(0x1f6d7)],
+        zoning: ['Service Zoning', icon(0x2699, 0x21c5)], openPlan: ['Open Plan', icon(0x2194, 0xfe0f)]
+    };
+    const terms = [];
+    Object.entries(challengeTerms).forEach(([id, [label, symbol]]) => {
+        const introducedRound = id === 'gravity' ? 13 : id === 'counterweights' ? 21 : id === 'capsule' ? 24 : id === 'zoning' ? 14 : id === 'openPlan' ? 22 : events[id]?.introducedRound;
+        if (introducedRound === round) terms.push({ label, icon: symbol });
+    });
+    const powerupTerms = {
+        wrench: 'Wrench', freshener: 'Air Freshener', musak: 'Musak', turbo: 'Turbo', tardis: 'TARDIS Mode',
+        doors: 'Wide Doors', groupThink: 'Group Think', doubleDecker: 'Double-Decker', openPlan: 'Open Plan'
+    };
+    Object.entries(powerupTerms).forEach(([id, label]) => {
+        if (shopUnlocks[id]?.[0] !== round) return;
+        const runtimeIcon = typeof PowerUps !== 'undefined' ? PowerUps.catalog?.[id]?.icon : null;
+        terms.push({ label, icon: runtimeIcon || icon(0x2699, 0x21c5) });
+    });
+    return terms.sort((a, b) => b.label.length - a.label.length);
+};
+
 window.getCampaignRank = function(round) {
     return Config.GAME_DATA.rounds[round]?.briefing?.rank || 'Trainee';
 };
