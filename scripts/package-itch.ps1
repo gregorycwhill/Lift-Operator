@@ -14,13 +14,17 @@ $archive = Join-Path $output ("Lift-Operator-{0}-{1}.zip" -f $build, $commit)
 Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $staging, $output -Force | Out-Null
 
-$items = @('index.html', 'style.css', 'release-config.js', 'THIRD_PARTY_NOTICES.md', 'generated', 'assets', 'lib')
-$items += Get-ChildItem -Path $root -File -Filter '*.js' | Where-Object { $_.Name -notin @('playwright.config.js') } | ForEach-Object Name
-foreach ($item in $items | Select-Object -Unique) {
-    $source = Join-Path $root $item
-    if (Test-Path -LiteralPath $source) { Copy-Item -LiteralPath $source -Destination $staging -Recurse -Force }
-}
-@"
+try {
+    $items = @('index.html', 'style.css', 'release-config.js', 'THIRD_PARTY_NOTICES.md', 'generated', 'assets', 'lib')
+    $items += Get-ChildItem -Path $root -File -Filter '*.js' | Where-Object { $_.Name -notin @('playwright.config.js') } | ForEach-Object Name
+    foreach ($item in $items | Select-Object -Unique) {
+        $source = Join-Path $root $item
+        if (Test-Path -LiteralPath $source) {
+            $destination = Join-Path $staging (Split-Path -Leaf $item)
+            Copy-Item -LiteralPath $source -Destination $destination -Recurse -Force
+        }
+    }
+    @"
 Lift Operator itch.io package
 Build: $build
 Commit: $commit
@@ -30,7 +34,24 @@ Open index.html in a current desktop browser, or upload this ZIP as an HTML5 pro
 See THIRD_PARTY_NOTICES.md and assets/audio/ATTRIBUTION.md in the source repository before public distribution.
 "@ | Set-Content -LiteralPath (Join-Path $staging 'BUILD.txt') -Encoding utf8
 
-Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue
-Compress-Archive -Path (Join-Path $staging '*') -DestinationPath $archive -Force
-Remove-Item -LiteralPath $staging -Recurse -Force
+    Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archiveStream = [System.IO.File]::Open($archive, [System.IO.FileMode]::CreateNew)
+    $zip = New-Object System.IO.Compression.ZipArchive($archiveStream, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        Get-ChildItem -LiteralPath $staging -Recurse -File | ForEach-Object {
+            $relative = $_.FullName.Substring($staging.Length).TrimStart('\', '/') -replace '\\', '/'
+            $entry = $zip.CreateEntry($relative, [System.IO.Compression.CompressionLevel]::Optimal)
+            $entryStream = $entry.Open()
+            $sourceStream = [System.IO.File]::OpenRead($_.FullName)
+            try { $sourceStream.CopyTo($entryStream) } finally { $sourceStream.Dispose(); $entryStream.Dispose() }
+        }
+    } finally {
+        $zip.Dispose()
+        $archiveStream.Dispose()
+    }
+} finally {
+    Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue
+}
 Write-Output "Created $archive"
