@@ -207,7 +207,8 @@ window.showRoundModal = function(round, options = {}) {
     if (!shopDiv && btn) {
         shopDiv = document.createElement('div');
         shopDiv.id = 'shopContainer';
-        btn.parentNode.insertBefore(shopDiv, btn);
+        const footer = btn.closest('.briefing-footer');
+        (footer?.parentNode || btn.parentNode).insertBefore(shopDiv, footer || btn);
     }
     
     const hasShopUnlocks = window.isSupplyClosetAvailable(round);

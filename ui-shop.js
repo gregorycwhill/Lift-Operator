@@ -185,16 +185,19 @@ window.renderShop = function() {
         cartHeader.className = 'cart-header';
         
         const cartSpan = document.createElement('span');
-        cartSpan.textContent = '🛒 Cart';
+        cartSpan.textContent = '🛒';
+        cartSpan.setAttribute('aria-label', 'Shopping cart');
+        cartSpan.title = 'Shopping cart';
         
         const totalSpan = document.createElement('span');
         totalSpan.className = 'cart-total';
-        totalSpan.textContent = 'Total Cost: ';
+        totalSpan.textContent = 'Total Cost:';
         const totalStrong = document.createElement('strong');
         totalStrong.textContent = `${currentCartTotal} Credits`;
         totalSpan.appendChild(totalStrong);
         
         cartHeader.append(cartSpan, totalSpan);
+        cartSpan.textContent = '🛒';
         cartContainer.appendChild(cartHeader);
 
         const cartItemsGrid = document.createElement('div');
@@ -216,7 +219,7 @@ window.renderShop = function() {
             
             const labelSpan = document.createElement('span');
             labelSpan.className = 'cart-item-label';
-            labelSpan.textContent = `${pu.name} · ${tierName}`;
+            labelSpan.textContent = pu.name;
             cartItem.append(iconSpan, labelSpan, removeSpan);
             cartItem.addEventListener('click', () => {
                 const ui = GameUI();

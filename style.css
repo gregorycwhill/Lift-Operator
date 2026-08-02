@@ -525,7 +525,7 @@ body {
     border-bottom: 2px solid #ecf0f1; 
     padding-bottom: 10px; 
 }
-.round-briefing-modal { width: 594px; max-width: calc(100vw - 32px); max-height: calc(100vh - 24px); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; text-align: left; }
+.round-briefing-modal { width: 594px; max-width: calc(100vw - 32px); max-height: calc(100vh - 24px); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; text-align: left; position: relative; padding-bottom: 86px; }
 .round-briefing-modal #briefingDetails { min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .round-briefing-modal h2 { margin-bottom: 10px; }
 .round-rank, .promotion-heading { margin: 0; color: #6b7c85; font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; }
@@ -586,7 +586,8 @@ body {
     white-space: nowrap; 
     flex-shrink: 0;
 }
-#startRoundBtn { margin-top: auto; flex: 0 0 auto; }
+.briefing-footer { position: absolute; left: 30px; right: 30px; bottom: 24px; z-index: 3; }
+#startRoundBtn { margin-top: 0; flex: 0 0 auto; }
 
 .round-countdown {
     position: fixed;
@@ -939,9 +940,9 @@ body {
 .shop-btn-desc { font-size: 11px; color: #666; margin-top: 5px; line-height: 1.2; }
 
 .cart-container { min-width: 0; background: #f8f9fa; border: 1px dashed #f39c12; border-radius: 6px; padding: 8px; box-sizing: border-box; text-align: left; display: flex; flex-direction: column; min-height: 261px; }
-.cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-shrink: 0; font-size: 14px; }
+.cart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-shrink: 0; font-size: 14px; }
 .cart-header span:first-child { font-weight: bold; color: #2c3e50; }
-.cart-total { color: #7f8c8d; }
+.cart-total { color: #7f8c8d; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; }
 .cart-items-grid { display: flex; flex-direction: column; gap: 5px; padding-right: 2px; align-content: flex-start; }
 .cart-item { border-radius: 4px; padding: 5px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; min-height: 30px; box-sizing: border-box; transition: opacity 0.2s; }
 .cart-item-label { min-width: 0; overflow-wrap: anywhere; line-height: 1.15; }

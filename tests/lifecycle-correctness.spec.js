@@ -120,6 +120,13 @@ test('briefing removes redundant objective/loadout copy and presents introductio
             getComputedStyle(document.querySelector('.shop-items-grid')).overflowY,
             getComputedStyle(document.querySelector('.cart-items-grid')).overflowY
         ];
+        PowerUps.cart = [{ id: 'freshener', tier: 0 }];
+        window.renderShop();
+        roomServiceIntro.startButtonVisible = document.getElementById('startRoundBtn').getBoundingClientRect().height > 0;
+        roomServiceIntro.footerPosition = getComputedStyle(document.querySelector('.briefing-footer')).position;
+        roomServiceIntro.cartHeader = document.querySelector('.cart-header')?.innerText || '';
+        roomServiceIntro.cartItem = document.querySelector('.cart-item-label')?.innerText || '';
+        roomServiceIntro.cartTotal = document.querySelector('.cart-total')?.innerText || '';
         return { roomServiceIntro, laterRound, enduranceRule };
     });
     expect(result.roomServiceIntro.richText).toContain('Room Service');
@@ -133,6 +140,11 @@ test('briefing removes redundant objective/loadout copy and presents introductio
     expect(result.roomServiceIntro.shopCardWidth).toBeGreaterThan(80);
     expect(result.roomServiceIntro.sharedScroll).toBe('auto');
     expect(result.roomServiceIntro.nestedScroll).toEqual(['visible', 'visible']);
+    expect(result.roomServiceIntro.startButtonVisible).toBe(true);
+    expect(result.roomServiceIntro.footerPosition).toBe('absolute');
+    expect(result.roomServiceIntro.cartHeader).not.toContain('Cart');
+    expect(result.roomServiceIntro.cartItem).toBe('Air Freshener');
+    expect(result.roomServiceIntro.cartTotal.split(/\r?\n/)).toEqual(['Total Cost:', '1 Credits']);
     expect(result.laterRound.introTerms).toBe(0);
     expect(result.enduranceRule).toContain('twentieth life');
 });
