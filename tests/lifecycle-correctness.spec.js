@@ -2000,23 +2000,41 @@ test('rooftop event has a long seeded schedule and releases guests to their orig
         Registry.floors[1].waitingGuests.push(guest);
         Registry.sunsetTargetTime = 100000;
         const previousRatio = Config.sunsetGuestRatio;
+        const previousToast = window.showToast;
+        const warnings = [];
+        window.showToast = message => warnings.push(message);
         Config.sunsetGuestRatio = 1;
         runSpawnerTick(100000);
         const active = { active: Registry.sunsetActive, redirected: guest.dest, original: guest.originalDest };
+        runSpawnerTick(185000);
+        runSpawnerTick(185000);
         runSpawnerTick(190000);
         Config.sunsetGuestRatio = previousRatio;
+        window.showToast = previousToast;
         return {
             scheduledStart,
             scheduleSeconds: (scheduledStart - (window.Game.virtualTime || Date.now())) / 1000,
             duration: Config.sunsetDurationSec,
             active,
-            released: { active: Registry.sunsetActive, dest: guest.dest, partying: guest.isPartying }
+            released: { active: Registry.sunsetActive, dest: guest.dest, partying: guest.isPartying },
+            warnings
         };
     });
 
     expect(result.duration).toBeGreaterThanOrEqual(90);
     expect(result.active).toEqual({ active: true, redirected: 14, original: 3 });
     expect(result.released).toEqual({ active: false, dest: 3, partying: false });
+    expect(result.warnings.filter(message => message === 'Last drinks! Rooftop Party ends in 5 seconds.')).toHaveLength(1);
+});
+
+test('R11 briefing explains the Gym Bros stink threshold and immunity', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const definition = getRoundDefinition(11);
+        return definition.briefing.ruleCard.body;
+    });
+
+    expect(result).toContain('three or more Gym Bros make a lift stinky');
+    expect(result).toContain('immune to Stink');
 });
 
 test('Round 13 playtest tuning reduces spawn pressure by 25% and gravity by 20%', async ({ page }) => {

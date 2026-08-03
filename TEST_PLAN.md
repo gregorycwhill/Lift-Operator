@@ -142,7 +142,7 @@ seed set.
 | R8 | VIP | VIP priority/queue rules, three-leg tour timing, and unsuitable/occupied-lift refusal. | Meets threshold |
 | R9 | Rooftop / stink | Party lifecycle, pressure duration, rooftop-only effects, and stink mitigation. | Meets threshold |
 | R10 | Advanced control | Custom automation usefulness, inherited event eligibility, power-up lifecycle, and refusal attribution. | Event-aware profile implemented; below threshold |
-| R11 | Advanced control / weight | Weight-aware lift selection, capacity/load trace, inherited-event interaction, and a bounded Rooftop evacuation window. | Spawn rate reduced 25%; evacuation and human capacity evidence pending |
+| R11 | Advanced control / weight | Weight-aware lift selection, capacity/load trace, inherited-event interaction, and a bounded Rooftop evacuation window. | Canonical 0.96→1.15 curve; evacuation and human capacity evidence pending |
 | R12 | Endurance | All-Sweep loses its twentieth life before 240 seconds; intended strategy survives 240–480 seconds; event pressure reported separately. | Event-aware profile implemented; 0/5 |
 | R13 | Pedal / gravity | Gravity, pedal availability, spawn pressure, power-up affordability, and practical manual override. | Event-aware profile implemented; below threshold |
 | R14 | Service Zoning | Zoning unlock/briefing, overlapping G coverage, zone return after override, and affordability. | Zoned profile implemented; 0/5 |
@@ -201,8 +201,17 @@ capacity fault. Improve and validate those policies before canonical balance par
 ### Current playtest remediation slice
 
 - [x] R2 countdown displays the approved basement-level automation instruction while the ten-second teaching countdown is visible.
-- [x] R11 spawn curve reduced by 25%: 1.3125â€“1.5 guests/second.
+- [x] R11 owner-tested candidate promoted to canonical: 0.96â€“1.15 guests/second; base capacity remains 10.
+- [x] No second candidate comparison is required: the lower curve is now the canonical R11 value.
 - [x] R11 reserves a 45-second post-party evacuation buffer; its Rooftop start is still randomized within the remaining legal window.
+- [ ] R11 candidate comparison: replay the non-canonical 0.96â€“1.15 guests/second curve. Record pass/fail, lives or
+  time remaining, power-ups used, and whether Rooftop evacuation remains understandable. Do not promote it over the
+  canonical 1.3125â€“1.5 curve or increase base capacity above 10 without independent replay evidence.
+- [x] R11 first-use briefing states both that three Gym Bros make a lift stinky and that Gym Bros are immune to Stink.
+- [x] Rooftop event emits exactly one visible â€œLast drinks!â€ toast five seconds before scheduled release, leaves the
+  party locked until release, and does not alter the existing start/release notifications.
+- [x] The earlier non-canonical R11 comparison item is superseded by the promotion above; future replay uses only
+  the canonical 0.96–1.15 guests/second curve.
 - [x] Standard lift travel uses the accepted geometry bands: 0.45 seconds/floor through 15 floors and 0.4166666667 seconds/floor above 15 floors.
 - [x] Counterweight and capsule movement retain their dedicated movement rules.
 - [x] Infinite Capacity regression coverage requires every compatible queued guest to board before the lift closes; direction, Stink, zoning, VIP, and party-state refusals remain valid exclusions.
@@ -212,7 +221,7 @@ capacity fault. Improve and validate those policies before canonical balance par
 - [x] Supply Closet renders a permanent empty/filled cart rail on the right, three narrower shop cards across on the left, and one shared scroll region without nested scrollbars.
 - [x] Briefing modal uses the narrower 594px layout with no modal-level scrollbar; the Supply Closet is shortened and the primary start/purchase button remains in the modal footer.
 - [x] Briefing symbols use the runtime icon vocabulary: cocktail-glass Rooftop, Christmas-tree Air Freshener, runtime power-up icons, and gear-arrow zoning/counterweight symbols.
-- [ ] Human replay R11 with the reduced arrival curve and evacuation buffer; report rooftop queue size at release, guests recovered, and whether ordinary traffic remains serviceable.
+- [ ] Human replay R11 with both the canonical reduced arrival curve and the 0.96â€“1.15 candidate; report rooftop queue size at release, guests recovered, power-ups used, and whether ordinary traffic remains serviceable.
 
 - [x] Move remaining active mechanic parameters out of compatibility/debug aliases and into canonical data, or remove
   the unused aliases.

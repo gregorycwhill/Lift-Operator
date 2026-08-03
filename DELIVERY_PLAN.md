@@ -83,6 +83,9 @@ The following programme is the current delivery scope. It restores the design-to
    overflow, anchor the primary start/purchase action in the footer, let three shop cards consume the fluid left pane,
    and align briefing icons with runtime power-up/effect symbols. Capsule uses the new elevator symbol; Rooftop uses
    the cocktail glass.
+10. **R11/Rooftop clarity:** the first Gym Bros rule card now explains the three-Gym-Bro stink threshold
+    alongside immunity, and publish one â€œLast drinks!â€ toast exactly five seconds before Rooftop release. Neither
+    change alters event duration or boarding rules; the owner-tested 0.96→1.15 R11 curve is now canonical.
 
 ### Tooling and release hygiene
 

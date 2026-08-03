@@ -209,7 +209,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | 8 | The Important Guest | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
 | 9 | Party at the Top | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |
 | 10 | Build It Yourself | Deliver 40 | 15 | 5 | 1.20→1.50 | Custom scripts | TARDIS, Group Think |
-| 11 | Peak Performance | Survive 180s | 15 | 5 | 1.35→1.70 | Gym Bros and mixed weight | Double-Decker |
+| 11 | Peak Performance | Survive 180s | 15 | 5 | 0.96→1.15 | Gym Bros and mixed weight | Double-Decker |
 | 12 | The Longest Shift | Survive until 20 lives are lost | 15 | 4 | 0.80→1.00 | Resource endurance and recombination | Higher tiers |
 | 13 | Uphill Battle | Deliver 50 | 15 | 5 | 1.20→1.55 | Gravity and load optimization | Full catalog |
 
@@ -268,8 +268,22 @@ Any change requires a focused snapshot for the affected round and a matrix parit
 
 **R11 Rooftop evacuation rule:** R11 retains the authored Rooftop Party and its long, unpredictable-feeling event,
 but the event start is constrained to leave a 45-second post-party evacuation window inside the three-minute round.
-R11's arrival curve is 25% below the prior authored values while this release candidate is re-engaged with playtesting.
+R11 uses the owner-tested lower arrival curve as its canonical balance value.
 R11 remains a five-lift, fifteen-floor challenge with Room Service, Gym Bros, Rooftop, Jams, and Stink active.
+
+**R11 canonical arrival curve:** owner playtesting passed R11 twice with four to five
+power-ups and did not reproduce premature lift departure. Test the lower `0.96`â€“`1.15` guests/second curve next.
+The promoted curve is `0.96`â€“`1.15` guests/second; base capacity remains 10.
+
+**R11 briefing clarification:** the first-use Gym Bros rule states that three or more Gym Bros make a
+lift stinky, as well as stating that Gym Bros are immune to Stink. This explains both the risk of grouping them and
+their exceptional boarding behaviour.
+
+**Rooftop last-drinks cue (pending):** issue a visible â€œLast drinks!â€ toast five seconds before Happy Hour releases.
+The party remains active until its scheduled release; the cue is advance notice, not an early evacuation.
+
+The earlier candidate-comparison note above is superseded: future R11 replay uses only the canonical `0.96`–`1.15`
+guests/second curve.
 
 **Standard-building travel bands:** conventional buildings up to 15 floors use the short-building travel band
 (0.45 seconds per floor); conventional buildings above 15 floors use the tall-building band (0.4166666667 seconds per

@@ -114,8 +114,14 @@ window.runSpawnerTick = function(now) {
     // 3. Sunset Happy Hour Event Logic
     if (window.isRoundEventEnabled(roundDefinition, 'rooftop')) {
         if (Registry.sunsetActive) {
+            const warningTime = Registry.sunsetEndTime - 5000;
+            if (!Registry.sunsetWarningShown && now >= warningTime && now < Registry.sunsetEndTime) {
+                Registry.sunsetWarningShown = true;
+                window.showToast?.('Last drinks! Rooftop Party ends in 5 seconds.');
+            }
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;
+                Registry.sunsetWarningShown = false;
                 window.Game.Audio?.publish('rooftop_released', { floor: Config.numFloors - 1 });
                 window.showToast?.('Rooftop Party over — guests are returning to their rooms.');
                 const revertGuest = (g) => {

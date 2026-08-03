@@ -285,12 +285,19 @@ window.getRoundDefinition = function(round, operation = null) {
         ...(Number.isFinite(spawnStartOverride) ? { spawnStart: spawnStartOverride } : {}),
         ...(Number.isFinite(spawnEndOverride) ? { spawnEnd: spawnEndOverride } : {})
     } : {};
-    return {
+    const result = {
         round: supportedRound,
         ...configured,
         ...debugOverlay,
         lifts: Number.isFinite(liftOverride) && Config.debugMode ? Math.max(1, Math.min(20, liftOverride)) : configured.lifts
     };
+    if (result.briefingRuleBody && result.briefing?.ruleCard) {
+        result.briefing = {
+            ...result.briefing,
+            ruleCard: { ...result.briefing.ruleCard, body: result.briefingRuleBody }
+        };
+    }
+    return result;
 };
 
 window.isRoundEventEnabled = function(roundDefinition, eventId) {
@@ -353,6 +360,7 @@ window.createRoundState = function(round, seed, options = {}) {
         sunsetTargetTime: 0,
         sunsetActive: false,
         sunsetEndTime: 0,
+        sunsetWarningShown: false,
         gymFloor: -1
     };
 
@@ -376,6 +384,13 @@ window.createRoundState = function(round, seed, options = {}) {
     }
     if (window.isRoundEventEnabled(definition, 'gym')) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
+    }
+
+    if (definition.briefingRuleBody && definition.briefing?.ruleCard) {
+        definition.briefing = {
+            ...definition.briefing,
+            ruleCard: { ...definition.briefing.ruleCard, body: definition.briefingRuleBody }
+        };
     }
 
     // Service zoning starts as full-building coverage. Players can narrow each
@@ -431,6 +446,7 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.sunsetTargetTime = roundState.sunsetTargetTime;
     Registry.sunsetActive = roundState.sunsetActive;
     Registry.sunsetEndTime = roundState.sunsetEndTime;
+    Registry.sunsetWarningShown = roundState.sunsetWarningShown ?? false;
     Registry.gymFloor = roundState.gymFloor;
     Registry.activeOperation = options.operation || null;
     window.resetAttemptTelemetry();

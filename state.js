@@ -59,7 +59,7 @@ const Registry = {
     automationControllerPreviewPolicy: 'manual',
     
     vipSpawned: false, vipTargetTime: 0, vipStage: 0, vipRoomFloor: -1, vipRandomFloor: -1,
-    sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0,
+    sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0, sunsetWarningShown: false,
     gymFloor: -1,
 
     getNearestTarget: function(lift, targetType) {

@@ -691,8 +691,8 @@ window.GameBalanceData = {
     "11": {
       "floors": 15,
       "lifts": 5,
-      "spawnStart": 1.3125,
-      "spawnEnd": 1.5,
+      "spawnStart": 0.96,
+      "spawnEnd": 1.15,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [
@@ -703,6 +703,7 @@ window.GameBalanceData = {
         "stink"
       ],
       "rooftopReleaseBufferSec": 45,
+      "briefingRuleBody": "Gym Bros are heavy, immune to Stink, and three or more Gym Bros make a lift stinky. Double-Decker increases capacity, but heavy loading can still slow the fleet and create poor service patterns.",
       "briefing": {
         "rank": "Engineer",
         "title": "Peak Performance",
