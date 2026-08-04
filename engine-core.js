@@ -314,7 +314,7 @@ window.createLiftState = function(id) {
     return {
         id, targetFloor: 0, pos: 0, passengers: [], counterweightPartner: null,
         lastActionTime: 0, automation: 'manual', sweepDirection: 1,
-        manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0,
+        manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0, gymStinkActive: false,
         tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
         sardineScored: false, isDoubleDecker: false,
@@ -384,13 +384,6 @@ window.createRoundState = function(round, seed, options = {}) {
     }
     if (window.isRoundEventEnabled(definition, 'gym')) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
-    }
-
-    if (definition.briefingRuleBody && definition.briefing?.ruleCard) {
-        definition.briefing = {
-            ...definition.briefing,
-            ruleCard: { ...definition.briefing.ruleCard, body: definition.briefingRuleBody }
-        };
     }
 
     // Service zoning starts as full-building coverage. Players can narrow each

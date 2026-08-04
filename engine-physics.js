@@ -149,6 +149,15 @@ window.gameTick = function(timestamp) {
         if (typeof lift.isJammed === 'undefined') lift.isJammed = false;
         const wasJamActive = lift.jamTimer > 0 || lift.isJammed;
         const wasStinkActive = lift.stinkTimer > 0;
+        const gymBroCount = lift.passengers.filter(guest => guest.isGymBro).length;
+        const gymBroStinkActive = window.isRoundEventEnabled(roundConfig, 'gym') &&
+            window.isRoundEventEnabled(roundConfig, 'stink') &&
+            gymBroCount >= Number(Config.gymBroStinkThreshold || 3) &&
+            !(lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0));
+        if (gymBroStinkActive && !lift.gymStinkActive) {
+            window.Game.Audio?.publish('hazard_started', { id: 'stink', liftId: lift.id, source: 'gym-bros' });
+        }
+        lift.gymStinkActive = gymBroStinkActive;
 
         const isDouble = lift.isDoubleDecker || lift.doubleDeckerTimer > 0;
         

@@ -19,6 +19,29 @@ window.showToast = function(message) {
     setTimeout(() => { toast.classList.remove("show"); }, 3500);
 };
 
+window.clearGameMessage = function() {
+    const rail = document.getElementById('game-message-rail');
+    if (rail) rail.hidden = true;
+    const text = document.getElementById('game-message-text');
+    if (text) text.textContent = '';
+};
+
+window.showGameMessage = function(message, options = {}) {
+    const rail = document.getElementById('game-message-rail');
+    const text = document.getElementById('game-message-text');
+    if (!rail || !text) return;
+    text.textContent = message;
+    rail.hidden = false;
+    if (options.durationMs > 0) {
+        window.clearTimeout?.(rail._dismissTimer);
+        rail._dismissTimer = window.setTimeout(() => window.clearGameMessage(), options.durationMs);
+    }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('game-message-dismiss')?.addEventListener('click', window.clearGameMessage);
+});
+
 window.openModalExclusive = function(id) {
     window.Game.AutomationController?.closeLibrary?.();
     ['welcomeOverlay', 'howToPlayOverlay', 'creditsOverlay', 'newGameConfirmOverlay', 'campaignCompleteOverlay', 'roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
@@ -47,12 +70,13 @@ window.startRoundCountdown = function(seconds = 5) {
         if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(index, Math.max(1800, remaining * 1000 - 150));
     });
     if (typeof ui.applyAutomationTeachingCue === 'function') ui.applyAutomationTeachingCue();
-    if (Registry.stats.round === 2) window.showToast?.('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
+    if (Registry.stats.round === 2) window.showGameMessage?.('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
 
     const begin = () => {
         if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
         Registry.roundCountdownTimer = null;
         Registry.roundCountdownActive = false;
+        window.clearGameMessage?.();
         window.clearTransientLiftCues?.();
         window.Game.Audio?.publish('round_started', { round: Registry.stats.round });
         if (countdown) countdown.classList.add('hidden');

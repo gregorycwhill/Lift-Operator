@@ -726,8 +726,6 @@ window.GameBalanceData = {
       "activeChallenges": [
         "roomService",
         "gym",
-        "rooftop",
-        "vip",
         "jam",
         "stink",
         "endurance"
@@ -735,11 +733,11 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Engineer",
         "title": "The Longest Shift",
-        "narrative": "There is no tidy finish tonight. Every familiar problem is active, resources are scarce and the only question is how long you can keep the Grand Hotel operating before the twentieth guest gives up spectacularly. Spend for endurance and turn inevitable defeat into a record shift.",
-        "learningFocus": "Endurance scoring; higher-tier resources; death as the completion condition.",
+        "narrative": "There is no tidy finish tonight. Room Service, Gym Bros, jams and contaminated cabins will keep the hotel under pressure while you manage a finite supply of recovery tools. The question is how long you can keep the Grand Hotel operating before the twentieth guest gives up spectacularly.",
+        "learningFocus": "Endurance scoring; resource timing; sustained hazard management.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Endurance has no countdown. Keep operating until the twentieth life is lost; survival time and service determine your result."
+          "body": "Endurance has no countdown. Keep operating until the twentieth life is lost; VIP and Rooftop events are disabled so your resources can focus on sustained operations."
         },
         "promotion": null
       }
@@ -1120,6 +1118,7 @@ window.GameBalanceData = {
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
+      "zoningEnabled": true,
       "capsuleMode": true,
       "capsuleTravelSecPerFloor": 0.2,
       "jamMinSec": 6,

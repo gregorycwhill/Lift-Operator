@@ -88,8 +88,8 @@ test('structured briefing uses the wider modal while keeping Supply Closet items
             gridColumns: getComputedStyle(grid).gridTemplateColumns.split(' ').length
         };
     });
-    expect(result.width).toBeGreaterThanOrEqual(580);
-    expect(result.width).toBeLessThanOrEqual(610);
+    expect(result.width).toBeGreaterThanOrEqual(870);
+    expect(result.width).toBeLessThanOrEqual(900);
     expect(result.modalOverflow).toBe('hidden');
     expect(result.gridDisplay).toBe('grid');
     expect(result.gridColumns).toBe(3);
@@ -993,6 +993,39 @@ test('Service Zoning reports coverage, overlap, and reproducible direct-route ga
         invalidBlank: false,
         invalidReversed: false
     });
+});
+
+test('R25 keeps zoning enabled for the capsule fleet and uses flat service greys', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(25, { showBriefing: false });
+        Registry.lifts[0].serviceUpper = 10;
+        buildWorld();
+        const served = document.querySelector('.shaft.zone-served');
+        const unserved = document.querySelector('.shaft.zone-unserved');
+        return {
+            zoning: getRoundDefinition(25).zoningEnabled,
+            capsule: Registry.capsuleMode,
+            currentRound: Registry.stats.round,
+            zoningActive: document.getElementById('world').classList.contains('zoning-active'),
+            shaftCount: document.querySelectorAll('.shaft').length,
+            servedCount: document.querySelectorAll('.shaft.zone-served').length,
+            unservedCount: document.querySelectorAll('.shaft.zone-unserved').length,
+            servedBackground: served ? getComputedStyle(served).backgroundColor : null,
+            unservedBackground: unserved ? getComputedStyle(unserved).backgroundColor : null,
+            servedShadow: served ? getComputedStyle(served).boxShadow : null,
+            unservedOpacity: unserved ? getComputedStyle(unserved).opacity : null
+        };
+    });
+    expect(result.zoning).toBe(true);
+    expect(result.capsule).toBe(true);
+    expect(result.currentRound).toBe(25);
+    expect(result.zoningActive).toBe(true);
+    expect(result.servedCount).toBeGreaterThan(0);
+    expect(result.unservedCount).toBeGreaterThan(0);
+    expect(result.servedBackground).toBe('rgb(208, 214, 217)');
+    expect(result.unservedBackground).toBe('rgb(184, 193, 198)');
+    expect(result.servedShadow).toBe('none');
+    expect(result.unservedOpacity).toBe('1');
 });
 
 test('short and tall standard buildings use the accepted speed bands while special arcs retain baseline rules', async ({ page }) => {
@@ -2129,11 +2162,15 @@ test('Round 2 shows the basement automation instruction during its extended coun
         startRoundCountdown(10);
         return {
             countdownVisible: !document.getElementById('roundCountdown').classList.contains('hidden'),
-            toast: document.getElementById('game-toast')?.innerText || ''
+            message: document.getElementById('game-message-text')?.innerText || '',
+            railVisible: !document.getElementById('game-message-rail')?.hidden
         };
     });
     expect(result.countdownVisible).toBe(true);
-    expect(result.toast).toBe('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
+    expect(result.message).toBe('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
+    expect(result.railVisible).toBe(true);
+    await page.evaluate(() => document.getElementById('roundCountdownSkip').click());
+    await expect(page.locator('#game-message-rail')).toBeHidden();
 });
 
 test('five-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {
@@ -2352,6 +2389,22 @@ test('Gym Bros board an otherwise compatible stinky lift', async ({ page }) => {
         return { boarded: lift.passengers.map(guest => guest.id), waiting: Registry.floors[floor].waitingGuests.length };
     });
     expect(result).toEqual({ boarded: ['stinky-gym-bro'], waiting: 0 });
+});
+
+test('Gym Bros trigger one stink alert when their threshold is reached', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(11, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        lift.passengers = [1, 2, 3].map(id => ({ id, isGymBro: true, status: GuestStatus.HAPPY, dest: 4, spawnTime: 0 }));
+        const events = [];
+        const off = window.Game.Audio.on('hazard_started', payload => events.push(payload));
+        gameTick(1000);
+        gameTick(2000);
+        off();
+        return events.filter(event => event.source === 'gym-bros').map(event => event.id);
+    });
+    expect(result).toEqual(['stink']);
 });
 
 test('automation teaching cues extend to custom and shared script discovery', async ({ page }) => {

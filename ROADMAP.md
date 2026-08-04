@@ -3,7 +3,7 @@
 **Document role:** Product outcomes and sequence; not an implementation checklist
 **Status:** Active product roadmap
 **Owner class:** Product
-**Last reviewed:** 31 July 2026
+**Last reviewed:** 4 August 2026
 **Current delivery:** Major release-candidate hardening in `DELIVERY_PLAN.md`
 
 ## Product north star
@@ -68,6 +68,29 @@ unwinnable operations, then publish only accepted seeds/templates. Every operati
 version, objective, intended bottleneck, difficulty envelope, and supported strategy profile.
 
 Endless Operations remains after Mobile so it builds on a stable campaign and settled presentation constraints.
+
+## Later — Teleportation topology
+
+**Outcome:** Introduce a deliberately strange late-game routing rule: a lift leaving the top floor immediately appears at
+Ground, and a lift leaving Ground immediately appears at the top floor. The building behaves as a vertical loop, in the
+style of Pac-Man wraparound movement.
+
+This is a puzzle/topology concept, not an RC1.0 change. It could become either a timed Power-up that changes one or
+more lifts temporarily, or a specialised lift type/round rule. The player value is the ability to turn a long vertical
+route into a cyclic route, creating new automation, zoning, and capacity trade-offs rather than simply making lifts
+faster.
+
+Decisions required before delivery planning:
+
+- Power-up, permanent lift type, or authored round-only rule;
+- targeted versus whole-fleet scope, duration, and unlock position;
+- how Sweep, Voting, custom Workshop policies, and distance calculations reason about a cyclic building;
+- interaction with Service Zoning, Counterweights, Capsule lifts, Rooftop, VIP journeys, boarding, and visual/audio
+  communication of the instant transition;
+- whether a top-to-Ground transition counts as servicing either endpoint or is travel-only.
+
+**Gate:** A player can predict the wraparound route, automation uses it intelligibly, and it creates a meaningful
+decision rather than an unqualified speed boost.
 
 ## Later — Meta-progression and achievements
 

@@ -87,6 +87,31 @@ The following programme is the current delivery scope. It restores the design-to
     alongside immunity, and publish one â€œLast drinks!â€ toast exactly five seconds before Rooftop release. Neither
     change alters event duration or boarding rules; the owner-tested 0.96→1.15 R11 curve is now canonical.
 
+### Next playtest remediation slice — implemented; awaiting replay
+
+1. **Low-cost zoning display:** replace green gradients and inset shadows with flat darker-grey no-service shaft cells;
+   served cells retain the current light grey and floor striping remains visible. This addresses the confirmed Chromebook
+   slowdown in R20/R23. Do not include elapsed-time movement in RC1.0; it is a post-RC1.0 engine backlog item.
+2. **R2 instruction and notice placement:** provide a reserved non-board message rail. The R2 Automation tip persists
+   for the ten-second teaching countdown and closes when that countdown is skipped or starts; ordinary notices retain
+   their short-lived behaviour.
+3. **Gym Bros clarity and alerting:** make the canonical R11 briefing source expose the full Gym Bro rule through the
+   shared round-definition path. Issue one fart alert when a lift first reaches the three-Gym-Bro stink threshold; do
+   not repeat it until the threshold condition clears.
+4. **R12 Endurance baseline:** remove VIP and Rooftop from R12. Retain ordinary traffic, Room Service, Gym Bros, Jams,
+   Stink, and the Endurance objective; revise authored content, canonical data, parity coverage, and acceptance criteria
+   together.
+5. **Briefing capacity:** widen the desktop briefing to approximately 891px (50% above the current 594px target), capped
+   responsively by the viewport. Preserve the three-column shop, pinned footer action, and a readable cart without an
+   outer modal scrollbar.
+6. **R25 zoning parity:** add the missing active zoning configuration so its actual mechanics and visual state match its
+   challenge list and briefing; perform the Chromebook performance replay only after item 1.
+7. **README release presentation:** apply the approved player-facing tagline, replace the current Supply Closet screenshot
+   with the uploaded asset, and retain the approved elevator/elevator-management discovery wording without changing the
+   game name or construction focus.
+8. **Boarding-refusal audio:** keep the existing no-sound direction-refusal mapping without restoring elevator-door or distressed-
+   guest sounds; retain only intentional event and power-up feedback.
+
 ### Tooling and release hygiene
 
 6. **Completed cleanup:** retire the broken completion audit, hash-only replay, placeholder robustness command, legacy

@@ -1,6 +1,8 @@
 # Lift Operator
 
-**Keep the hotel moving: route a growing lift fleet, automate the pressure, and solve each chaotic shift.**
+**Keep the hotel moving: route a growing elevator fleet, automate the pressure and solve each chaotic shift.**
+
+Lift Operator is an elevator management game about dispatching a growing hotel fleet, learning automation and solving increasingly chaotic shifts.
 
 ## [▶ Play Now — GitHub Pages](https://gregorycwhill.github.io/Lift-Operator/)
 

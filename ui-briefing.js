@@ -164,7 +164,9 @@ window.showRoundModal = function(round, options = {}) {
         btn.className = 'btn btn-green btn-large btn-full-width';
     }
 
-    const definition = Config.GAME_DATA.rounds[round];
+    const definition = typeof window.getRoundDefinition === 'function'
+        ? window.getRoundDefinition(round)
+        : Config.GAME_DATA.rounds[round];
     const briefing = definition?.briefing;
     if (!briefing?.rank || !briefing?.title || !briefing?.narrative || !briefing?.learningFocus ||
         !Object.prototype.hasOwnProperty.call(briefing, 'ruleCard')) {

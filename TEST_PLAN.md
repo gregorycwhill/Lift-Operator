@@ -198,6 +198,21 @@ capacity fault. Improve and validate those policies before canonical balance par
 
 ### Canonical data, content, and tooling hygiene
 
+### Next feedback remediation — implemented; awaiting human replay
+
+- [x] R2 Automation tip appears in the non-board message rail for the complete ten-second teaching countdown and closes
+  immediately when the countdown is skipped or starts; normal notices retain their ordinary timeout.
+- [x] R11's canonical briefing source and visible modal state the three-Gym-Bro rule; threshold crossing produces one
+  fart alert per active group-stink episode without replaying every tick.
+- [x] R12 excludes VIP and Rooftop while retaining Room Service, Gym Bros, Jams, Stink, ordinary guests, and Endurance
+  completion; briefing/challenge-matrix parity passes.
+- [x] The widened briefing remains usable at supported desktop and Chromebook viewports: three shop columns, visible
+  cart entries, pinned primary action, no outer modal scrollbar, and no board overlap.
+- [x] R20/R23 zone-served cells retain the light shaft grey, zone-unserved cells use a flat darker grey with floor lines
+  visible, and straight traversal remains near the canonical time on the Chromebook. R25 zoning parity is then replayed.
+- [x] Direction-incompatible boarding refusal produces no audible bong, while intentional boarding, hazard, power-up,
+  and served feedback remains mapped and audible.
+
 ### Current playtest remediation slice
 
 - [x] R2 countdown displays the approved basement-level automation instruction while the ten-second teaching countdown is visible.

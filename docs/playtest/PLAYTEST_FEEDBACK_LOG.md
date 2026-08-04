@@ -59,6 +59,15 @@ feedback belongs here.
 Gym Bros rule explains the three-Gym-Bro stink threshold and the Rooftop event emits one five-second “Last drinks!”
 warning before release. Focused automated validation covers both changes; human replay remains evidence, not a blocker.
 
+| PTF-025 | Chromebook replay — 4 August 2026 | Conventional zoned rounds slowed dramatically: R20 took about 30 seconds for a nominal 12-second uninterrupted traversal; R23 varied between normal and quarter speed. Removing the green zoning tint mid-round restored R23 to about 13 seconds. | Chromebook Chrome; R20/R23 Service Zoning | **Implemented—awaiting Chromebook replay.** Zone cells now use flat light/darker greys with floor striping preserved; elapsed-time movement remains deferred to post-RC1.0; R25 now has the active zoning flag. |
+| PTF-026 | playtest feedback — 4 August 2026 | The Round 2 Automation tip is useful but disappears before it can be read. Messages should not obscure the game board. | R2 countdown; global notices | **Implemented—awaiting visual replay.** A reserved non-board message rail holds the approved tip for the ten-second teaching countdown and closes on dismissal or countdown start; ordinary 3.5-second toasts are unchanged. |
+| PTF-027 | playtest feedback — 4 August 2026 | R11 says Gym Bros are immune to Stink but does not explain that three Gym Bros cause Stink. A group-stink transition needs the fart alert so the player knows to use Air Freshener. | R11 Gym Bros; lift hazards | **Implemented—awaiting replay.** The canonical round definition exposes the threshold rule through the briefing source path, and a threshold crossing publishes one stink/fart alert until the condition clears. |
+| PTF-028 | playtest feedback — 4 August 2026 | Endurance with VIP and Rooftop pressure is incompatible with the carry-forward economy; a 2:49 result can be shorter than a normal round. | R12 Endurance | **Implemented—awaiting balance replay.** R12 disables VIP and Rooftop only; ordinary traffic, Room Service, Gym Bros, Jams, Stink, and Endurance remain active, with matching briefing copy. |
+| PTF-029 | playtest feedback — 4 August 2026 | The briefing/Supply Closet needs more horizontal space so purchased power-ups remain readable. | Briefing modal and cart | **Implemented—awaiting visual replay.** The desktop briefing modal is approximately 50% wider with a responsive cap; the three-column shop remains intact. |
+
+**Source note — 4 August 2026:** the supplied feedback numbered item 6 contained no observation. No action has been
+created for it pending clarification.
+
 ## Current intake boundary
 
 The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. New feedback from
