@@ -75,7 +75,7 @@ test('campaign promotions appear only at approved progression boundaries and per
     expect(result.directEntry).toBe(false);
 });
 
-test('structured briefing uses the wider modal while keeping Supply Closet items three across', async ({ page }) => {
+test('structured briefing uses the compact modal while keeping Supply Closet items three across', async ({ page }) => {
     const result = await page.evaluate(() => {
         skipToRound(10, { showBriefing: false });
         showRoundModal(10);
@@ -88,8 +88,8 @@ test('structured briefing uses the wider modal while keeping Supply Closet items
             gridColumns: getComputedStyle(grid).gridTemplateColumns.split(' ').length
         };
     });
-    expect(result.width).toBeGreaterThanOrEqual(870);
-    expect(result.width).toBeLessThanOrEqual(900);
+    expect(result.width).toBeGreaterThanOrEqual(580);
+    expect(result.width).toBeLessThanOrEqual(610);
     expect(result.modalOverflow).toBe('hidden');
     expect(result.gridDisplay).toBe('grid');
     expect(result.gridColumns).toBe(3);
@@ -1525,7 +1525,7 @@ test('R14 onward applies the canonical 50 percent credit uplift', async ({ page 
         };
         return { r13: pointsFor(13), r14: pointsFor(14), r25: pointsFor(25) };
     });
-    expect(result).toEqual({ r13: 10, r14: 15, r25: 15 });
+    expect(result).toEqual({ r13: 15, r14: 15, r25: 15 });
 });
 
 test('party guests remain at the rooftop until the event releases them', async ({ page }) => {
@@ -1624,6 +1624,32 @@ test('Rooftop redirect applies equally to runtime and max-delay fallback spawns 
         expect(mix.redirected).toBeLessThan(95);
         expect(mix.ordinary).toBeGreaterThan(0);
     }
+});
+
+test('Rooftop guests already at the roof are party-bound and return to Ground', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(9, { showBriefing: false });
+        Registry.sunsetActive = false;
+        Registry.sunsetHasHappened = false;
+        Registry.sunsetTargetTime = 1;
+        Registry.sunsetEndTime = 60000;
+        Registry.sunsetWarningShown = false;
+        Registry.sunsetActive = false;
+        const originalRatio = Config.sunsetGuestRatio;
+        Config.sunsetGuestRatio = 1;
+        const top = Config.numFloors - 1;
+        Registry.floors[top].waitingGuests.push({ id: 'roof-bound', dest: top, status: GuestStatus.HAPPY, isVip: false, isSunset: false, isPartying: false });
+        runSpawnerTick(2);
+        const guest = Registry.floors[top].waitingGuests.find(item => item.id === 'roof-bound');
+        const redirected = guest.isSunset;
+        Registry.sunsetEndTime = 3;
+        runSpawnerTick(4);
+        Config.sunsetGuestRatio = originalRatio;
+        return { redirected, partyBlocked: !Game.Engine.canGuestBoardLift({ passengers: [], manualOverride: true }, guest, top, false, 10), destination: guest.dest, party: guest.isPartying };
+    });
+    expect(result.redirected).toBe(true);
+    expect(result.destination).toBe(0);
+    expect(result.party).toBe(false);
 });
 
 test('golden onboarding seed rewards Sweep over an idle manual lift', async ({ page }) => {
@@ -2173,16 +2199,27 @@ test('Round 2 shows the basement automation instruction during its extended coun
     await expect(page.locator('#game-message-rail')).toBeHidden();
 });
 
-test('five-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {
+test('Round 2 teaching rail is below the countdown rather than overlapping it', async ({ page }) => {
     const result = await page.evaluate(() => {
-        initializeRound(8, { showBriefing: false });
+        initializeRound(2, { showBriefing: false });
+        startRoundCountdown(10);
+        const countdown = document.getElementById('roundCountdown').getBoundingClientRect();
+        const rail = document.getElementById('game-message-rail').getBoundingClientRect();
+        return { railTop: rail.top, countdownBottom: countdown.bottom, stacked: rail.top >= countdown.bottom - 1 };
+    });
+    expect(result.stacked).toBe(true);
+});
+
+test('four-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(6, { showBriefing: false });
         const smallerFleet = Registry.lifts.map(lift => lift.automation);
-        initializeRound(9, { showBriefing: false });
+        initializeRound(7, { showBriefing: false });
         const largerFleet = Registry.lifts.map(lift => lift.automation);
         return { smallerFleet, largerFleet };
     });
-    expect(result.smallerFleet).toEqual(['manual', 'manual', 'manual', 'manual']);
-    expect(result.largerFleet).toHaveLength(5);
+    expect(result.smallerFleet.every(mode => mode === 'manual')).toBe(true);
+    expect(result.largerFleet).toHaveLength(4);
     expect(result.largerFleet.every(mode => mode === 'sweep')).toBe(true);
 });
 
@@ -2295,6 +2332,22 @@ test('VIP inter-leg travel waits 10-30 seconds and re-enters at the queue front'
     expect(result.pending.visible).toBe(false);
     expect(result.beforeRelease).toBe(false);
     expect(result.afterRelease).toEqual({ first: true, pending: null });
+});
+
+test('VIP arrival announces itself without changing lift targets', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(17, { showBriefing: false });
+        Registry.gameActive = true;
+        Registry.vipTargetTime = 1;
+        Registry.vipSpawned = false;
+        Registry.lifts.forEach((lift, index) => { lift.targetFloor = index + 1; });
+        const before = Registry.lifts.map(lift => lift.targetFloor);
+        runSpawnerTick(2);
+        return { before, after: Registry.lifts.map(lift => lift.targetFloor), vip: Registry.floors[0].waitingGuests.some(guest => guest.isVip), message: document.getElementById('game-message-text')?.textContent || '' };
+    });
+    expect(result.after).toEqual(result.before);
+    expect(result.vip).toBe(true);
+    expect(result.message).toContain('VIP arrival');
 });
 
 test('duplicate targeted power-up is blocked without manual targeting or consumption', async ({ page }) => {
@@ -2562,7 +2615,9 @@ test('R22 manual stop boards a compatible waiting guest before Sweep resumes', a
 
     expect(result.boarded).toEqual(['manual-stop-guest']);
     expect(result.waiting).toEqual([]);
-    expect(result.manualOverride).toBe(true);
+    // The explicit stop is consumed after the compatible boarding cycle;
+    // Sweep may resume once the lift has served the manual instruction.
+    expect(result.manualOverride).toBe(false);
     expect(result.partnerTarget).toBe(9);
 });
 

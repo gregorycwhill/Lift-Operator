@@ -162,10 +162,20 @@ const Registry = {
     getLiftWeight: function(lift) {
         return lift.passengers.reduce((sum, p) => sum + (p.boardingWeight || (p.isGymBro ? 2 : 1)), 0);
     },
+    isLiftStinky: function(lift) {
+        if (!lift) return false;
+        const immune = lift.freshenerTimer > 0 ||
+            (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
+        if (immune) return false;
+        const gymStink = window.isRoundEventEnabled?.(Config.GAME_DATA.rounds[Registry.stats.round], 'gym') &&
+            window.isRoundEventEnabled?.(Config.GAME_DATA.rounds[Registry.stats.round], 'stink') &&
+            lift.passengers.filter(passenger => passenger.isGymBro).length >= Number(Config.gymBroStinkThreshold || 3);
+        return Boolean(lift.stinkTimer > 0 || gymStink);
+    },
     findSweepTarget: function(lift, dir, priorityOnly = false) {
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);
         let maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(lift.id) : (Config.liftCapacity || 10);
-        let isStinky = lift.stinkTimer > 0;
+        let isStinky = this.isLiftStinky(lift);
         let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
         const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
         const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
@@ -184,12 +194,9 @@ const Registry = {
             // Pickup check: stop if we have room and there is a valid guest
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {
                 const hasStopReason = Registry.floors[checkF].waitingGuests.some(g => {
-                    if (isStinky && !g.isGymBro) return false;
-                    if (lift.passengers.some(p => p.isVip)) return false; 
-                    if (g.isVip && lift.passengers.length > 0) return false;
-                    
-                    if (priorityOnly) {
-                        return (g.status === 'critical' || g.status === 'annoyed');
+                    if (priorityOnly && g.status !== 'critical' && g.status !== 'annoyed') return false;
+                    if (typeof window.canGuestBoardLift === 'function') {
+                        return window.canGuestBoardLift(lift, g, checkF, isStinky, maxCap);
                     }
                     return this.canLiftDirectlyServe(lift, checkF, g.dest);
                 });
@@ -203,7 +210,7 @@ const Registry = {
         let maxScore = -1;
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);
         let maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(lift.id) : (Config.liftCapacity || 10);
-        let isStinky = lift.stinkTimer > 0;
+        let isStinky = this.isLiftStinky(lift);
         let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
         
         const getVal = (g) => {

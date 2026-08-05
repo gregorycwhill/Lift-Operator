@@ -184,6 +184,7 @@ body {
     pointer-events: auto;
 }
 .game-message-rail[hidden] { display: none; }
+.game-area.countdown-active .game-message-rail { top: 84px; }
 .game-message-rail button { margin-left: auto; flex: 0 0 auto; border: 0; background: transparent; color: #53616d; font-size: 20px; line-height: 1; cursor: pointer; }
 #world { 
     position: relative; 
@@ -544,7 +545,7 @@ body {
     border-bottom: 2px solid #ecf0f1; 
     padding-bottom: 10px; 
 }
-.round-briefing-modal { width: min(891px, calc(100vw - 32px)); height: calc(100vh - 24px); max-width: calc(100vw - 32px); max-height: calc(100vh - 24px); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; text-align: left; }
+.round-briefing-modal { width: 594px; height: calc(100vh - 24px); max-width: calc(100vw - 32px); max-height: calc(100vh - 24px); box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; text-align: left; }
 .round-briefing-modal #briefingDetails { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
 .round-briefing-modal #shopContainer { flex: 1 1 261px; min-height: 0; display: flex; flex-direction: column; }
 .round-briefing-modal h2 { margin-bottom: 10px; }

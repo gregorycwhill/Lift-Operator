@@ -39,8 +39,9 @@ window.createStandardGuest = function(roundDefinition, progress, now) {
     };
     if (Registry.sunsetActive && window.isRoundEventEnabled(roundDefinition, 'rooftop') && seededRandom() < Config.sunsetGuestRatio) {
         guest.isSunset = true;
-        guest.originalDest = guest.dest;
+        guest.originalDest = start === Config.numFloors - 1 || guest.dest === Config.numFloors - 1 ? 0 : guest.dest;
         guest.dest = Config.numFloors - 1;
+        if (start === Config.numFloors - 1) guest.isPartying = true;
     }
     return { start, guest };
 };
@@ -108,6 +109,7 @@ window.runSpawnerTick = function(now) {
         window.Game.BalanceTelemetry?.recordSpawn();
         window.Game.Audio?.publish('vip_arrival', { guestType: 'vip', floor: start, destination: roomFloor, stage: 1 });
         window.showToast?.(`VIP arrival: escort her from G to Room ${roomFloor}.`);
+        window.showGameMessage?.(`VIP arrival: escort her from G to Room ${roomFloor}.`, { durationMs: 5000 });
         Registry.vipSpawned = true;
     }
 
@@ -143,15 +145,16 @@ window.runSpawnerTick = function(now) {
             window.Game.Audio?.publish('rooftop_started', { floor: Config.numFloors - 1, duration: Config.sunsetDurationSec });
             window.showToast?.('Rooftop Party started — guests are heading upstairs!');
             
-            const infectGuest = (g) => {
+            const infectGuest = (g, floorIndex) => {
                 if (!g.isVip && seededRandom() < Config.sunsetGuestRatio) {
                     g.isSunset = true; 
-                    g.originalDest = g.dest; 
+                    g.originalDest = floorIndex === Config.numFloors - 1 || g.dest === Config.numFloors - 1 ? 0 : g.dest;
                     g.dest = Config.numFloors - 1; 
+                    if (floorIndex === Config.numFloors - 1) g.isPartying = true;
                 }
             };
-            Registry.floors.forEach(f => f.waitingGuests.forEach(infectGuest));
-            Registry.lifts.forEach(l => l.passengers.forEach(infectGuest));
+            Registry.floors.forEach((f, floorIndex) => f.waitingGuests.forEach(g => infectGuest(g, floorIndex)));
+            Registry.lifts.forEach(l => l.passengers.forEach(g => infectGuest(g, Math.round(l.pos / Registry.floorHeight))));
         }
     }
 

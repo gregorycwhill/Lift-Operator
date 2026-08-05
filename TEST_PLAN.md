@@ -206,12 +206,22 @@ capacity fault. Improve and validate those policies before canonical balance par
   fart alert per active group-stink episode without replaying every tick.
 - [x] R12 excludes VIP and Rooftop while retaining Room Service, Gym Bros, Jams, Stink, ordinary guests, and Endurance
   completion; briefing/challenge-matrix parity passes.
-- [x] The widened briefing remains usable at supported desktop and Chromebook viewports: three shop columns, visible
-  cart entries, pinned primary action, no outer modal scrollbar, and no board overlap.
+- [x] The compact 594px briefing remains usable at supported desktop and Chromebook viewports: three shop columns,
+  visible cart entries, pinned primary action, no outer modal scrollbar, and no board overlap.
 - [x] R20/R23 zone-served cells retain the light shaft grey, zone-unserved cells use a flat darker grey with floor lines
   visible, and straight traversal remains near the canonical time on the Chromebook. R25 zoning parity is then replayed.
 - [x] Direction-incompatible boarding refusal produces no audible bong, while intentional boarding, hazard, power-up,
   and served feedback remains mapped and audible.
+
+### PTF-030 regression coverage
+
+- [x] R2 teaching rail is geometrically below the countdown and closes when the countdown is skipped.
+- [x] R13's round-specific credit multiplier produces the intended 15-credit result at the representative payout.
+- [x] Four-lift fleets start in Sweep while three-lift fleets remain manual.
+- [x] Rooftop guests already at the top are party-bound during the event and return to Ground on release.
+- [x] VIP arrival emits its visible/audio notice without changing any lift target; the player must intervene.
+- [x] Sweep target selection and parked-lift allocation use compatible boarding predicates and fill the most-loaded
+  compatible car first.
 
 ### Current playtest remediation slice
 

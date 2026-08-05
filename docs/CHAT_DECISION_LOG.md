@@ -42,6 +42,9 @@ document after the decision is applied there.
 
 | DEC-025 | 2 August 2026 | Campaign progression uses eight round-based ranks, not lift size: Trainee (R1-R2), Operator (R3-R5), Manager (R6-R9), Engineer (R10-R13), Director (R14-R18), Architect (R19-R20), Executive (R21-R23), and Commissioner (R24-R25). The approved structured copy is canonical; promotions appear only on normal first arrival at R1/R3/R6/R10/R14/R19/R21/R24 and are locally acknowledged. R9 explicitly includes Stink. | `Game Play Map.md`, `design/game-balance.v1.json`, `TEST_PLAN.md`. |
 
+| DEC-026 | 5 August 2026 | VIPs retain boarding priority but do not trigger automatic dispatch: the player must notice the arrival and intervene. A suitable empty lift at Ground can take priority at boarding; occupied or unsuitable lifts remain unsuitable. Rooftop guests whose natural destination was already the Rooftop receive Ground as their post-party destination, representing an onward night out. | Current feedback remediation design; future implementation/test plan. |
+| DEC-027 | 5 August 2026 | Backlog concepts: Lift Bouncer is a selective-lift Power-up; Player-authored Rounds provide a validated designer, local list/Warp access, and optional manifest/URI sharing. Neither feature is part of RC1.0. | `ROADMAP.md`. |
+
 ## Chat persistence limitation
 
 The complete source conversation is retained by the chat service, outside this repository. This file is a curated

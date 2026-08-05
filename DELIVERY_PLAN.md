@@ -101,9 +101,8 @@ The following programme is the current delivery scope. It restores the design-to
 4. **R12 Endurance baseline:** remove VIP and Rooftop from R12. Retain ordinary traffic, Room Service, Gym Bros, Jams,
    Stink, and the Endurance objective; revise authored content, canonical data, parity coverage, and acceptance criteria
    together.
-5. **Briefing capacity:** widen the desktop briefing to approximately 891px (50% above the current 594px target), capped
-   responsively by the viewport. Preserve the three-column shop, pinned footer action, and a readable cart without an
-   outer modal scrollbar.
+5. **Briefing capacity:** retain the compact 594px desktop briefing geometry and its three-column shop. Keep the
+   supply/cart areas internally scrollable and the primary action visible without an outer modal scrollbar.
 6. **R25 zoning parity:** add the missing active zoning configuration so its actual mechanics and visual state match its
    challenge list and briefing; perform the Chromebook performance replay only after item 1.
 7. **README release presentation:** apply the approved player-facing tagline, replace the current Supply Closet screenshot
@@ -111,6 +110,15 @@ The following programme is the current delivery scope. It restores the design-to
    game name or construction focus.
 8. **Boarding-refusal audio:** keep the existing no-sound direction-refusal mapping without restoring elevator-door or distressed-
    guest sounds; retain only intentional event and power-up feedback.
+
+### PTF-030 implementation status
+
+The current remediation slice is implemented: R2's teaching rail stacks below the countdown; the briefing returns to
+594px; four-lift fleets begin in Sweep; R13 uses the 0.15 round credit multiplier to target roughly 22–30 Credits into
+R14; Sweep and boarding share effective direction, zoning, stink, VIP, capacity, and party-state eligibility; Rooftop
+guests already at the roof are sent to Ground after the party; VIP arrival remains visible but never auto-dispatches a
+lift; and counterweight policy commands remain pair-synchronised. Remaining evidence is human replay, especially R9/R11
+rooftop evacuation and R21 Sweep under real browser timing.
 
 ### Tooling and release hygiene
 

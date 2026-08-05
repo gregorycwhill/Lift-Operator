@@ -150,6 +150,9 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
     const pair = Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)
         ? Registry.lifts[lift.counterweightPartner]
         : null;
+    // A pair has one physical policy decision per animation frame. The first
+    // worker result wins; the mirrored target is then applied to both cars.
+    // Manual commands remain immediate overrides and are never suppressed.
     if (isPolicyCommand && pair && Number.isFinite(Registry.counterweightLastPolicyFrame) &&
         Registry.counterweightPolicyFrame === Registry.counterweightLastPolicyFrame) {
         return false;
@@ -366,7 +369,7 @@ window.createRoundState = function(round, seed, options = {}) {
 
     // Larger fleets begin in a safe operational baseline. Players can still
     // replace any Sweep assignment during the pre-round countdown.
-    if (state.lifts.length >= 5) {
+    if (state.lifts.length >= 4) {
         state.lifts.forEach(lift => { lift.automation = 'sweep'; });
     }
 

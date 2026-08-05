@@ -101,6 +101,46 @@ Achievements are deliberately absent from the 1.0 player surface. A future desig
 player actions rather than raw implementation telemetry, and primarily communicate mastery. Any one-time Credit reward
 must be small, explicitly modelled in the campaign economy, and never become a required source of purchasing power.
 
+## Later — Lift Bouncer
+
+**Outcome:** Add a targeted operational Power-up that lets the player control who may occupy a lift, turning one car
+into a deliberately selective service rather than merely a larger or faster one.
+
+Potential uses include clearing a cabin for a VIP, preventing a third Gym Bro from creating group Stink, and refusing
+Room Service where ordinary passengers should retain the remaining capacity. The feature is intentionally a future
+design item: it changes queue fairness, passenger removal, targeting, power duration, and the value of several
+existing mechanics.
+
+Decisions required before delivery planning:
+
+- whether it expels existing passengers, only blocks future boarding, or has separate tiers for each;
+- which guest categories/rules can be selected and how the player communicates the policy;
+- VIP, Gym Bro/Stink, Room Service, Checkout, zoning, Counterweight, and capsule interactions;
+- duration, targeting, price, and whether its advantage is bounded by any guest-protection rule.
+
+**Gate:** The player can predict who will board, why someone was refused or expelled, and when the Power-up creates a
+genuine operational choice rather than a universal answer.
+
+## Later — Player-authored rounds
+
+**Outcome:** Let players create, save, replay, share, and Warp to their own deterministic operations after the authored
+campaign is stable.
+
+The Round Designer would set timer, lives, floors, lift composition (regular, counterweight, capsule), hazards,
+events, power-ups, title, and briefing notes. Saved rounds appear in the player's operation list and Warp menu. A
+versioned, validated round package can use the existing manifest/URI mechanism for voluntary sharing.
+
+Decisions required before delivery planning:
+
+- which field combinations are legal and how feasibility, lift-pairing, zoning, capsule exclusions, and event conflicts
+  are validated before a round can be saved or shared;
+- whether custom rounds are sandbox-only or contribute to any future progression, records, or sharing catalogue;
+- the schema/version/migration contract, seed handling, package size limit, and manifest consent flow;
+- Round Designer UX: presets, advanced controls, briefing authoring, validation feedback, and custom-round management.
+
+**Gate:** A player can make a valid operation without knowing the codebase; recipients can inspect and opt into a
+shared package safely; invalid combinations are explained before launch.
+
 ## Cross-cutting product work
 
 - Improve briefing, Review, automation visualization, accessibility, and audio from observed playtest failures.

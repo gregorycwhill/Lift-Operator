@@ -68,6 +68,16 @@ warning before release. Focused automated validation covers both changes; human 
 **Source note — 4 August 2026:** the supplied feedback numbered item 6 contained no observation. No action has been
 created for it pending clarification.
 
+| PTF-030 | playtest feedback — 5 August 2026 | R2 countdown overlaps its Automation tip; briefing is too wide; R9/Ground boarding can leave compatible-looking queues; Rooftop `R` guests can board/alight at the same floor; R17 VIP visibility/priority is unreliable; R21 Sweep appears incoherent; R14 opens with too few Credits. | R2, R9–R10, R14, R17, R21 | **Analysed—implementation pending.** Shared dispatch/boarding predicates and fill-first allocation are the primary remediation. Decisions: no automatic VIP dispatch; natural Rooftop arrivals leave for Ground after the party; R13 should target roughly 22–30 Credits into R14. |
+
+## PTF-030 status correction
+
+PTF-030 is implemented and awaiting replay. The remediation stacks the R2 teaching rail below the countdown, restores
+594px briefing geometry, starts four-lift fleets in Sweep, applies the R13 0.15 round credit multiplier, shares
+direction/zoning/stink/VIP/capacity/party eligibility between Sweep and boarding, returns Rooftop guests already at the
+roof to Ground after release, keeps VIP arrival visible without auto-dispatch, and preserves pair-synchronised
+counterweight policy. This note supersedes the pending status in the historical intake row above.
+
 ## Current intake boundary
 
 The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. New feedback from

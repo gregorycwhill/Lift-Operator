@@ -64,7 +64,7 @@ window.processOpenPlanTransfers = function() {
             const sourceDistance = Math.abs(source.targetFloor - guest.dest);
             const targetDistance = Math.abs(target.targetFloor - guest.dest);
             if (targetDistance >= sourceDistance) return false;
-            return window.canGuestBoardLift(target, guest, floor, target.stinkTimer > 0, capacity);
+            return window.canGuestBoardLift(target, guest, floor, Registry.isLiftStinky(target), capacity);
         });
         if (index < 0) return false;
         const guest = source.passengers.splice(index, 1)[0];
@@ -545,7 +545,7 @@ window.animationTick = function(timestamp) {
             actualPixelsPerTick *= window.getGravitySpeedMultiplier(currentWeight, maxCap, liftGravity);
         }
 
-        let isStinky = lift.stinkTimer > 0;
+        let isStinky = Registry.isLiftStinky(lift);
         let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
 
         if (Math.abs(lift.pos - targetPos) > actualPixelsPerTick) {
@@ -587,8 +587,10 @@ window.animationTick = function(timestamp) {
                 const hasDropoffs = lift.passengers.some(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
                 
                 let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
-                const canPickUp = (Registry.getLiftWeight(lift) < maxCap && 
-                                  (Registry.floors[f].waitingGuests.length > 0 || (isDouble && Registry.floors[f+1] && Registry.floors[f+1].waitingGuests.length > 0)));
+                const canBoardAt = floor => Registry.getLiftWeight(lift) < maxCap && Registry.floors[floor]?.waitingGuests.some(guest =>
+                    window.canGuestBoardLift(lift, guest, floor, isStinky, maxCap)
+                );
+                const canPickUp = canBoardAt(f) || (isDouble && canBoardAt(f + 1));
                 
                 if (hasDropoffs || canPickUp) {
                     lift.state = 'DOORS_OPENING';
@@ -690,9 +692,12 @@ window.animationTick = function(timestamp) {
                             let parkedLifts = Registry.lifts.filter(l => {
                                 if (l.targetFloor !== f || Math.abs(l.pos - f * Registry.floorHeight) >= 1 || l.jamTimer > 0) return false;
                                 const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity;
-                                return Registry.getLiftWeight(l) < capacity && window.canGuestBoardLift(l, guestToBoard, targetFloorToBoard, l.stinkTimer > 0, capacity);
+                                return Registry.getLiftWeight(l) < capacity && window.canGuestBoardLift(l, guestToBoard, targetFloorToBoard, Registry.isLiftStinky(l), capacity);
                             });
-                            parkedLifts.sort((a, b) => Registry.getLiftWeight(a) - Registry.getLiftWeight(b));
+                            // Fill the most-loaded compatible parked car first. This prevents
+                            // several lifts waiting at one floor from fragmenting a queue into
+                            // partial loads, while preserving direction/stink/VIP eligibility.
+                            parkedLifts.sort((a, b) => Registry.getLiftWeight(b) - Registry.getLiftWeight(a) || a.id - b.id);
                             if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
                                 Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1);
                                 if (lift.passengers.length === 0 && ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(lift.automation)) {
@@ -744,7 +749,9 @@ window.animationTick = function(timestamp) {
                 if (lift.stateProgress >= 1) {
                     lift.state = 'IDLE';
                     lift.stateProgress = 0;
-                    if (lift.manualOverride) lift.manualOverride = false;
+                    // Keep the explicit stop visible through the boarding frame;
+                    // the following idle decision clears it before Sweep resumes.
+                    if (lift.manualOverride && lift.passengers.length === 0) lift.manualOverride = false;
                     window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
                 }
             }

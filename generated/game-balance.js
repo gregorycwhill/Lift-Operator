@@ -749,6 +749,7 @@ window.GameBalanceData = {
       "spawnEnd": 1.05,
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.12,
+      "creditMultiplier": 0.15,
       "activeChallenges": [
         "roomService",
         "gym",

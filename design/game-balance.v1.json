@@ -518,6 +518,7 @@
       "spawnEnd": 1.05,
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.12,
+      "creditMultiplier": 0.15,
       "activeChallenges": ["roomService", "gym", "gravity", "jam", "stink"],
       "briefing": {"rank": "Engineer", "title": "Uphill Battle", "narrative": "Sustainability consultants have connected the lift system to pedal power. Heavy cars now climb more slowly, so filling every cabin is no longer automatically efficient. Balance load against upward travel while familiar carts, Gym Bros, jams and contaminated cabins test your command of the whole system.", "learningFocus": "Gravity; load versus upward speed; full-system optimisation.", "ruleCard": {"heading": "New operating rule", "body": "Gravity slows loaded upward travel. A full lift is not always the fastest lift; balance passenger load against the time needed to climb."}, "promotion": null}
     },

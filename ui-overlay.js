@@ -24,6 +24,7 @@ window.clearGameMessage = function() {
     if (rail) rail.hidden = true;
     const text = document.getElementById('game-message-text');
     if (text) text.textContent = '';
+    document.getElementById('game-area')?.classList.remove('countdown-active');
 };
 
 window.showGameMessage = function(message, options = {}) {
@@ -58,6 +59,7 @@ window.startRoundCountdown = function(seconds = 5) {
     Registry.roundCountdownActive = true;
     Registry.roundCountdownPaused = false;
     const countdown = document.getElementById('roundCountdown');
+    document.getElementById('game-area')?.classList.add('countdown-active');
     const value = document.getElementById('roundCountdownValue');
     let remaining = Math.max(0, seconds);
     Registry.countdownRemaining = remaining;
