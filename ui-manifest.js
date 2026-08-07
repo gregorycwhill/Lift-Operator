@@ -113,7 +113,7 @@ window.processNextManifestItem = function() {
                     Registry.highestUnlockedRound = Math.max(...Object.keys(Config.GAME_DATA.rounds || { 1: {} }).map(Number));
                     if (typeof ui.buildWorld === 'function') ui.buildWorld();
                     if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
-                    if (typeof ui.showToast === 'function') ui.showToast("🛠️ Sandbox Mode Deployed!");
+                    if (typeof ui.showToast === 'function') ui.showToast("Playtest Access enabled");
                 };
             }
             break;
@@ -159,7 +159,7 @@ window.processNextManifestItem = function() {
                 if (typeof window.captureRoundCheckpoint === 'function') {
                     window.captureRoundCheckpoint(Registry.stats.round);
                 }
-                if (typeof ui.showToast === 'function') ui.showToast("🔓 Root Overrides Applied!");
+                if (typeof ui.showToast === 'function') ui.showToast("Playtest Access enabled");
             };
             break;
 

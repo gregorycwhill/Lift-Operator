@@ -92,6 +92,19 @@ Decisions required before delivery planning:
 **Gate:** A player can predict the wraparound route, automation uses it intelligibly, and it creates a meaningful
 decision rather than an unqualified speed boost.
 
+## Later — Polar lift topology
+
+**Outcome:** Reimagine a late-game building as concentric orbital tracks rather than parallel vertical shafts. Lift
+cars travel around circular paths, creating a spatial-routing puzzle in which the player manages orbital position,
+direction, timing, and transfers instead of only vertical floor service.
+
+This is a deliberately speculative topology concept, not an RC1.0 or currently planned feature. Its design must first
+define how floors/stops map onto rings, whether cars can transfer between rings, what constitutes a reachable guest,
+how automation primitives describe an orbital route, and how the board remains readable on desktop screens.
+
+**Gate:** Players can predict where a car will go, understand which stops it can serve, and use the topology to make
+new automation and routing decisions rather than encountering an opaque visual reskin.
+
 ## Later — Meta-progression and achievements
 
 **Outcome:** Add a meaningful, status-first mastery layer only after the desktop campaign, Mobile constraints, and

@@ -647,7 +647,19 @@ warned, restricted, or given a master/slave interface.
 - Turbo applies to the pair at half its normal speed benefit. Gravity always matters through the car travelling upward.
 - Stink, Wrench, TARDIS, Wide Doors, Group Think, Double-Decker, Musak, and ordinary automations remain available under
   their normal rules unless a counterweight rule above explicitly changes their movement consequence.
-- Zoned automation remains optional and accepts the usual manual override; it resumes normal zone behaviour afterwards.
+- Built-in automations are pair-owned in counterweight rounds. Applying a built-in to either controller assigns the
+  matching pair behaviour to both cars; applying Manual to either controller makes the whole pair Manual. Pair-aware
+  Sweep-family policies evaluate demand from both cars and issue one legal mirrored target pair, with no hidden
+  left-hand policy owner.
+- A floor click on either shaft is a pair manual command: the clicked car receives the requested stop and its partner
+  receives the forced complementary stop. It takes precedence until both cars have completed their service, then the
+  pair's built-in policy resumes. The interaction remains deliberately consequence-rich, but works identically from
+  either side of a pair.
+- Zoned automation remains optional. Selecting Zoned Low or Zoned High on one car establishes that car's role and gives
+  its partner the complementary role; a batch assignment retains the conventional left-low/right-high default. A
+  manual command may leave a zone temporarily and zoning resumes afterwards.
+- Custom Workshop automations remain an explicitly advanced per-cabin exception: they are not silently converted to a
+  pair policy, and their coupled movement consequence must remain visible to the player.
 - The visual loop is fixed to the building: a solid rounded-square cable attaches at the top and bottom of both cars and
   runs across two top pulleys and two bottom pulleys positioned outside the pair’s shafts. No oval or dashed cable is used.
 

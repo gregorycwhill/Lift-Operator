@@ -289,14 +289,19 @@ their documented exclusions.
 ### Counterweight network (post-R20 authored arc)
 
 Rounds 21–23 add fixed, immediately adjacent counterweight pairs. Each pair has complementary floor positions: moving one
-car upward moves the other downward. The player and every existing automation command either car normally; the game
-does not expose a paired-command mode or protect the player from a bad consequence. Pair identity is visible through
-matching colours and a continuous cable/pulley loop above and below the adjacent shafts.
+car upward moves the other downward. The player commands either car normally; the game does not expose a master/slave
+interface or protect the player from a bad consequence. Built-in automations are pair-owned: applying one to either car
+assigns matching pair behaviour to both, and the policy plans legal mirrored targets from both cars' demand. Pair identity
+is visible through matching colours and a continuous cable/pulley loop above and below the adjacent shafts.
 
 The rule changes movement, not cabin independence. Passenger load, doors, boarding, alighting, patience, and destination
 state remain per car. A jam prevents both cars in the pair travelling, while the unjammed partner may still complete
 boarding/alighting at its current floor. Turbo drives both cars and therefore supplies half its normal speed advantage;
-Gravity always evaluates the upward leg. Other power-ups and all automation policies remain available.
+Gravity always evaluates the upward leg. A manual floor click immediately commands the clicked car and its forced
+complementary partner, then holds the pair override until both cars have completed service. Applying Manual to either
+controller makes both cars Manual. Zoned Low/High assigns a selected role to the clicked car and the complement to its
+partner. Saved custom Workshop policies remain an advanced per-cabin exception and disclose their coupled consequence.
+Other power-ups and automation policies remain available.
 
 Open Plan enters in Round 22 as a timed tiered recovery tool. Bronze and Silver target one lift as a transfer hub;
 during their effect, guests may automatically make a destination-aware transfer between that car and either adjacent car
@@ -313,7 +318,7 @@ over 15 floors at about three seconds end-to-end; R25 has 20 capsules over 30 fl
 zoned and custom automation remains the intended dispatch mechanism; manual targeting is legal but not the primary
 solution. Demand is generated through continuous seeded currents with no in-round wave announcement beyond the briefing.
 
-VIPs, Gym Bros, Room Service, and Stink are excluded. Freshener, TARDIS, and Double-Decker are unavailable. Jams remain
+Gym Bros, Room Service, and Stink are excluded; VIP remains active. Freshener, TARDIS, and Double-Decker are unavailable. Jams remain
 common but are shorter and retain their passenger. Open Plan keeps its normal adjacent/same-floor behaviour; Turbo is
 available with a 15% boost but intentionally low value for already fast capsules.
 

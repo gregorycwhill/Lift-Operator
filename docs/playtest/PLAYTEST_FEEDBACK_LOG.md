@@ -79,17 +79,18 @@ roof to Ground after release, keeps VIP arrival visible without auto-dispatch, a
 counterweight policy. This note supersedes the pending status in the historical intake row above.
 
 | PTF-031 | playtest feedback — 7 August 2026 | A built-in Sweep lift may refuse up-bound guests while travelling down, reverse at that same stopped floor, then depart upward without reconsidering those now-compatible guests. | Conventional boarding; reported during active play | **Implemented—awaiting replay.** Reversal rechecks the current floor for compatible guests while preserving all other boarding exclusions. |
-| PTF-032 | playtest feedback — 7 August 2026 | Counterweight lifts remain ineffective in Sweep. | R21–R23 Counterweights | **Implemented—awaiting replay.** Built-in pair routing uses the accepted precedence; manual clicks remain immediate and symmetric, custom policies remain advanced. |
+| PTF-032 | playtest feedback — 7 August 2026 | Counterweight lifts remain ineffective in Sweep. | R21–R23 Counterweights | **Superseded by planned PTF-036 remediation.** The earlier pair-routing correction retained a hidden-driver edge case; the final scope makes built-ins explicitly pair-owned and symmetric. |
 | PTF-033 | playtest feedback — 7 August 2026 | Round 13 spawn rate is too low; increase it by 20%. | R13 — Uphill Battle | **Implemented as balance candidate—awaiting replay.** Canonical candidate curve is `1.08 → 1.26`, up from `0.90 → 1.05`. |
 | PTF-034 | implementation decision — 7 August 2026 | Normal campaigns should vary while test reports remain reproducible. | Campaign seed and Debug menu | **Implemented—awaiting replay.** New campaigns persist random campaign seeds; round seeds derive deterministically; Debug offers transient seed replay controls. |
-| PTF-035 | late playtest feedback — 7 August 2026 | In Round 8, the VIP arrival notice rendered over the VIP at Ground, obscuring her location at the moment player intervention is needed. | VIP notice rail / board visibility | **Open—queued for grouped notice-placement analysis.** Preserve the arrival notice and music, but ensure any future placement/remediation leaves the VIP and their queue position visible. |
+| PTF-035 | late playtest feedback — 7 August 2026 | In Round 8, the VIP arrival notice rendered over the VIP at Ground, obscuring her location at the moment player intervention is needed. | VIP notice rail / board visibility | **Implemented—awaiting replay.** Queued critical notices now render in layout flow outside the board; each VIP leg gets one visible/audio arrival cue without obscuring the queue. |
+| PTF-036 | late playtest feedback — 7 August 2026 | In counterweight rounds, Sweep appeared to permit an effective manual override only from the left car. | R21–R23 Counterweights | **Implemented—awaiting replay.** Built-in policies are pair-owned; either car may issue the immediate paired manual command, held until both cars complete service. Custom policies remain an advanced disclosed exception. |
 
 ## Current intake boundary
 
-The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. PTF-035 is held
-for grouped notice-placement analysis with any further late feedback. New feedback from that session must receive a
-new `PTF-` identifier here, then be classified in `DELIVERY_PLAN.md` and converted into acceptance evidence in
-`TEST_PLAN.md` where applicable.
+The next requested evidence window begins after final Friends & Family remediation. Share the ordinary public URI for a
+natural first session first; after initial feedback, selected testers may receive the existing manifest Debug URI for
+higher-round evidence. New feedback must receive a new `PTF-` identifier here, then be classified in `DELIVERY_PLAN.md`
+and converted into acceptance evidence in `TEST_PLAN.md` where applicable.
 
 ## Audit — 2 August 2026
 

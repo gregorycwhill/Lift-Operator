@@ -79,9 +79,9 @@ window.runSpawnerTick = function(now) {
         Registry.floors[floor].waitingGuests.unshift(vip);
         window.Game.BalanceTelemetry?.recordSpawn();
         window.Game.Audio?.publish('vip_journey', { stage: vip.vipStage, floor, destination: vip.dest });
-        window.showToast?.(vip.vipStage === 2
+        window.showGameMessage?.(vip.vipStage === 2
             ? `VIP is leaving her room for Floor ${vip.dest}.`
-            : 'VIP is departing. Get her back to Ground.');
+            : 'VIP is departing. Get her back to Ground.', { critical: true, durationMs: 5000 });
     }
 
     // 2. VIP Event Orchestration
@@ -108,8 +108,7 @@ window.runSpawnerTick = function(now) {
         });
         window.Game.BalanceTelemetry?.recordSpawn();
         window.Game.Audio?.publish('vip_arrival', { guestType: 'vip', floor: start, destination: roomFloor, stage: 1 });
-        window.showToast?.(`VIP arrival: escort her from G to Room ${roomFloor}.`);
-        window.showGameMessage?.(`VIP arrival: escort her from G to Room ${roomFloor}.`, { durationMs: 5000 });
+        window.showGameMessage?.(`VIP arrival: escort her from G to Room ${roomFloor}.`, { critical: true, durationMs: 5000 });
         Registry.vipSpawned = true;
     }
 
@@ -119,13 +118,13 @@ window.runSpawnerTick = function(now) {
             const warningTime = Registry.sunsetEndTime - 5000;
             if (!Registry.sunsetWarningShown && now >= warningTime && now < Registry.sunsetEndTime) {
                 Registry.sunsetWarningShown = true;
-                window.showToast?.('Last drinks! Rooftop Party ends in 5 seconds.');
+                window.showGameMessage?.('Last drinks! Rooftop Party ends in 5 seconds.', { critical: true, durationMs: 5000 });
             }
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;
                 Registry.sunsetWarningShown = false;
                 window.Game.Audio?.publish('rooftop_released', { floor: Config.numFloors - 1 });
-                window.showToast?.('Rooftop Party over — guests are returning to their rooms.');
+                window.showGameMessage?.('Rooftop Party over — guests are returning to their rooms.', { critical: true, durationMs: 5000 });
                 const revertGuest = (g) => {
                     if (g.isSunset) {
                         g.isSunset = false; 
@@ -143,7 +142,7 @@ window.runSpawnerTick = function(now) {
             Registry.sunsetHasHappened = true;
             Registry.sunsetEndTime = now + (Config.sunsetDurationSec * 1000);
             window.Game.Audio?.publish('rooftop_started', { floor: Config.numFloors - 1, duration: Config.sunsetDurationSec });
-            window.showToast?.('Rooftop Party started — guests are heading upstairs!');
+            window.showGameMessage?.('Rooftop Party started — guests are heading upstairs!', { critical: true, durationMs: 5000 });
             
             const infectGuest = (g, floorIndex) => {
                 if (!g.isVip && seededRandom() < Config.sunsetGuestRatio) {

@@ -177,6 +177,34 @@ const Registry = {
         if (partnerRank > liftRank || (partnerRank === liftRank && partner.id < lift.id)) return partner;
         return lift;
     },
+    getCounterweightPair: function(lift) {
+        if (!this.counterweightEnabled || !Number.isInteger(lift?.counterweightPartner)) return null;
+        const partner = this.lifts[lift.counterweightPartner];
+        return partner ? [lift, partner] : null;
+    },
+    getCounterweightPolicyCoordinator: function(lift) {
+        const pair = this.getCounterweightPair(lift);
+        if (!pair) return lift;
+        return pair.reduce((lowest, candidate) => candidate.id < lowest.id ? candidate : lowest, pair[0]);
+    },
+    releaseCounterweightManualOverride: function(lift) {
+        const pair = this.getCounterweightPair(lift);
+        if (!pair) {
+            if (lift?.manualOverride && lift.state === 'IDLE' && Math.round(lift.pos / this.floorHeight) === lift.targetFloor) {
+                lift.manualOverride = false;
+                return true;
+            }
+            return false;
+        }
+        const ready = pair.every(car => car.manualOverride && car.state === 'IDLE' &&
+            Math.abs(car.pos - car.targetFloor * this.floorHeight) <= 1);
+        if (!ready) return false;
+        pair.forEach(car => {
+            car.manualOverride = false;
+            car.counterweightManualOverride = false;
+        });
+        return true;
+    },
     isCounterweightPolicy: function(lift) {
         return Boolean(Registry.counterweightEnabled && lift && this.getCounterweightPolicyRank(lift.automation) > 0);
     },

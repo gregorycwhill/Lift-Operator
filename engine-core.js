@@ -171,6 +171,10 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
     if (Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)) {
         const partner = Registry.lifts[lift.counterweightPartner];
         if (partner) setTarget(partner, maxFloor - target);
+        if (partner && options.manualOverride === true) {
+            lift.counterweightManualOverride = true;
+            partner.counterweightManualOverride = true;
+        }
     }
     if (isPolicyCommand && pair) Registry.counterweightLastPolicyFrame = Registry.counterweightPolicyFrame;
     return true;
@@ -201,10 +205,17 @@ window.setLiftTarget = function(liftIndex, targetFloor) {
 window.setLiftAutomation = function(liftIndex, mode) {
     if (Registry.lifts[liftIndex]) {
         const lift = Registry.lifts[liftIndex];
-        lift.automation = mode;
-        if (mode !== 'manual') lift.manualOverride = false;
         const VM = window.Game.Automation;
-        if (VM?.applyPolicyToLift) VM.applyPolicyToLift(lift, mode);
+        const pair = Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)
+            ? Registry.lifts[lift.counterweightPartner]
+            : null;
+        const pairOwned = Boolean(pair && (mode === 'manual' || Registry.getCounterweightPolicyRank?.(mode) > 0));
+        const targets = pairOwned ? [lift, pair] : [lift];
+        targets.forEach(targetLift => {
+            targetLift.automation = mode;
+            if (mode !== 'manual') targetLift.manualOverride = false;
+            if (VM?.applyPolicyToLift) VM.applyPolicyToLift(targetLift, mode);
+        });
 
         const ui = GameUI();
         if (typeof ui.updateLiftAutomationUI === 'function') {
@@ -317,6 +328,7 @@ window.createLiftState = function(id) {
     return {
         id, targetFloor: 0, pos: 0, passengers: [], counterweightPartner: null,
         lastActionTime: 0, automation: 'manual', sweepDirection: 1,
+        counterweightManualOverride: false,
         manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0, gymStinkActive: false,
         tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,

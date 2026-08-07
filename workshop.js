@@ -299,7 +299,7 @@ const AutomationWorkshop = {
         VM.scripts.push(copiedScript);
         this.saveCurrentScript();
         this.openScript(newId);
-        if (typeof window.UI.showToast === "function") window.UI.showToast("?? Script Copied");
+        if (typeof window.UI.showToast === "function") window.UI.showToast("Automation copied");
     },
 
     openScript: function(id) {

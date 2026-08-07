@@ -158,43 +158,10 @@ window.renderDebugMenu = function() {
     container.appendChild(quickGroup);
     */
 
-    // Telemetry Console Section
-    const consoleHeader = document.createElement('h3');
-    consoleHeader.innerText = "System Console";
-    consoleHeader.style.margin = "20px 0 10px 0";
-    consoleHeader.style.borderBottom = "1px solid #ccc";
-    container.appendChild(consoleHeader);
-
-    const consoleDiv = document.createElement('div');
-    consoleDiv.id = "telemetry-console";
-    consoleDiv.style.background = "#2c3e50";
-    consoleDiv.style.color = "#ecf0f1";
-    consoleDiv.style.fontFamily = "monospace";
-    consoleDiv.style.fontSize = "11px";
-    consoleDiv.style.height = "150px";
-    consoleDiv.style.overflowY = "auto";
-    consoleDiv.style.padding = "10px";
-    consoleDiv.style.borderRadius = "4px";
-    consoleDiv.style.marginBottom = "20px";
-    
-    const renderLogs = () => {
-        if (typeof Telemetry === 'undefined') return;
-        consoleDiv.innerHTML = Telemetry.logs.map(log => {
-            const color = log.importance === 'error' ? '#e74c3c' : (log.importance === 'warning' ? '#f1c40f' : '#bdc3c7');
-            const plainCategory = ({ PHYSICS: 'Game engine', RENDER: 'Display', VM: 'Automation', SYSTEM: 'System' })[log.category] || log.category;
-            return `<div style="margin-bottom: 4px; border-bottom: 1px solid #34495e; padding-bottom: 2px;">
-                <span style="color: #95a5a6;">[${log.timestamp}]</span> 
-                <span style="color: #3498db; font-weight: bold;">[${plainCategory}]</span> 
-                <span style="color: ${color};">${log.message}</span>
-            </div>`;
-        }).join('');
-    };
-    
-    renderLogs();
-    container.appendChild(consoleDiv);
-
-    // Listen for telemetry updates while modal is open
-    window.addEventListener('telemetryUpdate', renderLogs);
+    const supportNote = document.createElement('p');
+    supportNote.className = 'modal-help';
+    supportNote.innerText = 'Warp and seed replay are temporary playtest tools. Use Give Feedback to include the current build and round details.';
+    container.appendChild(supportNote);
 
 };
 

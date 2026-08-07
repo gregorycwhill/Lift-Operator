@@ -19,7 +19,10 @@ window.showToast = function(message) {
     setTimeout(() => { toast.classList.remove("show"); }, 3500);
 };
 
+const criticalGameMessages = [];
+
 window.clearGameMessage = function() {
+    criticalGameMessages.length = 0;
     const rail = document.getElementById('game-message-rail');
     if (rail) rail.hidden = true;
     const text = document.getElementById('game-message-text');
@@ -27,20 +30,46 @@ window.clearGameMessage = function() {
     document.getElementById('game-area')?.classList.remove('countdown-active');
 };
 
-window.showGameMessage = function(message, options = {}) {
+function renderGameMessage(message, options = {}) {
     const rail = document.getElementById('game-message-rail');
     const text = document.getElementById('game-message-text');
     if (!rail || !text) return;
     text.textContent = message;
+    rail.dataset.critical = options.critical ? 'true' : 'false';
     rail.hidden = false;
+    window.clearTimeout?.(rail._dismissTimer);
     if (options.durationMs > 0) {
-        window.clearTimeout?.(rail._dismissTimer);
-        rail._dismissTimer = window.setTimeout(() => window.clearGameMessage(), options.durationMs);
+        rail._dismissTimer = window.setTimeout(() => {
+            if (options.critical && criticalGameMessages.length) {
+                const next = criticalGameMessages.shift();
+                renderGameMessage(next.message, next.options);
+            } else {
+                window.clearGameMessage();
+            }
+        }, options.durationMs);
     }
+}
+
+window.showGameMessage = function(message, options = {}) {
+    const rail = document.getElementById('game-message-rail');
+    if (!rail) return;
+    if (options.critical && !rail.hidden && rail.dataset.critical === 'true') {
+        criticalGameMessages.push({ message, options });
+        return;
+    }
+    renderGameMessage(message, options);
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('game-message-dismiss')?.addEventListener('click', window.clearGameMessage);
+    document.getElementById('game-message-dismiss')?.addEventListener('click', () => {
+        const rail = document.getElementById('game-message-rail');
+        if (rail?.dataset.critical === 'true' && criticalGameMessages.length) {
+            const next = criticalGameMessages.shift();
+            renderGameMessage(next.message, next.options);
+        } else {
+            window.clearGameMessage();
+        }
+    });
 });
 
 window.openModalExclusive = function(id) {

@@ -209,6 +209,29 @@ capacity fault. Improve and validate those policies before canonical balance par
 - [x] The existing UFI Manifest-backed Debug URI opens a friendly Playtest Access consent screen, explains that it
   unlocks higher-round selection and seed replay, and keeps normal campaign progress separate from Debug use.
 
+### Final Friends & Family feedback-quality coverage
+
+- [x] Counterweight built-ins are pair-owned: applying each built-in from either controller produces the same paired
+  assignment, target planning, and visible controller state. Verify all built-in families, multiple pairs in one frame,
+  and no hidden left-car owner/frame gate.
+- [x] Counterweight manual commands are symmetric: click each side of every pair, verify the requested and complementary
+  targets, preserve the override through boarding/alighting, and resume pair policy only after both cars finish service.
+  Verify Manual and Zoned Low/High pair assignment; retain an explicit regression showing custom policies are the
+  disclosed per-cabin exception.
+- [x] Critical event messages render in a reserved layout-flow rail that cannot intersect the board, lift shafts, or
+  queues. Verify exactly one visible/audio VIP arrival cue per leg, queued critical messages, and unchanged short-toast
+  behaviour for non-critical feedback.
+- [ ] In a signed-out Chrome profile, Give Feedback opens the public Google Form and pre-fills the diagnostic field
+  `entry.1033382669`; the game neither uploads media nor submits data. Verify the optional screenshot/video-link help
+  text is accurate.
+- [x] Settings and Round Review expose the immutable release build identifier that matches the Pages deployment and the
+  itch-compatible artifact from that commit.
+- [x] Normal and manifest Debug paths use player-facing labels (`New Campaign`, `Playtest Tools`, `Playtest Access`,
+  `Resume Game`) without exposing a player-facing console. Workshop copy feedback and the compact audio tracker use
+  accurate, non-developer language.
+- [x] The tester pack reflects the normal-URI-first / existing-Debug-URI-later protocol, supported desktop browsers,
+  feedback form, current release identity, and known limitations.
+
 ### R22 manual-stop boarding
 
 - [x] Reproduced the reported interaction with explicit R22 pair state: a Sweep lift manually stopped at Floor 5
@@ -363,12 +386,12 @@ The following remain browser/human acceptance checks because they cover first-vi
   event state, or a pending shop cart.
 - [ ] Invalid, stale, or malformed save data is discarded safely and falls back to a new campaign without breaking
   audio preferences, Workshop scripts, Automation Dock pins, or the local leaderboard.
-- [ ] New Game confirms intent and clears campaign progress only; it does not clear scripts, pins, audio settings, or
+- [ ] New Campaign confirms intent and clears campaign progress only; it does not clear scripts, pins, audio settings, or
   leaderboard records.
 - [ ] How to Play and Credits & Licences are reachable from Welcome and Settings; Credits & Licences is also reachable
   at campaign completion and names Gregory Hill and Marie Barnard correctly.
 - [ ] R25 opens Campaign Complete rather than only the legacy Leaderboard; it offers Leaderboard, feedback, credits,
-  and Play Again.
+  and New Campaign.
 - [ ] Feedback diagnostics include outcome and failure reason where applicable; configured Google Form opening and
   popup-blocked fallback remain opt-in and locally visible.
 

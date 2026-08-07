@@ -597,8 +597,10 @@ window.animationTick = function(timestamp) {
                     lift.stateProgress = 0;
                     lift.lastActionTime = now;
                 } else {
-                    if (lift.manualOverride) lift.manualOverride = false;
-                    window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                    const released = Registry.releaseCounterweightManualOverride?.(lift);
+                    if (released || !lift.manualOverride) {
+                        window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                    }
                 }
             }
             
@@ -751,8 +753,10 @@ window.animationTick = function(timestamp) {
                     lift.stateProgress = 0;
                     // Keep the explicit stop visible through the boarding frame;
                     // the following idle decision clears it before Sweep resumes.
-                    if (lift.manualOverride && lift.passengers.length === 0) lift.manualOverride = false;
-                    window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                    const released = Registry.releaseCounterweightManualOverride?.(lift);
+                    if (released || !lift.manualOverride) {
+                        window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                    }
                 }
             }
         }
@@ -764,9 +768,11 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
 
     const VM = window.Game.Automation;
     if (!VM || !lift.automation || lift.automation === 'manual') return;
+    let policyLift = lift;
     if (Registry.isCounterweightPolicy?.(lift)) {
-        const driver = Registry.getCounterweightPolicyDriver(lift);
-        if (driver.id !== lift.id) return;
+        const coordinator = Registry.getCounterweightPolicyCoordinator?.(lift) || lift;
+        if (coordinator.id !== lift.id) return;
+        policyLift = Registry.getCounterweightPolicyDriver(lift);
     }
 
     // Idle lifts can reach this path every animation frame. Bound policy scans so
@@ -774,22 +780,23 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
     const decisionTime = Number.isFinite(now) ? now : (window.Game.virtualTime || performance.now());
     if (decisionTime - (lift.lastAutomationTime || 0) < 100) return;
     lift.lastAutomationTime = decisionTime;
+    if (policyLift !== lift) policyLift.lastAutomationTime = decisionTime;
 
     // Dispatch to VM for all modes
-    if (lift.automation === 'sweep') {
-        VM.execute(lift, 'sys_sweep');
-    } else if (lift.automation === 'priority-sweep') {
-        VM.execute(lift, 'sys_priority');
-    } else if (lift.automation === 'voting') {
-        VM.execute(lift, 'sys_voting');
-    } else if (lift.automation === 'weighted-voting') {
-        VM.execute(lift, 'sys_weighted');
-    } else if (lift.automation === 'zoned-low') {
-        VM.execute(lift, 'sys_zoned_low');
-    } else if (lift.automation === 'zoned-high') {
-        VM.execute(lift, 'sys_zoned_high');
-    } else if (lift.automation.startsWith('custom_')) {
-        VM.execute(lift, lift.automation);
+    if (policyLift.automation === 'sweep') {
+        VM.execute(policyLift, 'sys_sweep');
+    } else if (policyLift.automation === 'priority-sweep') {
+        VM.execute(policyLift, 'sys_priority');
+    } else if (policyLift.automation === 'voting') {
+        VM.execute(policyLift, 'sys_voting');
+    } else if (policyLift.automation === 'weighted-voting') {
+        VM.execute(policyLift, 'sys_weighted');
+    } else if (policyLift.automation === 'zoned-low') {
+        VM.execute(policyLift, 'sys_zoned_low');
+    } else if (policyLift.automation === 'zoned-high') {
+        VM.execute(policyLift, 'sys_zoned_high');
+    } else if (policyLift.automation.startsWith('custom_')) {
+        VM.execute(policyLift, policyLift.automation);
     }
 };
 

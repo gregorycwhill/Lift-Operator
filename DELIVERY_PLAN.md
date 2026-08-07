@@ -1,7 +1,7 @@
 # Major Release Candidate Delivery Plan
 
 **Document role:** Current implementation and release scope only
-**Status:** Active Friends & Family readiness — automated release evidence complete; human/device evidence remains
+**Status:** Active final Friends & Family feedback-quality remediation
 **Release target:** `1.0` (no release tag has been created)
 **Owner class:** Product and engineering
 **Last reviewed:** 7 August 2026
@@ -143,6 +143,10 @@ This is a correctness-and-tuning slice, not new RC1.0 product scope.
 precedence: `custom` > `priority voting` > `priority sweep` > `zoned` > `voting` > `sweep`. The selected policy plans
 for both cars as a coupled pair; manual player commands still override it immediately.
 
+The final Friends & Family remediation below supersedes the remaining hidden-driver edge case in this earlier work: the
+implemented precedence remains authoritative, while built-in ownership, manual lifecycle, and controller symmetry move
+to first-class pair state.
+
 ### Friends & Family readiness slice — implemented
 
 This final internal slice removes distribution and playtest friction without changing campaign mechanics.
@@ -170,8 +174,39 @@ This final internal slice removes distribution and playtest friction without cha
 8. **Staged tester access:** Friends & Family initially receive the ordinary public URI and normal campaign flow.
    After initial feedback, selected testers receive the existing UFI Manifest-backed Debug URI so they can access
    higher rounds. This remains Debug access rather than a new shared-operation pathway. The manifest consent screen is
-   welcoming and explicit that Playtest Access unlocks round selection and seed replay for testing;
-   normal campaign progress remains separate.
+    welcoming and explicit that Playtest Access unlocks round selection and seed replay for testing;
+    normal campaign progress remains separate.
+
+### Final Friends & Family feedback-quality remediation — implemented; awaiting replay
+
+This is the final pre-distribution implementation slice. It removes obstacles to useful external feedback without adding
+new campaign content or a new access route. Automated focused and lifecycle coverage passes; signed-out form/device
+verification and Friends & Family replay remain the release evidence.
+
+1. **Counterweight built-in behaviour:** make built-in policies first-class pair policies in R21–R23. Either controller
+   must behave symmetrically; built-in Sweep, Priority Sweep, Voting, Priority Voting, and Zoned policies plan a single
+   mirrored pair response from both cabins' demand. A click on either shaft remains an immediate pair manual command
+   until both cars complete service. Manual applied to either controller makes the pair Manual. Custom Workshop policies
+   remain the clearly disclosed advanced per-cabin exception.
+2. **Board-visible critical notices:** move VIP and other critical event notices to a reserved, layout-flow message rail
+   outside the board. Queue rather than stack critical notices, use one visible/audio VIP arrival announcement for every
+   leg, and retain short non-critical toasts separately. No notice may obscure a VIP, lift, or queue.
+3. **Feedback path and release identity:** retain the public unsigned Google Form with the production prefill parameter
+   `entry.1033382669`. Describe screenshots/video as an optional shareable-link field; no data is submitted by the game.
+   Replace the generic visible build identifier with the immutable release commit or release identifier used by the
+   Pages deployment and itch artifact.
+4. **External-player language:** use `Playtest Tools`, `Playtest Access enabled`, and `Resume Game` in the existing
+   manifest-backed Debug flow; remove player-facing console jargon. Use `New Campaign` consistently in every normal
+   entry point and confirmation. Keep the ordinary URI as day-one distribution and send the existing Debug URI only to
+   selected testers after initial feedback.
+5. **Small trust and clarity repairs:** replace the Workshop's developer-style copied-script toast with plain player
+   language, and make the compact audio tracker accurately direct players to the supplied Credits & Licences details.
+6. **Tester materials:** replace the stale R9-only tester pack with a short normal-first-session guide, a later
+   Debug-access guide, the feedback/report instructions, current browser scope, and a concise known-limitations section.
+
+Implementation must update the durable counterweight rules in `Game Play Map.md`, `Lift-Operator_GDD.md`, and
+`Automation_Workshop_Spec.md`; record external observations in the playtest log; and add focused acceptance coverage
+before a new distribution commit.
 
 ### Tooling and release hygiene
 

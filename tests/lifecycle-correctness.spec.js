@@ -1292,6 +1292,24 @@ test('counterweight built-in policy precedence selects one pair driver', async (
     expect(result.rankOrder).toEqual([6, 5, 4, 3, 2, 1]);
 });
 
+test('counterweight built-ins assign symmetrically and manual commands work from either side', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        Registry.gameActive = true;
+        setLiftAutomation(1, 'sweep');
+        const assigned = Registry.lifts.slice(0, 2).map(lift => lift.automation);
+        setLiftTarget(1, 10);
+        const manual = Registry.lifts.slice(0, 2).map(lift => ({ target: lift.targetFloor, override: lift.manualOverride }));
+        Registry.lifts.slice(0, 2).forEach(lift => { lift.pos = lift.targetFloor * Registry.floorHeight; lift.state = 'IDLE'; });
+        const released = Registry.releaseCounterweightManualOverride(Registry.lifts[1]);
+        return { assigned, manual, released, remaining: Registry.lifts.slice(0, 2).map(lift => lift.manualOverride) };
+    });
+    expect(result.assigned).toEqual(['sweep', 'sweep']);
+    expect(result.manual).toEqual([{ target: 0, override: true }, { target: 10, override: true }]);
+    expect(result.released).toBe(true);
+    expect(result.remaining).toEqual([false, false]);
+});
+
 test('Open Plan uses one active hub to transfer a compatible guest between adjacent lifts', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(22, { showBriefing: false });
@@ -2087,7 +2105,7 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=RC1.0-playtest');
+    expect(result.copied).toContain('build=RC1.0-friends-family-2026-08-07');
     expect(result.copied).toContain('balance=0.2.10-fleet-onboarding');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
@@ -2095,7 +2113,7 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('RC1.0-playtest');
+    expect(result.build).toContain('RC1.0-friends-family-2026-08-07');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
@@ -2191,8 +2209,10 @@ test('rooftop event has a long seeded schedule and releases guests to their orig
         Registry.sunsetTargetTime = 100000;
         const previousRatio = Config.sunsetGuestRatio;
         const previousToast = window.showToast;
+        const previousMessage = window.showGameMessage;
         const warnings = [];
         window.showToast = message => warnings.push(message);
+        window.showGameMessage = (message) => warnings.push(message);
         Config.sunsetGuestRatio = 1;
         runSpawnerTick(100000);
         const active = { active: Registry.sunsetActive, redirected: guest.dest, original: guest.originalDest };
@@ -2201,6 +2221,7 @@ test('rooftop event has a long seeded schedule and releases guests to their orig
         runSpawnerTick(190000);
         Config.sunsetGuestRatio = previousRatio;
         window.showToast = previousToast;
+        window.showGameMessage = previousMessage;
         return {
             scheduledStart,
             scheduleSeconds: (scheduledStart - (window.Game.virtualTime || Date.now())) / 1000,
@@ -2356,6 +2377,27 @@ test('Round 2 teaching rail is below the countdown rather than overlapping it', 
         return { railTop: rail.top, countdownBottom: countdown.bottom, stacked: rail.top >= countdown.bottom - 1 };
     });
     expect(result.stacked).toBe(true);
+});
+
+test('critical notices queue outside the board without obscuring it', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        showGameMessage('VIP arrival', { critical: true, durationMs: 5000 });
+        showGameMessage('Rooftop Party started', { critical: true, durationMs: 5000 });
+        const rail = document.getElementById('game-message-rail');
+        const world = document.getElementById('world');
+        const first = document.getElementById('game-message-text').textContent;
+        document.getElementById('game-message-dismiss').click();
+        return {
+            first,
+            second: document.getElementById('game-message-text').textContent,
+            queued: rail?.dataset.critical === 'true',
+            separated: rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().top
+        };
+    });
+    expect(result.first).toBe('VIP arrival');
+    expect(result.second).toBe('Rooftop Party started');
+    expect(result.queued).toBe(true);
+    expect(result.separated).toBe(true);
 });
 
 test('four-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {

@@ -128,17 +128,26 @@ The Automation Dock is the sole in-game deployment surface. It owns presentation
 unlock logic, assignment rules, and persistent state remain canonical in the shared automation services. There is no
 Debug-only controller switch or alternate in-game selector.
 
-## 2.3 Future counterweight compatibility
+## 2.3 Counterweight compatibility
 
 The post-R20 Counterweight trilogy does not introduce a second automation controller or special paired-lift authoring
-surface. Existing built-ins, saved Blockly policies, custom policies, and the Automation Dock continue to assign one
-policy per lift. The movement engine owns the fixed adjacent-pair consequence of a command.
+surface. The Automation Dock remains the assignment surface, but built-in policies are pair-owned in a counterweight
+round: assigning a built-in to either controller assigns the pair behaviour to both cars. Manual on either controller
+makes the pair Manual.
 
-For R21–R23, a manual or automation target selected for either car applies through the ordinary assignment/target path;
-the engine moves its counterweight partner in the opposite direction. Zoned policy manual overrides retain their normal
-temporary-out-of-zone behaviour. Open Plan is an operational timed power-up, not a Workshop block: it enables legal,
-destination-aware transfers between adjacent cars sharing a floor while preserving capacity, stink, Gym Bro, VIP, and
-other boarding checks.
+For R21–R23, a built-in policy makes one pair-level routing decision from both cars' demand and sends the resulting
+mirrored targets together. A manual floor command remains side-specific in intent: the clicked car takes the requested
+floor and the partner takes its forced complement. That pair manual state stays in force until both cars finish service.
+There is no hidden left/right driver and no master/slave controller.
+
+Zoned Low/High selected on a car makes that car the selected role and gives the partner its complement; a batch
+assignment retains the left-low/right-high default. Zoned manual overrides retain their normal temporary out-of-zone
+behaviour. Open Plan is an operational timed power-up, not a Workshop block: it enables legal, destination-aware
+transfers between adjacent cars sharing a floor while preserving capacity, stink, Gym Bro, VIP, and other boarding checks.
+
+Saved Blockly/custom policies are an advanced per-cabin exception. They retain their own assignment and may therefore
+be the selected policy under deterministic pair precedence; the Dock must disclose that their targets still move the
+partner. It must not imply that a custom policy has become pair-authored or allow it to rewire the pair.
 
 Before custom policies are asked to solve the eight-lift Counterweight Network, the automation bridge must expose only
 canonical, deterministic pair state required for safe observation—paired-lift identity, current floor/target, movement
