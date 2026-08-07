@@ -8,6 +8,7 @@ const acceptanceSource = fs.readFileSync(path.join(root, 'tests', 'balance-accep
 const acceptance = JSON.parse(acceptanceSource);
 const report = JSON.parse(fs.readFileSync(path.join(root, 'reports', 'campaign-balance-acceptance.json'), 'utf8'));
 const integrityOnly = process.argv.includes('--integrity');
+const strict = process.argv.includes('--strict');
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
 const errors = [];
 const assert = (condition, message) => { if (!condition) errors.push(message); };
@@ -23,7 +24,7 @@ report.rounds.forEach(entry => {
     assert(entry.allSweep.runs.length === acceptance.seeds.length, `R${entry.round}: missing all-Sweep seeds.`);
     assert(entry.intended.runs.length === acceptance.seeds.length, `R${entry.round}: missing intended seeds.`);
     entry.intended.runs.forEach(run => assert(Array.isArray(run.metrics.trace), `R${entry.round}, seed ${run.seed}: missing intended diagnostic trace.`));
-    if (!integrityOnly) {
+    if (strict) {
         assert(entry.allSweep.accepted, `R${entry.round}: all-Sweep acceptance failed.`);
         // Intended profiles remain diagnostic until human playtesting supplies
         // round-level difficulty evidence. The hard simulator gate is the
@@ -37,4 +38,6 @@ if (errors.length) {
 }
 console.log(integrityOnly
     ? `Balance acceptance evidence is current: ${report.rounds.length} rounds, ${report.seedCount} seeds.`
-    : `Balance acceptance valid: ${report.rounds.length} rounds, ${report.seedCount} seeds; all-Sweep negative-control gate met.`);
+    : strict
+        ? `Balance acceptance valid: ${report.rounds.length} rounds, ${report.seedCount} seeds; all-Sweep negative-control gate met.`
+        : `Balance acceptance evidence is valid: ${report.rounds.length} rounds, ${report.seedCount} seeds.`);

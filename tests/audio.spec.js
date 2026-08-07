@@ -390,7 +390,6 @@ test('manifested audio files are locally resolvable', async ({ request }) => {
 
 test('local test server sends browser-recognized audio MIME types', async ({ request }) => {
     const expectedTypes = {
-        'assets/audio/gameplay-chiploop.mp3': 'audio/mpeg',
         'assets/audio/menu-somewhere-in-the-elevator.ogg': 'audio/ogg',
         'assets/audio/elevator-door.wav': 'audio/wav'
     };
@@ -406,6 +405,17 @@ test('verified Turbo asset is available and mapped to the production audio path'
     const response = await request.get('http://127.0.0.1:5500/assets/audio/sfx/powerup-rocket-launch.wav');
     expect(response.ok()).toBe(true);
     expect(await page.evaluate(() => window.Game.Audio.getStatus())).toHaveProperty('initialized');
+});
+
+test('unprovenanced retired audio files are absent from the distributable tree', async ({ request }) => {
+    for (const file of [
+        'assets/audio/gameplay-chiploop.mp3',
+        'assets/audio/gameplay-pressure-chip-bit-danger.mp3',
+        'assets/audio/sfx/powerup-special.wav',
+        'assets/audio/sfx/powerup-turbo.wav'
+    ]) {
+        expect((await request.get(`http://127.0.0.1:5500/${file}`)).status(), file).toBe(404);
+    }
 });
 
 test('Wrench uses the documented two-second CC-BY metal excerpt and does not ship the GPL predecessor', async ({ request }) => {

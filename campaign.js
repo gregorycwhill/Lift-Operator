@@ -56,11 +56,11 @@
         acknowledgePromotion: (round) => {
             if (!Config.GAME_DATA.rounds[round]?.briefing?.promotion) return false;
             Registry.promotionAcknowledgements = clonePromotions([...Registry.promotionAcknowledgements, round]);
-            if (Registry.playerName) Game.Campaign.saveCurrent();
+            if (Registry.playerName && !Registry.debugSession) Game.Campaign.saveCurrent();
             return true;
         },
         saveCurrent: (options = {}) => {
-            if (!Registry.playerName) return null;
+            if (!Registry.playerName || Registry.debugSession) return null;
             const record = {
                 schemaVersion,
                 balanceVersion: Config.balanceVersion,
@@ -123,7 +123,13 @@
             ui.showRoundModal?.(Registry.stats.round, { showPromotion: Registry.stats.round === 1 });
             return true;
         },
-        requestNewGame: () => show('newGameConfirmOverlay'),
+        requestNewGame: () => {
+            if (Registry.debugSession) {
+                window.resetGame?.({ showBriefing: true, preserveDebugSession: true });
+                return;
+            }
+            show('newGameConfirmOverlay');
+        },
         showInfo: (id) => {
             const current = ['welcomeOverlay', 'settingsOverlay', 'campaignCompleteOverlay']
                 .find(candidate => document.getElementById(candidate)?.style.display === 'flex');

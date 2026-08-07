@@ -42,7 +42,7 @@ feedback belongs here.
 | PTF-012 | chat reconstruction — date unavailable | Capsule lifts were too griddy/cabled, were not centred in tubes, could miss manual targets or Sweep pickups, needed controller tooltips, and R24 could lag. | R24–R25 | Implemented in stages; target-device performance and input responsiveness remain open H3 evidence. |
 | PTF-013 | chat reconstruction — date unavailable | Guests appeared to be only Checkout, Rooftop, or VIP traffic; R7 said half Checkout but appeared all Checkout; R9 read as Checkout rather than Rooftop. | R7, R9 | **Implemented—awaiting R9 replay.** RC-TRAF-01 consolidated standard spawning and enforces probabilistic Checkout plus Rooftop share routing. |
 | PTF-014 | chat reconstruction — date unavailable | R2 remained too hard for playtesting after its first reduction. | R2 | Implemented: arrival rate was reduced further. Balance gate conflict is explicitly deferred pending product decision. |
-| PTF-015 | chat reconstruction — date unavailable | The direction-decline “bong” remained audible and should be removed. | Audio/boarding refusal | Open unless superseded by a verified audio change; add reproduction context on next report. |
+| PTF-015 | chat reconstruction — date unavailable | The direction-decline “bong” remained audible and should be removed. | Audio/boarding refusal | **Closed.** Production refusal is telemetry-only and has no sound asset or fallback; regression coverage verifies this path. Reopen only with a reproducible counterexample. |
 | PTF-016 | chat reconstruction — date unavailable | Gym Bros should board stinky lifts regardless of whether stink came from a fart or another source; Room Service must never be Checkout. | Guest rules | Implemented historically; retain regression coverage/observation. |
 | PTF-017 | chat reconstruction — date unavailable | Every power-up should have its intended wall-clock duration; fart sound should be capped at two seconds; R14+ needed 50% more credits. | Power-ups, economy | Implemented/tuned historically; duration telemetry and human replay remain relevant. |
 | PTF-018 | chat reconstruction — date unavailable | Zoning needed visible shaft colour for serviceable floors. | R14+ Service Zoning | Implemented historically; H1 discovery/readability check. |
@@ -82,12 +82,14 @@ counterweight policy. This note supersedes the pending status in the historical 
 | PTF-032 | playtest feedback — 7 August 2026 | Counterweight lifts remain ineffective in Sweep. | R21–R23 Counterweights | **Implemented—awaiting replay.** Built-in pair routing uses the accepted precedence; manual clicks remain immediate and symmetric, custom policies remain advanced. |
 | PTF-033 | playtest feedback — 7 August 2026 | Round 13 spawn rate is too low; increase it by 20%. | R13 — Uphill Battle | **Implemented as balance candidate—awaiting replay.** Canonical candidate curve is `1.08 → 1.26`, up from `0.90 → 1.05`. |
 | PTF-034 | implementation decision — 7 August 2026 | Normal campaigns should vary while test reports remain reproducible. | Campaign seed and Debug menu | **Implemented—awaiting replay.** New campaigns persist random campaign seeds; round seeds derive deterministically; Debug offers transient seed replay controls. |
+| PTF-035 | late playtest feedback — 7 August 2026 | In Round 8, the VIP arrival notice rendered over the VIP at Ground, obscuring her location at the moment player intervention is needed. | VIP notice rail / board visibility | **Open—queued for grouped notice-placement analysis.** Preserve the arrival notice and music, but ensure any future placement/remediation leaves the VIP and their queue position visible. |
 
 ## Current intake boundary
 
-The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. New feedback from
-that session must receive a new `PTF-` identifier here, then be classified in `DELIVERY_PLAN.md` and converted into
-acceptance evidence in `TEST_PLAN.md` where applicable.
+The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. PTF-035 is held
+for grouped notice-placement analysis with any further late feedback. New feedback from that session must receive a
+new `PTF-` identifier here, then be classified in `DELIVERY_PLAN.md` and converted into acceptance evidence in
+`TEST_PLAN.md` where applicable.
 
 ## Audit — 2 August 2026
 
@@ -96,7 +98,6 @@ Every reconstructed entry has a disposition. The only open or human-evidence-dep
 | IDs | State | Next evidence |
 | --- | --- | --- |
 | PTF-013 | Implemented—awaiting replay | R7/R9 traffic-mix replay on the published H0 build. |
-| PTF-015 | Open | Exact reproduction context for any remaining refusal “bong”. |
 | PTF-007, PTF-018 | Implemented—awaiting H1 evidence | R9–R15 briefing, loadout, and zoning-discovery observations. |
 | PTF-010–PTF-012 | Implemented—awaiting later evidence | H2/H3 desktop layout, counterweight, and capsule-device checks. |
 | PTF-019 | Implemented—awaiting visual evidence | Chrome/Edge visual check: Checkout briefcase is black and legible on Happy, Annoyed, and Critical guests; ordinary G-bound guests remain `G`. |

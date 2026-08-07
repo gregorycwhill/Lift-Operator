@@ -186,8 +186,11 @@ window.buildWorld = function() {
         });
     }
     
-    const seedContainer = document.getElementById('seedDisplay');
-    if (seedContainer && !document.getElementById('spontaneousShareLink')) {
+    const seedContainer = document.getElementById('seedContainer');
+    if (seedContainer) seedContainer.hidden = !Config.debugMode;
+    const existingShareLink = document.getElementById('spontaneousShareLink');
+    if (!Config.debugMode && existingShareLink) existingShareLink.remove();
+    if (Config.debugMode && seedContainer && !existingShareLink) {
         const shareLink = document.createElement('button');
         shareLink.id = 'spontaneousShareLink';
         shareLink.className = 'btn btn-blue btn-small';
@@ -199,7 +202,7 @@ window.buildWorld = function() {
             const ui = GameUI();
             if (typeof ui.shareGame === 'function') ui.shareGame();
         };
-        seedContainer.parentNode.appendChild(shareLink);
+        seedContainer.appendChild(shareLink);
     }
 
     const debugOptionBtn = document.getElementById('openDebugBtn');

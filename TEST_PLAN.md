@@ -9,13 +9,14 @@
 
 ## Current evidence
 
-The active remediation working tree is based on `d9247aa` on `master`; the next commit is a release-readiness update.
+The active Friends & Family working tree is on `master`; the next commit records the release-readiness slice.
 
 Recent focused evidence:
 
-- `npm.cmd run test:full` passed on 2 August 2026 in 150 seconds: syntax (67 files), documentation (28 Markdown
-  files), config, balance freshness/integrity, economy, UTF-8 (117 first-party files), unit, mechanics (19/19),
-  integration (3/3), audio (25/25), and the supported Playwright suite (133/133).
+- `npm.cmd run test:release` passed on 7 August 2026 in 283 seconds: syntax (48 JavaScript files), documentation
+  (30 Markdown files), config, balance freshness/integrity, economy, UTF-8 (101 first-party files), unit, mechanics
+  (24/24), integration (3/3), audio (25/25), the supported Playwright suite (157/157), and a regenerated 24-round,
+  five-seed balance diagnostic report.
 - `guest_refused` is telemetry-only and has no sound asset or fallback.
 - Integration suite: 3/3 passed.
 - Capsule rendering regression passed: capsule cars have no cable pseudo-element and tube separators use the intended
@@ -28,12 +29,12 @@ Recent focused evidence:
 - The all-Sweep negative-control rescue tuning is recorded in canonical data: R3, R5, and R9 received small spawn-end
   increases after the Turbo floor-snap fix caused one seed each to survive unattended Sweep.
 - The 25-round balance acceptance harness, canonical economy projection, event-persistence resolver, production-faithful
-  simulator routing, and representative reproducibility command are now implemented. All-Sweep is the hard simulator
-  gate; intended-strategy profiles are diagnostic evidence pending human round-level difficulty reports.
+  simulator routing, and representative reproducibility command are now implemented. For RC1.0, All-Sweep and intended
+  profiles are diagnostic evidence pending human round-level difficulty reports; `--strict` retains the later-balance
+  negative-control threshold.
 - The acceptance harness now records a versioned intended profile ID and diagnostic trace for every intended seed. The
-  current report confirms all-Sweep survives all five fixed R2 seeds after the further reduction; intended results
-  remain diagnostic only and are not a
-  release gate. The checked-in full report is the authoritative per-seed result. Simulation runs no
+  current report records all-Sweep losses in 15/24 rounds and intended-profile positives in 10/24 rounds; both results
+  are diagnostic for RC1.0. The checked-in full report is the authoritative per-seed result. Simulation runs no
   longer yield to browser timers, and a regression test proves that an R6 acceptance run is invariant alone and after
   R2–R5. R2 is explicitly deferred by the current
   remediation instruction; R3–R6 remain the next staged recovery slice, while later-family failures require custom
@@ -113,7 +114,7 @@ playtesting, but all-Sweep now survives all five fixed R2 seeds. Product must ch
 make R2 an explicit onboarding exception; do not silently alter the fixed seeds, accept a failed gate, or counter-tune
 arrival pressure.
 
-The existing R2–R13 reports are historical diagnostic evidence only. They are not a 1.0 balance pass.
+The acceptance report is current diagnostic evidence only. It is not a 1.0 balance pass.
 
 - [x] Add versioned, non-runtime balance-acceptance data for R2–R25: fixed gate seeds, all-Sweep setup, intended
   strategy profile, and round-specific thresholds.
@@ -134,8 +135,8 @@ The existing R2–R13 reports are historical diagnostic evidence only. They are 
   recovery.
 - [ ] For every balance-accepted round, confirm via browser/playtest evidence that the simulated profile corresponds to
   legible player actions; a simulator success alone is insufficient promotion evidence.
-- [x] The balance release command fails when all-Sweep does not fail every required round. Evidence-integrity checks continue to
-  validate report hashes, schema, and provenance separately.
+- [x] `balance:acceptance:strict` fails when all-Sweep does not fail every required round. The default RC1.0 release
+  command records the diagnostic report, while evidence-integrity checks validate report hashes, schema, and provenance.
 - [x] Matrix and profiles cover R14–R20 zoning/events, R21–R23 counterweights/Open Plan, and R24–R25 capsules.
 - [x] Simulated commands use production target routing, including counterweight partner consequences.
 - [x] Reproducibility samples R2, R12, R14, R17, R21, R23, R24, and R25.
@@ -187,6 +188,26 @@ zoned, and pair-aware profiles now exist, but their traces show unresolved VIP a
 capacity fault. Improve and validate those policies before canonical balance parameters are changed.
 
 ## Open engineering acceptance
+
+### Friends & Family readiness coverage
+
+- [x] RC1 release documentation describes all-Sweep acceptance as internal diagnostic evidence, not a distribution
+  blocker; the full report remains reproducible and visible to maintainers.
+- [x] The four unused/unprovenanced audio files are absent from the Pages and itch distributable trees; every shipped
+  audio file has a manifest record and required attribution/provenance.
+- [x] `THIRD_PARTY_NOTICES.md` identifies Blockly and LZ-String by exact source/version and ships their required
+  Apache-2.0 and MIT notices.
+- [x] Debug exposes only controls with a documented, production-tested temporary effect; Warp and transient seed replay
+  remain available for support reproduction.
+- [x] A production-path audio check confirms direction-incompatible guest refusal has no audible event; PTF-015 is
+  closed unless a reproducible counterexample is supplied.
+- [x] Normal Round 1 has no unexplained Game ID field; Welcome states the supported desktop browser expectation and
+  How to Play explains Ground, guest patience/status, and between-round saving concisely.
+- [x] `New Campaign…` confirms before clearing only campaign progress; its visible wording cannot be mistaken for a
+  same-round retry. The pre-unlock Workshop control explains its Round 10 unlock.
+- [x] Normal player UI does not expose seed/debug clutter, while feedback diagnostics retain reproducible seed data.
+- [x] The existing UFI Manifest-backed Debug URI opens a friendly Playtest Access consent screen, explains that it
+  unlocks higher-round selection and seed replay, and keeps normal campaign progress separate from Debug use.
 
 ### R22 manual-stop boarding
 

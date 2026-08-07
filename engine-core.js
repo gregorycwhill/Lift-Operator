@@ -586,6 +586,9 @@ window.advanceToRound = function(targetRound) {
 window.resetGame = function(options = {}) {
     window.Game.Audio?.publish('reset', { round: Registry.stats.round });
     const useDebugReset = !options.forceProduction && (Config.debugMode || navigator.webdriver);
+    // Debug mode can also be enabled by local developer/test configuration.
+    // Only a manifest-authorised playtest session suppresses campaign writes.
+    Registry.debugSession = Boolean(options.preserveDebugSession || Registry.debugSession);
     if (useDebugReset) {
         Registry.useCampaignSeeds = false;
         Registry.campaignSeed = 1234;

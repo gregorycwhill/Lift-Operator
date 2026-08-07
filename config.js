@@ -189,30 +189,6 @@ for (let round = 1; round <= 25; round++) {
     Config[`spawnR${round}End`] = BalanceRounds[round].spawnEnd;
 }
 
-const debugDefinitions = [
-    { key: 'roundTime', label: 'Round Duration (sec)', min: 10, max: 600, step: 10, dispFormat: (v)=>v },
-    { key: 'startingLives', label: 'Starting Lives', min: 1, max: 100, step: 1, dispFormat: (v)=>v },
-    { key: 'maxSpawnDelaySec', label: 'Max Spawn Delay (sec)', min: 1, max: 10, step: 1, dispFormat: (v)=>v },
-    { key: 'jamChancePerSec', label: 'Lift Jam Chance/Sec', min: 0.000, max: 0.1, step: 0.001, dispFormat: (v)=>(v*100).toFixed(1)+'%' },
-    { key: 'checkoutChance', label: 'Check-out (G) Chance', min: 0.0, max: 1.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
-    { key: 'vipPenalty', label: 'VIP Rage Penalty', min: 1, max: 20, step: 1, dispFormat: (v)=>v },
-    { key: 'fartChancePerSec', label: 'Fart Chance/Sec', min: 0.0, max: 0.1, step: 0.001, dispFormat: (v)=>(v*100).toFixed(1)+'%' },
-    { key: 'fartStinkSec', label: 'Fart Duration (sec)', min: 1, max: 30, step: 1, dispFormat: (v)=>v },
-    { key: 'gymBroStinkThreshold', label: 'Gym Bro Stink Threshold', min: 1, max: 10, step: 1, dispFormat: (v)=>v },
-    { key: 'sunsetMinSec', label: 'Sunset Min Spawn (sec)', min: 10, max: 120, step: 5, dispFormat: (v)=>v },
-    { key: 'sunsetMaxSec', label: 'Sunset Max Spawn (sec)', min: 20, max: 180, step: 5, dispFormat: (v)=>v },
-    { key: 'sunsetDurationSec', label: 'Sunset Duration (sec)', min: 10, max: 120, step: 5, dispFormat: (v)=>v },
-    { key: 'sunsetGuestRatio', label: 'Sunset Ratio', min: 0.1, max: 1.0, step: 0.1, dispFormat: (v)=>Math.round(v*100)+'%' },
-    ...Array.from({ length: 25 }, (_, index) => ({ key: `liftsR${index + 1}`, label: `Lifts in Round ${index + 1}`, min: 1, max: 20, step: 1, dispFormat: (v)=>v })),
-    ...Array.from({ length: 25 }, (_, index) => [
-        { key: `spawnR${index + 1}Start`, label: `R${index + 1} Start Rate`, min: 0.05, max: 5.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' },
-        { key: `spawnR${index + 1}End`, label: `R${index + 1} End Rate`, min: 0.05, max: 5.0, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' }
-    ]).flat(),
-    { key: 'happySec', label: 'Happy Timeout (sec)', min: 2, max: 100, step: 1, dispFormat: (v)=>v },
-    { key: 'annoyedSec', label: 'Annoyed Timeout (sec)', min: 5, max: 120, step: 1, dispFormat: (v)=>v },
-    { key: 'criticalSec', label: 'Defenestrate Timeout (sec)', min: 10, max: 200, step: 1, dispFormat: (v)=>v },
-    { key: 'liftCapacity', label: 'Lift Capacity', min: 1, max: 30, step: 1, dispFormat: (v)=>v },
-    { key: 'liftSpeedSec', label: 'Lift Speed (sec/floor)', min: 0.1, max: 5.0, step: 0.1, dispFormat: (v)=>v.toFixed(1) },
-    { key: 'boardSpeedSec', label: 'Boarding Speed (sec/person)', min: 0.1, max: 5.0, step: 0.1, dispFormat: (v)=>v.toFixed(1) },
-    { key: 'gravityConstant', label: 'Gravity Penalty (Up)', min: 0.0, max: 0.8, step: 0.05, dispFormat: (v)=>Math.round(v*100)+'%' }
-];
+// Debug intentionally exposes only working support controls (Warp, seed
+// replay, and inspection). Balance/configuration sliders were removed because
+// most did not alter an active authored round and misled playtesters.

@@ -196,36 +196,6 @@ window.renderDebugMenu = function() {
     // Listen for telemetry updates while modal is open
     window.addEventListener('telemetryUpdate', renderLogs);
 
-    // Configuration Spinners
-    if (typeof debugDefinitions !== 'undefined') {
-        debugDefinitions.forEach(def => {
-            const row = document.createElement('div'); row.className = 'debug-row';
-            const label = document.createElement('span'); label.innerText = def.label;
-            const ctrl = document.createElement('div'); ctrl.className = 'spinner-ctrl';
-            
-            const minus = document.createElement('button'); minus.innerText = '-';
-            const valDisplay = document.createElement('div'); 
-            const currentVal = Config[def.key] !== undefined ? Config[def.key] : (def.default || 0);
-            valDisplay.innerText = def.dispFormat(currentVal);
-            const plus = document.createElement('button'); plus.innerText = '+';
-            
-            minus.onclick = () => { 
-                Config[def.key] = Math.max(def.min, Math.round((Config[def.key] - def.step) * 1000) / 1000); 
-                valDisplay.innerText = def.dispFormat(Config[def.key]); 
-            };
-            plus.onclick = () => { 
-                Config[def.key] = Math.min(def.max, Math.round((Config[def.key] + def.step) * 1000) / 1000); 
-                valDisplay.innerText = def.dispFormat(Config[def.key]); 
-            };
-            
-            ctrl.appendChild(minus); 
-            ctrl.appendChild(valDisplay); 
-            ctrl.appendChild(plus);
-            row.appendChild(label); 
-            row.appendChild(ctrl); 
-            container.appendChild(row);
-        });
-    }
 };
 
 /* Retired RC1.0 in-game regression-suite loader.

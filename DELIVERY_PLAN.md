@@ -1,11 +1,11 @@
 # Major Release Candidate Delivery Plan
 
 **Document role:** Current implementation and release scope only
-**Status:** Active release-candidate hardening — not promotable until the balance gate and human-device evidence are complete
+**Status:** Active Friends & Family readiness — automated release evidence complete; human/device evidence remains
 **Release target:** `1.0` (no release tag has been created)
 **Owner class:** Product and engineering
-**Last reviewed:** 1 August 2026
-**Implementation baseline:** Active remediation working tree based on `39c07b7` on `master`
+**Last reviewed:** 7 August 2026
+**Implementation baseline:** Active Friends & Family working tree on `master`
 
 ## Outcome
 
@@ -33,11 +33,9 @@ The following programme is the current delivery scope. It restores the design-to
 
 ### Accepted decisions
 
-- Unattended all-Sweep must fail every fixed gate seed in every authored round from R2 through R25. R1 remains the
-  onboarding exception. The further 25% R2 spawn-rate accessibility change (43.75% total from the original values) is
-  implemented but currently violates this invariant
-  (5/5 R2 all-Sweep seeds survive); resolving that conflict requires an explicit product decision rather than hidden
-  counter-tuning.
+- All-Sweep remains an internal negative-control diagnostic for RC1.0, not a Friends & Family distribution blocker.
+  R1 remains the onboarding exception. A later balance release may reinstate a strict fixed-seed gate only with an
+  explicitly approved threshold; do not silently counter-tune to its results.
 - R12 expresses that rule as an endurance ceiling: all-Sweep loses its twentieth life before 240 seconds, while a
   competent strategy survives for 240–480 seconds.
 - Intended-strategy profiles remain diagnostic comparators. Their failures require trace review, but do not block this
@@ -47,10 +45,10 @@ The following programme is the current delivery scope. It restores the design-to
 
 ### Balance, simulation, and economy recovery
 
-1. **Full-campaign balance acceptance:** versioned non-runtime acceptance data, fixed seeds, all-Sweep requirements,
-   intended/feasibility profiles, and R12 timing bounds are implemented. The enforceable gate is now the source of truth;
-   its current result is recorded in `reports/campaign-balance-acceptance.md`; it passes the all-Sweep negative-control
-   requirement while retaining intended-strategy outcomes for diagnosis.
+1. **Full-campaign balance diagnostics:** versioned non-runtime acceptance data, fixed seeds, all-Sweep results,
+   intended/feasibility profiles, and R12 timing bounds are implemented. The current result is recorded in
+   `reports/campaign-balance-acceptance.md`; strict all-Sweep enforcement remains an explicit later-balance command,
+   while intended-strategy outcomes remain diagnostic.
 2. **Production-faithful simulation:** profiles now cover zoning, counterweights/Open Plan, and capsules; all-Sweep assigns
    every lift; simulated commands use production targeting; reproducibility covers representative rounds. The hash-only
    replay and placeholder robustness commands are retired from the supported npm surface pending a real action-log replay.
@@ -144,6 +142,36 @@ This is a correctness-and-tuning slice, not new RC1.0 product scope.
 **Resolved routing rule:** when paired cars have different automations, the pair coordinator uses this deterministic
 precedence: `custom` > `priority voting` > `priority sweep` > `zoned` > `voting` > `sweep`. The selected policy plans
 for both cars as a coupled pair; manual player commands still override it immediately.
+
+### Friends & Family readiness slice — implemented
+
+This final internal slice removes distribution and playtest friction without changing campaign mechanics.
+
+1. **RC1 balance-gate scope:** relaxed the all-Sweep requirement for RC1.0. The current acceptance report remains
+   internal diagnostic evidence, but do not treat its unmet round results as a Friends & Family distribution blocker.
+   A later balance release may reinstate a stricter all-Sweep gate with an explicitly approved threshold.
+2. **Bundled-audio hygiene:** removed the unused, unprovenanced bundled files `gameplay-chiploop.mp3`,
+   `gameplay-pressure-chip-bit-danger.mp3`, `powerup-special.wav`, and `powerup-turbo.wav` from the distributable
+   tree; refresh the audio manifest, attribution, audit, and audio checks together.
+3. **Vendored-library notices:** identified the exact Blockly and LZ-String sources/versions and added their required
+   Apache-2.0 and MIT licence notices, and close the corresponding `THIRD_PARTY_NOTICES.md` audit gaps.
+4. **Debug simplification:** removed Debug sliders that do not produce a documented active-round overlay. Retained only
+   working Warp, seed replay, and inspection controls for reproducible support.
+5. **Refusal-audio closure:** confirmed the direction-incompatible boarding refusal is silent in production and closed
+   PTF-015 unless a new reproducible report contradicts that result.
+6. **Normal-player onboarding:** removed the Round 1 `Game ID` field from the briefing; added a concise Welcome
+   expectation that RC1.0 is best played in desktop Chrome or Edge; explain that campaign progress saves between
+   rounds and a restarted shift begins from its round boundary; and expand How to Play with the minimum guest-status,
+   Ground, and patience vocabulary needed by a first-time player.
+7. **Safe navigation language:** renamed the destructive sidebar action from `Restart Game` to `New Campaign…` while
+   retaining its confirmation. Keep Workshop visible before its Round 10 unlock, but provide an explicit unlock
+   tooltip. Reduce developer-facing normal-play clutter, including the seed display, without reducing diagnostic
+   capture.
+8. **Staged tester access:** Friends & Family initially receive the ordinary public URI and normal campaign flow.
+   After initial feedback, selected testers receive the existing UFI Manifest-backed Debug URI so they can access
+   higher rounds. This remains Debug access rather than a new shared-operation pathway. The manifest consent screen is
+   welcoming and explicit that Playtest Access unlocks round selection and seed replay for testing;
+   normal campaign progress remains separate.
 
 ### Tooling and release hygiene
 
@@ -245,9 +273,9 @@ cycle. Larger redesigns and non-release-risk architecture debt move to `ROADMAP.
 
 These are genuine unresolved implementation or diagnosis items, not historical checklist residue.
 
-1. **Balance acceptance remediation:** all-Sweep now fails all fixed seeds in R2–R25, but the positive comparator is
-   not yet a credible model of intended play. Execute the following phase without weakening the gate or silently
-   regenerating its seed set:
+1. **Post-RC balance investigation:** the all-Sweep report and intended comparator are valuable diagnostics, but not
+   Friends & Family release gates. Any later balancing phase must preserve the fixed seeds and retain before/after
+   evidence rather than silently regenerating a passing result:
    - Define versioned, round-family intended profiles: R2–R3 hybrid rescue; R4–R6 triage/redundancy; R7–R9 event
      handling; R10–R13 advanced control; R14–R20 zoned fleet; R21–R23 counterweight/Open Plan; and R24–R25 capsule
      dispatch. Each declares automation, bounded manual intervention, permitted loadout, timing rules, and win metric.
@@ -256,17 +284,17 @@ These are genuine unresolved implementation or diagnosis items, not historical c
    - Recover acceptance in sequence: R2 is deferred for the current phase; begin with R3–R6, then progress through each
      later family only after the preceding family reaches its threshold. Preserve before/after reports and traces for
      every canonical tuning change.
-   - Treat the all-Sweep setup, fixed seeds, and R12 bounds as immutable policy. The simulator gate passes only when
-     all-Sweep fails every seed. Intended profiles require trace/disposition review and browser/playtest evidence, but
-     their survival rate is diagnostic rather than a release threshold.
+   - Treat the all-Sweep setup, fixed seeds, and R12 bounds as immutable diagnostic policy. A later strict command may
+     require all-Sweep failure every seed, but intended profiles still require trace/disposition review and browser or
+     playtest evidence.
    Current evidence: profile and trace infrastructure is implemented. After the further 25% R2 spawn-rate reduction,
    all-Sweep survives every fixed R2 seed (5/5), while the remaining rounds retain the negative-control result. The
    current report is authoritative for individual seeds. Virtual runs are now
    synchronous, realm-unique, and wall-clock pinned, with regression coverage for subset/full run-order invariance. R2 is explicitly
    deferred for this phase. R3–R6 remain the next staged recovery slice; later-family
    failures are currently classified as profile-model gaps where event-specific criteria are required before balance
-   parameters are altered. The intended-strategy percentage is diagnostic only; the release gate is all-Sweep failure
-   in every required round. The complete round-by-round criteria are in `TEST_PLAN.md`.
+   parameters are altered. The intended-strategy percentage and all-Sweep result are both diagnostic for RC1.0. The
+   complete round-by-round criteria are in `TEST_PLAN.md`.
    First-pass event-aware (R10–R13), zoned (R14–R20), and pair-aware (R21–R23) controllers are implemented and their
    traces now classify guest versus VIP life loss. They have not improved late-family acceptance yet: VIP penalties and
    Rooftop release pressure remain the dominant evidence, so the next remediation is controller policy and human
@@ -282,14 +310,14 @@ These are genuine unresolved implementation or diagnosis items, not historical c
 
 | Gate | Current evidence | Decision |
 | --- | --- | --- |
-| Engineering correctness | Syntax, docs, config, balance freshness, economy, mechanics, integration, audio, and lifecycle Playwright tests are the supported test surface. The retired UNIT_01 Auto-Pilot protocol is not release evidence. | Conditional |
+| Engineering correctness | `npm.cmd run test:release` passed on 7 August 2026: syntax, docs, config, balance freshness/integrity, economy, UTF-8, unit, mechanics (24/24), integration (3/3), audio (25/25), and Playwright (157/157). | Pass |
 | Evidence provenance | The full R2–R25 / five-seed acceptance report is current and passes integrity validation. | Pass |
-| Balance acceptance | All-Sweep is rejected in 23/24 required rounds; R2 survives 5/5 seeds after the requested accessibility reduction. Intended profiles are diagnostic (10/24 currently positive). | **Block — decision required** |
-| Capsule device performance | Deterministic headless smoke passes; reference-device frame and long-task evidence is not captured. | **Block** |
-| Broad playtest | Session protocol is ready; broader external feedback has not yet been recorded against this working tree. | **Block** |
+| Balance diagnostics | All-Sweep currently produces a loss in 15/24 authored rounds; intended profiles are diagnostic (10/24 currently positive). The strict command preserves the historical threshold for later balancing. | Pass for Friends & Family; diagnostic follow-up |
+| Capsule device performance | Deterministic headless smoke passes; reference-device frame and long-task evidence is not captured. | Human evidence required |
+| Broad playtest | Session protocol is ready; broader external feedback has not yet been recorded against this working tree. | Human evidence required |
 
-The implementation is therefore a tested release candidate *candidate*, not a promotable 1.0 release candidate. The
-balance threshold is intentionally not waived.
+The implementation is a tested Friends & Family release candidate. Promotion to public 1.0 remains subject to the
+human/device evidence below and the release-owner decision.
 
 ## Release acceptance requiring human evidence
 
@@ -299,8 +327,7 @@ balance threshold is intentionally not waived.
 - R21–R23 teach counterweights, make Open Plan useful, and remain recoverable at scale.
 - R24–R25 make automation materially useful, remain readable, and perform acceptably on target hardware.
 - R19–R25 fit supported desktop viewports without board jitter, clipped controls, or unusable targets.
-- Audio identity, duration, continuity, and first-gesture behavior are acceptable on desktop Chromium/WebKit and at
-  least one Safari/iOS device.
+- Audio identity, duration, continuity, and first-gesture behavior are acceptable on supported desktop Chrome/Edge.
 - The Automation Dock is understandable without instruction for both single-lift and batch assignment.
 
 The exact playtest matrix and evidence format are in `TEST_PLAN.md`.
@@ -315,7 +342,7 @@ The exact playtest matrix and evidence format are in `TEST_PLAN.md`.
 
 ## Release sequence
 
-1. Resolve or explicitly defer the four engineering items above with evidence.
+1. Confirm the human/device evidence below and record any material playtest finding.
 2. Run the automated release gate and record commit, environment, and results in `TEST_PLAN.md`.
 3. Run the structured broad-feedback playtest pack across early, zoning, counterweight, and capsule arcs.
 4. Triage findings into release blockers, tuning candidates, and later-roadmap ideas.

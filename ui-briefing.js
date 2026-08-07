@@ -143,17 +143,10 @@ window.showRoundModal = function(round, options = {}) {
     const title = document.getElementById('roundTitle');
     const instructions = document.getElementById('roundInstructions');
     const nameContainer = document.getElementById('playerNameContainer');
-    const gameIdContainer = document.getElementById('gameIdContainer');
     const btn = document.getElementById('startRoundBtn');
-
-    const seedInput = document.getElementById('gameSeed');
-    if (seedInput && !seedInput.value) {
-        seedInput.value = Registry.seed || (Math.floor(Math.random() * 9000) + 1000);
-    }
 
     const isRound1 = (round === 1);
     if (nameContainer) nameContainer.style.display = isRound1 ? "flex" : "none";
-    if (gameIdContainer) gameIdContainer.style.display = "none";
 
     if (typeof ui.updatePilotNameDisplay === 'function') ui.updatePilotNameDisplay();
 

@@ -212,6 +212,70 @@ test('campaign shell Play reaches Round 1 briefing and New Game only clears its 
     expect(result).toEqual({ checkpoint: null, preference: 'retain', briefing: 'flex', round: 1 });
 });
 
+test('Friends and Family onboarding keeps developer identifiers out of normal play', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = false;
+        Registry.highestUnlockedRound = 1;
+        updateLocksUI();
+        Game.Shell.showWelcome();
+        return {
+            gameId: Boolean(document.getElementById('gameIdContainer')),
+            welcome: document.getElementById('welcomeOverlay').innerText,
+            howTo: document.getElementById('howToPlayOverlay').innerText,
+            seedHidden: document.getElementById('seedContainer').hidden,
+            newCampaign: document.getElementById('restartBtn').innerText,
+            workshopHint: document.getElementById('openWorkshopBtn').title
+        };
+    });
+
+    expect(result.gameId).toBe(false);
+    expect(result.welcome).toContain('desktop Chrome or Edge');
+    expect(result.howTo).toContain('Ground is marked G');
+    expect(result.howTo).toContain('Progress saves between rounds');
+    expect(result.seedHidden).toBe(true);
+    expect(result.newCampaign).toBe('New Campaign…');
+    expect(result.workshopHint).toBe('Unlocks at Round 10');
+});
+
+test('manifest Debug access is welcoming and cannot overwrite a saved campaign', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const saved = {
+            schemaVersion: 1, balanceVersion: Config.balanceVersion, playerName: 'Saved Pilot', seed: 2468,
+            round: 6, highestUnlockedRound: 6, lives: 14, points: 12, inventory: [], completed: false
+        };
+        localStorage.setItem(Game.Keys.CAMPAIGN, JSON.stringify(saved));
+        Registry.playerName = 'Playtest Pilot';
+        Registry.debugSession = false;
+        Config.debugMode = false;
+        Registry.pendingManifest = [{ type: 'debug_override', overrides: {} }];
+        processNextManifestItem();
+        const prompt = {
+            title: document.getElementById('manifestTitle').innerText,
+            text: document.getElementById('manifestInstructions').innerText,
+            accept: document.getElementById('manifestAcceptBtn').innerText,
+            reject: document.getElementById('manifestRejectBtn').innerText
+        };
+        document.getElementById('manifestAcceptBtn').click();
+        const persisted = Game.Campaign.saveCurrent();
+        return {
+            prompt,
+            debug: Config.debugMode,
+            debugSession: Registry.debugSession,
+            unlock: Registry.highestUnlockedRound,
+            persisted,
+            saved: JSON.parse(localStorage.getItem(Game.Keys.CAMPAIGN))
+        };
+    });
+
+    expect(result.prompt).toMatchObject({ title: 'Playtest Access', accept: 'Enable Playtest Access', reject: 'Use Normal Play' });
+    expect(result.prompt.text).toContain('does not replace your saved campaign progress');
+    expect(result.debug).toBe(true);
+    expect(result.debugSession).toBe(true);
+    expect(result.unlock).toBe(25);
+    expect(result.persisted).toBeNull();
+    expect(result.saved).toMatchObject({ playerName: 'Saved Pilot', round: 6, points: 12 });
+});
+
 test('round evaluation commits payout only once', async ({ page }) => {
     const result = await page.evaluate(() => {
         Registry.playerName = 'Evaluation Test';

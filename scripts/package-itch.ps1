@@ -15,7 +15,7 @@ Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $staging, $output -Force | Out-Null
 
 try {
-    $items = @('index.html', 'style.css', 'release-config.js', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'generated', 'assets', 'lib')
+    $items = @('index.html', 'style.css', 'release-config.js', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'THIRD_PARTY_LICENSES.md', 'generated', 'assets', 'lib')
     $items += Get-ChildItem -Path $root -File -Filter '*.js' | Where-Object { $_.Name -notin @('playwright.config.js') } | ForEach-Object Name
     foreach ($item in $items | Select-Object -Unique) {
         $source = Join-Path $root $item

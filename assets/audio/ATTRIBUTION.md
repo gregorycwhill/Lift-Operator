@@ -22,8 +22,6 @@ Additional provisional CC0 assets:
   ([source](https://opengameart.org/content/space-boss-battle-theme)), CC-BY 3.0. The MP3 is stored as
   `assets/audio/gameplay-orbital-colossus.mp3`; credit Matthew Pablo.
 
-- “Chiploop” by iamoneabe ([source](https://opengameart.org/content/chiploop)), gameplay base loop.
-- “Chip Bit Danger” by Sudocolon ([source](https://opengameart.org/content/chip-bit-danger)), pressure layer.
 - “Victory” by celestialghost8 ([source](https://opengameart.org/content/victory)), victory fanfare.
 - “Elevator_Door” by PagDev ([source](https://opengameart.org/content/elevatordoor)), door/boarding cue.
 - Selected effects from “8-Bit Sound Effect Pack (Vol. 001)” by Deva/@Shades

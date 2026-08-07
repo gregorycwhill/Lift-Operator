@@ -37,6 +37,7 @@ const Registry = {
     gameActive: false, pauseStartTime: 0, lastSpawnTime: 0, floorHeight: 60, 
     fallbackName: "Pilot 1", seed: 1234, campaignSeed: 1234, useCampaignSeeds: false,
     debugSeedOverride: null, debugSeedOverrideRound: null,
+    debugSession: false,
     guestSequence: 0,
     
     // Auto-Pilot & Regression Telemetry

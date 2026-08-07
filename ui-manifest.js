@@ -61,8 +61,12 @@ window.processNextManifestItem = function() {
     if (!manifestOverlay || !instructionsEl || !acceptBtn || !rejectBtn) return;
 
     // Reset UI state for next item
-    if (manifestTitle) manifestTitle.innerText = "⚠️ System Message";
+    if (manifestTitle) manifestTitle.innerText = "System Message";
     instructionsEl.style.fontSize = "14px";
+    instructionsEl.style.fontWeight = "normal";
+    instructionsEl.style.textAlign = "left";
+    acceptBtn.innerText = 'Accept';
+    rejectBtn.innerText = 'Reject';
 
     let descText = "Foreign configuration telemetry package detected.";
     let acceptCallback = () => {};
@@ -98,11 +102,15 @@ window.processNextManifestItem = function() {
 
         case 'system':
             if (item.data && item.data.mode === 'debug') {
-                descText = "Inbound automated telemetry bundle containing Master Configuration overrides. Enable Sandbox Access?";
+                if (manifestTitle) manifestTitle.innerText = 'Playtest Access';
+                descText = 'This testing link unlocks higher rounds and seed replay. It does not replace your saved campaign progress.';
+                acceptBtn.innerText = 'Enable Playtest Access';
+                rejectBtn.innerText = 'Use Normal Play';
                 acceptCallback = () => {
                     Config.debugMode = true;
+                    Registry.debugSession = true;
                     Registry.points = 99999;
-                    Registry.highestUnlockedRound = 11;
+                    Registry.highestUnlockedRound = Math.max(...Object.keys(Config.GAME_DATA.rounds || { 1: {} }).map(Number));
                     if (typeof ui.buildWorld === 'function') ui.buildWorld();
                     if (typeof ui.updateLocksUI === 'function') ui.updateLocksUI();
                     if (typeof ui.showToast === 'function') ui.showToast("🛠️ Sandbox Mode Deployed!");
@@ -111,17 +119,18 @@ window.processNextManifestItem = function() {
             break;
 
         case 'debug_override':
+            if (manifestTitle) manifestTitle.innerText = 'Playtest Access';
             descText = item.monkey
-                ? "Enable Debug mode and make the UNIT_01 Monkey Agent available?"
-                : "Enable Debug mode for testing?";
-            instructionsEl.style.fontSize = "22px";
-            instructionsEl.style.fontWeight = "bold";
-            instructionsEl.style.textAlign = "center";
+                ? 'This testing link unlocks higher rounds, seed replay, and the requested automation test tools. It does not replace your saved campaign progress.'
+                : 'This testing link unlocks higher rounds and seed replay. It does not replace your saved campaign progress.';
+            acceptBtn.innerText = 'Enable Playtest Access';
+            rejectBtn.innerText = 'Use Normal Play';
             
             acceptCallback = () => {
                 Config.debugMode = true;
+                Registry.debugSession = true;
                 Registry.points = 99999;
-                Registry.highestUnlockedRound = 13;
+                Registry.highestUnlockedRound = Math.max(...Object.keys(Config.GAME_DATA.rounds || { 1: {} }).map(Number));
 
                 if (item.monkey) {
                     Registry.monkeyCapability = true;
@@ -251,7 +260,7 @@ window.processNextManifestItem = function() {
     // Preserve UI alignment
     instructionsEl.style.whiteSpace = "pre-line";
     instructionsEl.innerText = descText;
-    manifestOverlay.style.display = 'flex';
+    window.openModalExclusive?.('manifestOverlay');
 
     acceptBtn.onclick = () => {
         acceptCallback();
@@ -260,6 +269,16 @@ window.processNextManifestItem = function() {
 
     rejectBtn.onclick = () => {
         if (typeof ui.showToast === 'function') ui.showToast("Transmission rejected.");
+        const declinedPlaytestAccess = item.type === 'debug_override' ||
+            (item.type === 'system' && item.data?.mode === 'debug');
+        if (declinedPlaytestAccess) {
+            Registry.pendingManifest = [];
+            Config.debugMode = false;
+            Registry.debugSession = false;
+            manifestOverlay.style.display = 'none';
+            window.Game.Shell?.showWelcome?.();
+            return;
+        }
         window.processNextManifestItem();
     };
 };

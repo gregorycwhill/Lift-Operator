@@ -153,9 +153,11 @@ window.updateLocksUI = function() {
         if (maxRoundAllowed >= Config.GAME_DATA.automationUnlocks.custom) {
             workshopBtn.disabled = false;
             workshopBtn.classList.remove("locked");
+            workshopBtn.title = 'Open the Automation Workshop';
         } else {
             workshopBtn.disabled = true;
             workshopBtn.classList.add("locked");
+            workshopBtn.title = `Unlocks at Round ${Config.GAME_DATA.automationUnlocks.custom}`;
         }
     }
 };
@@ -174,10 +176,10 @@ window.initializeUI = function() {
     // Initialize Random Seed
     if (!Registry.seed) Registry.seed = Math.floor(Math.random() * 9000) + 1000;
     if (window.Game.Seed) window.Game.Seed.set(Registry.seed);
-    const seedInput = document.getElementById("gameSeed");
-    if (seedInput) seedInput.value = Registry.seed;
     const seedDisplay = document.getElementById("seedDisplay");
     if (seedDisplay) seedDisplay.innerText = Registry.seed;
+    const seedContainer = document.getElementById('seedContainer');
+    if (seedContainer) seedContainer.hidden = !Config.debugMode;
 
     // Reset Rank Display
     if (typeof ui.updatePilotNameDisplay === "function") ui.updatePilotNameDisplay();
@@ -260,12 +262,6 @@ window.initializeUI = function() {
             window.Game.Storage.set(window.Game.Keys.PLAYER, Registry.playerName);
             if (document.getElementById("pilotNameDisplay")) document.getElementById("pilotNameDisplay").innerText = Registry.playerName;
 
-            let rawSeed = document.getElementById("gameSeed")?.value;
-            if (rawSeed && !isNaN(parseInt(rawSeed))) Registry.seed = parseInt(rawSeed);
-            if (Registry.useCampaignSeeds && !Config.debugMode && Number.isInteger(Registry.seed)) {
-                Registry.campaignSeed = window.Game.Seed?.normalize?.(Registry.seed) || Registry.seed;
-                Registry.seed = Registry.campaignSeed;
-            }
             if (window.Game.Seed) window.Game.Seed.set(Registry.seed);
             if (document.getElementById("seedDisplay")) document.getElementById("seedDisplay").innerText = Registry.seed;
             if (typeof ui.buildWorld === "function") ui.buildWorld();

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "partially-implemented-gameplay-assets-imported",
+  "status": "production-assets-verified",
   "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Procedural fallback remains enabled for missing or unsupported assets.",
   "assets": {
     "menu": {

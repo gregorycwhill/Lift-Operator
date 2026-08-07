@@ -1,21 +1,21 @@
 # Third-Party Notices and Licence Audit
 
 **Status:** Distribution audit — first-party project code is GPL-3.0-only
-**Last audited:** 2 August 2026  
+**Last audited:** 7 August 2026
 **Scope:** Files bundled by the GitHub Pages/itch.io static distribution, excluding development-only `node_modules/`
 
 ## Outcome
 
 Lift Operator's first-party code is licensed under GPL-3.0-only; the full licence text is in `LICENSE`. The project
 must not represent all bundled material as GPL-licensed: third-party audio keeps its own terms, and CC-BY attribution
-requirements must travel with every distribution. This audit identifies remaining provenance work.
+requirements must travel with every distribution. This audit records the required provenance and distribution notices.
 
 ## Bundled code
 
 | Component | Bundled location | Claimed/upstream licence | Audit result |
 | --- | --- | --- | --- |
-| Blockly | `lib/blockly_compressed.js`, `blocks_compressed.js`, `en.js`, `javascript_compressed.js` | Apache-2.0 (upstream Blockly) | Compatibility is generally permissive, but the vendored files lack version/provenance headers. **Gap:** record exact upstream version, source URL, and included licence text before public release. |
-| LZ-String | `lib/lz-string.min.js` | MIT (upstream LZ-String) | **Gap:** vendored minified file has no version/licence header; record exact source/version and include the MIT notice. |
+| Blockly | `lib/blockly_compressed.js`, `blocks_compressed.js`, `en.js`, `javascript_compressed.js` | Apache-2.0 | Blockly 13.1.1, from [google/blockly tag `blockly-13.1.1`](https://github.com/google/blockly/tree/blockly-13.1.1). The bundled build reports `Blockly.VERSION = "13.1.1"`. Required Apache-2.0 text is in `THIRD_PARTY_LICENSES.md`. |
+| LZ-String | `lib/lz-string.min.js` | MIT | LZ-String 1.5.0, from [pieroxy/lz-string tag `1.5.0`](https://github.com/pieroxy/lz-string/tree/1.5.0); version is pinned in `package-lock.json`. Required MIT notice is in `THIRD_PARTY_LICENSES.md`. |
 | First-party game code/CSS | Root JavaScript, `style.css`, generated balance data | GPL-3.0-only | Ship `LICENSE`, corresponding source, this notice, and third-party notices with every distribution. |
 
 ## Audio
@@ -33,9 +33,8 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 
 - The former GPL-3.0 `assets/audio/sfx/powerup-wrench.wav` predecessor was removed during this audit. Production maps
   only to the documented CC-BY `powerup-wrench-metal.wav`; keep a regression check that the predecessor is absent.
-- `gameplay-chiploop.mp3`, `gameplay-pressure-chip-bit-danger.mp3`, `powerup-special.wav`, and `powerup-turbo.wav` are
-  bundled but are not individually described in the manifest. **Gap:** either remove unused files from release
-  artifacts or add individual provenance/licence entries.
+- Unused and unprovenanced former audio files (`gameplay-chiploop.mp3`, `gameplay-pressure-chip-bit-danger.mp3`,
+  `powerup-special.wav`, and `powerup-turbo.wav`) were removed from the Pages and itch distribution tree.
 - Settings and campaign-completion Audio Credits & Licences render the CC-BY entries from the manifest, including
   title, author, licence, modification note, and source link. Keep this surface synchronized with the manifest whenever
   an audio asset changes.
@@ -49,6 +48,6 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 
 ## Licence-selection constraints
 
-Close the Blockly/LZ-String provenance gaps and the unlisted-audio gap above. GPL-3.0-only applies to first-party
-project code only; ship this notice, the audio attribution record, and any required upstream licence texts in the
-itch.io ZIP without claiming rights over third-party audio.
+The audit has no remaining bundled-code or bundled-audio provenance gap. GPL-3.0-only applies to first-party project
+code only; ship this notice, `THIRD_PARTY_LICENSES.md`, and the audio attribution record in the itch.io ZIP without
+claiming rights over third-party audio.

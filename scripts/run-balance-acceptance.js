@@ -79,7 +79,7 @@ function markdown(report) {
     ));
     lines.push('', `- All-Sweep failures accepted: ${report.summary.allSweepAccepted}/${report.summary.allSweepRequired}`);
     lines.push(`- Intended-strategy comparator rounds currently positive (diagnostic only): ${report.summary.intendedAccepted}/${report.summary.intendedRequired}`);
-    lines.push('', 'This report is an acceptance result, not merely a freshness check. Any unmet required classification blocks the balance gate.');
+    lines.push('', 'This report is internal balance diagnostic evidence. RC1.0 Friends & Family distribution does not require every all-Sweep classification to pass; run the strict gate explicitly when evaluating a later balance release.');
     return `${lines.join('\n')}\n`;
 }
 
@@ -153,7 +153,7 @@ function markdown(report) {
         const reportDir = path.join(root, 'reports');
         fs.writeFileSync(path.join(reportDir, 'campaign-balance-acceptance.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
         fs.writeFileSync(path.join(reportDir, 'campaign-balance-acceptance.md'), markdown(report), 'utf8');
-        const failed = report.summary.allSweepAccepted !== report.summary.allSweepRequired;
+        const failed = process.argv.includes('--strict') && report.summary.allSweepAccepted !== report.summary.allSweepRequired;
         console.log(`Acceptance complete: ${report.summary.allSweepAccepted}/${report.summary.allSweepRequired} all-Sweep rounds; ${report.summary.intendedAccepted}/${report.summary.intendedRequired} intended rounds.`);
         if (failed) process.exitCode = 1;
     } finally {

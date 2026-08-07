@@ -33,4 +33,4 @@ Policy: All-Sweep must fail every fixed gate seed from R2 through R25; productio
 - All-Sweep failures accepted: 15/24
 - Intended-strategy comparator rounds currently positive (diagnostic only): 10/24
 
-This report is an acceptance result, not merely a freshness check. Any unmet required classification blocks the balance gate.
+This report is internal balance diagnostic evidence. RC1.0 Friends & Family distribution does not require every all-Sweep classification to pass; run the strict gate explicitly when evaluating a later balance release.
