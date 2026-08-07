@@ -279,8 +279,8 @@ test('guest refusal is emitted from a controlled boarding frame', async ({ page 
     expect(events).toContain('guest_refused');
 });
 
-test('failed audio fetch is recorded without blocking the game', async ({ page }) => {
-    await page.route('**/assets/audio/gameplay-dream-raid.mp3', route => route.abort());
+test('failed menu-music fetch is recorded without blocking the game', async ({ page }) => {
+    await page.route('**/assets/audio/menu-somewhere-in-the-elevator.ogg', route => route.abort());
     await page.goto(GAME_URL);
     await page.waitForTimeout(500);
     const result = await page.evaluate(() => ({
@@ -292,8 +292,8 @@ test('failed audio fetch is recorded without blocking the game', async ({ page }
     expect(result.gamePresent).toBe(true);
 });
 
-test('invalid audio data is recorded as a decode failure without blocking the game', async ({ page }) => {
-    await page.route('**/assets/audio/gameplay-orbital-colossus.mp3', route => route.fulfill({
+test('invalid Rooftop music is recorded as a decode failure without blocking the game', async ({ page }) => {
+    await page.route('**/assets/audio/gameplay-rooftop-trance.mp3', route => route.fulfill({
         status: 200,
         contentType: 'audio/mpeg',
         body: 'not-a-valid-audio-file'
@@ -391,7 +391,7 @@ test('manifested audio files are locally resolvable', async ({ request }) => {
 test('local test server sends browser-recognized audio MIME types', async ({ request }) => {
     const expectedTypes = {
         'assets/audio/menu-somewhere-in-the-elevator.ogg': 'audio/ogg',
-        'assets/audio/elevator-door.wav': 'audio/wav'
+        'assets/audio/sfx/event-vip-fanfare.wav': 'audio/wav'
     };
     for (const [file, expectedType] of Object.entries(expectedTypes)) {
         const response = await request.get(`http://127.0.0.1:5500/${file}`);
@@ -412,7 +412,9 @@ test('unprovenanced retired audio files are absent from the distributable tree',
         'assets/audio/gameplay-chiploop.mp3',
         'assets/audio/gameplay-pressure-chip-bit-danger.mp3',
         'assets/audio/sfx/powerup-special.wav',
-        'assets/audio/sfx/powerup-turbo.wav'
+        'assets/audio/sfx/powerup-turbo.wav',
+        'assets/audio/elevator-door.wav',
+        'assets/audio/sfx/guest-urgency-aww.ogg'
     ]) {
         expect((await request.get(`http://127.0.0.1:5500/${file}`)).status(), file).toBe(404);
     }
@@ -447,13 +449,28 @@ test('verified imported audio assets are available at their production paths', a
         'sfx/powerup-open-plan-metal.wav',
         'sfx/hazard-metal-interaction.wav',
         'sfx/event-vip-fanfare.wav',
-        'sfx/guest-urgency-aww.ogg',
         'sfx/ui-purchase-coin.wav',
         'sfx/ui-error-failed.mp3'
     ]) {
         const response = await request.get(`http://127.0.0.1:5500/assets/audio/${file}`);
         expect(response.ok(), file).toBe(true);
     }
+});
+
+test('RC1 disables ordinary gameplay background music while retaining menu, Rooftop, and VIP audio', async ({ page }) => {
+    await page.goto(GAME_URL);
+    const result = await page.evaluate(() => {
+        const audio = window.Game.Audio;
+        audio.setContext('gameplay');
+        const gameplay = audio.getStatus();
+        audio.publish('rooftop_started', { floor: 14 });
+        const rooftop = audio.getStatus();
+        audio.publish('vip_arrival', { id: 'test-vip' });
+        return { gameplay, rooftop };
+    });
+    expect(result.gameplay.gameplayBackgroundMusicEnabled).toBe(false);
+    expect(result.gameplay.musicSourceCount).toBe(0);
+    expect(result.rooftop.rooftopActive).toBe(true);
 });
 
 test('manifested production event mappings resolve to local assets', async ({ request }) => {

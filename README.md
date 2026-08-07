@@ -30,15 +30,18 @@ Firefox is not currently a supported browser.
 - Built-in and Workshop-authored automations, including Service Zoning.
 - Power-ups, VIP journeys, Checkout demand, Rooftop Parties, counterweights, and capsule tubes.
 - Persistent Credits, deterministic seeds, and local pre-round campaign resume for repeatable problem-solving.
-- Welcome, How to Play, Credits & Licences, audio controls, and an in-game feedback action that pre-fills the form with game details and copies them locally.
+- Welcome, How to Play, Credits & Licences, menu/Rooftop music and SFX controls, and an in-game feedback action that pre-fills the form with game details and copies them locally.
 
 ## Help improve it
 
 - Use **Give Feedback** in Settings or Round Review. It opens the feedback form with a compact diagnostic pre-filled
   and also copies that string to your clipboard. Nothing is submitted until you choose **Submit** in the form.
 - Feedback is collected through the configured Google Form for player, technical, balance, and accessibility reports.
+  The form is shared by link and does not collect email addresses.
   Give Feedback sends its diagnostic only as part of the player-initiated form opening; it never submits a response
   automatically.
+- **Settings → Clear local data…** removes this browser's campaign, local leaderboard, custom automations, and audio
+  settings after a confirmation. It does not send or affect anyone else's data.
 - See the concise [RC1 Playtest Pack](docs/playtest/RC1_PLAYTEST_PACK.md) for current priorities and a report template.
 
 ## Contributors and project documentation
@@ -46,7 +49,7 @@ Firefox is not currently a supported browser.
 Lift Operator is a hobby project designed to help children move from Scratch into purposeful programming. The current
 release work is correctness, performance, balance, usability, and device acceptance—not feature expansion. Start with
 [DOCUMENTATION.md](DOCUMENTATION.md) for document roles, then see [LICENSE](LICENSE) and
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing a build.
+[NOTICE.md](NOTICE.md), and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) before redistributing a build.
 
 | Need | Document |
 | --- | --- |

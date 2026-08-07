@@ -44,13 +44,19 @@ human acceptance belong in `TEST_PLAN.md`.
   and seed reproduction without changing the normal first-impression path.
 - Elapsed-time movement integration is deferred until after RC1.0. The current release may still address targeted
   overlay/rendering issues.
+- Ordinary in-round background music is disabled for RC1.0. Menu music (controlled by the Menu music slider), Rooftop
+  music, VIP fanfare, Musak, and SFX remain available.
+- Feedback is opt-in: the linked Google Form does not collect email addresses and receives only the compact diagnostic
+  the player chooses to open/submit.
+- Settings provides a confirmed local-data deletion action for the browser's campaign, leaderboard, custom automations,
+  automation pins/teaching state, and audio settings.
 - Achievements, endless operations, Mobile, teleportation, polar lifts, Lift Bouncer, and player-authored rounds are
   roadmap work, not release candidates.
 
 ## Current collateral remediation before broad distribution
 
-1. Reconcile `assets/audio/manifest.json`, `assets/audio/ATTRIBUTION.md`, and `assets/audio/audio-review.csv`.
-   In particular, resolve the deliberate `NO SOUND` elevator-door decision and account for every bundled binary.
+1. Verify `assets/audio/manifest.json`, `assets/audio/ATTRIBUTION.md`, and `assets/audio/audio-review.csv` remain
+   synchronized after any asset change. The deliberate `NO SOUND` elevator-door and urgency assets are retired.
 2. Create a canonical media manifest, then move or retire superseded screenshot variants from the active media folder.
 3. Record a concise August release-history entry and keep completed implementation detail out of this plan.
 4. Decide a retention policy for the 48 MB balance trace: concise summary/digest in Git, bulky trace as an artifact or

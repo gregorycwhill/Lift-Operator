@@ -3,7 +3,10 @@
 // VERSION: 2.0.1 (Resilient Decoding)
 // ============================================================================
 
-window.SHARE_SECRET = "ELEVATOR_GO_BRRR_2026";
+// A reversible share-format marker, not an access-control secret. Debug links
+// are opt-in playtest configuration and must never be treated as private.
+window.SHARE_MARKER = "ELEVATOR_GO_BRRR_2026";
+window.SHARE_SECRET = window.SHARE_MARKER; // Legacy alias for existing shared manifests.
 
 window.encodePayload = function(payloadObj) {
     try {

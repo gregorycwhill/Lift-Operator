@@ -15,7 +15,7 @@ Remove-Item -LiteralPath $staging -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $staging, $output -Force | Out-Null
 
 try {
-    $items = @('index.html', 'style.css', 'release-config.js', 'LICENSE', 'THIRD_PARTY_NOTICES.md', 'THIRD_PARTY_LICENSES.md', 'generated', 'assets', 'lib')
+    $items = @('index.html', 'style.css', 'release-config.js', 'LICENSE', 'NOTICE.md', 'THIRD_PARTY_NOTICES.md', 'THIRD_PARTY_LICENSES.md', 'generated', 'assets', 'lib')
     $items += Get-ChildItem -Path $root -File -Filter '*.js' | Where-Object { $_.Name -notin @('playwright.config.js') } | ForEach-Object Name
     foreach ($item in $items | Select-Object -Unique) {
         $source = Join-Path $root $item
@@ -24,6 +24,8 @@ try {
             Copy-Item -LiteralPath $source -Destination $destination -Recurse -Force
         }
     }
+    # Source screenshots and archive material are repository collateral, not shipped game assets.
+    Remove-Item -LiteralPath (Join-Path $staging 'assets\media\archive') -Recurse -Force -ErrorAction SilentlyContinue
     @"
 Lift Operator itch.io package
 Build: $build

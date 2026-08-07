@@ -686,6 +686,7 @@ body {
 .audio-attribution-scroller span { display:inline-block; animation: audioCreditsScroll 22s linear infinite; }
 .melbourne-heart { color: #ff4f9a; }
 .audio-credits > div[id] { max-height: 120px; overflow-y: auto; padding-right: 4px; }
+.feedback-privacy-note { margin: 8px 0 0; color: #667; font-size: 11px; line-height: 1.35; text-align: center; }
 @keyframes audioCreditsScroll { from { transform:translateX(100%); } to { transform:translateX(-100%); } }
 
 /* Round Review Layout Framework */

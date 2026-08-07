@@ -148,6 +148,11 @@
             document.getElementById('campaignCompleteOverlay')?.style.setProperty('display', 'none');
             window.resetGame?.();
         },
+        clearLocalData: () => {
+            if (!Game.Storage.clearLiftOperatorData()) return false;
+            window.location.reload();
+            return true;
+        },
         showCampaignComplete: () => {
             Game.Campaign.saveCurrent({ round: maxRound(), completed: true, inventory: [] });
             show('campaignCompleteOverlay');

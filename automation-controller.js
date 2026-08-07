@@ -245,7 +245,9 @@ window.Game = window.Game || {};
                     if (query && items.length) expandedGroup = group.key;
                     const section = document.createElement('section'); section.className = 'automation-library-group';
                     const heading = document.createElement('button'); heading.type = 'button'; heading.className = 'automation-library-group-toggle'; heading.setAttribute('aria-expanded', String(expandedGroup === group.key));
-                    heading.innerHTML = `<span>${group.label}</span><span class="automation-library-chevron">${expandedGroup === group.key ? '\u25BE' : '\u25B8'}</span>`;
+                    const groupLabel = document.createElement('span'); groupLabel.textContent = group.label;
+                    const chevron = document.createElement('span'); chevron.className = 'automation-library-chevron'; chevron.textContent = expandedGroup === group.key ? '\u25BE' : '\u25B8';
+                    heading.append(groupLabel, chevron);
                     heading.onclick = () => { expandedGroup = expandedGroup === group.key ? null : group.key; draw(); };
                     section.appendChild(heading);
                     if (expandedGroup === group.key) {
@@ -253,7 +255,10 @@ window.Game = window.Game || {};
                         if (!items.length) { const empty = document.createElement('div'); empty.className = 'automation-library-empty'; empty.textContent = query ? 'No matching automations' : 'No automations yet'; itemsEl.appendChild(empty); }
                         items.forEach(item => {
                             const row = document.createElement('div'); row.className = 'automation-library-item';
-                            const select = document.createElement('button'); select.type = 'button'; select.className = 'automation-library-select'; select.innerHTML = `<span>${item.name}</span><small>${item.author === 'System' ? '' : item.author}</small>`; select.onclick = () => { updatePolicyName(item); this.closeLibrary(); };
+                            const select = document.createElement('button'); select.type = 'button'; select.className = 'automation-library-select';
+                            const name = document.createElement('span'); name.textContent = item.name;
+                            const author = document.createElement('small'); author.textContent = item.author === 'System' ? '' : item.author;
+                            select.append(name, author); select.onclick = () => { updatePolicyName(item); this.closeLibrary(); };
                             const pinLabel = document.createElement('label'); pinLabel.className = 'automation-library-pin'; pinLabel.title = item.value === 'manual' ? 'Manual is always pinned' : 'Show in carousel';
                             const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = item.pinned; checkbox.disabled = item.value === 'manual'; checkbox.setAttribute('aria-label', `Pin ${item.name} in carousel`); checkbox.onclick = event => { event.stopPropagation(); this.setPinned(item.value, checkbox.checked); item.pinned = checkbox.checked; onPinChanged?.(); };
                             pinLabel.append(checkbox, document.createTextNode(' Pin')); row.append(select, pinLabel); itemsEl.appendChild(row);

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "status": "production-assets-verified-door-retirement-pending",
-  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. The retained legacy door asset must be reconciled with the intentional no-door-sound policy before a final public release; procedural fallback must be retired in the same slice.",
+  "status": "production-assets-verified",
+  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Ordinary gameplay background tracks are intentionally disabled for RC1.0; menu, Rooftop, VIP, Musak, and SFX remain available.",
   "assets": {
     "menu": {
       "title": "Somewhere in the Elevator",
@@ -42,14 +42,6 @@
       "file": "assets/audio/victory.mp3",
       "source": "https://opengameart.org/content/victory",
       "author": "celestialghost8",
-      "license": "CC0",
-      "modification": "None",
-      "attribution": ""
-    },
-    "door": {
-      "file": "assets/audio/elevator-door.wav",
-      "source": "https://opengameart.org/content/elevatordoor",
-      "author": "PagDev",
       "license": "CC0",
       "modification": "None",
       "attribution": ""
@@ -154,15 +146,6 @@
       "license": "CC-BY 4.0",
       "modification": "None; downloaded WAV retained",
       "attribution": "Spring/Spring Enterprises"
-    },
-    "guestUrgency": {
-      "title": "aww scream",
-      "file": "assets/audio/sfx/guest-urgency-aww.ogg",
-      "source": "https://opengameart.org/content/aww-scream",
-      "author": "bluszcz",
-      "license": "CC-BY 3.0",
-      "modification": "Selected OGG retained",
-      "attribution": "Aww scream by bluszcz"
     },
     "purchase": {
       "file": "assets/audio/sfx/ui-purchase-coin.wav",

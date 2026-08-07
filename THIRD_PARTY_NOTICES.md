@@ -1,6 +1,6 @@
 # Third-Party Notices and Licence Audit
 
-**Status:** Distribution audit in remediation — first-party project code is GPL-3.0-only
+**Status:** Distribution audit complete — first-party project code is GPL-3.0-only
 **Last audited:** 8 August 2026
 **Scope:** Files bundled by the GitHub Pages/itch.io static distribution, excluding development-only `node_modules/`
 
@@ -26,22 +26,20 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 | Licence family | Bundled use | Distribution requirement |
 | --- | --- | --- |
 | CC0 | Several music and SFX assets | May be distributed without attribution; retain provenance record. |
-| CC-BY 3.0 / 4.0 | Menu music, gameplay music, Rocket, Wrench metal, Double-Decker, VIP fanfare, urgency, UI error, and other listed assets | Preserve author/title/source/licence notice and state any modification. A project licence cannot remove this obligation. |
+| CC-BY 3.0 / 4.0 | Menu music, retained background assets, Rocket, Wrench metal, Double-Decker, VIP fanfare, UI error, and other listed assets | Preserve author/title/source/licence notice and state any modification. A project licence cannot remove this obligation. The in-game Credits surface links directly to the applicable Creative Commons licence. |
 | Pixabay Content License | Freshener, Group Think, and Toot Effect | Preserve source/provenance. Do not distribute the sound as a stand-alone asset or imply ownership; check current Pixabay terms before a commercial/public launch. |
 
-### Audio provenance gaps and blockers
+### Audio audit decisions
 
 - The former GPL-3.0 `assets/audio/sfx/powerup-wrench.wav` predecessor was removed during this audit. Production maps
   only to the documented CC-BY `powerup-wrench-metal.wav`; keep a regression check that the predecessor is absent.
 - Unused and unprovenanced former audio files (`gameplay-chiploop.mp3`, `gameplay-pressure-chip-bit-danger.mp3`,
   `powerup-special.wav`, and `powerup-turbo.wav`) were removed from the Pages and itch distribution tree.
-- Settings and campaign-completion Audio Credits & Licences render the CC-BY entries from the manifest, including
-  title, author, licence, modification note, and source link. Keep this surface synchronized with the manifest whenever
+- The intentionally silent legacy `elevator-door.wav` and `guest-urgency-aww.ogg` were removed from the distribution
+  tree and manifest. They have no production mapping or procedural replacement.
+- Settings and campaign-completion Audio Credits & Licences render CC-BY entries from the manifest, including title,
+  author, linked licence, modification note, and source link. Keep this surface synchronized with the manifest whenever
   an audio asset changes.
-- The production manifest/CSV/attribution records require a final consistency pass before broad distribution. The
-  deliberate `NO SOUND` elevator-door decision conflicts with a retained `elevator-door.wav` record. It remains
-  temporarily because removing it without retiring its procedural fallback would reintroduce a player-facing tone.
-  Do not claim this audit is complete until that one runtime/asset reconciliation is checked against package contents.
 
 ## Fonts and visual assets
 
@@ -52,6 +50,6 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 
 ## Licence-selection constraints
 
-Bundled-code licensing is complete. Audio provenance reconciliation remains a release gate described above.
+Bundled-code and audio licensing are complete for RC1.0.
 GPL-3.0-only applies to first-party project code only; ship this notice, `THIRD_PARTY_LICENSES.md`, and the audio
 attribution record in the itch.io ZIP without claiming rights over third-party audio.

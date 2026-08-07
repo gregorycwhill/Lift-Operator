@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.openModalExclusive = function(id) {
     window.Game.AutomationController?.closeLibrary?.();
-    ['welcomeOverlay', 'howToPlayOverlay', 'creditsOverlay', 'newGameConfirmOverlay', 'campaignCompleteOverlay', 'roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
+    ['welcomeOverlay', 'howToPlayOverlay', 'creditsOverlay', 'newGameConfirmOverlay', 'clearLocalDataConfirmOverlay', 'campaignCompleteOverlay', 'roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
     const overlay = document.getElementById(id);
@@ -368,6 +368,7 @@ window.initializeUI = function() {
     bind("reviewFeedbackBtn", () => window.Game.Feedback?.open('round-review'));
     bind('settingsHowToBtn', () => window.Game.Shell?.showInfo?.('howToPlayOverlay'));
     bind('settingsCreditsBtn', () => window.Game.Shell?.showInfo?.('creditsOverlay'));
+    bind('settingsClearLocalDataBtn', () => window.openModalExclusive?.('clearLocalDataConfirmOverlay'));
 
     bind('welcomeStartBtn', () => window.Game.Shell?.start?.());
     bind('welcomeNewGameBtn', () => window.Game.Shell?.requestNewGame?.());
@@ -378,6 +379,8 @@ window.initializeUI = function() {
     bind('closeCreditsBtn', () => window.Game.Shell?.closeInfo?.());
     bind('confirmNewGameBtn', () => window.Game.Shell?.beginNewGame?.());
     bind('cancelNewGameBtn', () => window.Game.Shell?.showWelcome?.());
+    bind('confirmClearLocalDataBtn', () => window.Game.Shell?.clearLocalData?.());
+    bind('cancelClearLocalDataBtn', () => window.openModalExclusive?.('settingsOverlay'));
     bind('campaignLeaderboardBtn', () => ui.showLeaderboard?.('Campaign Complete'));
     bind('campaignFeedbackBtn', () => window.Game.Feedback?.open('campaign-complete'));
     bind('campaignCreditsBtn', () => window.Game.Shell?.showInfo?.('creditsOverlay'));

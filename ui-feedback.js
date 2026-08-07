@@ -17,7 +17,9 @@ window.Game.Feedback.getDiagnostic = function(context = 'gameplay') {
     const viewport = `${window.innerWidth || 0}x${window.innerHeight || 0}`;
     const outcome = window.Registry?.lastRoundOutcome || 'in-progress';
     const failure = window.Registry?.lastRoundFailureReason;
-    return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | campaignSeed=${campaignSeed} | seed=${seed}${debugSeed !== null ? ` | debugSeed=${debugSeed}` : ''} | outcome=${outcome}${failure ? ` | failure=${failure}` : ''} | browser=${navigator.userAgent} | viewport=${viewport}`;
+    const match = navigator.userAgent.match(/(Edg|Chrome)\/([\d.]+)/);
+    const browser = match ? `${match[1] === 'Edg' ? 'Edge' : 'Chrome'} ${match[2]}` : 'Other browser';
+    return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | campaignSeed=${campaignSeed} | seed=${seed}${debugSeed !== null ? ` | debugSeed=${debugSeed}` : ''} | outcome=${outcome}${failure ? ` | failure=${failure}` : ''} | browser=${browser} | viewport=${viewport}`;
 };
 
 window.Game.Feedback.copyDiagnostic = async function(context, suppliedDiagnostic) {
@@ -67,8 +69,8 @@ window.Game.Feedback.open = async function(context) {
     const result = await window.Game.Feedback.copyDiagnostic(context, diagnostic);
     if (url) {
         window.showToast?.(result.copied
-            ? 'Feedback form opened with game details pre-filled. Diagnostics copied too.'
-            : 'Feedback form opened with game details pre-filled.');
+            ? 'Feedback form opened with round, seed, browser and viewport details pre-filled. Diagnostics copied too.'
+            : 'Feedback form opened with round, seed, browser and viewport details pre-filled.');
     } else {
         window.showToast?.(result.copied
             ? 'Diagnostics copied. Google Form URL is not configured yet.'

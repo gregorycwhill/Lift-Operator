@@ -130,7 +130,9 @@ window.showLeaderboard = function(titleText) {
         } else {
             records.slice(0, 10).forEach((record, index) => { 
                 const li = document.createElement('li');
-                li.innerHTML = `<span>#${index + 1} ${record.name}</span> <strong>${record.score}</strong>`;
+                const name = document.createElement('span'); name.textContent = `#${index + 1} ${String(record.name || 'Operator').slice(0, 120)}`;
+                const score = document.createElement('strong'); score.textContent = String(Number(record.score) || 0);
+                li.append(name, score);
                 listContainer.appendChild(li);
             });
         }

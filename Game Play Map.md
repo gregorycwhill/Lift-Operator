@@ -275,14 +275,14 @@ R11 uses the owner-tested lower arrival curve as its canonical balance value.
 R11 remains a five-lift, fifteen-floor challenge with Room Service, Gym Bros, Rooftop, Jams, and Stink active.
 
 **R11 canonical arrival curve:** owner playtesting passed R11 twice with four to five
-power-ups and did not reproduce premature lift departure. Test the lower `0.96`â€“`1.15` guests/second curve next.
-The promoted curve is `0.96`â€“`1.15` guests/second; base capacity remains 10.
+power-ups and did not reproduce premature lift departure. Test the lower `0.96`–`1.15` guests/second curve next.
+The promoted curve is `0.96`–`1.15` guests/second; base capacity remains 10.
 
 **R11 briefing clarification:** the first-use Gym Bros rule states that three or more Gym Bros make a
 lift stinky, as well as stating that Gym Bros are immune to Stink. This explains both the risk of grouping them and
 their exceptional boarding behaviour.
 
-**Rooftop last-drinks cue (pending):** issue a visible â€œLast drinks!â€ toast five seconds before Happy Hour releases.
+**Rooftop last-drinks cue (pending):** issue a visible “Last drinks!” toast five seconds before Happy Hour releases.
 The party remains active until its scheduled release; the cue is advance notice, not an early evacuation.
 
 The earlier candidate-comparison note above is superseded: future R11 replay uses only the canonical `0.96`–`1.15`

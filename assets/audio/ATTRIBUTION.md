@@ -10,8 +10,9 @@ The title/menu context uses:
   ([OpenGameArt source](https://opengameart.org/content/somewhere-in-the-elevator)), CC-BY 4.0 attribution.
   The OGG file is stored as `assets/audio/menu-somewhere-in-the-elevator.ogg` and is looped without modification.
 
-The gameplay loop and SFX use the locally imported assets below, with procedural Web Audio fallback tones authored in
-`audio.js` where no asset is intentionally assigned.
+Menu music, Rooftop music, VIP fanfare, Musak, and SFX use the locally imported assets below, with procedural Web
+Audio fallback tones authored in `audio.js` where no asset is intentionally assigned. Ordinary gameplay background
+tracks are intentionally disabled for RC1.0.
 
 Additional imported music assets:
 
@@ -23,8 +24,6 @@ Additional imported music assets:
   `assets/audio/gameplay-orbital-colossus.mp3`; credit Matthew Pablo.
 
 - “Victory” by celestialghost8 ([source](https://opengameart.org/content/victory)), CC0 victory fanfare.
-- “Elevator_Door” by PagDev ([source](https://opengameart.org/content/elevatordoor)), CC0 legacy ambient asset.
-  It remains bundled while the procedural fallback path is retired; it is not approved as a player-facing boarding sound.
 - Selected effects from “8-Bit Sound Effect Pack (Vol. 001)” by Deva/@Shades
   ([source](https://opengameart.org/content/8-bit-sound-effect-pack-vol-001)), CC0. Selected WAVs were renamed for
   semantic mappings; no audio edits were made.
@@ -60,17 +59,14 @@ Additional imported music assets:
   `assets/audio/sfx/hazard-metal-interaction.wav`.
 - “Fanfares” by Spring Spring ([source](https://opengameart.org/content/fanfare-2)), CC-BY 4.0. Credit
   Spring/Spring Enterprises; stored as `assets/audio/sfx/event-vip-fanfare.wav`.
-- “aww scream” by bluszcz ([source](https://opengameart.org/content/aww-scream)), CC-BY 3.0. Retained as
-  `assets/audio/sfx/guest-urgency-aww.ogg` for provenance while its event is intentionally `NO SOUND`.
 - “Plingy Coin” by Fupi ([source](https://opengameart.org/content/plingy-coin)), CC0. Stored as
   `assets/audio/sfx/ui-purchase-coin.wav`.
 - “UI Failed or Error” by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0.
   Credit “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”; stored as
   `assets/audio/sfx/ui-error-failed.mp3`.
 
-The former GPL-3.0 Wrench file and the unused duplicate hazard/power-up effects are retired and no longer
-distributed. The retained guest-urgency asset is intentionally mapped to `NO SOUND` and remains attributed in the
-manifest. The Wrench replacement is “Metal sounds” by
+The former GPL-3.0 Wrench file, legacy elevator-door/urgency assets, and unused duplicate hazard/power-up effects are
+retired and no longer distributed. The Wrench replacement is “Metal sounds” by
 Vinrax ([source](https://opengameart.org/content/metal-sounds)), CC-BY 3.0: the first two seconds of
 `Metal_sounds.wav` are stored as `assets/audio/sfx/powerup-wrench-metal.wav`. Credit Vinrax and note the excerpt
 modification in distributed builds.

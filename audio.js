@@ -23,7 +23,10 @@ window.Game.Audio = (function () {
     };
     let context = null, masterGain = null, musicGain = null, sfxGain = null, menuBuffer = null, menuSource = null, menuSourceStartedAt = 0, menuOffset = 0, rooftopSource = null, pressureLayerGain = null, musakSource = null, musakStopTimer = null;
     const buffers = {}, failedAssets = new Map(), musicSources = [];
-    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', base: 'assets/audio/gameplay-dream-raid.mp3', pressure: 'assets/audio/gameplay-orbital-colossus.mp3', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-metal.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-tooteffect-90578.mp3', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
+    // RC1 policy: ordinary gameplay background tracks are disabled. Menu and Rooftop music remain available;
+    // Musak remains a timed player-triggered Power-up effect and non-music SFX remain unchanged.
+    const GAMEPLAY_BACKGROUND_MUSIC_ENABLED = false;
+    const assetPaths = { menu: 'assets/audio/menu-somewhere-in-the-elevator.ogg', rooftop: 'assets/audio/gameplay-rooftop-trance.mp3', victory: 'assets/audio/victory.mp3', wrench: 'assets/audio/sfx/powerup-wrench-metal.wav', turbo: 'assets/audio/sfx/powerup-rocket-launch.wav', musak: 'assets/audio/sfx/musak-electronic-jazz.mp3', freshener: 'assets/audio/sfx/freesound_community-spray-48068.mp3', tardis: 'assets/audio/sfx/tardis-air-whoosh.wav', doors: 'assets/audio/sfx/wide-doors-old-elevator.mp3', groupThink: 'assets/audio/sfx/dragon-studio-alien-song-323613.mp3', doubleDecker: 'assets/audio/sfx/powerup-double-decker-robot-step.wav', openPlan: 'assets/audio/sfx/powerup-open-plan-metal.wav', jam: 'assets/audio/sfx/hazard-metal-interaction.wav', stink: 'assets/audio/sfx/hazard-tooteffect-90578.mp3', vipArrival: 'assets/audio/sfx/event-vip-fanfare.wav', purchase: 'assets/audio/sfx/ui-purchase-coin.wav', uiError: 'assets/audio/sfx/ui-error-failed.mp3' };
     let initialized = false, currentContext = 'menu', psi = 1, pressureBand = 'calm', musicTimer = null, rooftopActive = false, acceptedEventCount = 0;
     let settings = { muted: false, music: 0.22, sfx: 0.50 };
     const listeners = new Map();
@@ -38,10 +41,18 @@ window.Game.Audio = (function () {
     const emit = (name, payload = {}) => (listeners.get(name) || []).forEach(fn => { try { fn(payload); } catch (_) {} });
     const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
     const requiredCredits = manifest => Object.values(manifest?.assets || {}).filter(asset => /^CC-BY\s+[0-9.]+$/i.test(asset.license || ''));
+    const licenceUrl = licence => ({
+        'CC-BY 3.0': 'https://creativecommons.org/licenses/by/3.0/',
+        'CC-BY 4.0': 'https://creativecommons.org/licenses/by/4.0/'
+    })[String(licence || '').toUpperCase()] || '';
     const formatAttribution = asset => {
         const title = escapeHtml(asset.title || asset.attribution || 'Untitled audio asset');
         const author = escapeHtml(asset.author || 'Unknown author');
-        const license = escapeHtml(asset.license || 'Licence unavailable');
+        const licenseName = escapeHtml(asset.license || 'Licence unavailable');
+        const licenceLink = licenceUrl(asset.license);
+        const license = licenceLink
+            ? `<a href="${licenceLink}" target="_blank" rel="noopener noreferrer">${licenseName}</a>`
+            : licenseName;
         const modification = escapeHtml(asset.modification || 'No modification recorded');
         const source = String(asset.source || '');
         const sourceLink = /^https:\/\//i.test(source)
@@ -152,13 +163,15 @@ window.Game.Audio = (function () {
             menuSource = context.createBufferSource(); menuSource.buffer = menuBuffer; menuSource.loop = true;
             menuSource.connect(musicGain); menuSource.start(0, menuOffset); menuSourceStartedAt = context.currentTime - menuOffset;
         }
-        if (currentContext === 'gameplay' && initialized && !settings.muted) {
+        if (GAMEPLAY_BACKGROUND_MUSIC_ENABLED && currentContext === 'gameplay' && initialized && !settings.muted) {
             [['base', 0.22], ['pressure', Math.max(0, Math.min(0.32, (1 - psi) * 0.32))]].forEach(([name, volume]) => { if (!buffers[name]) return; const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; source.loop = true; gain.gain.value = name === 'pressure' ? 0 : volume; source.connect(gain); gain.connect(musicGain); source.start(); musicSources.push(source); if (name === 'pressure') { pressureLayerGain = gain; gain.gain.setTargetAtTime(pressureBand === 'pressure' ? volume : 0, context.currentTime, 0.35); } });
         }
         startRooftopMusic();
-        // A quiet procedural fallback is only needed when no decoded gameplay layer is available.
-        const pulse = () => { if (currentContext === 'gameplay' && !buffers.base && !buffers.pressure) tone(pressureBand === 'pressure' ? 'hazard' : 'door', musicGain); };
-        musicTimer = setInterval(pulse, 2600);
+        // Do not replace suppressed background music with a procedural fallback.
+        if (GAMEPLAY_BACKGROUND_MUSIC_ENABLED) {
+            const pulse = () => { if (currentContext === 'gameplay' && !buffers.base && !buffers.pressure) tone(pressureBand === 'pressure' ? 'hazard' : 'door', musicGain); };
+            musicTimer = setInterval(pulse, 2600);
+        }
     }
     function setContext(next) { currentContext = next || 'menu'; init(); if (initialized) startMusic(); emit('context_changed', { context: currentContext }); }
     function setPsi(value) { const numeric = Number(value); if (!Number.isFinite(numeric)) return; psi = Math.max(0, Math.min(2, numeric)); if (pressureBand === 'calm' && psi < 0.60) pressureBand = 'pressure'; else if (pressureBand === 'pressure' && psi > 0.70) pressureBand = 'calm'; if (pressureLayerGain && context) pressureLayerGain.gain.setTargetAtTime(pressureBand === 'pressure' ? Math.max(0, Math.min(0.32, (1 - psi) * 0.32)) : 0, context.currentTime, 0.35); }
@@ -186,7 +199,7 @@ window.Game.Audio = (function () {
     }
     ['pointerdown', 'keydown', 'touchstart'].forEach(type => document.addEventListener(type, init, { once: true, passive: true }));
 
-    function getStatus() { return { initialized, context: currentContext, rooftopActive, rooftopSourceActive: !!rooftopSource, menuSourceActive: !!menuSource, menuPositionSec: menuOffset, musicSourceCount: musicSources.length, pressureBand, acceptedEventCount, menuLoaded: !!buffers.menu, baseLoaded: !!buffers.base, pressureLoaded: !!buffers.pressure, rooftopLoaded: !!buffers.rooftop, victoryLoaded: !!buffers.victory, doorLoaded: !!buffers.door, loadedAssetCount: Object.keys(buffers).length, failedAssetCount: failedAssets.size, muted: settings.muted }; }
+    function getStatus() { return { initialized, context: currentContext, gameplayBackgroundMusicEnabled: GAMEPLAY_BACKGROUND_MUSIC_ENABLED, rooftopActive, rooftopSourceActive: !!rooftopSource, menuSourceActive: !!menuSource, menuPositionSec: menuOffset, musicSourceCount: musicSources.length, pressureBand, acceptedEventCount, menuLoaded: !!buffers.menu, baseLoaded: !!buffers.base, pressureLoaded: !!buffers.pressure, rooftopLoaded: !!buffers.rooftop, victoryLoaded: !!buffers.victory, doorLoaded: !!buffers.door, loadedAssetCount: Object.keys(buffers).length, failedAssetCount: failedAssets.size, muted: settings.muted }; }
     return { init, play, publish, on, setContext, setPsi, setMuted, setVolume, teardown, getSettings, getStatus, renderAttributions };
 })();
 

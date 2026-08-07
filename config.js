@@ -43,6 +43,14 @@ window.Game.Storage = {
     set: function(key, value) {
         try { localStorage.setItem(key, value); }
         catch (e) {}
+    },
+    clearLiftOperatorData: function() {
+        try {
+            Object.keys(localStorage)
+                .filter(key => key.startsWith('liftOp_') || key === 'lift-operator-audio-v1')
+                .forEach(key => localStorage.removeItem(key));
+            return true;
+        } catch (e) { return false; }
     }
 };
 

@@ -38,7 +38,7 @@ Automation reduces repetitive workload but never replaces the operator. From Rou
 
 The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. A built-in automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
 
-Player-authored custom automation remains the deliberate exception: it is the playerâ€™s route to mastering advanced
+Player-authored custom automation remains the deliberate exception: it is the player’s route to mastering advanced
 rounds without manual intervention. Achievements are deferred from RC1.0; any future Hands-Free recognition must reward
 clear authored-play evidence, not raw runtime tick counts.
 

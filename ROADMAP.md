@@ -111,6 +111,35 @@ how automation primitives describe an orbital route, and how the board remains r
 **Gate:** Players can predict where a car will go, understand which stops it can serve, and use the topology to make
 new automation and routing decisions rather than encountering an opaque visual reskin.
 
+The working product name for this concept is **Ferris Wheel**: concentric circular tracks using polar-coordinate or
+orbital movement rather than vertical shafts.
+
+## Later — Persistent player creations and discovery
+
+**Outcome:** Let players retain, discover, and voluntarily share their own automations and authored rounds beyond a
+single browser, without turning the first online step into a full social platform.
+
+The existing versioned UFI Manifest/URI format remains the portable content package. A deliberately lightweight first
+step is a Google Form that accepts a manifest URI and concise metadata (title, creator name or alias, content type,
+and description). A reviewed public response sheet or curated catalogue can make submissions discoverable, while
+recipients still inspect and explicitly accept a manifest before importing it. This is an interim publishing workflow,
+not a backend for game state or automatic content execution.
+
+Later backend persistence may add authenticated profiles, saved automations/rounds, search, tags, version history,
+ratings or curation, and durable share links. It must preserve the current validation, size limits, schema versions,
+and consent model rather than treating shared content as trusted code.
+
+Decisions required before delivery planning:
+
+- whether the Google Form catalogue is moderated before publication and who owns moderation/takedown decisions;
+- what creator identity, attribution, licence, privacy, and age-appropriate contribution rules apply;
+- the minimum metadata and validation preview required before a manifest URI is published;
+- when a form/sheet workflow stops scaling and what backend, account, retention, and abuse-reporting model replaces it;
+- whether discovery covers automations, rounds, or both, and how custom content remains separate from campaign balance.
+
+**Gate:** A player can safely publish and discover a valid automation or round, understand that import is optional,
+and recover a creation on another device without weakening content containment or privacy.
+
 ## Later — Meta-progression and achievements
 
 **Outcome:** Add a meaningful, status-first mastery layer only after the desktop campaign, Mobile constraints, and
