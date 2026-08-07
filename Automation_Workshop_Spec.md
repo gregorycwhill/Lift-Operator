@@ -1,9 +1,9 @@
 # Automation Workshop Specification
 
 **Document role:** Durable Workshop and Automation Dock product/containment contract
-**Document status:** Active feature specification; implementation status is tracked below.
+**Document status:** Active feature specification; current delivery status is tracked in `DELIVERY_PLAN.md`.
 **Owner class:** Product and engineering
-**Last reviewed:** 31 July 2026
+**Last reviewed:** 8 August 2026
 
 ## 1. Player purpose
 
@@ -19,7 +19,7 @@ It should help the player answer:
 
 Custom automation is the strategic culmination of the game, not an unrestricted JavaScript editor.
 
-## 2. Status
+## 2. Implemented contract
 
 ### Implemented
 
@@ -35,7 +35,7 @@ Custom automation is the strategic culmination of the game, not an unrestricted 
 - Capacity sensors use effective capacity and passenger weight.
 - Service Zone metadata and the permanent two-step Automation Dock described below.
 
-### Known implementation gaps
+### Known limitations and deferred design questions
 
 - Imported script origin is not clearly communicated.
 - Custom script errors are logged but not fully explained in the game UI.

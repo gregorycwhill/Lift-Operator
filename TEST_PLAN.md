@@ -1,444 +1,78 @@
-# Major Release Candidate Test Plan
+# Friends & Family Release Candidate Test Plan
 
-**Document role:** Current release evidence, acceptance gates, and playtest protocol only
-**Status:** Active acceptance plan for the 25-round major release candidate
+**Document role:** Current release evidence, human acceptance, and playtest protocol only
+**Status:** Active acceptance plan
 **Owner class:** Engineering and playtest
-**Last reviewed:** 2 August 2026
-**Testing principles:** `TESTING_STRATEGY.md`
+**Last reviewed:** 8 August 2026
 **Delivery scope:** `DELIVERY_PLAN.md`
+**Test principles:** `TESTING_STRATEGY.md`
+**Baseline:** `master` at `bc59758` — Friends & Family playtest build
 
-## Current evidence
+## Evidence already available
 
-The active Friends & Family working tree is on `master`; the next commit records the release-readiness slice.
-
-Recent focused evidence:
-
-- `npm.cmd run test:release` passed on 7 August 2026 in 283 seconds: syntax (48 JavaScript files), documentation
-  (30 Markdown files), config, balance freshness/integrity, economy, UTF-8 (101 first-party files), unit, mechanics
-  (24/24), integration (3/3), audio (25/25), the supported Playwright suite (157/157), and a regenerated 24-round,
-  five-seed balance diagnostic report.
-- `guest_refused` is telemetry-only and has no sound asset or fallback.
-- Integration suite: 3/3 passed.
-- Capsule rendering regression passed: capsule cars have no cable pseudo-element and tube separators use the intended
-  dark 4px treatment; the capsule-specific cable pseudo-element is disabled.
-- Current 13-item remediation coverage includes Turbo floor snapping, capsule centering, synthetic-fart asset mapping,
-  Gym Bro stink boarding, wall-clock power-up expiry, R14+ credit uplift, Room Service/Checkout exclusion, challenge
-  briefings, countdown policy, counterweight command arbitration, zoning visuals, and R24/R25 performance smoke.
-- The retired UNIT_01 Auto-Pilot protocol is not current release evidence; its dedicated test file and commands have
-  been removed from the supported suite.
-- The all-Sweep negative-control rescue tuning is recorded in canonical data: R3, R5, and R9 received small spawn-end
-  increases after the Turbo floor-snap fix caused one seed each to survive unattended Sweep.
-- The 25-round balance acceptance harness, canonical economy projection, event-persistence resolver, production-faithful
-  simulator routing, and representative reproducibility command are now implemented. For RC1.0, All-Sweep and intended
-  profiles are diagnostic evidence pending human round-level difficulty reports; `--strict` retains the later-balance
-  negative-control threshold.
-- The acceptance harness now records a versioned intended profile ID and diagnostic trace for every intended seed. The
-  current report records all-Sweep losses in 15/24 rounds and intended-profile positives in 10/24 rounds; both results
-  are diagnostic for RC1.0. The checked-in full report is the authoritative per-seed result. Simulation runs no
-  longer yield to browser timers, and a regression test proves that an R6 acceptance run is invariant alone and after
-  R2–R5. R2 is explicitly deferred by the current
-  remediation instruction; R3–R6 remain the next staged recovery slice, while later-family failures require custom
-  event/mechanic criteria before they are treated as balance tuning failures.
-
-Completed historical gates and implementation checkpoints are summarized in `docs/archive/RELEASE_HISTORY.md`. Detailed
-test evolution remains in Git history rather than this active plan.
+- `npm.cmd run test:release` passed on 7 August 2026 before the final Friends & Family slice: syntax, documentation,
+  config, balance, economy, UTF-8, unit, mechanics, integration, audio, supported Playwright, and the balance report.
+- The final slice was subsequently covered by focused lifecycle, smoke, integration, configuration, documentation,
+  UTF-8, and syntax checks before commit `bc59758`.
+- These results are evidence for the baseline tree, but the final release command remains a required commit-bound gate
+  before a public 1.0 tag or distribution package.
 
 ## Automated release gate
 
-Run from PowerShell on the release-candidate commit:
+Run from PowerShell on the exact release commit:
 
 ```powershell
-npm.cmd run test:syntax
-npm.cmd run docs:check
-npm.cmd run test:config
-npm.cmd run balance:check
-npm.cmd run test:economy
-  npm.cmd run balance:check
-npm.cmd run test:utf8
-npm.cmd run test:unit
-npm.cmd run test:mechanics
-npm.cmd run test:integration
-npx.cmd playwright test tests/audio.spec.js --workers=1
-npx.cmd playwright test tests/lifecycle-correctness.spec.js --workers=1
-npm.cmd run test:smoke
+npm.cmd run test:release
 ```
 
-Record the commit, Node/browser versions, operating system, pass counts, duration, and any failure artifact. The
-aggregate `npm.cmd test` may also be used when the runner allows more than ten minutes.
+Record the commit, command result, elapsed time, and report hash in `docs/archive/RELEASE_HISTORY.md`. The all-Sweep
+portion is a strict diagnostic result: it demonstrates whether unattended Sweep fails as intended, but it is not by
+itself a Friends & Family promotion blocker.
 
-## RC hardening cycle checks
+## Limited internal confirmation — 15 minutes
 
-Run targeted checks for each 4–12 item playtest batch: syntax, config when canonical data changes, docs, and the
-smallest relevant browser test. Do not run long end-to-end or simulator protocols for ordinary polish fixes. Run the
-full release gate only at H4, or when a fix changes shared simulation, balance, lifecycle, or capsule-performance code.
+Use current Chrome or Edge on desktop/laptop. Record the build identifier shown in Settings or Round Review.
 
-- [x] H0 traffic invariants: Checkout remains probabilistic; Rooftop redirects only its canonical share; normal and
-  max-delay fallback spawning use the same standard-guest decision path.
-- [ ] H1 R9–R15 human evidence: no progression blocker; zoning and named challenges are understandable.
-- [ ] H2 R15–R20 human evidence: no large-fleet clipping, event/briefing mismatch, or reset leakage.
-- [ ] H3 R20–R25 human evidence: counterweight/Open Plan correctness and capsule responsiveness on target hardware.
-- [ ] H4 candidate gate: full release command, licence/attribution package, and triaged remaining-issue list.
+1. Start a normal New Campaign; confirm the onboarding, R1 controls, and R2 automation explanation are readable.
+2. Confirm pause/resume at a round boundary, Settings, Credits & Licences, and Give Feedback are reachable without
+   Debug.
+3. Open Give Feedback in a signed-out/private window: confirm the Google Form opens, diagnostic text is prefilled and
+   copied, and the optional media-link field is understandable.
+4. Warp only through the supplied Debug manifest URI: spot-check R9 event clarity, R14 zoning/briefing, R21 pair
+   routing/manual override, and R24 capsule readability/performance.
+5. Build and open the itch-compatible ZIP locally; confirm it contains `LICENSE`, third-party notices, attribution,
+   and a matching `BUILD.txt`.
 
-The former `test:e2e` Auto-Pilot protocol relied on retired UNIT_01 debug behavior and stalled without producing a
-bounded result. It is retired from the active suite. `test:smoke` is the short supported gate; `test:full` is the
-supported comprehensive gate.
+## Friends & Family evidence window
 
-### Planned routing and R13 remediation coverage
+Use `docs/playtest/RC1_PLAYTEST_PACK.md` and append observations to
+`docs/playtest/PLAYTEST_FEEDBACK_LOG.md` before interpretation.
 
-- [x] Sweep reversal regression: a down-bound built-in Sweep lift services a drop-off, reverses at that floor, then
-  boards an otherwise-compatible up-bound waiting guest before departing. Cover Ground and Rooftop variants.
-- [x] Reversal exclusions: the same reversal must not reopen for a full lift, a regular guest blocked by Stink, an
-  out-of-zone route, party-bound guest, or VIP-incompatible cabin.
-- [x] Counterweight pair routing: built-in Sweep chooses a legal mirrored target pair using demand from both cars;
-  neither car is silently discarded because its policy evaluates second in the frame.
-- [x] Counterweight manual precedence: clicking either car immediately applies the requested/mirrored targets and
-  suppresses pair policy until that manual stop is serviced.
-- [x] Counterweight family variants: Priority Sweep and Zoned built-ins retain their declared routing constraints when
-  coordinated as a pair; custom policies remain individually sandboxed.
-- [x] Counterweight precedence: differently assigned pair policies resolve deterministically as `custom` > `priority
-  voting` > `priority sweep` > `zoned` > `voting` > `sweep`, without weakening manual-command precedence.
-- [x] R13 canonical data and generated artifact record the 20% curve (`1.08 → 1.26`); config and economy checks pass.
-- [x] New Game randomness: independent normal New Game campaigns generate valid, different persisted campaign seeds;
-  a continued campaign retains its original seed and derives the same round setup.
-- [x] Debug seed replay: applying a numeric seed or Randomise restarts only the current round deterministically; Copy
-  reports the active seed; neither action mutates the persisted campaign checkpoint.
-- [x] Feedback diagnostics include campaign seed plus an active Debug seed override, without automatically transmitting
-  either value.
-- [ ] Human replay: R9/R11 reversal behaviour, R13 difficulty/power-up use, and R21–R23 Sweep/manual recovery on the
-  published Chrome build. Record lives/time, power-ups, and any unfilled compatible queue.
+Required qualitative evidence:
 
-## Full-campaign balance and economy acceptance
+- First-session player understands ordinary campaign controls, Supply Closet, automation selection, and feedback path.
+- R9 Rooftop, R14+ zoning, R21–R23 counterweights/Open Plan, and R24–R25 capsules are legible and usable.
+- Checkout marker, VIP notices, briefings, and critical message rail do not conceal required board information.
+- One Chromebook/low-power Chrome observation if a tester is available, especially in zoned or capsule rounds.
 
-**Current decision point:** the further 25% R2 spawn-rate reduction (43.75% total from the original values) unblocks
-playtesting, but all-Sweep now survives all five fixed R2 seeds. Product must choose a different R2 intervention or
-make R2 an explicit onboarding exception; do not silently alter the fixed seeds, accept a failed gate, or counter-tune
-arrival pressure.
+Use 1–5 round difficulty ratings: **1 very easy**, **3 about right**, **5 very hard**. Balance reports are evidence to
+triage, not automatic retuning instructions.
 
-The acceptance report is current diagnostic evidence only. It is not a 1.0 balance pass.
+## Human gates still open
 
-- [x] Add versioned, non-runtime balance-acceptance data for R2–R25: fixed gate seeds, all-Sweep setup, intended
-  strategy profile, and round-specific thresholds.
-- [x] All-Sweep assigns Sweep to every available lift and uses no manual targets, policy changes, custom automation, or
-  power-ups. It must fail every gate seed in R2–R25.
-- [x] R12 all-Sweep loses its twentieth life before 240 seconds. Competent-play duration remains a human-playtest
-  calibration question rather than a simulator release threshold.
-- [x] Intended profiles record fixed-seed outcomes and causal traces. Their survival rates are diagnostic only; round
-  difficulty and arrival-rate calibration will use experienced playtester reports.
-- [x] Replace the generic positive comparator with versioned intended profiles for the seven campaign families:
-  hybrid rescue (R2–R3), triage/redundancy (R4–R6), events (R7–R9), advanced control (R10–R13), zoned fleet
-  (R14–R20), counterweights/Open Plan (R21–R23), and capsule dispatch (R24–R25).
-- [x] Every failed intended run records compact causal evidence: automation changes, manual command acceptance/rejection,
-  boarding/refusal, power-up and event lifecycle, classified guest/VIP life-loss cause, and any zoning/counterweight
-  constraint.
-- [x] Establish a staged recovery order and record a before/after report and trace for every canonical parameter change.
-  R2 is intentionally deferred for the current phase; R3–R6 are the active early-round slice before later-family
-  recovery.
-- [ ] For every balance-accepted round, confirm via browser/playtest evidence that the simulated profile corresponds to
-  legible player actions; a simulator success alone is insufficient promotion evidence.
-- [x] `balance:acceptance:strict` fails when all-Sweep does not fail every required round. The default RC1.0 release
-  command records the diagnostic report, while evidence-integrity checks validate report hashes, schema, and provenance.
-- [x] Matrix and profiles cover R14–R20 zoning/events, R21–R23 counterweights/Open Plan, and R24–R25 capsules.
-- [x] Simulated commands use production target routing, including counterweight partner consequences.
-- [x] Reproducibility samples R2, R12, R14, R17, R21, R23, R24, and R25.
-- [x] Replace the 13-round fixed-payout economy calculator with a 25-round current-price projection using canonical
-  payout, unlock, retry, and consumable rules. Achievements are deferred from RC1.0 and cannot add Credits.
-- [ ] Record affordability, savings, and dominant-purchase share for struggling, typical,
-  and expert profiles. Current prices remain unchanged for 1.0; inflation is measured and documented.
-
-### Round-by-round custom acceptance criteria
-
-Persistent event coverage must include traffic-mix checks: an eligible Checkout round retains ordinary non-G
-destinations at the canonical probability, and an active Rooftop event redirects only its configured share. A named
-event must never silently replace every standard guest journey unless its authored round definition says so.
-
-The generic survival comparator is not sufficient for every round. This matrix records where authored mechanics need
-additional evidence. A custom criterion supplements the all-Sweep gate; it never relaxes that gate or changes the fixed
-seed set.
-
-| Rounds | Profile / mechanic | Additional acceptance evidence required | Current status |
-| --- | --- | --- | --- |
-| R1 | Onboarding | Briefing, first gesture, warning gating, and audio start; no campaign balance gate. | Human evidence |
-| R2 | Hybrid rescue | Late-failure shape, one-lift recovery, bounded manual intervention, and deferral disposition. | Deferred; 5/5 all-Sweep survivors |
-| R3 | Hybrid rescue / two lifts | Split lift roles, Room Service explanation, and credible recovery with declared loadout. | Meets threshold |
-| R4 | Triage / redundancy | Two-lift coverage and target acceptance under rising demand. | Meets threshold |
-| R5 | Triage / redundancy | Three-lift allocation and capacity/load distribution, not just survival. | Meets threshold |
-| R6 | Triage / jam recovery | Fifteen-floor routing, jam recovery, stink interaction, and manual rescue trace. | Meets threshold |
-| R7 | Checkout | Ground-floor suitcase semantics, checkout routing, and no false guest-type mixing. | Meets threshold |
-| R8 | VIP | VIP priority/queue rules, three-leg tour timing, and unsuitable/occupied-lift refusal. | Meets threshold |
-| R9 | Rooftop / stink | Party lifecycle, pressure duration, rooftop-only effects, and stink mitigation. | Meets threshold |
-| R10 | Advanced control | Custom automation usefulness, inherited event eligibility, power-up lifecycle, and refusal attribution. | Event-aware profile implemented; below threshold |
-| R11 | Advanced control / weight | Weight-aware lift selection, capacity/load trace, inherited-event interaction, and a bounded Rooftop evacuation window. | Canonical 0.96→1.15 curve; evacuation and human capacity evidence pending |
-| R12 | Endurance | All-Sweep loses its twentieth life before 240 seconds; intended strategy survives 240–480 seconds; event pressure reported separately. | Event-aware profile implemented; 0/5 |
-| R13 | Pedal / gravity | Gravity, pedal availability, spawn pressure, power-up affordability, and practical manual override. | Event-aware profile implemented; below threshold |
-| R14 | Service Zoning | Zoning unlock/briefing, overlapping G coverage, zone return after override, and affordability. | Zoned profile implemented; 0/5 |
-| R15 | Zoning / VIP / Rooftop | Zoning plus persistent VIP/Rooftop pressure, party release, priority, and whole-building routing. | Zoned profile implemented; 0/5 |
-| R16 | Zoning / jam / stink | Jam recovery, stink eligibility, Freshener use, and zone continuity. | Zoned profile implemented; 0/5 |
-| R17 | Zoning / Checkout | Authored Checkout remains identifiable while inherited events persist; suitcase and G-demand routing. | Zoned profile implemented; 0/5 |
-| R18 | Zoning / multi-event | VIP, Rooftop, Stink, Gym, zoning, and six-lift coordination; gym-bro immunity observable. | Zoned profile implemented; 0/5 |
-| R19 | Zoning / scale | Eight lifts, thirty floors, viewport fit, cable alignment, capacity labels, and event pressure. | Zoned profile implemented; 0/5 |
-| R20 | Zoning / campaign cap | Ten lifts, thirty floors, no clipping/overlap, and correct final-authored-round messaging. | Zoned profile implemented; 0/5 |
-| R21 | Counterweight intro | Adjacent pairing, odd-floor geometry, partner boarding behavior, and briefing clarity. | Pair-aware profile implemented; below threshold |
-| R22 | Counterweight / Open Plan | Open Plan timing, manual-stop boarding, paired movement, and refusal-cause trace. | Pair-aware profile implemented; below threshold; deterministic manual-stop regression passes |
-| R23 | Counterweight / zoning / Open Plan | Eight-lift paired network, zoning recovery, pair invariants, and capacity/stink rules. | Pair-aware profile implemented; 0/5 |
-| R24 | Capsule dispatch | Single-person capacity, six-second jam retention, demand currents, tube rendering, and automation-first dispatch. | Meets threshold; browser performance open |
-| R25 | Capsule dispatch scale | Twenty capsules, thirty floors, demand currents, throughput, no overflow, and 45fps floor. | Meets threshold; browser performance open |
-
-Later intended failures are therefore not yet evidence for changing spawn rates or capacities. First-pass event-aware,
-zoned, and pair-aware profiles now exist, but their traces show unresolved VIP and Rooftop pressure rather than a clean
-capacity fault. Improve and validate those policies before canonical balance parameters are changed.
-
-## Open engineering acceptance
-
-### Friends & Family readiness coverage
-
-- [x] RC1 release documentation describes all-Sweep acceptance as internal diagnostic evidence, not a distribution
-  blocker; the full report remains reproducible and visible to maintainers.
-- [x] The four unused/unprovenanced audio files are absent from the Pages and itch distributable trees; every shipped
-  audio file has a manifest record and required attribution/provenance.
-- [x] `THIRD_PARTY_NOTICES.md` identifies Blockly and LZ-String by exact source/version and ships their required
-  Apache-2.0 and MIT notices.
-- [x] Debug exposes only controls with a documented, production-tested temporary effect; Warp and transient seed replay
-  remain available for support reproduction.
-- [x] A production-path audio check confirms direction-incompatible guest refusal has no audible event; PTF-015 is
-  closed unless a reproducible counterexample is supplied.
-- [x] Normal Round 1 has no unexplained Game ID field; Welcome states the supported desktop browser expectation and
-  How to Play explains Ground, guest patience/status, and between-round saving concisely.
-- [x] `New Campaign…` confirms before clearing only campaign progress; its visible wording cannot be mistaken for a
-  same-round retry. The pre-unlock Workshop control explains its Round 10 unlock.
-- [x] Normal player UI does not expose seed/debug clutter, while feedback diagnostics retain reproducible seed data.
-- [x] The existing UFI Manifest-backed Debug URI opens a friendly Playtest Access consent screen, explains that it
-  unlocks higher-round selection and seed replay, and keeps normal campaign progress separate from Debug use.
-
-### Final Friends & Family feedback-quality coverage
-
-- [x] Counterweight built-ins are pair-owned: applying each built-in from either controller produces the same paired
-  assignment, target planning, and visible controller state. Verify all built-in families, multiple pairs in one frame,
-  and no hidden left-car owner/frame gate.
-- [x] Counterweight manual commands are symmetric: click each side of every pair, verify the requested and complementary
-  targets, preserve the override through boarding/alighting, and resume pair policy only after both cars finish service.
-  Verify Manual and Zoned Low/High pair assignment; retain an explicit regression showing custom policies are the
-  disclosed per-cabin exception.
-- [x] Critical event messages render in a reserved layout-flow rail that cannot intersect the board, lift shafts, or
-  queues. Verify exactly one visible/audio VIP arrival cue per leg, queued critical messages, and unchanged short-toast
-  behaviour for non-critical feedback.
-- [ ] In a signed-out Chrome profile, Give Feedback opens the public Google Form and pre-fills the diagnostic field
-  `entry.1033382669`; the game neither uploads media nor submits data. Verify the optional screenshot/video-link help
-  text is accurate.
-- [x] Settings and Round Review expose the immutable release build identifier that matches the Pages deployment and the
-  itch-compatible artifact from that commit.
-- [x] Normal and manifest Debug paths use player-facing labels (`New Campaign`, `Playtest Tools`, `Playtest Access`,
-  `Resume Game`) without exposing a player-facing console. Workshop copy feedback and the compact audio tracker use
-  accurate, non-developer language.
-- [x] The tester pack reflects the normal-URI-first / existing-Debug-URI-later protocol, supported desktop browsers,
-  feedback form, current release identity, and known limitations.
-
-### R22 manual-stop boarding
-
-- [x] Reproduced the reported interaction with explicit R22 pair state: a Sweep lift manually stopped at Floor 5
-  boards a compatible Floor-5 guest, mirrors its partner target, and retains the override until the stop completes.
-- [x] Regression coverage proves the outcome before Sweep resumes. The original report is therefore not a general
-  manual-direction defect; any new reproduction must capture its exact queue, capacity, zoning, stink, VIP, and
-  parked-lift state before changing boarding arbitration.
-
-### Canonical event gating
-
-- [x] Record the approved explicit R1–R25 active-challenge matrix in `Game Play Map.md`; absence means inactive.
-- [x] Derive canonical event activation and briefing challenge summaries from that matrix; remove event-introduction
-  inheritance and per-round exclusion logic once the generated/validated replacement is in place.
-- [x] Validate every round's configured runtime events against the Game Play Map and reject Checkout/Rooftop
-  co-activation, as well as Room Service/Gym Bro Checkout mixing.
-- [x] Add focused tests for an active and inactive example of each challenge, and browser assertions that the briefing
-  names exactly the active challenges before Supply Closet choices are made.
-
-### Capsule performance
-
-- [x] Capture deterministic R24/R25 acceptance traces with representative queues, automations, jams, and active
-  effects. R25 meets the simulator threshold at 4/5 fixed seeds.
-- [x] Run `npm.cmd run perf:capsule` and record [the headless R24/R25 tick-cost/DOM/overflow smoke report](reports/capsule-performance-smoke.json).
-  The current reference run has no horizontal overflow and a p95 tick at or below 0.4ms for both capsule rounds.
-  This is a regression signal, not hardware frame-rate certification.
-- [x] Record deterministic frame intervals, tick cost, DOM count, and horizontal overflow for R24/R25 headless pressure.
-- [ ] Record frame intervals, long tasks, DOM count, and layout/paint hotspots on the supported reference device using
-  `docs/playtest/RC1_PLAYTEST_PACK.md`.
-- [ ] R25 targets 60fps, remains at or above 45fps under representative pressure, and avoids sustained tasks above 50ms.
-- [ ] Twenty capsules and thirty floors remain fully operable without horizontal scrolling or Dock overlap on the
-  reference desktop viewport.
-
-### Canonical data, content, and tooling hygiene
-
-### Next feedback remediation — implemented; awaiting human replay
-
-- [x] R2 Automation tip appears in the non-board message rail for the complete ten-second teaching countdown and closes
-  immediately when the countdown is skipped or starts; normal notices retain their ordinary timeout.
-- [x] R11's canonical briefing source and visible modal state the three-Gym-Bro rule; threshold crossing produces one
-  fart alert per active group-stink episode without replaying every tick.
-- [x] R12 excludes VIP and Rooftop while retaining Room Service, Gym Bros, Jams, Stink, ordinary guests, and Endurance
-  completion; briefing/challenge-matrix parity passes.
-- [x] The compact 594px briefing remains usable at supported desktop and Chromebook viewports: three shop columns,
-  visible cart entries, pinned primary action, no outer modal scrollbar, and no board overlap.
-- [x] R20/R23 zone-served cells retain the light shaft grey, zone-unserved cells use a flat darker grey with floor lines
-  visible, and straight traversal remains near the canonical time on the Chromebook. R25 zoning parity is then replayed.
-- [x] Direction-incompatible boarding refusal produces no audible bong, while intentional boarding, hazard, power-up,
-  and served feedback remains mapped and audible.
-
-### PTF-030 regression coverage
-
-- [x] R2 teaching rail is geometrically below the countdown and closes when the countdown is skipped.
-- [x] R13's round-specific credit multiplier produces the intended 15-credit result at the representative payout.
-- [x] Four-lift fleets start in Sweep while three-lift fleets remain manual.
-- [x] Rooftop guests already at the top are party-bound during the event and return to Ground on release.
-- [x] VIP arrival emits its visible/audio notice without changing any lift target; the player must intervene.
-- [x] Sweep target selection and parked-lift allocation use compatible boarding predicates and fill the most-loaded
-  compatible car first.
-
-### Current playtest remediation slice
-
-- [x] R2 countdown displays the approved basement-level automation instruction while the ten-second teaching countdown is visible.
-- [x] R11 owner-tested candidate promoted to canonical: 0.96â€“1.15 guests/second; base capacity remains 10.
-- [x] No second candidate comparison is required: the lower curve is now the canonical R11 value.
-- [x] R11 reserves a 45-second post-party evacuation buffer; its Rooftop start is still randomized within the remaining legal window.
-- [ ] R11 candidate comparison: replay the non-canonical 0.96â€“1.15 guests/second curve. Record pass/fail, lives or
-  time remaining, power-ups used, and whether Rooftop evacuation remains understandable. Do not promote it over the
-  canonical 1.3125â€“1.5 curve or increase base capacity above 10 without independent replay evidence.
-- [x] R11 first-use briefing states both that three Gym Bros make a lift stinky and that Gym Bros are immune to Stink.
-- [x] Rooftop event emits exactly one visible â€œLast drinks!â€ toast five seconds before scheduled release, leaves the
-  party locked until release, and does not alter the existing start/release notifications.
-- [x] The earlier non-canonical R11 comparison item is superseded by the promotion above; future replay uses only
-  the canonical 0.96–1.15 guests/second curve.
-- [x] Standard lift travel uses the accepted geometry bands: 0.45 seconds/floor through 15 floors and 0.4166666667 seconds/floor above 15 floors.
-- [x] Counterweight and capsule movement retain their dedicated movement rules.
-- [x] Infinite Capacity regression coverage requires every compatible queued guest to board before the lift closes; direction, Stink, zoning, VIP, and party-state refusals remain valid exclusions.
-- [x] Briefings omit the redundant Objective and Available loadout cards; Endurance explains its changed objective in the operating-rule card.
-- [x] First-introduction terms only receive bold/icon treatment on their canonical campaign introduction round; later briefings remain uncluttered.
-- [x] Active-challenge chips include accessible icons and labels. Supply Closet tiers are named Bronze, Silver, and Gold.
-- [x] Supply Closet renders a permanent empty/filled cart rail on the right, three narrower shop cards across on the left, and one shared scroll region without nested scrollbars.
-- [x] Briefing modal uses the narrower 594px layout with no modal-level scrollbar; the Supply Closet is shortened and the primary start/purchase button remains in the modal footer.
-- [x] Briefing symbols use the runtime icon vocabulary: cocktail-glass Rooftop, Christmas-tree Air Freshener, runtime power-up icons, and gear-arrow zoning/counterweight symbols.
-- [ ] Human replay R11 with both the canonical reduced arrival curve and the 0.96â€“1.15 candidate; report rooftop queue size at release, guests recovered, power-ups used, and whether ordinary traffic remains serviceable.
-
-- [x] Move remaining active mechanic parameters out of compatibility/debug aliases and into canonical data, or remove
-  the unused aliases.
-- [ ] Debug controls either alter a documented temporary round overlay or are removed; no visible control may silently
-  fail to affect the round definition.
-- [x] Validate event exclusions, counterweight odd-floor geometry, capsule constraints, unlock availability, and
-  required mechanic support.
-- [x] Reconcile all R1–R25 Gameplay Map rows, canonical data, and briefings through the explicit active-challenge
-  matrix and canonical briefing records. The 25-round browser parity test verifies unique titles, authored teaching
-  copy, and active challenge labels; the earlier inheritance-based reconciliation is superseded.
-- [x] Repair, complete, relabel, or retire the broken completion audit, hash-only replay, placeholder robustness command,
-  and misleading simulation-batch default.
-- [x] Retire the stale `balance:report:check` from the active verification surface. It is retained as the explicitly
-  historical `balance:legacy:report:check`; `test:full` no longer treats an archived R2â€“R13 baseline as a current
-  canonical gate. `balance:acceptance:integrity` verifies the committed report's schema, provenance, seeds, and traces;
-  `balance:acceptance:check` remains the active full-campaign release gate and rejects unmet thresholds.
-
-**Briefing-and-rank authoring follow-up: complete.** Canonical `briefing` records now contain the round-based rank,
-unique title, approved narrative, learning focus, first-use rule card where applicable, promotion record at each
-approved boundary, and active-challenge emphasis for all 25 rounds. Promotion acknowledgement persists at campaign
-boundaries, is not replayed after acknowledgement, and is suppressed for restored or direct Debug entry. The focused
-browser coverage verifies the rendered title/rank/challenge labels, promotion flow, wider briefing layout, and the
-three-column Supply Closet grid; future authored changes must update canonical data and that evidence together.
-
-### Retired Auto-Pilot automation
-
-- [x] Retire the unbounded UNIT_01 Auto-Pilot protocol and its dedicated `test:e2e` commands from the active test
-  surface. It depended on a retired debug pathway and stalled without reliable release evidence.
-- [x] Use `npm.cmd run test:smoke` as the fast supported gate and `npm.cmd run test:full` as the supported
-  comprehensive gate. A future browser E2E journey must be designed against a supported player workflow before it is
-  reintroduced.
-
-### Acceptance run-order reproducibility
-
-- [x] Fixed a simulation run-order leak caused by yielding to browser timers inside the virtual loop. Each iframe also
-  has a unique realm identity and pins `Date.now()` to virtual time. Regression coverage proves the R6 seed/profile
-  result is unchanged alone and after R2–R5; the representative reproducibility suite passes.
-
-## Structured broad-feedback playtest
-
-Use `docs/playtest/RC1_PLAYTEST_PACK.md` for tester-facing instructions, report fields, known limitations, and the
-audio attribution/distribution checklist. Use `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` as the authoritative intake
-record.
-
-## Distribution and feedback acceptance
-
-- [ ] README Play Now link, all six campaign captures, and social-preview metadata resolve from the deployed GitHub
-  Pages build.
-- [x] Settings and Round Review expose Give Feedback with a visible build/balance identifier.
-- [x] Give Feedback opens the configurable Google Form with build, balance version, round, seed, browser, and viewport
-  pre-filled, and copies the same diagnostic locally. It does not submit a response automatically.
-- [x] Published Google Form URL configured in `release-config.js` for player and technical reports. External
-  responder access and no unintended sign-in requirement remain a release-owner acceptance check.
-- [x] `THIRD_PARTY_NOTICES.md` records code, audio, font, and visual-asset audit findings; GPL-3.0-only applies to
-  first-party project code while third-party assets retain their own terms.
-- [ ] Build and open an itch.io ZIP from the final release commit; check `index.html`, audio, media, and notices in the
-  archive before upload.
-
-## Campaign shell and persistence acceptance
-
-Automated lifecycle coverage now exercises schema validation, restoration, campaign completion, and shell credits.
-The following remain browser/human acceptance checks because they cover first-visit presentation and external-form UX.
-
-- [ ] First visit shows Welcome before the existing Round 1 briefing; Play reaches the player-name flow and the shell
-  never appears automatically between rounds.
-- [ ] A schema-valid saved campaign presents Continue; Continue restores player name, seed, resumable round, unlocks,
-  lives, Credits, and owned inventory at that round's briefing.
-- [ ] Reload during active play returns to the pre-round checkpoint rather than serializing live guests, cars, timers,
-  event state, or a pending shop cart.
-- [ ] Invalid, stale, or malformed save data is discarded safely and falls back to a new campaign without breaking
-  audio preferences, Workshop scripts, Automation Dock pins, or the local leaderboard.
-- [ ] New Campaign confirms intent and clears campaign progress only; it does not clear scripts, pins, audio settings, or
-  leaderboard records.
-- [ ] How to Play and Credits & Licences are reachable from Welcome and Settings; Credits & Licences is also reachable
-  at campaign completion and names Gregory Hill and Marie Barnard correctly.
-- [ ] R25 opens Campaign Complete rather than only the legacy Leaderboard; it offers Leaderboard, feedback, credits,
-  and New Campaign.
-- [ ] Feedback diagnostics include outcome and failure reason where applicable; configured Google Form opening and
-  popup-blocked fallback remain opt-in and locally visible.
-
-## Fleet baseline and countdown acceptance
-
-- [x] Automation-controller text, tooltip, and accessible name update together after an automation assignment.
-- [x] Rounds with fewer than five lifts start Manual; five-or-more-lift rounds start every lift on Sweep.
-- [x] Countdown is three seconds per lift, with a five-second minimum and thirty-second maximum; Round 2 remains a
-  ten-second automation-teaching exception.
-
-For every session record: commit, balance version, browser/device, round, seed, starting Credits, purchases, automation
-layout, result, observed failure cause, and the tester's own explanation.
-
-| Arc | Minimum sample | Questions |
+| ID | Check | Pass condition |
 | --- | --- | --- |
-| Onboarding | R1–R3 | Are controls, Room Service, Credits, countdown, and first automation legible? |
-| Core events | R7, R9, R11, R13 | Are Checkout, Rooftop, Gym Bros, stink, gravity, and resource pressure understandable and fair? |
-| Zoning network | R14, R17, R19, R20 | Can players choose a loadout, deploy zones, diagnose refusals, and keep the fleet visible? |
-| Counterweights | R21–R23 | Can players explain paired movement, recover with Open Plan, and scale to the network round? |
-| Capsule dispatch | R24–R25 | Does automation outperform frantic manual play; are demand currents, jams, tubes, and controllers readable? |
+| H1 | Public feedback form | Works while signed out; diagnostics are prefilled and no data is sent automatically. |
+| H2 | Build identity | Settings, Round Review, diagnostic, tester pack, and ZIP identify the same baseline. |
+| H3 | Audio/licence surface | Credits are readable and every bundled file has a verified provenance/status record. |
+| H4 | Package smoke | ZIP opens locally with expected assets/notices and no missing start path. |
+| H5 | Supported-browser play | Chrome/Edge desktop spot-check passes; Firefox/mobile remain explicitly unsupported. |
+| H6 | Campaign feedback | Enough structured observations exist to assess the five campaign arcs and any P0/P1 reports are dispositioned. |
 
-Cross-cutting observations:
+## Test-data and report governance
 
-- [ ] Automation Dock: policy-first, lift-first batch, disarm, Library toggle, pin persistence, keyboard, and touch.
-- [ ] Audio: first gesture, menu resume, pressure fade, Rooftop lifecycle, Musak duration, one-shot SFX caps, mute, and
-  independent volume controls; CC-BY credits remain accessible through a compact scrolling tracker/disclosure rather
-  than expanding the primary modal.
-- [x] VIP configuration: the dead `vipHeadstartSec` offset is removed; each leg begins Happy, then follows the
-  standard Happy → Annoyed → Critical → rage lifecycle. The approved 10–30 second between-leg pause and 10-life
-  rage-quit penalty remain configured.
-- [ ] Visual stability: top-floor icons, tube/cable treatment, capacity labels, Checkout's black text-presented `💼︎`
-  marker remains legible on Happy/Annoyed/Critical backgrounds, the Credits line uses a pink heart, rooftop decoration,
-  board jitter, and supported viewport fit.
-- [ ] Economy: carried Credits are understood; no-spend confirmation appears only when a shop is available; loadouts
-  create choices rather than mandatory purchases.
-- [x] Progression: briefing text matches actual events and “Finish Campaign” appears only after R25.
-
-## Promotion rule
-
-Promote only when:
-
-- automated engineering gates are green or explicitly dispositioned;
-- full-campaign balance and economy acceptance are satisfied, or any exception is explicitly approved as a release risk;
-- no reproducible progression, save, routing, or inventory corruption remains;
-- broad feedback covers all five arcs above;
-- balance changes are made through canonical data, one parameter family at a time, with generated artifacts refreshed;
-- unresolved feedback is classified as blocker, accepted limitation, tuning candidate, or later-roadmap work.
-
-Unchecked human items do not mean the feature is unimplemented. They mean release acceptance evidence has not yet been
-recorded.
+- Every active fixture must name its consuming command and purpose. Retire or archive fixtures with no current owner.
+- Store concise campaign-balance summaries in Git. The full trace needs an explicit retention decision before it is
+  regenerated and recommitted.
+- Historical test reports and completed checklists belong in `docs/archive/`; do not revive them as current acceptance
+  criteria.

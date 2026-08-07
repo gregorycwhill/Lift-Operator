@@ -58,6 +58,7 @@ release work is correctness, performance, balance, usability, and device accepta
 | Current playtest intake | [Feedback log](docs/playtest/PLAYTEST_FEEDBACK_LOG.md) |
 | Material chat decisions | [Chat decision log](docs/CHAT_DECISION_LOG.md) |
 | Audio source and credit record | [Audio attribution](assets/audio/ATTRIBUTION.md) |
+| Canonical release screenshots | [Release media manifest](assets/media/README.md) |
 
 ## Local development
 
@@ -79,8 +80,9 @@ npm.cmd run balance:generate
 npm.cmd run balance:check
 ```
 
-Create screenshots and a social-preview image with `npm.cmd run capture:media`. Create a local itch.io-compatible ZIP
-from the current commit with `npm.cmd run package:itch`.
+Create diagnostic screenshots and a social-preview image with `npm.cmd run capture:media`; curated README screenshots
+are governed by the [release media manifest](assets/media/README.md). Create a local itch.io-compatible ZIP from the
+current commit with `npm.cmd run package:itch`.
 
 ## Security philosophy
 

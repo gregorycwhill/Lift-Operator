@@ -2,7 +2,7 @@
 
 **Document role:** Authoritative intake and disposition record for playtest feedback  
 **Status:** Active, append-only source record  
-**Coverage:** Reconstructed from the available project chat through 1 August 2026  
+**Coverage:** Reconstructed from the available project chat through 8 August 2026
 **Companion records:** `../CHAT_DECISION_LOG.md`, `../../DELIVERY_PLAN.md`, `../../TEST_PLAN.md`
 
 ## How to use this log
@@ -13,6 +13,20 @@ and the delivery/test reference once known. This is the feedback source, not the
 
 The older `../archive/PLAYTEST_ARCHIVE.md` preserves imported verbatim excerpts. It is historical evidence; new
 feedback belongs here.
+
+## Current disposition index — 8 August 2026
+
+The register below remains the source evidence. This index is the current-status view and takes precedence over an
+older row where a later correction exists.
+
+| IDs | Current disposition | Current evidence needed |
+| --- | --- | --- |
+| PTF-013, PTF-019, PTF-020, PTF-022, PTF-035, PTF-036 | Implemented — awaiting Friends & Family replay | Published-build visual/behaviour confirmation. |
+| PTF-023 | Implemented canonical tuning | Human R11 difficulty observation against the canonical `0.96`–`1.15` curve. |
+| PTF-024 | Implemented | Rooftop and R11 briefing observation only. |
+| PTF-028 | Implemented — awaiting balance replay | Endurance evidence with VIP/Rooftop excluded and hazards retained. |
+| PTF-030, PTF-033, PTF-034 | Implemented — awaiting replay | Published-build routing, R13 balance, and seed-reproduction observations. |
+| Remaining historical entries | Closed, deferred, or regression-sensitive | Reopen only with a reproducible report. |
 
 ## Intake fields
 
@@ -87,7 +101,7 @@ counterweight policy. This note supersedes the pending status in the historical 
 
 ## Current intake boundary
 
-The next requested evidence window begins after final Friends & Family remediation. Share the ordinary public URI for a
+The current evidence window begins with the Friends & Family build at `bc59758`. Share the ordinary public URI for a
 natural first session first; after initial feedback, selected testers may receive the existing manifest Debug URI for
 higher-round evidence. New feedback must receive a new `PTF-` identifier here, then be classified in `DELIVERY_PLAN.md`
 and converted into acceptance evidence in `TEST_PLAN.md` where applicable.

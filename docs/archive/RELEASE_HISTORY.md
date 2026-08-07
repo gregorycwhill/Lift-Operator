@@ -2,11 +2,25 @@
 
 **Status:** Historical release record; not a current plan
 **Owner class:** Product and engineering
-**Last reviewed:** 31 July 2026
+**Last reviewed:** 8 August 2026
 **Use instead for current work:** `ROADMAP.md`, `DELIVERY_PLAN.md`, and `TEST_PLAN.md`
 
 This file preserves concise outcomes from completed delivery slices. Git history remains the detailed implementation
 record; obsolete checklists are not copied here.
+
+## Friends & Family playtest build — 8 August 2026
+
+- Commit `bc59758` established the Friends & Family candidate baseline on `master`, the GitHub Pages deployment branch.
+- The completed hardening work includes the campaign shell, local round-boundary resume, Settings/Credits & Licences,
+  Google Form feedback diagnostics, public-first/Debug-follow-up distribution guidance, counterweight routing
+  remediation, explicit challenge scheduling, and 25-round campaign polish.
+- Focused checks passed before commit. A fresh full release command, signed-out feedback-form check, package smoke,
+  and Friends & Family human evidence remain release gates; this is not yet a public `1.0` tag.
+- Documentation governance was reset so the active Delivery and Test plans contain only current release evidence;
+  completed detail remains here, in `docs/archive/`, and in Git history.
+- Seven unused bundled audio binaries were removed and non-canonical screenshot captures were moved to the media
+  archive. The remaining elevator-door/fallback mismatch is explicitly retained as a post-RC runtime reconciliation
+  rather than misrepresented as a completed audio audit.
 
 ## Network campaign and permanent Automation Dock — July 2026
 

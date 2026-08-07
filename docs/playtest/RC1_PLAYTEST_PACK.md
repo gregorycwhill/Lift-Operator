@@ -1,8 +1,9 @@
 # RC1 Friends & Family Playtest Pack
 
 **Document role:** Tester-facing session guide and distribution checklist
-**Status:** Use after the final feedback-quality remediation is deployed
-**Build:** Read the exact build identifier in Settings or Round Review; it is also added to Give Feedback automatically.
+**Status:** Active Friends & Family guide
+**Baseline:** `master` commit `bc59758`; read the matching build identifier in Settings or Round Review. It is also
+added to Give Feedback automatically.
 
 ## First session: normal campaign
 

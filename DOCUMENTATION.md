@@ -2,7 +2,7 @@
 
 **Status:** Active documentation governance reference
 **Owner class:** Product and engineering
-**Last reviewed:** 7 August 2026
+**Last reviewed:** 8 August 2026
 
 ## Purpose
 
@@ -24,7 +24,7 @@ plan as current work authority just because it contains useful detail.
 | What material instruction or decision came from chat? | `docs/CHAT_DECISION_LOG.md` | A durable product, design, release, or documentation decision is made |
 | How should an external tester run and report an RC session? | `docs/playtest/RC1_PLAYTEST_PACK.md` | The test window, reporting fields, or release-readiness guidance changes |
 | What shipped in completed delivery slices? | `docs/archive/RELEASE_HISTORY.md` | A release candidate or material delivery slice completes |
-| What audio assets may ship and how are they credited? | `assets/audio/ATTRIBUTION.md` | An audio source, licence, or local asset changes |
+| What audio assets may ship and how are they credited? | `assets/audio/manifest.json`, `assets/audio/ATTRIBUTION.md` | An audio source, licence, local asset, or enabled status changes |
 | What third-party material is bundled and what blocks a project licence? | `THIRD_PARTY_NOTICES.md`, `THIRD_PARTY_LICENSES.md` | A bundled dependency, asset, provenance record, or licence decision changes |
 | What does the code currently expose? | Code, `package.json`, generated balance data, and focused tests | Code is always primary; write a short baseline note only for material behavior |
 | How do balance and quality practices work? | `BALANCE_WORKFLOW.md`, `TESTING_STRATEGY.md` | Enduring process changes |
@@ -37,10 +37,14 @@ change. Markdown describes intent and evidence, never a competing numeric source
 `docs/archive/` preserves prior decisions, implementation context, and retrospective playtest evidence. Completed plans
 are not active work queues. Git history is the detailed change log; do not keep completed checklists alive indefinitely.
 
-`docs/playtest/PLAYTEST_FEEDBACK_LOG.md` is the active feedback intake and disposition source, not a work queue. New
+`docs/playtest/PLAYTEST_FEEDBACK_LOG.md` is the active feedback intake and disposition source, not a work queue. Its
+current-disposition index is the fast status view; the append-only register preserves original evidence. New
 entries should include the transcript timestamp when available and explicitly mark unrecoverable timestamps.
 `docs/CHAT_DECISION_LOG.md` is the active curated decision record for material chat instructions; it does not replace
 the service-hosted full transcript. `docs/archive/PLAYTEST_ARCHIVE.md` retains imported historical verbatims only.
+
+`assets/media/README.md` is the release-media manifest. It identifies canonical README/preview images; superseded
+captures belong in `assets/media/archive/` or Git history rather than the active collateral set.
 
 | Archived document | Retained for | Superseded by |
 | --- | --- | --- |
@@ -75,6 +79,10 @@ Avoid ambiguous labels such as “partially implemented” without naming the mi
 6. Before release, run the documented gate and ensure no historical document is described as the current authority.
 7. Keep release notes/history out of `ROADMAP.md`, implementation design out of `TEST_PLAN.md`, and future product
    concepts out of `DELIVERY_PLAN.md` until they are selected for delivery.
+8. Treat `assets/audio/manifest.json` as the per-file shipping authority. Every bundled audio file must have a
+   provenance/licence/status record; `ATTRIBUTION.md` is a human-readable rendering, not a competing source.
+9. Keep full generated traces out of Git unless their retention is explicitly justified. Commit concise summaries and
+   reproducibility metadata; retain bulky raw evidence as release artifacts where possible.
 
 `npm.cmd run docs:check` verifies local Markdown links, the required live-plan files, and obsolete authority claims.
 
@@ -85,3 +93,4 @@ Avoid ambiguous labels such as “partially implemented” without naming the mi
 - Does the playtest feedback log preserve the source observation and does the chat decision log preserve any material instruction?
 - Are balance values changed only in canonical JSON and regenerated artifacts?
 - Did the change leave a single current source for scope, status, and tests?
+- Does every changed release asset have a provenance/status record and a current collateral role?

@@ -3,8 +3,8 @@
 **Document role:** Product outcomes and sequence; not an implementation checklist
 **Status:** Active product roadmap
 **Owner class:** Product
-**Last reviewed:** 4 August 2026
-**Current delivery:** Major release-candidate hardening in `DELIVERY_PLAN.md`
+**Last reviewed:** 8 August 2026
+**Current delivery:** Friends & Family release evidence in `DELIVERY_PLAN.md`
 
 ## Product north star
 
@@ -25,10 +25,16 @@ The campaign currently includes:
 - R24–R25 fast single-passenger capsule dispatch;
 - the permanent Automation Dock, Settings, audio controls, Leaderboard, and local campaign-resume shell.
 
-The current product work is validation and tuning: resolve reproducible correctness gaps, confirm the legacy event
-matrix, profile the capsule fleet, validate the local campaign-resume shell, and gather structured human evidence
-across all five campaign arcs. Implementation scope and release gates are owned by `DELIVERY_PLAN.md` and
-`TEST_PLAN.md`.
+The implementation is feature-complete for this release candidate. Current work is limited to release evidence:
+
+- verify the ordinary public URI and unsigned feedback flow;
+- run the scoped internal desktop/device confirmation;
+- package and open the itch.io-compatible ZIP from the release commit;
+- gather structured Friends & Family evidence across the campaign arcs; and
+- classify findings as release blocker, tuning candidate, or later work before deciding promotion.
+
+Implementation scope and release gates are owned by `DELIVERY_PLAN.md` and `TEST_PLAN.md`. Mobile discovery does not
+begin until the current release decision closes.
 
 **Gate:** Broad feedback shows that players can understand the campaign's progression, diagnose failures, operate the
 Automation Dock, and complete representative zoning, counterweight, and capsule rounds on supported desktop hardware.
@@ -168,6 +174,8 @@ shared package safely; invalid combinations are explained before launch.
 - Workshop callbacks, persistent script memory, mandatory event-root blocks, and a visual Think block.
 - Runtime procedural generation before the authored campaign and Mobile edition are stable.
 - Player-facing achievements before their status, reward, persistence, and economy model are designed and validated.
+- Elapsed-time movement integration. It remains a post-RC technical resilience investigation; the zoning-overlay
+  performance remediation is separate and does not commit the project to replacing the current movement model.
 
 These are directions, not commitments. A future item enters `DELIVERY_PLAN.md` only after Product chooses it as the
 current delivery outcome.

@@ -3,12 +3,16 @@
 **Document role:** Active economy design reference for earning, spending, retry, and progression
 **Status:** Active design; numerical authority remains `design/game-balance.v1.json`
 **Owner class:** Product and design
-**Last reviewed:** 1 August 2026
+**Last reviewed:** 8 August 2026
 **Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
 
 **1.0 decision:** Retain the current canonical power-up prices for the release candidate. The candidate scarcity-price
 bands below remain future design work, not approved runtime values. The 1.0 evidence task is to measure and document
 inflation across the full 25-round campaign using current prices.
+
+**Authority boundary:** Sections labelled *candidate* describe post-1.0 exploration only. They are not runtime policy,
+release acceptance criteria, or a reason to reinterpret `design/game-balance.v1.json`. Current RC1.0 economy rules are
+the currency, retry, carry-forward, payout, unlock, and purchase constraints that are explicitly marked as current.
 
 ## 1. Economy goals
 

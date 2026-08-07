@@ -2,7 +2,7 @@
 
 **Document role:** Curated durable record of material product, design, release, and documentation instructions from chat  
 **Status:** Active, append-only decision record  
-**Coverage:** Reconstructed from the available project chat through 1 August 2026  
+**Coverage:** Reconstructed from the available project chat through 8 August 2026
 **Not a substitute for:** The service-hosted chat transcript, Git history, or active delivery/test plans
 
 ## Recording rule
@@ -52,6 +52,8 @@ document after the decision is applied there.
 | DEC-033 | 7 August 2026 | Post-RC roadmap idea: Polar Lifts arrange cars on concentric circular tracks that move in orbits rather than vertical shafts. Treat this as a topology/routing concept requiring later design of stops, transfers, automation semantics, and readable presentation; it is not part of the current release slice. | `ROADMAP.md`. |
 | DEC-034 | 7 August 2026 | Counterweight built-ins become pair-owned. Built-in routing evaluates both cars and is symmetric from either controller; a manual click commands the selected car plus its forced complement until both cars finish service. Manual applies to the pair. Zoned Low/High assigns the selected car's role and the partner's complement. Custom Workshop policies remain the disclosed advanced per-cabin exception. | `Game Play Map.md`, `Lift-Operator_GDD.md`, `Automation_Workshop_Spec.md`, delivery/test plan. |
 | DEC-035 | 7 August 2026 | Final Friends & Family feedback-quality scope: critical event messages use a queued non-board rail; the public Google Form is available unsigned with diagnostics prefilled and an optional shareable media-link field; release identity must be immutable; normal distribution precedes selected-testers' existing Debug URI. Player-facing Debug and campaign wording is simplified without creating a new pathway. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, `docs/playtest/RC1_PLAYTEST_PACK.md`. |
+| DEC-036 | 8 August 2026 | For RC1.0, the single Google Form is the player and technical feedback intake. It supersedes the earlier idea of GitHub Issue Forms; feedback is voluntary, no telemetry is transmitted automatically, and selected testers may separately receive the existing Debug URI after a normal first session. | `README.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`, `docs/playtest/RC1_PLAYTEST_PACK.md`. |
+| DEC-037 | 8 August 2026 | The explicit per-round Game Play Map challenge matrix replaces the historical event-persistence rule. Canonical configuration, briefings, and runtime activation must match the matrix; Round 12 keeps Room Service, Gym Bros, Jams, Stink, and Endurance while excluding VIP and Rooftop. | `Lift-Operator_GDD.md`, `Game Play Map.md`, canonical balance configuration. |
 
 ## Chat persistence limitation
 

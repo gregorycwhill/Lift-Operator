@@ -4,7 +4,7 @@
 **Campaign scope:** 25 implemented authored rounds; tuning remains evidence-led
 **Status:** Active product design reference; not a delivery-status or test-evidence record
 **Owner class:** Product and design
-**Last reviewed:** 1 August 2026
+**Last reviewed:** 8 August 2026
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
 **Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
@@ -134,7 +134,7 @@ runtime behaviour must be derived.
 | 9 | ✓ | — | — | ✓ | — | — | — | — | ✓ | ✓ | — | — | — |
 | 10 | ✓ | — | ✓ | — | ✓ | — | — | — | ✓ | ✓ | — | — | — |
 | 11 | ✓ | ✓ | — | ✓ | — | — | — | — | ✓ | ✓ | — | — | — |
-| 12 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | — | — | ✓ |
+| 12 | ✓ | ✓ | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ |
 | 13 | ✓ | ✓ | — | — | — | ✓ | — | — | ✓ | ✓ | — | — | — |
 | 14 | ✓ | ✓ | ✓ | — | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
 | 15 | ✓ | ✓ | — | ✓ | ✓ | — | — | — | ✓ | ✓ | ✓ | — | — |
@@ -179,6 +179,9 @@ capsule finale, combining Rooftop, VIP, Jams, and Zoning.
 | Endurance until death | 12 | 12 | — |
 | Gravity | 13 | 13 | — |
 | Open Plan | Round 22 (post-R20) | 22–23 | Timed adjacent-lift transfer; outside core 1–20 balance |
+
+The table describes teaching intent only. The explicit active-challenge matrix above is the sole authority for whether a
+mechanic is active in any particular round; it deliberately excludes VIP and Rooftop from R12.
 
 ### Why Open Plan is outside the core 13-round balance
 
@@ -317,7 +320,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - No shop or economy distraction.
 - A first-time completion rate of roughly 90–95%.
 
-### Round 2 — Let It Sweep
+### Round 2 — Probation by Automation
 
 **Role in arc:** Introduce automation as relief, not replacement.  
 **New problem:** Traffic exceeds comfortable single-lift manual attention.  
@@ -345,7 +348,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - The player must remain attentive without fighting the automation constantly.
 - Completion rate roughly 75–90% on first attempt.
 
-### Round 3 — Rush Delivery
+### Round 3 — Room Service, Going Up
 
 **Role in arc:** First tactical wall  
 **New problem:** A second lift and Room Service reveal boarding throughput and role assignment.  
@@ -370,7 +373,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - First round where a new player may fail once.
 - Wide Doors Bronze should be affordable. The automated balance comparator carries four uses as a conservative proof that an active response can survive; human playtesting must determine whether successful play actually requires too many purchases.
 
-### Round 4 — Triage Protocol
+### Round 4 — Code Red
 
 **Role in arc:** Urgency management  
 **New problem:** Serving maximum volume is insufficient when a minority of guests are near rage.  
@@ -390,7 +393,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - Use heterogeneous automation roles.
 - Reduce critical defenestrations without collapsing total throughput.
 
-### Round 5 — Democracy
+### Round 5 — The Guests Have Spoken
 
 **Role in arc:** Policy comparison and recovery round  
 **New problem:** With three lifts, directional sweep is not always the best response to concentrated demand.  
@@ -409,7 +412,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - Explain why each lift has its assigned policy.
 - Complete without needing a new power-up.
 
-### Round 6 — Maintenance Crisis
+### Round 6 — Out of Service
 
 **Role in arc:** Availability and redundancy wall  
 **New problem:** Lift jams make a perfectly optimized system brittle.  
@@ -429,7 +432,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - Recover from a jam without cascading failure.
 - Understand that repair and backlog recovery are separate problems.
 
-### Round 7 — Checkout Rush
+### Round 7 — Everybody Out
 
 **Role in arc:** Traffic-topology puzzle  
 **New problem:** Half of traffic flows toward Ground, producing a directional funnel.  
@@ -449,7 +452,7 @@ floor). Counterweight and capsule rounds retain their dedicated movement rules.
 - Create a dedicated funnel strategy.
 - Avoid sending every lift to Ground simultaneously.
 
-### Round 8 — VIP Security
+### Round 8 — The Important Guest
 
 **Role in arc:** Constraint and reservation puzzle  
 **New problem:** A VIP makes three journeys and carries a severe life penalty at every stage.<br>
@@ -470,7 +473,7 @@ track of the VIP after her first trip.
 - Serve the VIP without allowing the rest of the building to collapse.
 - Treat empty capacity as a strategic resource.
 
-### Round 9 — Happy Hour
+### Round 9 — Party at the Top
 
 **Role in arc:** Multi-stage event and timing wall  
 **New problem:** Stink temporarily removes lift capacity while the rooftop event creates a synchronized destination spike and later release.  
@@ -491,7 +494,7 @@ track of the VIP after her first trip.
 - Anticipate the event release.
 - Survive using a timed combination rather than one universal effect.
 
-### Round 10 — Automation Workshop
+### Round 10 — Build It Yourself
 
 **Role in arc:** Strategic expression and recovery  
 **Objective:** Deliver a quota rather than merely survive a timer.  
@@ -512,7 +515,7 @@ track of the VIP after her first trip.
 - Complete with at least one custom lift.
 - Observe a measurable advantage or learn why the script underperformed.
 
-### Round 11 — Heavy Lifting
+### Round 11 — Peak Performance
 
 **Role in arc:** Capacity versus speed mastery wall  
 **New problem:** Gym Bros and Room Service create mixed weight and boarding pressure; groups can trigger stink.  
@@ -533,7 +536,7 @@ track of the VIP after her first trip.
 - Balance weight, boarding time, and urgency.
 - Avoid treating all guests as identical units.
 
-### Round 12 — Endurance Operations
+### Round 12 — The Longest Shift
 
 **Role in arc:** Resource-management capstone and high-earning score round  
 **Objective:** Start with 20 lives and continue until the 20th life is lost. There is no timer and no delivery quota.  
@@ -570,7 +573,7 @@ track of the VIP after her first trip.
 
 The 30-second Workflow Monkey must use a test-only Endurance pressure multiplier or life-loss accelerator so it can exercise the death → payout → automatic Round 13 transition without waiting for a full human endurance run.
 
-### Round 13 — Pedal Power
+### Round 13 — Uphill Battle
 
 **Role in arc:** Final optimization puzzle  
 **New problem:** Upward travel slows with load, reversing the normal assumption that full lifts are always efficient.  

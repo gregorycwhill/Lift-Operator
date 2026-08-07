@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "status": "production-assets-verified",
-  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Procedural fallback remains enabled for missing or unsupported assets.",
+  "status": "production-assets-verified-door-retirement-pending",
+  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. The retained legacy door asset must be reconciled with the intentional no-door-sound policy before a final public release; procedural fallback must be retired in the same slice.",
   "assets": {
     "menu": {
       "title": "Somewhere in the Elevator",

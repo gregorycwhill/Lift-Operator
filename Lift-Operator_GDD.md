@@ -3,7 +3,7 @@
 **Document role:** Product vision and design intent
 **Status:** Active product design reference
 **Owner class:** Product and design
-**Last reviewed:** 31 July 2026
+**Last reviewed:** 8 August 2026
 **Current phase:** Implemented 25-round desktop campaign entering major release-candidate playtesting
 **Campaign scope:** R1–R25 are implemented; balance, usability, performance, and device acceptance remain evidence gates.
 
@@ -272,19 +272,16 @@ unsuitable for the VIP, an eligible ordinary guest may board instead; the VIP re
 An explicit manual lift target is a rescue instruction. It must not be replaced by an automation result already in
 flight; the lift honours the selected stop through arrival and one boarding attempt, then its assigned policy resumes.
 
-### Authored event persistence
+### Authored challenge schedule
 
-VIP, Rooftop, Stink, Gym, jam, and Checkout become persistent campaign vocabulary after their introduction. They remain
-eligible in every subsequent conventional round unless that round explicitly excludes them. A round's named challenge
-describes its primary pressure, not an automatic exclusion of previously introduced mechanics.
+Each authored round has an explicit challenge set in `Game Play Map.md`; omitted challenges are inactive. There is no
+inheritance rule after a mechanic is introduced. The Game Play Map matrix, canonical balance configuration, briefing,
+and runtime activation must agree.
 
 Checkout eligibility does not replace ordinary traffic: each eligible standard spawn independently uses the canonical
-Checkout probability (currently 50%). The remaining guests retain ordinary, varied floor-to-floor journeys. Rooftop
-redirection is a separate temporary event and likewise leaves unaffected guests on their ordinary journeys.
-
-Canonical balance data must record event introductions and explicit round exclusions. Runtime systems must resolve the
-same effective event set rather than mixing per-event thresholds with isolated inclusion flags. Capsule rounds retain
-their documented exclusions.
+Checkout probability. The remaining guests retain ordinary, varied floor-to-floor journeys. Rooftop redirection is a
+separate temporary event and likewise leaves unaffected guests on their ordinary journeys. Room Service and Gym Bros
+are never Checkout; Gym Bros can board a stinky lift.
 
 ### Counterweight network (post-R20 authored arc)
 

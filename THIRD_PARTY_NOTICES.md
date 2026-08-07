@@ -1,7 +1,7 @@
 # Third-Party Notices and Licence Audit
 
-**Status:** Distribution audit — first-party project code is GPL-3.0-only
-**Last audited:** 7 August 2026
+**Status:** Distribution audit in remediation — first-party project code is GPL-3.0-only
+**Last audited:** 8 August 2026
 **Scope:** Files bundled by the GitHub Pages/itch.io static distribution, excluding development-only `node_modules/`
 
 ## Outcome
@@ -38,6 +38,10 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 - Settings and campaign-completion Audio Credits & Licences render the CC-BY entries from the manifest, including
   title, author, licence, modification note, and source link. Keep this surface synchronized with the manifest whenever
   an audio asset changes.
+- The production manifest/CSV/attribution records require a final consistency pass before broad distribution. The
+  deliberate `NO SOUND` elevator-door decision conflicts with a retained `elevator-door.wav` record. It remains
+  temporarily because removing it without retiring its procedural fallback would reintroduce a player-facing tone.
+  Do not claim this audit is complete until that one runtime/asset reconciliation is checked against package contents.
 
 ## Fonts and visual assets
 
@@ -48,6 +52,6 @@ human-readable credit text in `assets/audio/ATTRIBUTION.md` and intake history i
 
 ## Licence-selection constraints
 
-The audit has no remaining bundled-code or bundled-audio provenance gap. GPL-3.0-only applies to first-party project
-code only; ship this notice, `THIRD_PARTY_LICENSES.md`, and the audio attribution record in the itch.io ZIP without
-claiming rights over third-party audio.
+Bundled-code licensing is complete. Audio provenance reconciliation remains a release gate described above.
+GPL-3.0-only applies to first-party project code only; ship this notice, `THIRD_PARTY_LICENSES.md`, and the audio
+attribution record in the itch.io ZIP without claiming rights over third-party audio.

@@ -1,8 +1,8 @@
 # Playtest Verbatim Archive
 
-**Status:** Active playtest evidence archive; not a work queue  
+**Status:** Historical playtest evidence archive; not a work queue
 **Source:** Playtester messages and decisions reconstructed from the project chat transcript  
-**Last reviewed:** 25 July 2026
+**Last reviewed:** 8 August 2026
 
 This archive preserves direct playtester wording where it was available. Known transcript times are retained exactly;
 the chat context did not expose dates for most later messages, so those entries are marked `date/time unavailable`.

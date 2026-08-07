@@ -2,7 +2,7 @@
 
 **Status:** Active licensing and attribution record  
 **Owner class:** Product and engineering  
-**Last reviewed:** 1 August 2026
+**Last reviewed:** 8 August 2026
 
 The title/menu context uses:
 
@@ -13,7 +13,7 @@ The title/menu context uses:
 The gameplay loop and SFX use the locally imported assets below, with procedural Web Audio fallback tones authored in
 `audio.js` where no asset is intentionally assigned.
 
-Additional provisional CC0 assets:
+Additional imported music assets:
 
 - “Dream Raid (Cinematic Action Soundtrack)” by Matthew Pablo
   ([source](https://opengameart.org/content/dream-raid-cinematic-action-soundtrack)), CC-BY 3.0. The full-version MP3
@@ -22,8 +22,9 @@ Additional provisional CC0 assets:
   ([source](https://opengameart.org/content/space-boss-battle-theme)), CC-BY 3.0. The MP3 is stored as
   `assets/audio/gameplay-orbital-colossus.mp3`; credit Matthew Pablo.
 
-- “Victory” by celestialghost8 ([source](https://opengameart.org/content/victory)), victory fanfare.
-- “Elevator_Door” by PagDev ([source](https://opengameart.org/content/elevatordoor)), door/boarding cue.
+- “Victory” by celestialghost8 ([source](https://opengameart.org/content/victory)), CC0 victory fanfare.
+- “Elevator_Door” by PagDev ([source](https://opengameart.org/content/elevatordoor)), CC0 legacy ambient asset.
+  It remains bundled while the procedural fallback path is retired; it is not approved as a player-facing boarding sound.
 - Selected effects from “8-Bit Sound Effect Pack (Vol. 001)” by Deva/@Shades
   ([source](https://opengameart.org/content/8-bit-sound-effect-pack-vol-001)), CC0. Selected WAVs were renamed for
   semantic mappings; no audio edits were made.
@@ -41,7 +42,7 @@ Additional provisional CC0 assets:
   ([source](https://pixabay.com/sound-effects/film-special-effects-tooteffect-90578/)), Pixabay Content License.
   Attribution is optional; stored as `assets/audio/sfx/hazard-tooteffect-90578.mp3` and capped at two seconds during
   stink playback.
-- UI Error by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0. If imported,
+- UI Error by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0. Required
   credit: “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”.
 - “Film Special Effects: Spray” ([source](https://pixabay.com/sound-effects/film-special-effects-spray-48068/)), Pixabay
   Content License. Attribution is optional; stored as `assets/audio/sfx/freesound_community-spray-48068.mp3`.
@@ -59,15 +60,17 @@ Additional provisional CC0 assets:
   `assets/audio/sfx/hazard-metal-interaction.wav`.
 - “Fanfares” by Spring Spring ([source](https://opengameart.org/content/fanfare-2)), CC-BY 4.0. Credit
   Spring/Spring Enterprises; stored as `assets/audio/sfx/event-vip-fanfare.wav`.
-- “aww scream” by bluszcz ([source](https://opengameart.org/content/aww-scream)), CC-BY 3.0. Stored as
-  `assets/audio/sfx/guest-urgency-aww.ogg`.
+- “aww scream” by bluszcz ([source](https://opengameart.org/content/aww-scream)), CC-BY 3.0. Retained as
+  `assets/audio/sfx/guest-urgency-aww.ogg` for provenance while its event is intentionally `NO SOUND`.
 - “Plingy Coin” by Fupi ([source](https://opengameart.org/content/plingy-coin)), CC0. Stored as
   `assets/audio/sfx/ui-purchase-coin.wav`.
 - “UI Failed or Error” by ViRiX/David McKee ([source](https://opengameart.org/content/ui-failed-or-error)), CC-BY 3.0.
   Credit “Some of the sounds in this project were created by David McKee (ViRiX) soundcloud.com/virix”; stored as
   `assets/audio/sfx/ui-error-failed.mp3`.
 
-The former GPL-3.0 Wrench file is retired and no longer used or distributed. The replacement is “Metal sounds” by
+The former GPL-3.0 Wrench file and the unused duplicate hazard/power-up effects are retired and no longer
+distributed. The retained guest-urgency asset is intentionally mapped to `NO SOUND` and remains attributed in the
+manifest. The Wrench replacement is “Metal sounds” by
 Vinrax ([source](https://opengameart.org/content/metal-sounds)), CC-BY 3.0: the first two seconds of
 `Metal_sounds.wav` are stored as `assets/audio/sfx/powerup-wrench-metal.wav`. Credit Vinrax and note the excerpt
 modification in distributed builds.
