@@ -82,6 +82,30 @@ The former `test:e2e` Auto-Pilot protocol relied on retired UNIT_01 debug behavi
 bounded result. It is retired from the active suite. `test:smoke` is the short supported gate; `test:full` is the
 supported comprehensive gate.
 
+### Planned routing and R13 remediation coverage
+
+- [x] Sweep reversal regression: a down-bound built-in Sweep lift services a drop-off, reverses at that floor, then
+  boards an otherwise-compatible up-bound waiting guest before departing. Cover Ground and Rooftop variants.
+- [x] Reversal exclusions: the same reversal must not reopen for a full lift, a regular guest blocked by Stink, an
+  out-of-zone route, party-bound guest, or VIP-incompatible cabin.
+- [x] Counterweight pair routing: built-in Sweep chooses a legal mirrored target pair using demand from both cars;
+  neither car is silently discarded because its policy evaluates second in the frame.
+- [x] Counterweight manual precedence: clicking either car immediately applies the requested/mirrored targets and
+  suppresses pair policy until that manual stop is serviced.
+- [x] Counterweight family variants: Priority Sweep and Zoned built-ins retain their declared routing constraints when
+  coordinated as a pair; custom policies remain individually sandboxed.
+- [x] Counterweight precedence: differently assigned pair policies resolve deterministically as `custom` > `priority
+  voting` > `priority sweep` > `zoned` > `voting` > `sweep`, without weakening manual-command precedence.
+- [x] R13 canonical data and generated artifact record the 20% curve (`1.08 → 1.26`); config and economy checks pass.
+- [x] New Game randomness: independent normal New Game campaigns generate valid, different persisted campaign seeds;
+  a continued campaign retains its original seed and derives the same round setup.
+- [x] Debug seed replay: applying a numeric seed or Randomise restarts only the current round deterministically; Copy
+  reports the active seed; neither action mutates the persisted campaign checkpoint.
+- [x] Feedback diagnostics include campaign seed plus an active Debug seed override, without automatically transmitting
+  either value.
+- [ ] Human replay: R9/R11 reversal behaviour, R13 difficulty/power-up use, and R21–R23 Sweep/manual recovery on the
+  published Chrome build. Record lives/time, power-ups, and any unfilled compatible queue.
+
 ## Full-campaign balance and economy acceptance
 
 **Current decision point:** the further 25% R2 spawn-rate reduction (43.75% total from the original values) unblocks

@@ -262,6 +262,10 @@ window.initializeUI = function() {
 
             let rawSeed = document.getElementById("gameSeed")?.value;
             if (rawSeed && !isNaN(parseInt(rawSeed))) Registry.seed = parseInt(rawSeed);
+            if (Registry.useCampaignSeeds && !Config.debugMode && Number.isInteger(Registry.seed)) {
+                Registry.campaignSeed = window.Game.Seed?.normalize?.(Registry.seed) || Registry.seed;
+                Registry.seed = Registry.campaignSeed;
+            }
             if (window.Game.Seed) window.Game.Seed.set(Registry.seed);
             if (document.getElementById("seedDisplay")) document.getElementById("seedDisplay").innerText = Registry.seed;
             if (typeof ui.buildWorld === "function") ui.buildWorld();

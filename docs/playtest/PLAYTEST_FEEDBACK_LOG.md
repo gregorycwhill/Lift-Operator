@@ -78,6 +78,11 @@ direction/zoning/stink/VIP/capacity/party eligibility between Sweep and boarding
 roof to Ground after release, keeps VIP arrival visible without auto-dispatch, and preserves pair-synchronised
 counterweight policy. This note supersedes the pending status in the historical intake row above.
 
+| PTF-031 | playtest feedback — 7 August 2026 | A built-in Sweep lift may refuse up-bound guests while travelling down, reverse at that same stopped floor, then depart upward without reconsidering those now-compatible guests. | Conventional boarding; reported during active play | **Implemented—awaiting replay.** Reversal rechecks the current floor for compatible guests while preserving all other boarding exclusions. |
+| PTF-032 | playtest feedback — 7 August 2026 | Counterweight lifts remain ineffective in Sweep. | R21–R23 Counterweights | **Implemented—awaiting replay.** Built-in pair routing uses the accepted precedence; manual clicks remain immediate and symmetric, custom policies remain advanced. |
+| PTF-033 | playtest feedback — 7 August 2026 | Round 13 spawn rate is too low; increase it by 20%. | R13 — Uphill Battle | **Implemented as balance candidate—awaiting replay.** Canonical candidate curve is `1.08 → 1.26`, up from `0.90 → 1.05`. |
+| PTF-034 | implementation decision — 7 August 2026 | Normal campaigns should vary while test reports remain reproducible. | Campaign seed and Debug menu | **Implemented—awaiting replay.** New campaigns persist random campaign seeds; round seeds derive deterministically; Debug offers transient seed replay controls. |
+
 ## Current intake boundary
 
 The next requested evidence window is H0/H1: replay R9 after RC-TRAF-01, then continue through R15. New feedback from

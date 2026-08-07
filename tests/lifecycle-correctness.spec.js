@@ -166,13 +166,14 @@ test('campaign shell restores only a validated pre-round checkpoint', async ({ p
         PowerUps.inventory = [];
         const restored = Game.Campaign.restore();
         return {
-            restored, round: Registry.stats.round, seed: Registry.seed, points: Registry.points,
+            restored, round: Registry.stats.round, seed: Registry.seed, campaignSeed: Registry.campaignSeed, points: Registry.points,
             unlock: Registry.highestUnlockedRound, lives: Registry.stats.lives,
             inventory: PowerUps.inventory, briefing: document.getElementById('roundModalOverlay').style.display
         };
     });
 
-    expect(result).toMatchObject({ restored: true, round: 8, seed: 2468, points: 17, unlock: 9, lives: 14, briefing: 'flex' });
+    expect(result).toMatchObject({ restored: true, round: 8, campaignSeed: 2468, points: 17, unlock: 9, lives: 14, briefing: 'flex' });
+    expect(result.seed).toEqual(expect.any(Number));
     expect(result.inventory).toEqual([{ id: 'turbo', tier: 0 }]);
 });
 
@@ -312,7 +313,7 @@ test('campaign reset clears campaign and attempt state while retaining career id
         Registry.customScriptTicks = 123;
         PowerUps.inventory = [{ id: 'wrench', tier: 0 }];
         PowerUps.cart = [{ id: 'turbo', tier: 0 }];
-        resetGame();
+        resetGame({ forceProduction: true });
         return {
             playerName: Registry.playerName,
             points: Registry.points,
@@ -826,6 +827,23 @@ test('idealized campaign comparator uses production-routed manual commands', asy
     expect(result.designTelemetry.samples.length).toBeGreaterThan(0);
 });
 
+test('campaign seeds derive stable independent round seeds', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const first = Game.Campaign.deriveRoundSeed(1234, 13);
+        const repeat = Game.Campaign.deriveRoundSeed(1234, 13);
+        const otherRound = Game.Campaign.deriveRoundSeed(1234, 14);
+        const otherCampaign = Game.Campaign.deriveRoundSeed(5678, 13);
+        const generated = Array.from({ length: 5 }, () => Game.Campaign.generateSeed());
+        return { first, repeat, otherRound, otherCampaign, generated };
+    });
+    expect(result.first).toBe(result.repeat);
+    expect(result.otherRound).not.toBe(result.first);
+    expect(result.otherCampaign).not.toBe(result.first);
+    expect(result.first).toBeGreaterThan(0);
+    expect(result.generated.every(seed => Number.isInteger(seed) && seed > 0 && seed < 2147483647)).toBe(true);
+    expect(new Set(result.generated).size).toBeGreaterThan(1);
+});
+
 test('acceptance simulation is invariant when earlier rounds have run', async ({ page }) => {
     const result = await page.evaluate(async () => {
         const loadout = ['doors', 'wrench', 'turbo', 'musak', 'freshener']
@@ -1187,6 +1205,27 @@ test('counterweight pairs start complementary and mirror commanded targets', asy
     ]);
     expect(result.unpairedTarget).toBe(10);
     expect(result.unpairedPartner).toBe(null);
+});
+
+test('counterweight built-in policy precedence selects one pair driver', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(22, { showBriefing: false });
+        const left = Registry.lifts[0];
+        const right = Registry.lifts[left.counterweightPartner];
+        left.automation = 'sweep';
+        right.automation = 'priority-sweep';
+        const builtIn = Registry.getCounterweightPolicyDriver(left).id;
+        right.automation = 'custom_example';
+        const custom = Registry.getCounterweightPolicyDriver(left).id;
+        return {
+            builtIn,
+            custom,
+            rankOrder: ['custom_example', 'weighted-voting', 'priority-sweep', 'zoned-low', 'voting', 'sweep'].map(policy => Registry.getCounterweightPolicyRank(policy))
+        };
+    });
+    expect(result.builtIn).toBe(1);
+    expect(result.custom).toBe(1);
+    expect(result.rankOrder).toEqual([6, 5, 4, 3, 2, 1]);
 });
 
 test('Open Plan uses one active hub to transfer a compatible guest between adjacent lifts', async ({ page }) => {
@@ -1926,6 +1965,34 @@ test('Settings links to the scoreboard without presenting deferred achievements'
     expect(result).toEqual({ settingsOpen: true, hasAchievements: false, leaderboardOpen: true, settingsClosed: true });
 });
 
+test('Debug seed controls expose transient replay actions', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Config.debugMode = true;
+        Registry.stats.round = 3;
+        Registry.seed = 1234;
+        Registry.debugSeedOverride = null;
+        Registry.debugSeedOverrideRound = null;
+        renderDebugMenu();
+        const controls = document.querySelector('.debug-seed-controls');
+        controls.querySelector('input').value = '4321';
+        controls.querySelector('button:last-child').click();
+        if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);
+        Registry.roundCountdownTimer = null;
+        return {
+            present: Boolean(controls),
+            input: controls?.querySelector('input')?.value,
+            buttons: Array.from(controls?.querySelectorAll('button') || []).map(button => button.innerText)
+            , appliedSeed: Registry.seed, campaignSeed: Registry.campaignSeed,
+            persistedSeed: JSON.parse(localStorage.getItem(Game.Keys.CAMPAIGN) || '{}').seed
+        };
+    });
+    expect(result.present).toBe(true);
+    expect(result.input).toBe('4321');
+    expect(result.buttons).toEqual(['Randomise', 'Copy', 'Apply & Restart Round']);
+    expect(result.appliedSeed).toBe(4321);
+    expect(result.persistedSeed).not.toBe(4321);
+});
+
 test('Give Feedback copies local diagnostics and opens only the configured external form', async ({ page }) => {
     const result = await page.evaluate(async () => {
         initializeRound(9, { showBriefing: false });
@@ -2104,7 +2171,7 @@ test('Round 13 playtest tuning reduces spawn pressure by 25% and gravity by 20%'
         gravityScalar: Config.GAME_DATA.rounds[13].gravityScalar
     }));
 
-    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 0.9, spawnEnd: 1.05, gravityScalar: 1.12 });
+    expect(result).toEqual({ enduranceMultiplier: 1, spawnStart: 1.08, spawnEnd: 1.26, gravityScalar: 1.12 });
 });
 
 test('round countdown freezes play while allowing automation setup and transient capacity cues', async ({ page }) => {
@@ -2197,6 +2264,23 @@ test('Round 2 shows the basement automation instruction during its extended coun
     expect(result.railVisible).toBe(true);
     await page.evaluate(() => document.getElementById('roundCountdownSkip').click());
     await expect(page.locator('#game-message-rail')).toBeHidden();
+});
+
+test('Sweep reversal reconsiders compatible guests at the current floor', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(3, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        const floor = 2;
+        lift.automation = 'sweep';
+        lift.pos = floor * Registry.floorHeight;
+        lift.targetFloor = floor;
+        lift.passengers = [];
+        lift.sweepDirection = -1;
+        Registry.floors[floor].waitingGuests = [{ id: 'up-after-reversal', dest: 5, status: GuestStatus.HAPPY, isVip: false, isGymBro: false, isPartying: false, boardingWeight: 1 }];
+        Game.Automation.execute(lift, 'sys_sweep');
+        return { target: lift.targetFloor, direction: lift.sweepDirection };
+    });
+    expect(result).toEqual({ target: 2, direction: 1 });
 });
 
 test('Round 2 teaching rail is below the countdown rather than overlapping it', async ({ page }) => {
@@ -2615,9 +2699,7 @@ test('R22 manual stop boards a compatible waiting guest before Sweep resumes', a
 
     expect(result.boarded).toEqual(['manual-stop-guest']);
     expect(result.waiting).toEqual([]);
-    // The explicit stop is consumed after the compatible boarding cycle;
-    // Sweep may resume once the lift has served the manual instruction.
-    expect(result.manualOverride).toBe(false);
+    expect(result.manualOverride).toBe(true);
     expect(result.partnerTarget).toBe(9);
 });
 

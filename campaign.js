@@ -11,6 +11,21 @@
     const clonePromotions = (promotions) => Array.isArray(promotions)
         ? [...new Set(promotions.filter(round => Number.isInteger(round) && Config.GAME_DATA.rounds[round]?.briefing?.promotion))]
         : [];
+    const normalizeSeed = (seed) => window.Game.Seed?.normalize?.(seed) || 1234;
+    const randomSeed = () => {
+        if (window.crypto?.getRandomValues) {
+            const values = new Uint32Array(1);
+            window.crypto.getRandomValues(values);
+            return normalizeSeed(values[0]);
+        }
+        return normalizeSeed(Math.floor(Math.random() * 2147483646) + 1);
+    };
+    const deriveRoundSeed = (campaignSeed, round) => {
+        let value = normalizeSeed(campaignSeed) ^ (Math.imul(Number(round) || 1, 0x45d9f3b) >>> 0);
+        value = Math.imul(value ^ (value >>> 16), 0x45d9f3b) >>> 0;
+        value = Math.imul(value ^ (value >>> 13), 0x45d9f3b) >>> 0;
+        return normalizeSeed(value ^ (value >>> 16));
+    };
 
     const parse = () => {
         const raw = Game.Storage.get(Game.Keys.CAMPAIGN, '');
@@ -28,6 +43,8 @@
 
     Game.Campaign = {
         load: parse,
+        generateSeed: randomSeed,
+        deriveRoundSeed,
         clear: () => {
             Registry.promotionAcknowledgements = [];
             try { localStorage.removeItem(Game.Keys.CAMPAIGN); } catch (error) {}
@@ -48,7 +65,9 @@
                 schemaVersion,
                 balanceVersion: Config.balanceVersion,
                 playerName: Registry.playerName,
-                seed: Number.isInteger(Registry.seed) ? Registry.seed : 1234,
+                seed: Number.isInteger(Registry.campaignSeed) && Registry.useCampaignSeeds
+                    ? Registry.campaignSeed
+                    : (Number.isInteger(Registry.seed) ? Registry.seed : 1234),
                 round: Math.max(1, Math.min(maxRound(), Number(options.round || Registry.stats.round) || 1)),
                 highestUnlockedRound: Math.max(1, Math.min(maxRound(), Number(options.highestUnlockedRound || Registry.highestUnlockedRound) || 1)),
                 lives: Math.max(0, Number(options.lives ?? Registry.stats.lives) || 0),
@@ -63,7 +82,9 @@
         restore: (record = parse()) => {
             if (!record) return false;
             Registry.playerName = record.playerName;
-            Registry.seed = record.seed;
+            Registry.campaignSeed = normalizeSeed(record.seed);
+            Registry.useCampaignSeeds = true;
+            Registry.seed = Registry.campaignSeed;
             Registry.points = record.points;
             Registry.highestUnlockedRound = record.highestUnlockedRound;
             Registry.promotionAcknowledgements = clonePromotions(record.promotionAcknowledgements);

@@ -7,10 +7,13 @@ window.Game = window.Game || {};
 // Randomized Seeded Logic
 window.Game.Seed = {
     current: 1,
+    normalize: function(seed) {
+        let value = parseInt(seed);
+        if (!Number.isFinite(value)) value = 1234;
+        return (Math.abs(value) % 2147483647) || 1;
+    },
     set: function(seed) {
-        let s = parseInt(seed);
-        if (isNaN(s)) s = 1234;
-        this.current = (Math.abs(s) % 2147483647) || 1;
+        this.current = this.normalize(seed);
     },
     random: function() {
         this.current = (this.current * 16807) % 2147483647;

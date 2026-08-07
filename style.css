@@ -774,6 +774,8 @@ body {
 .debug-row:nth-child(odd) { background-color: #fdfdfd; }
 .debug-row:nth-child(even) { background-color: #f4f6f7; }
 .debug-row > span { font-weight: bold; color: #2c3e50; font-size: 14px; }
+.debug-seed-controls { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.debug-seed-controls input { width: 110px; box-sizing: border-box; }
 .spinner-ctrl { 
     display: flex; 
     align-items: center; 

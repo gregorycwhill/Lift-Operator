@@ -44,6 +44,9 @@ document after the decision is applied there.
 
 | DEC-026 | 5 August 2026 | VIPs retain boarding priority but do not trigger automatic dispatch: the player must notice the arrival and intervene. A suitable empty lift at Ground can take priority at boarding; occupied or unsuitable lifts remain unsuitable. Rooftop guests whose natural destination was already the Rooftop receive Ground as their post-party destination, representing an onward night out. | Current feedback remediation design; future implementation/test plan. |
 | DEC-027 | 5 August 2026 | Backlog concepts: Lift Bouncer is a selective-lift Power-up; Player-authored Rounds provide a validated designer, local list/Warp access, and optional manifest/URI sharing. Neither feature is part of RC1.0. | `ROADMAP.md`. |
+| DEC-028 | 7 August 2026 | Player manual counterweight commands always have priority: clicking either shaft/floor immediately dispatches that car and its forced complementary partner. Built-in pair routing resumes only after the manual stop is serviced. | Counterweight routing remediation and tests. |
+| DEC-029 | 7 August 2026 | When counterweight partners have different automations, paired routing uses deterministic precedence: custom > priority voting > priority sweep > zoned > voting > sweep. The selected policy plans for both cars; manual player commands still override immediately. | Counterweight routing remediation and tests. |
+| DEC-030 | 7 August 2026 | RC1.0 normal New Game uses a random persisted campaign seed with deterministic per-round derivation. Debug provides numeric seed entry, Randomise, Copy, and Apply & Restart Round as a transient override; it never overwrites campaign persistence. Diagnostics identify both seeds when an override is active. | Current routing/balance/seed remediation and tests. |
 
 ## Chat persistence limitation
 

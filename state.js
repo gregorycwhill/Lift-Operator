@@ -35,7 +35,8 @@ const Registry = {
     
     highestUnlockedRound: 1, 
     gameActive: false, pauseStartTime: 0, lastSpawnTime: 0, floorHeight: 60, 
-    fallbackName: "Pilot 1", seed: 1234,
+    fallbackName: "Pilot 1", seed: 1234, campaignSeed: 1234, useCampaignSeeds: false,
+    debugSeedOverride: null, debugSeedOverrideRound: null,
     guestSequence: 0,
     
     // Auto-Pilot & Regression Telemetry
@@ -162,6 +163,61 @@ const Registry = {
     getLiftWeight: function(lift) {
         return lift.passengers.reduce((sum, p) => sum + (p.boardingWeight || (p.isGymBro ? 2 : 1)), 0);
     },
+    getCounterweightPolicyRank: function(policy) {
+        if (String(policy || '').startsWith('custom_')) return 6;
+        return ({ 'priority-voting': 5, 'weighted-voting': 5, 'priority-sweep': 4, 'zoned-low': 3, 'zoned-high': 3, voting: 2, sweep: 1 })[policy] || 0;
+    },
+    getCounterweightPolicyDriver: function(lift) {
+        if (!Registry.counterweightEnabled || !Number.isInteger(lift?.counterweightPartner)) return lift;
+        const partner = Registry.lifts[lift.counterweightPartner];
+        if (!partner) return lift;
+        const liftRank = this.getCounterweightPolicyRank(lift.automation);
+        const partnerRank = this.getCounterweightPolicyRank(partner.automation);
+        if (partnerRank > liftRank || (partnerRank === liftRank && partner.id < lift.id)) return partner;
+        return lift;
+    },
+    isCounterweightPolicy: function(lift) {
+        return Boolean(Registry.counterweightEnabled && lift && this.getCounterweightPolicyRank(lift.automation) > 0);
+    },
+    getCounterweightPairTarget: function(lift, dir = 1, priorityOnly = false, weighted = false, includeCurrentFloor = false) {
+        if (!this.isCounterweightPolicy(lift)) return -1;
+        const driver = this.getCounterweightPolicyDriver(lift);
+        const partner = Registry.lifts[driver.counterweightPartner];
+        if (!partner) return -1;
+        const maxFloor = Math.max(0, Config.numFloors - 1);
+        const current = Math.round(driver.pos / Registry.floorHeight);
+        const partnerCurrent = Math.round(partner.pos / Registry.floorHeight);
+        const direction = driver.sweepDirection || dir || 1;
+        const scoreAt = (targetLift, floor) => {
+            let score = targetLift.passengers.filter(passenger => passenger.dest === floor).length * 10;
+            const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
+            const isStinky = this.isLiftStinky(targetLift);
+            if (this.getLiftWeight(targetLift) < capacity) {
+                Registry.floors[floor]?.waitingGuests.forEach(guest => {
+                    if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return;
+                    if (typeof window.canGuestBoardLift === 'function' && window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity)) {
+                        score += weighted && guest.status === 'critical' ? 10 : (guest.status === 'annoyed' ? 3 : 1);
+                    }
+                });
+            }
+            return score;
+        };
+        let best = -1;
+        let bestScore = 0;
+        for (let target = 0; target <= maxFloor; target++) {
+            if (target !== current && (direction > 0 ? target < current : target > current)) continue;
+            if (target === current && !includeCurrentFloor) continue;
+            const partnerTarget = maxFloor - target;
+            if (!this.isFloorInLiftZone(driver, target) || !this.isFloorInLiftZone(partner, partnerTarget)) continue;
+            const score = scoreAt(driver, target) + scoreAt(partner, partnerTarget);
+            if (score > bestScore || (score === bestScore && score > 0 && (best < 0 || Math.abs(target - current) < Math.abs(best - current)))) {
+                best = target;
+                bestScore = score;
+            }
+        }
+        if (best < 0) return -1;
+        return lift.id === driver.id ? best : maxFloor - best;
+    },
     isLiftStinky: function(lift) {
         if (!lift) return false;
         const immune = lift.freshenerTimer > 0 ||
@@ -172,7 +228,11 @@ const Registry = {
             lift.passengers.filter(passenger => passenger.isGymBro).length >= Number(Config.gymBroStinkThreshold || 3);
         return Boolean(lift.stinkTimer > 0 || gymStink);
     },
-    findSweepTarget: function(lift, dir, priorityOnly = false) {
+    findSweepTarget: function(lift, dir, priorityOnly = false, includeCurrentFloor = false) {
+        if (this.isCounterweightPolicy(lift)) {
+            const pairTarget = this.getCounterweightPairTarget(lift, dir, priorityOnly, false, includeCurrentFloor);
+            if (pairTarget >= 0) return pairTarget;
+        }
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);
         let maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(lift.id) : (Config.liftCapacity || 10);
         let isStinky = this.isLiftStinky(lift);
@@ -183,7 +243,8 @@ const Registry = {
         const existingOutsideZone = lift.passengers.find(passenger => !this.isFloorInLiftZone(lift, passenger.dest));
         if (existingOutsideZone) return existingOutsideZone.dest;
 
-        for (let checkF = currentFloor + dir; checkF >= 0 && checkF <= maxF; checkF += dir) {
+        const firstFloor = includeCurrentFloor ? currentFloor : currentFloor + dir;
+        for (let checkF = firstFloor; checkF >= 0 && checkF <= maxF; checkF += dir) {
             if (!this.isFloorInLiftZone(lift, checkF)) continue;
             // Dropoff check: passengers always want to get off
             // Existing passengers must still be delivered if a new Zoned policy
@@ -206,6 +267,10 @@ const Registry = {
         return -1;
     },
     getBestFloor: function(lift, weighted) {
+        if (this.isCounterweightPolicy(lift)) {
+            const pairTarget = this.getCounterweightPairTarget(lift, lift.sweepDirection || 1, false, Boolean(weighted), false);
+            if (pairTarget >= 0) return pairTarget;
+        }
         let bestFloors = [];
         let maxScore = -1;
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);

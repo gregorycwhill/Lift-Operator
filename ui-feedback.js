@@ -9,11 +9,15 @@ window.Game.Feedback.getDiagnostic = function(context = 'gameplay') {
     const release = window.LiftOperatorRelease || {};
     const round = window.Registry?.stats?.round ?? 'unknown';
     const seed = window.Registry?.seed ?? 'unknown';
+    const campaignSeed = window.Registry?.campaignSeed ?? seed;
+    const debugSeed = window.Registry?.debugSeedOverrideRound === round
+        ? window.Registry?.debugSeedOverride
+        : null;
     const balance = window.Config?.balanceVersion ?? 'unknown';
     const viewport = `${window.innerWidth || 0}x${window.innerHeight || 0}`;
     const outcome = window.Registry?.lastRoundOutcome || 'in-progress';
     const failure = window.Registry?.lastRoundFailureReason;
-    return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | seed=${seed} | outcome=${outcome}${failure ? ` | failure=${failure}` : ''} | browser=${navigator.userAgent} | viewport=${viewport}`;
+    return `Lift Operator | build=${release.buildVersion || 'development'} | balance=${balance} | context=${context} | round=${round} | campaignSeed=${campaignSeed} | seed=${seed}${debugSeed !== null ? ` | debugSeed=${debugSeed}` : ''} | outcome=${outcome}${failure ? ` | failure=${failure}` : ''} | browser=${navigator.userAgent} | viewport=${viewport}`;
 };
 
 window.Game.Feedback.copyDiagnostic = async function(context, suppliedDiagnostic) {

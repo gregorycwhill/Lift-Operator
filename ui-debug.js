@@ -11,6 +11,61 @@ window.renderDebugMenu = function() {
     const container = document.getElementById('debugControls');
     if (!container) return;
     container.innerHTML = '';
+
+    // Seed replay controls are deliberately transient: they restart only the
+    // current round and never rewrite the persisted campaign checkpoint.
+    const seedHeader = document.createElement('h3');
+    seedHeader.innerText = 'Seed Replay';
+    seedHeader.style.margin = '10px 0';
+    seedHeader.style.borderBottom = '1px solid #ccc';
+    container.appendChild(seedHeader);
+    const seedRow = document.createElement('div');
+    seedRow.className = 'debug-row';
+    const seedLabel = document.createElement('span');
+    seedLabel.innerText = 'Round seed';
+    const seedControls = document.createElement('div');
+    seedControls.className = 'debug-seed-controls';
+    const seedInput = document.createElement('input');
+    seedInput.type = 'number';
+    seedInput.min = '1';
+    seedInput.max = '2147483646';
+    seedInput.step = '1';
+    seedInput.value = Registry.debugSeedOverrideRound === Registry.stats.round
+        ? Registry.debugSeedOverride
+        : Registry.seed;
+    seedInput.title = 'Temporary seed for the current round';
+    const randomSeedButton = document.createElement('button');
+    randomSeedButton.className = 'btn btn-gray btn-small';
+    randomSeedButton.innerText = 'Randomise';
+    randomSeedButton.onclick = () => { seedInput.value = window.Game.Campaign?.generateSeed?.() || Math.floor(Math.random() * 2147483646) + 1; };
+    const copySeedButton = document.createElement('button');
+    copySeedButton.className = 'btn btn-blue btn-small';
+    copySeedButton.innerText = 'Copy';
+    copySeedButton.onclick = async () => {
+        const value = Number(seedInput.value);
+        if (!Number.isInteger(value)) return;
+        await navigator.clipboard?.writeText?.(String(value));
+        ui.showToast?.(`Seed ${value} copied.`);
+    };
+    const applySeedButton = document.createElement('button');
+    applySeedButton.className = 'btn btn-purple btn-small';
+    applySeedButton.innerText = 'Apply & Restart Round';
+    applySeedButton.onclick = () => {
+        const value = Number(seedInput.value);
+        if (!Number.isInteger(value) || value < 1 || value >= 2147483647) {
+            ui.showToast?.('Enter a valid seed between 1 and 2147483646.');
+            return;
+        }
+        Registry.debugSeedOverride = value;
+        Registry.debugSeedOverrideRound = Registry.stats.round;
+        window.initializeRound(Registry.stats.round, { showBriefing: false, seedOverride: value });
+        document.getElementById('debugOverlay')?.style.setProperty('display', 'none');
+        window.startRoundCountdown?.(window.getRoundCountdownSeconds?.());
+        ui.showToast?.(`Round restarted with Debug seed ${value}.`);
+    };
+    seedControls.append(seedInput, randomSeedButton, copySeedButton, applySeedButton);
+    seedRow.append(seedLabel, seedControls);
+    container.appendChild(seedRow);
     
     /* Retired RC1.0 internal quick actions. Automated tests run from npm,
        while Endless and UNIT_01 are not player-facing product modes.

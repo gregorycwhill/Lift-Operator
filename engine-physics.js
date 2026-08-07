@@ -764,6 +764,10 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
 
     const VM = window.Game.Automation;
     if (!VM || !lift.automation || lift.automation === 'manual') return;
+    if (Registry.isCounterweightPolicy?.(lift)) {
+        const driver = Registry.getCounterweightPolicyDriver(lift);
+        if (driver.id !== lift.id) return;
+    }
 
     // Idle lifts can reach this path every animation frame. Bound policy scans so
     // large queues do not multiply into hundreds of full-building scans per second.

@@ -120,6 +120,31 @@ guests already at the roof are sent to Ground after the party; VIP arrival remai
 lift; and counterweight policy commands remain pair-synchronised. Remaining evidence is human replay, especially R9/R11
 rooftop evacuation and R21 Sweep under real browser timing.
 
+### Routing, R13 balance, and seed remediation — implemented; awaiting replay
+
+This is a correctness-and-tuning slice, not new RC1.0 product scope.
+
+1. **Sweep reversal pickup:** when a built-in Sweep-family policy reverses at a stopped floor, re-evaluate the current
+   floor before selecting a new remote target. If a waiting guest has become compatible under the new direction, reopen
+   the doors and board normally. Preserve all existing capacity, stink, VIP, Room Service, party-state, zoning, and
+   passenger-drop-off rules; do not create a repeated open/close loop when nobody is compatible.
+2. **Counterweight pair-aware routing:** replace competing per-car built-in Sweep decisions with one combined decision
+   for each physical pair. Score a proposed car target and its forced mirrored partner target using both cars' pending
+   drop-offs and compatible pickups, then issue one paired command. A player click remains an immediate, symmetric
+   manual override and is never replaced by the policy. Custom Workshop automations retain individual/advanced
+   behaviour.
+3. **R13 pressure candidate:** the canonical candidate is now `1.08 → 1.26`, a 20% increase from `0.90 → 1.05`.
+   Derived balance artifacts and acceptance evidence are regenerated; human replay decides whether the candidate becomes
+   final balance.
+4. **Seed variation with reproducibility:** normal New Game creates and persists a random campaign seed; authored
+   round seeds remain deterministically derived from it. Add a Debug seed control with numeric entry, Randomise, Copy,
+   and Apply & Restart Round. A Debug seed is a transient override for the active replay: it must not overwrite the
+   persisted campaign seed. Diagnostics expose both the campaign seed and any active override.
+
+**Resolved routing rule:** when paired cars have different automations, the pair coordinator uses this deterministic
+precedence: `custom` > `priority voting` > `priority sweep` > `zoned` > `voting` > `sweep`. The selected policy plans
+for both cars as a coupled pair; manual player commands still override it immediately.
+
 ### Tooling and release hygiene
 
 6. **Completed cleanup:** retire the broken completion audit, hash-only replay, placeholder robustness command, legacy

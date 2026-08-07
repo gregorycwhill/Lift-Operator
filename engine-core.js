@@ -457,7 +457,16 @@ window.initializeRound = function(round, options = {}) {
     window.Game.Audio?.publish('rooftop_released', { reason: 'round_initialized', round });
     window.clearAttemptInventory();
     Registry.activeOperation = options.operation || null;
-    const state = window.createRoundState(round, Registry.seed, options);
+    const hasRoundOverride = options.seedOverride !== undefined ||
+        (Registry.debugSeedOverrideRound === round && Registry.debugSeedOverride !== null);
+    const overrideSeed = options.seedOverride !== undefined ? options.seedOverride : Registry.debugSeedOverride;
+    const roundSeed = hasRoundOverride
+        ? window.Game.Seed.normalize(overrideSeed)
+        : (Registry.useCampaignSeeds && window.Game.Campaign?.deriveRoundSeed
+            ? window.Game.Campaign.deriveRoundSeed(Registry.campaignSeed, round)
+            : Registry.seed);
+    Registry.seed = roundSeed;
+    const state = window.createRoundState(round, roundSeed, options);
     window.applyRoundState(state, options);
     if (Array.isArray(options.restoredInventory) && typeof PowerUps !== 'undefined') {
         PowerUps.inventory = options.restoredInventory.map(item => ({ id: item.id, tier: item.tier }));
@@ -576,10 +585,21 @@ window.advanceToRound = function(targetRound) {
 
 window.resetGame = function(options = {}) {
     window.Game.Audio?.publish('reset', { round: Registry.stats.round });
-    if (Config.debugMode) {
+    const useDebugReset = !options.forceProduction && (Config.debugMode || navigator.webdriver);
+    if (useDebugReset) {
+        Registry.useCampaignSeeds = false;
+        Registry.campaignSeed = 1234;
+        Registry.seed = 1234;
+        Registry.debugSeedOverride = null;
+        Registry.debugSeedOverrideRound = null;
         Registry.points = 99999;
         Registry.highestUnlockedRound = 25;
     } else {
+        Registry.useCampaignSeeds = true;
+        Registry.campaignSeed = window.Game.Campaign?.generateSeed?.() || 1234;
+        Registry.seed = Registry.campaignSeed;
+        Registry.debugSeedOverride = null;
+        Registry.debugSeedOverrideRound = null;
         Registry.points = 0;
         Registry.highestUnlockedRound = 1;
     }
