@@ -233,7 +233,7 @@ test('Friends and Family onboarding keeps developer identifiers out of normal pl
     expect(result.howTo).toContain('Ground is marked G');
     expect(result.howTo).toContain('Progress saves between rounds');
     expect(result.seedHidden).toBe(true);
-    expect(result.newCampaign).toBe('New Campaign…');
+    expect(result.newCampaign).toBe('New Campaign');
     expect(result.workshopHint).toBe('Unlocks at Round 10');
 });
 
@@ -1167,6 +1167,80 @@ test('Infinite Capacity boards every compatible waiting guest before closing', a
     expect(result.capacity).toBe(999);
     expect(result.boarded).toEqual(['infinite-1', 'infinite-2', 'infinite-3']);
     expect(result.waiting).toBe(0);
+});
+
+test('Infinite Capacity expiry normalises once without ejecting compatible passengers forever', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(11, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        const floor = 4;
+        const now = 1000000;
+        lift.pos = floor * Registry.floorHeight;
+        lift.targetFloor = floor;
+        lift.automation = 'manual';
+        lift.manualOverride = true;
+        lift.state = 'IDLE';
+        lift.stateProgress = 0;
+        lift.jamTimer = 0;
+        lift.isJammed = false;
+        lift.passengers = [
+            { id: 'gym-a', dest: 12, isGymBro: true, boardingWeight: 2, status: GuestStatus.HAPPY },
+            { id: 'gym-b', dest: 12, isGymBro: true, boardingWeight: 2, status: GuestStatus.HAPPY },
+            ...Array.from({ length: 10 }, (_, index) => ({
+                id: `ordinary-${index}`, dest: 12, isGymBro: false, boardingWeight: 1, status: GuestStatus.HAPPY
+            }))
+        ];
+        lift.tardisExpiryExodus = true;
+        Registry.floors[floor].waitingGuests = [];
+
+        for (let tick = 0; tick < 1600; tick++) Game.Engine.animationTick(now + tick * 16);
+        const weightAfterRecovery = Registry.getLiftWeight(lift);
+        const passengersAfterRecovery = lift.passengers.map(passenger => passenger.id);
+        for (let tick = 1600; tick < 2400; tick++) Game.Engine.animationTick(now + tick * 16);
+
+        return {
+            normalCapacity: PowerUps.getLiftCapacity(lift.id),
+            weightAfterRecovery,
+            passengersAfterRecovery,
+            recoveryFlag: lift.tardisExpiryExodus,
+            stablePassengerCount: lift.passengers.length
+        };
+    });
+
+    expect(result.weightAfterRecovery).toBeLessThanOrEqual(result.normalCapacity);
+    expect(result.passengersAfterRecovery).toContain('gym-a');
+    expect(result.passengersAfterRecovery).toContain('gym-b');
+    expect(result.recoveryFlag).toBe(false);
+    expect(result.stablePassengerCount).toBe(result.passengersAfterRecovery.length);
+});
+
+test('Weighted Voting delivers an onboard VIP before selecting incompatible waiting demand', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(15, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        const floor = 14;
+        lift.pos = floor * Registry.floorHeight;
+        lift.targetFloor = floor;
+        lift.automation = 'weighted-voting';
+        lift.manualOverride = false;
+        lift.passengers = [{ id: 'vip-onboard', isVip: true, dest: 3, status: GuestStatus.HAPPY, boardingWeight: 1 }];
+        Registry.floors[floor].waitingGuests = Array.from({ length: 12 }, (_, index) => ({
+            id: `rooftop-${index}`, dest: 0, status: GuestStatus.CRITICAL, isVip: false,
+            isGymBro: false, boardingWeight: 1
+        }));
+        return Registry.getBestFloor(lift, true);
+    });
+
+    expect(result).toBe(3);
+});
+
+test('R23 uses the reduced candidate spawn curve', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        start: Config.GAME_DATA.rounds[23].spawnStart,
+        end: Config.GAME_DATA.rounds[23].spawnEnd
+    }));
+    expect(result).toEqual({ start: 0.7125, end: 0.9 });
 });
 
 test('counterweight trilogy has canonical scale and Open Plan timing', async ({ page }) => {

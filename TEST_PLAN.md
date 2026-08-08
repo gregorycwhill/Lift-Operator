@@ -50,6 +50,21 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
 8. Confirm the four-column Supply Closet remains readable at the supported desktop viewport; spot-check R8 traffic and
    the R11/R25 titles.
 
+## Lift-state remediation checks
+
+The latest remediation must pass these focused checks before the next Friends & Family replay:
+
+- Infinite Capacity expiry sheds only enough load to return a car to ordinary capacity, including a car containing Gym
+  Bros; the expiry marker clears and compatible passengers do not board/alight repeatedly.
+- Weighted Voting delivers an onboard VIP before selecting waiting demand that cannot board that car. A waiting VIP still
+  requires player-observed intervention and is not silently dispatched by policy.
+- A Sweep car that reverses direction while parked re-evaluates the current floor and boards newly compatible guests;
+  rooftop evacuation continues until the car is full or no compatible guest remains.
+- A manual command from either counterweight controller interrupts stale door/policy state, dispatches the selected car
+  and its complementary partner, and remains authoritative until both cars complete the service stop.
+- R23 uses the candidate `0.7125`–`0.90` spawn curve. Treat difficulty as a playtest observation, not an automated
+  simulator proof of human solvability.
+
 ## Friends & Family evidence window
 
 Use `docs/playtest/RC1_PLAYTEST_PACK.md` and append observations to

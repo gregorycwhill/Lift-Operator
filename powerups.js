@@ -30,6 +30,7 @@ const PowerUps = {
     setGlobalTimer: function(key, duration) {
         const seconds = Math.max(0, Number(duration) || 0);
         this.timers[key] = seconds;
+        if (key === 'globalTardis') this.timers.globalTardisExpiryHandled = false;
         const expiry = this.timerNow() + seconds * 1000;
         this.timerExpiresAt[key] = expiry;
         this.timers[`${key}ExpiresAt`] = expiry;
@@ -67,8 +68,9 @@ const PowerUps = {
         ['jamImmunity', 'stinkImmunity', 'globalAngerPause', 'globalTurbo', 'globalTardis', 'wideDoors'].forEach(key => this.refreshTimer(this.timers, key, now));
         Registry.lifts.forEach(lift => ['tardisTimer', 'turboTimer', 'freshenerTimer', 'musakTimer', 'doubleDeckerTimer', 'openPlanTimer', 'wideDoorsTimer'].forEach(key => this.refreshTimer(lift, key, now)));
         Registry.lifts.forEach(lift => { if (lift.wideDoorsTimer <= 0) lift.wideDoorsMultiplier = 1; });
-        if (this.timers.globalTardis <= 0 && this.timerExpiresAt.globalTardis && this.timerExpiresAt.globalTardis <= now) {
+        if (this.timers.globalTardis <= 0 && this.timerExpiresAt.globalTardis && this.timerExpiresAt.globalTardis <= now && !this.timers.globalTardisExpiryHandled) {
             Registry.lifts.forEach(lift => { lift.tardisExpiryExodus = true; });
+            this.timers.globalTardisExpiryHandled = true;
         }
         if (this.timers.wideDoors <= 0) Config.boardingSpeedMultiplier = 1.0;
     },

@@ -1048,8 +1048,8 @@ window.GameBalanceData = {
     "23": {
       "floors": 29,
       "lifts": 8,
-      "spawnStart": 0.95,
-      "spawnEnd": 1.2,
+      "spawnStart": 0.7125,
+      "spawnEnd": 0.9,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,

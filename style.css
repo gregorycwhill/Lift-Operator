@@ -184,9 +184,15 @@ body {
     margin: 10px auto 0;
 }
 .game-message-rail[hidden] { display: none; }
-.game-message-rail { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); margin: 0; }
+.game-message-rail { position: relative; top: 0; left: auto; transform: none; margin: 10px auto; }
 .game-area.countdown-active { justify-content: center; }
-.game-area.countdown-active .game-message-rail { top: 90px; margin: 0; }
+.game-area.countdown-active .game-message-rail {
+    position: absolute;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
 .game-message-rail button { margin-left: auto; flex: 0 0 auto; border: 0; background: transparent; color: #53616d; font-size: 20px; line-height: 1; cursor: pointer; }
 #world { 
     position: relative; 

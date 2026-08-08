@@ -26,7 +26,7 @@ Policy: All-Sweep must fail every fixed gate seed from R2 through R25; productio
 | 20 | yes | NO | 0/5 | 0/5 |
 | 21 | NO | NO | 1/5 | 3/5 |
 | 22 | yes | NO | 0/5 | 2/5 |
-| 23 | yes | NO | 0/5 | 1/5 |
+| 23 | yes | NO | 0/5 | 2/5 |
 | 24 | yes | NO | 0/5 | 4/5 |
 | 25 | yes | NO | 0/5 | 0/5 |
 

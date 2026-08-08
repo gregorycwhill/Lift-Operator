@@ -219,6 +219,10 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 These figures are the next accepted tuning targets where they differ from the current canonical balance; implementation
 must update the canonical source and generated artifact together.
 
+**R23 candidate tuning:** the counterweight/Open Plan fleet now uses a deliberately reduced spawn curve of `0.7125` to
+`0.90` attempts per one-second spawner tick while the R23 difficulty report is re-tested. This is a candidate balance
+change, not evidence that the counterweight routing defects are solved.
+
 ## 5.1 Player briefing contract
 
 Every authored round has a rank, unique title, narrative briefing, learning focus, optional first-use rule card, and

@@ -55,6 +55,10 @@ human acceptance belong in `TEST_PLAN.md`.
   presentation, increase R8 traffic by 20%, and update R11/R25 briefing titles.
 - Achievements, endless operations, Mobile, teleportation, polar lifts, Lift Bouncer, and player-authored rounds are
   roadmap work, not release candidates.
+- Current lift-state remediation: Infinite Capacity expiry normalises an over-capacity car once at its next stop;
+  Weighted Voting prioritises onboard delivery over incompatible pickup demand; parked cars re-evaluate after direction
+  reversal; counterweight manual dispatch interrupts stale door/policy state; and R23 uses the reduced candidate spawn
+  curve `0.7125`–`0.90`. These changes require focused regression tests and fresh R11/R15/R23 playtest evidence.
 
 ## Current collateral remediation before broad distribution
 

@@ -319,16 +319,26 @@ const Registry = {
         const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
         const maxF = isDouble ? Config.numFloors - 2 : Config.numFloors - 1;
 
+        // Once a passenger is aboard, delivering that passenger outranks new
+        // pickup demand. This is especially important for a VIP after a
+        // rooftop release: waiting rooftop traffic must not strand her car.
+        const onboardVip = lift.passengers.find(passenger => passenger.isVip);
+        if (onboardVip && Number.isInteger(onboardVip.dest)) return onboardVip.dest;
+
         const existingOutsideZone = lift.passengers.find(passenger => !this.isFloorInLiftZone(lift, passenger.dest));
         if (existingOutsideZone) return existingOutsideZone.dest;
 
         for (let f = 0; f <= maxF; f++) {
             if (!this.isFloorInLiftZone(lift, f)) continue;
             let score = 0;
-            lift.passengers.forEach(p => { if (p.dest === f) score += getVal(p); });
+            lift.passengers.forEach(p => { if (p.dest === f) score += 1000 + getVal(p); });
             if (Registry.getLiftWeight(lift) < maxCap && (!isStinky || hasStinkImmunity)) {
                 Registry.floors[f].waitingGuests.forEach(g => {
-                    if ((!isStinky || g.isGymBro) && this.canLiftDirectlyServe(lift, f, g.dest)) score += getVal(g);
+                    // VIP dispatch remains a player-observed/intervention
+                    // mechanic. Policies may serve ordinary waiting traffic,
+                    // but never silently dispatch for a waiting VIP.
+                    if (g.isVip) return;
+                    if ((!isStinky || g.isGymBro) && window.canGuestBoardLift(lift, g, f, isStinky, maxCap)) score += getVal(g);
                 });
             }
             if (score > maxScore && score > 0) { maxScore = score; bestFloors = [f]; }

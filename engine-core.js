@@ -168,7 +168,13 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
         if (floor > currentFloor) targetLift.sweepDirection = 1;
         else if (floor < currentFloor) targetLift.sweepDirection = -1;
         if (options.manualOverride !== undefined) targetLift.manualOverride = options.manualOverride;
-        if (options.manualOverride === true) targetLift.commandRevision = (targetLift.commandRevision || 0) + 1;
+        if (options.manualOverride === true) {
+            targetLift.commandRevision = (targetLift.commandRevision || 0) + 1;
+            // A player command is an immediate dispatch, including when the
+            // car is currently in a door/boarding state at another floor.
+            targetLift.state = 'IDLE';
+            targetLift.stateProgress = 0;
+        }
     };
     setTarget(lift, target);
     if (Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)) {

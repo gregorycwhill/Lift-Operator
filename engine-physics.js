@@ -586,9 +586,10 @@ window.animationTick = function(timestamp) {
             if (lift.state === 'IDLE' || lift.state === 'DONE') {
                 const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
                 let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
-                const hasDropoffs = lift.passengers.some(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
                 
                 let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+                const hasCapacityRecovery = lift.tardisExpiryExodus && Registry.getLiftWeight(lift) > maxCap;
+                const hasDropoffs = lift.passengers.some(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro)) || hasCapacityRecovery;
                 const canBoardAt = floor => Registry.getLiftWeight(lift) < maxCap && Registry.floors[floor]?.waitingGuests.some(guest =>
                     window.canGuestBoardLift(lift, guest, floor, isStinky, maxCap)
                 );
@@ -618,9 +619,24 @@ window.animationTick = function(timestamp) {
                 if (lift.stateProgress >= 1) {
                     let performedAction = false;
                     const isDouble = (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
-                    let forceExodus = lift.tardisExpiryExodus || (isStinky && lift.passengers.some(p => !p.isGymBro));
+                    let maxCap = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
+                    let forceExodus = (isStinky && lift.passengers.some(p => !p.isGymBro));
+                    const hasCapacityRecovery = lift.tardisExpiryExodus && Registry.getLiftWeight(lift) > maxCap;
                     
-                    const indexToDrop = lift.passengers.findIndex(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
+                    let indexToDrop = lift.passengers.findIndex(p => p.dest === f || (isDouble && p.dest === f + 1) || (forceExodus && !p.isGymBro));
+                    if (indexToDrop === -1 && hasCapacityRecovery) {
+                        // Remove only enough load to return to the ordinary
+                        // capacity. Prefer the most recently boarded passenger
+                        // while preserving the existing journey order for the
+                        // rest of the car.
+                        for (let candidate = lift.passengers.length - 1; candidate >= 0; candidate--) {
+                            const weight = lift.passengers[candidate].boardingWeight || 1;
+                            if (Registry.getLiftWeight(lift) - weight < Registry.getLiftWeight(lift)) {
+                                indexToDrop = candidate;
+                                break;
+                            }
+                        }
+                    }
                     
                     if (indexToDrop !== -1) {
                         const p = lift.passengers.splice(indexToDrop, 1)[0];
@@ -651,6 +667,11 @@ window.animationTick = function(timestamp) {
                         } else {
                             p.isFarter = false; 
                             Registry.floors[f].waitingGuests.push(p);
+                        }
+                        if (lift.tardisExpiryExodus && Registry.getLiftWeight(lift) <= maxCap) {
+                            // Expiry recovery is one-shot. The global expiry
+                            // marker must not keep ejecting new passengers.
+                            lift.tardisExpiryExodus = false;
                         }
                         if (lift.passengers.length === 0) {
                             lift.sardineScored = false;
@@ -717,6 +738,9 @@ window.animationTick = function(timestamp) {
                     }
 
                     if (!performedAction) {
+                        if (lift.tardisExpiryExodus && Registry.getLiftWeight(lift) <= maxCap) {
+                            lift.tardisExpiryExodus = false;
+                        }
                         if (Registry.floors[f].waitingGuests.length > 0) {
                             const rejectionReasons = {};
                             const refusalCapacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
