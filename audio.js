@@ -147,7 +147,7 @@ window.Game.Audio = (function () {
     }
     function playBuffer(name, destination = sfxGain, volume = 1, options = {}) {
         if (!initialized || !buffers[name] || settings.muted) return false;
-        const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; const loop = options.loop || name === 'stink'; source.loop = !!loop; gain.gain.value = volume * (name === 'defenestration' ? 0.8 : 1); source.connect(gain); gain.connect(destination); source.start();
+        const source = context.createBufferSource(), gain = context.createGain(); source.buffer = buffers[name]; const loop = !!options.loop; source.loop = loop; gain.gain.value = volume * (name === 'defenestration' ? 0.8 : 1); source.connect(gain); gain.connect(destination); source.start();
         const durationMs = Number.isFinite(options.durationMs) ? options.durationMs : 5000;
         if (!loop || Number.isFinite(options.durationMs)) {
             const stopMs = loop ? durationMs : Math.min(durationMs, Math.max(1, buffers[name].duration * 1000));
@@ -173,7 +173,7 @@ window.Game.Audio = (function () {
             musicTimer = setInterval(pulse, 2600);
         }
     }
-    function setContext(next) { currentContext = next || 'menu'; init(); if (initialized) startMusic(); emit('context_changed', { context: currentContext }); }
+    function setContext(next) { currentContext = next || 'menu'; if (currentContext !== 'gameplay') stopMusak(); init(); if (initialized) startMusic(); emit('context_changed', { context: currentContext }); }
     function setPsi(value) { const numeric = Number(value); if (!Number.isFinite(numeric)) return; psi = Math.max(0, Math.min(2, numeric)); if (pressureBand === 'calm' && psi < 0.60) pressureBand = 'pressure'; else if (pressureBand === 'pressure' && psi > 0.70) pressureBand = 'calm'; if (pressureLayerGain && context) pressureLayerGain.gain.setTargetAtTime(pressureBand === 'pressure' ? Math.max(0, Math.min(0.32, (1 - psi) * 0.32)) : 0, context.currentTime, 0.35); }
     function play(name) { init(); if (!playBuffer(name === 'door' ? 'door' : name)) tone(name); emit('effect_played', { name }); }
     function on(name, handler) { if (typeof handler !== 'function') return () => {}; const list = listeners.get(name) || []; list.push(handler); listeners.set(name, list); return () => listeners.set(name, list.filter(fn => fn !== handler)); }

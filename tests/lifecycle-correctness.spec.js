@@ -75,7 +75,7 @@ test('campaign promotions appear only at approved progression boundaries and per
     expect(result.directEntry).toBe(false);
 });
 
-test('structured briefing uses the compact modal while keeping Supply Closet items three across', async ({ page }) => {
+test('structured briefing uses the compact modal while keeping Supply Closet items four across', async ({ page }) => {
     const result = await page.evaluate(() => {
         skipToRound(10, { showBriefing: false });
         showRoundModal(10);
@@ -92,7 +92,7 @@ test('structured briefing uses the compact modal while keeping Supply Closet ite
     expect(result.width).toBeLessThanOrEqual(610);
     expect(result.modalOverflow).toBe('hidden');
     expect(result.gridDisplay).toBe('grid');
-    expect(result.gridColumns).toBe(3);
+    expect(result.gridColumns).toBe(4);
 });
 
 test('briefing removes redundant objective/loadout copy and presents introductions and shop tiers', async ({ page }) => {
@@ -2549,14 +2549,42 @@ test('duplicate targeted power-up is blocked without manual targeting or consump
         PowerUps.primeAbility('turbo', 0);
         const before = { targeting: !!PowerUps.activeTargeting, inventory: PowerUps.inventory.length, timer: Registry.lifts[0].turboTimer };
         Game.Engine.setLiftTarget(0, 0);
-        PowerUps.timers.wideDoors = 7;
+        Registry.lifts[0].wideDoorsTimer = 7;
         PowerUps.inventory = [{ id: 'doors', tier: 0 }];
         PowerUps.primeAbility('doors', 0);
-        return { before, after: { targeting: !!PowerUps.activeTargeting, inventory: PowerUps.inventory.length, timer: Registry.lifts[0].turboTimer, manual: Registry.lifts[0].manualOverride }, wideDoors: { timer: PowerUps.timers.wideDoors, inventory: PowerUps.inventory.length } };
+        return { before, after: { targeting: !!PowerUps.activeTargeting, inventory: PowerUps.inventory.length, timer: Registry.lifts[0].turboTimer, manual: Registry.lifts[0].manualOverride }, wideDoors: { timer: Registry.lifts[0].wideDoorsTimer, inventory: PowerUps.inventory.length } };
     });
     expect(result.before).toEqual({ targeting: true, inventory: 1, timer: 7 });
     expect(result.after).toEqual({ targeting: true, inventory: 1, timer: 7, manual: false });
     expect(result.wideDoors).toEqual({ timer: 7, inventory: 1 });
+});
+
+test('R8 traffic and late campaign briefing titles use the current authored polish', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        r8: { start: Config.GAME_DATA.rounds[8].spawnStart, end: Config.GAME_DATA.rounds[8].spawnEnd },
+        r11: Config.GAME_DATA.rounds[11].briefing.title,
+        r25: Config.GAME_DATA.rounds[25].briefing.title
+    }));
+    expect(result).toEqual({ r8: { start: 1.2, end: 1.5 }, r11: 'Do you even lift, bro?', r25: 'A series of tubes' });
+});
+
+test('Bronze Wide Doors targets one lift and uses canonical tier wording', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        skipToRound(3, { showBriefing: false });
+        Registry.gameActive = true;
+        PowerUps.inventory = [{ id: 'doors', tier: 0 }];
+        PowerUps.primeAbility('doors', 0);
+        const armed = { target: PowerUps.activeTargeting?.id, liftTimer: Registry.lifts[0].wideDoorsTimer, inventory: PowerUps.inventory.length, tooltip: document.querySelector('#inventory-bar button')?.title || '' };
+        PowerUps.resolveTargeting(0, 0);
+        return { armed, applied: { timer: Registry.lifts[0].wideDoorsTimer, multiplier: Registry.lifts[0].wideDoorsMultiplier, inventory: PowerUps.inventory.length }, tooltip: document.querySelector('#inventory-bar button')?.title || '' };
+    });
+    expect(result.armed.target).toBe('doors');
+    expect(result.armed.liftTimer).toBe(0);
+    expect(result.armed.inventory).toBe(1);
+    expect(result.armed.tooltip).toContain('Bronze');
+    expect(result.applied.timer).toBe(20);
+    expect(result.applied.multiplier).toBe(2);
+    expect(result.applied.inventory).toBe(0);
 });
 
 test('active effect icons are siblings in a non-interactive overlay at the top floor', async ({ page }) => {

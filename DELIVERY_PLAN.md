@@ -44,12 +44,15 @@ human acceptance belong in `TEST_PLAN.md`.
   and seed reproduction without changing the normal first-impression path.
 - Elapsed-time movement integration is deferred until after RC1.0. The current release may still address targeted
   overlay/rendering issues.
-- Ordinary in-round background music is disabled for RC1.0. Menu music (controlled by the Menu music slider), Rooftop
-  music, VIP fanfare, Musak, and SFX remain available.
+- Ordinary in-round background music is disabled for RC1.0. Menu and Rooftop music (controlled by the Music slider),
+  VIP fanfare, Musak, and SFX remain available.
 - Feedback is opt-in: the linked Google Form does not collect email addresses and receives only the compact diagnostic
   the player chooses to open/submit.
 - Settings provides a confirmed local-data deletion action for the browser's campaign, leaderboard, custom automations,
   automation pins/teaching state, and audio settings.
+- Current polish slice: stabilise countdown/message layout, clear final-life warning state between rounds, refine audio
+  lifecycle and controls, group repeated power-up quantities, make Bronze Wide Doors lift-targeted, tighten promotion
+  presentation, increase R8 traffic by 20%, and update R11/R25 briefing titles.
 - Achievements, endless operations, Mobile, teleportation, polar lifts, Lift Bouncer, and player-authored rounds are
   roadmap work, not release candidates.
 

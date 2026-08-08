@@ -42,6 +42,13 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
    routing/manual override, and R24 capsule readability/performance.
 5. Build and open the itch-compatible ZIP locally; confirm it contains `LICENSE`, third-party notices, attribution,
    and a matching `BUILD.txt`.
+6. In R2/R3, confirm countdown and teaching/VIP notices remain outside the board, the board does not shift, cables stay
+   visible, and no transient scrollbar appears. Confirm the final-life warning clears at the next round.
+7. Confirm Settings starts unmuted with clean storage, persists deliberate audio changes, and stops Musak before menu
+   music after a round. Confirm Bronze Wide Doors targets one lift, repeated cart/tray items use quantity badges, and
+   tooltips use Bronze/Silver/Gold.
+8. Confirm the four-column Supply Closet remains readable at the supported desktop viewport; spot-check R8 traffic and
+   the R11/R25 titles.
 
 ## Friends & Family evidence window
 

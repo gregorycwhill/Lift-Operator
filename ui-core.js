@@ -437,7 +437,7 @@ window.draw = function() {
             if (lift.musakTimer > 0) activeIcons.push({type: 'emoji', val: '🎵'});
             if (lift.doubleDeckerTimer > 0 || lift.isDoubleDecker) activeIcons.push({type: 'emoji', val: '⚡'});
             if (lift.openPlanTimer > 0) activeIcons.push({type: 'emoji', val: '↔️'});
-            if (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0) activeIcons.push({type: 'emoji', val: '🚪'});
+            if (lift.wideDoorsTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0)) activeIcons.push({type: 'emoji', val: '🚪'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) activeIcons.push({type: 'emoji', val: '🔧'});
             if (lift.jamTimer > 0 || lift.isJammed) activeIcons.push({type: 'jam', val: '⚠️'});
             

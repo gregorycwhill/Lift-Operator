@@ -65,7 +65,8 @@ const PowerUps = {
         // Expiry is derived from the active gameplay clock, not from the
         // number of setInterval callbacks received by the browser.
         ['jamImmunity', 'stinkImmunity', 'globalAngerPause', 'globalTurbo', 'globalTardis', 'wideDoors'].forEach(key => this.refreshTimer(this.timers, key, now));
-        Registry.lifts.forEach(lift => ['tardisTimer', 'turboTimer', 'freshenerTimer', 'musakTimer', 'doubleDeckerTimer', 'openPlanTimer'].forEach(key => this.refreshTimer(lift, key, now)));
+        Registry.lifts.forEach(lift => ['tardisTimer', 'turboTimer', 'freshenerTimer', 'musakTimer', 'doubleDeckerTimer', 'openPlanTimer', 'wideDoorsTimer'].forEach(key => this.refreshTimer(lift, key, now)));
+        Registry.lifts.forEach(lift => { if (lift.wideDoorsTimer <= 0) lift.wideDoorsMultiplier = 1; });
         if (this.timers.globalTardis <= 0 && this.timerExpiresAt.globalTardis && this.timerExpiresAt.globalTardis <= now) {
             Registry.lifts.forEach(lift => { lift.tardisExpiryExodus = true; });
         }
@@ -245,8 +246,8 @@ const PowerUps = {
         doors: {
             id: 'doors', name: 'Wide Doors', icon: '🚪',
             tiers: [
-                { cost: window.Config.GAME_DATA.powerups.doors.tiers[0].cost, desc: `Increase boarding speed (${window.Config.GAME_DATA.powerups.doors.tiers[0].scalar}x delay) for ${window.Config.GAME_DATA.powerups.doors.tiers[0].duration}s.`, target: 'instant', 
-                  execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[0].scalar; PowerUps.setGlobalTimer('wideDoors', window.Config.GAME_DATA.powerups.doors.tiers[0].duration); PowerUps.flashScreen('rgba(241, 196, 15, 0.4)'); } },
+                { cost: window.Config.GAME_DATA.powerups.doors.tiers[0].cost, desc: `One lift boards guests faster (${window.Config.GAME_DATA.powerups.doors.tiers[0].scalar}x delay) for ${window.Config.GAME_DATA.powerups.doors.tiers[0].duration}s.`, target: 'lift',
+                  execute: (liftId) => { const lift = Registry.lifts[liftId]; lift.wideDoorsMultiplier = 1 / window.Config.GAME_DATA.powerups.doors.tiers[0].scalar; PowerUps.setLiftTimer(lift, 'wideDoorsTimer', window.Config.GAME_DATA.powerups.doors.tiers[0].duration); PowerUps.showEffectOnLift(liftId, '🚪'); PowerUps.flashScreen('rgba(241, 196, 15, 0.4)'); } },
                 { cost: window.Config.GAME_DATA.powerups.doors.tiers[1].cost, desc: `Further increase boarding speed (${window.Config.GAME_DATA.powerups.doors.tiers[1].scalar}x delay) for ${window.Config.GAME_DATA.powerups.doors.tiers[1].duration}s.`, target: 'instant', 
                   execute: () => { Config.boardingSpeedMultiplier = window.Config.GAME_DATA.powerups.doors.tiers[1].scalar; PowerUps.setGlobalTimer('wideDoors', window.Config.GAME_DATA.powerups.doors.tiers[1].duration); PowerUps.flashScreen('rgba(241, 196, 15, 0.5)'); } },
                 { cost: window.Config.GAME_DATA.powerups.doors.tiers[2].cost, desc: `Instantly board/unboard all guests for ${window.Config.GAME_DATA.powerups.doors.tiers[2].duration}s.`, target: 'instant', 
@@ -476,6 +477,7 @@ const PowerUps = {
         const global = this.timers;
         return ({
             freshener: lift.freshenerTimer > 0 || global.stinkImmunity > 0,
+            doors: lift.wideDoorsTimer > 0,
             musak: lift.musakTimer > 0 || global.globalAngerPause > 0,
             turbo: lift.turboTimer > 0 || global.globalTurbo > 0,
             tardis: lift.tardisTimer > 0 || global.globalTardis > 0,

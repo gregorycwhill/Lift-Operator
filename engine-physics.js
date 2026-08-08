@@ -327,8 +327,10 @@ window.gameTick = function(timestamp) {
         const world = document.getElementById('world');
         if (world) {
             const psi = Number(balanceSample.projectedSurvivalIndex);
-            const finalLifeThreat = Registry.stats.lives <= 1 && (balanceSample.imminentLives >= Registry.stats.lives || psi < 0.35);
-            const clearFinalLifeThreat = Registry.stats.lives > 1 || (psi > 0.45 && balanceSample.imminentLives < 1);
+            // Pressure music changes first; the visual warning follows earlier than the
+            // old threshold, with hysteresis to prevent flicker around the boundary.
+            const finalLifeThreat = Registry.stats.lives <= 1 && (balanceSample.imminentLives >= Registry.stats.lives || psi < 0.45);
+            const clearFinalLifeThreat = Registry.stats.lives > 1 || (psi > 0.55 && balanceSample.imminentLives < 1);
             if (finalLifeThreat) world.classList.add('final-life-warning');
             else if (clearFinalLifeThreat) world.classList.remove('final-life-warning');
         }
@@ -742,6 +744,7 @@ window.animationTick = function(timestamp) {
                     let multiplier = 1.0;
                     if (typeof PowerUps !== 'undefined' && PowerUps.activePowers && PowerUps.activePowers.includes('wideDoors')) multiplier *= 2.0;
                     const weight = lift.lastBoardingWeight || 1.0;
+                    if (lift.wideDoorsTimer > 0) multiplier *= (lift.wideDoorsMultiplier || 1);
                     const boardDurationMs = window.getBoardingDurationMs(weight, multiplier);
                     lift.stateProgress += 16 / boardDurationMs;
                 }

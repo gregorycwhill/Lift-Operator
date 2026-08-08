@@ -43,9 +43,12 @@ window.addToCart = function(id, tier) {
 /**
  * Remove an item from the shopping cart.
  */
-window.removeFromCart = function(index) {
+window.removeFromCart = function(indexOrId, tier) {
     if (typeof PowerUps === 'undefined') return;
-    PowerUps.cart.splice(index, 1);
+    const index = typeof indexOrId === 'number'
+        ? indexOrId
+        : PowerUps.cart.findIndex(item => item.id === indexOrId && item.tier === tier);
+    if (index >= 0) PowerUps.cart.splice(index, 1);
     window.renderShop();
 };
 
@@ -84,7 +87,14 @@ window.updateInventoryUI = function() {
         return;
     }
     
-    PowerUps.inventory.forEach((item, index) => {
+    const grouped = new Map();
+    PowerUps.inventory.forEach(item => {
+        const key = `${item.id}:${item.tier}`;
+        const entry = grouped.get(key) || { item, count: 0 };
+        entry.count++;
+        grouped.set(key, entry);
+    });
+    grouped.forEach(({ item, count }) => {
         const pu = PowerUps.catalog[item.id];
         const btn = document.createElement('button');
         
@@ -92,9 +102,16 @@ window.updateInventoryUI = function() {
         
         btn.className = `inv-btn inv-btn-t${item.tier + 1} ${isActive ? 'active' : ''}`;
         btn.textContent = pu.icon;
-        btn.title = `${pu.name} (Tier ${item.tier + 1})`;
+        const tierName = ['Bronze', 'Silver', 'Gold'][item.tier] || `Tier ${item.tier + 1}`;
+        btn.title = `${pu.name} (${tierName}) — ${count} available`;
+        if (count > 1) {
+            const badge = document.createElement('span');
+            badge.className = 'quantity-badge';
+            badge.textContent = String(count);
+            btn.appendChild(badge);
+        }
         
-        btn.onclick = () => { 
+        btn.onclick = () => {
             if (isActive) PowerUps.cancelTargeting();
             else PowerUps.primeAbility(item.id, item.tier); 
         };
@@ -203,12 +220,19 @@ window.renderShop = function() {
         const cartItemsGrid = document.createElement('div');
         cartItemsGrid.className = 'cart-items-grid';
 
-        PowerUps.cart.forEach((item, idx) => {
+        const groupedCart = new Map();
+        PowerUps.cart.forEach(item => {
+            const key = `${item.id}:${item.tier}`;
+            const entry = groupedCart.get(key) || { item, count: 0 };
+            entry.count++;
+            groupedCart.set(key, entry);
+        });
+        groupedCart.forEach(({ item, count }) => {
             const pu = PowerUps.catalog[item.id];
             const cartItem = document.createElement('div');
             cartItem.className = `cart-item cart-item-t${item.tier + 1}`;
             const tierName = ['Bronze', 'Silver', 'Gold'][item.tier] || `Tier ${item.tier + 1}`;
-            cartItem.title = `${pu.name} — ${tierName}. Click to remove.`;
+            cartItem.title = `${pu.name} — ${tierName}. Click to remove one.`;
             
             const iconSpan = document.createElement('span');
             iconSpan.textContent = pu.icon;
@@ -220,11 +244,18 @@ window.renderShop = function() {
             const labelSpan = document.createElement('span');
             labelSpan.className = 'cart-item-label';
             labelSpan.textContent = pu.name;
-            cartItem.append(iconSpan, labelSpan, removeSpan);
+            cartItem.append(iconSpan, labelSpan);
+            if (count > 1) {
+                const badge = document.createElement('span');
+                badge.className = 'quantity-badge';
+                badge.textContent = String(count);
+                cartItem.appendChild(badge);
+            }
+            cartItem.appendChild(removeSpan);
             cartItem.addEventListener('click', () => {
                 const ui = GameUI();
-                if (typeof ui.removeFromCart === 'function') ui.removeFromCart(idx);
-                else window.removeFromCart(idx);
+                if (typeof ui.removeFromCart === 'function') ui.removeFromCart(item.id, item.tier);
+                else window.removeFromCart(item.id, item.tier);
             });
             cartItemsGrid.appendChild(cartItem);
         });

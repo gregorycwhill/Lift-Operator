@@ -184,8 +184,9 @@ body {
     margin: 10px auto 0;
 }
 .game-message-rail[hidden] { display: none; }
-.game-area.countdown-active { justify-content: flex-start; }
-.game-area.countdown-active .game-message-rail { top: auto; margin-top: 100px; }
+.game-message-rail { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); margin: 0; }
+.game-area.countdown-active { justify-content: center; }
+.game-area.countdown-active .game-message-rail { top: 90px; margin: 0; }
 .game-message-rail button { margin-left: auto; flex: 0 0 auto; border: 0; background: transparent; color: #53616d; font-size: 20px; line-height: 1; cursor: pointer; }
 #world { 
     position: relative; 
@@ -562,9 +563,9 @@ body {
 .challenge-chip-icon, .briefing-intro-icon { font-weight: normal; }
 .briefing-intro-term { white-space: nowrap; }
 .briefing-intro-term strong { font-weight: 800; }
-.promotion-banner { text-align: center; padding: 32px 22px 16px; }
+.promotion-banner { text-align: center; padding: 20px 18px 10px; }
 .promotion-heading { color: #b8860b; font-size: 14px; }
-.promotion-copy { margin: 18px auto 26px; max-width: 470px; color: #2c3e50; font-size: 18px; line-height: 1.45; }
+.promotion-copy { margin: 10px auto 14px; max-width: 470px; color: #2c3e50; font-size: 16px; line-height: 1.3; }
 .round-briefing-modal.promotion-pending #briefingDetails { display: none; }
 .round-briefing-modal.promotion-pending { width: 468px; }
 
@@ -632,6 +633,7 @@ body {
 .round-countdown strong { color: #f1c40f; font-size: 2rem; line-height: 1; }
 .round-countdown-skip { position: absolute; top: 6px; right: 6px; border: 0; border-radius: 50%; width: 20px; height: 20px; padding: 0; background: rgba(44,62,80,.72); color: #fff; font-size: .9rem; line-height: 1; font-weight: 900; cursor: pointer; }
 .round-countdown-skip:hover, .round-countdown-skip:focus-visible { background: #f7dc6f; outline: 3px solid #fff; }
+.audio-mute-row { flex-basis: 100%; justify-content: center; }
 .compact-modal { max-width: 420px; text-align: center; }
 .modal-help { color: #d5dbdb; font-size: 0.9rem; }
 
@@ -946,9 +948,9 @@ body {
 .shop-header { margin: 0 0 5px 0; border-bottom: 1px solid #ccc; padding-bottom: 5px; font-size: 16px; }
 .shop-container { display: flex; flex-direction: column; height: auto; min-height: 0; gap: 10px; margin-bottom: 10px; flex: 1 1 0; }
 .shop-scroll-region { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-right: 5px; }
-.shop-layout { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(112px, .9fr); gap: 10px; align-items: start; }
+.shop-layout { display: grid; grid-template-columns: minmax(0, 3.5fr) minmax(96px, .75fr); gap: 8px; align-items: start; }
 .shop-items-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-content: flex-start; padding: 5px 5px 5px 0; }
-.round-briefing-modal .shop-items-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); justify-content: stretch; }
+.round-briefing-modal .shop-items-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); justify-content: stretch; }
 .shop-btn { padding: 8px; border-radius: 6px; cursor: pointer; width: 115px; text-align: center; display: flex; flex-direction: column; align-items: center; transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s; position: relative; flex-shrink: 0; }
 .round-briefing-modal .shop-btn { width: auto; min-width: 0; }
 .shop-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
@@ -995,6 +997,9 @@ body {
     .floor.rooftop-party::after,
     #world.rooftop-party-board::before { animation: none; }
 }
+.quantity-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 4px; box-sizing: border-box; border-radius: 50%; background: #111; color: #fff; font-size: 11px; line-height: 1; font-weight: 800; }
+.inv-btn { position: relative; }
+.inv-btn > .quantity-badge { position: absolute; top: -5px; right: -5px; }
 .shell-modal { max-width: 480px; }
 .shell-hook { font-size: 18px; line-height: 1.45; color: #34495e; margin: 24px 0; }
 .shell-links { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 18px; }

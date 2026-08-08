@@ -334,7 +334,7 @@ window.createLiftState = function(id) {
         counterweightManualOverride: false,
         manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0, gymStinkActive: false,
         tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
-        musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0,
+        musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0, wideDoorsTimer: 0, wideDoorsMultiplier: 1,
         sardineScored: false, isDoubleDecker: false,
         state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,
         lastEffectiveCapacity: Config.liftCapacity,
@@ -469,6 +469,8 @@ window.initializeRound = function(round, options = {}) {
     Registry.roundCountdownActive = false;
     Registry.roundCountdownPaused = false;
     document.getElementById('roundCountdown')?.classList.add('hidden');
+    document.getElementById('world')?.classList.remove('final-life-warning');
+    document.getElementById('game-area')?.classList.remove('countdown-active');
     window.Game.Audio?.publish('rooftop_released', { reason: 'round_initialized', round });
     window.clearAttemptInventory();
     Registry.activeOperation = options.operation || null;
