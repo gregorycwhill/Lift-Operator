@@ -295,6 +295,45 @@ test('Friends and Family onboarding keeps developer identifiers out of normal pl
     expect(result.workshopHint).toBe('Unlocks at Round 10');
 });
 
+test('environment guard classifies supported and unsupported player environments', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const detect = window.Game.Environment.detectEnvironment;
+        const cases = {
+            edgeDesktop: detect({ userAgent: 'Mozilla/5.0 Windows NT 10.0 Edg/126.0', maxTouchPoints: 0 }),
+            firefoxDesktop: detect({ userAgent: 'Mozilla/5.0 Windows NT 10.0 Firefox/128.0', maxTouchPoints: 0 }),
+            safariDesktop: detect({ userAgent: 'Mozilla/5.0 Macintosh Intel Mac OS X Safari/605.1.15', maxTouchPoints: 0 }),
+            android: detect({ userAgent: 'Mozilla/5.0 Android 14 Mobile Chrome/126.0', maxTouchPoints: 5 }),
+            ipadDesktopUa: detect({ userAgent: 'Mozilla/5.0 Macintosh Intel Mac OS X Safari/605.1.15', maxTouchPoints: 5 })
+        };
+        window.Game.Environment.show(cases.firefoxDesktop);
+        const shown = {
+            display: document.getElementById('environmentNoticeOverlay').style.display,
+            label: document.getElementById('environmentNoticeDetected').innerText
+        };
+        document.getElementById('environmentNoticeContinue').click();
+        return { cases, shown, afterContinue: document.getElementById('environmentNoticeOverlay').style.display };
+    });
+
+    expect(result.cases.edgeDesktop.supported).toBe(true);
+    expect(result.cases.edgeDesktop.label).toContain('Edge on a desktop or laptop');
+    expect(result.cases.firefoxDesktop.supported).toBe(false);
+    expect(result.cases.firefoxDesktop.label).toContain('Firefox');
+    expect(result.cases.safariDesktop.supported).toBe(false);
+    expect(result.cases.android.isMobile).toBe(true);
+    expect(result.cases.android.isTablet).toBe(false);
+    expect(result.cases.ipadDesktopUa.isTablet).toBe(true);
+    expect(result.cases.ipadDesktopUa.supported).toBe(false);
+    expect(result.shown).toEqual({ display: 'flex', label: 'Firefox on a desktop or laptop' });
+    expect(result.afterContinue).toBe('none');
+});
+
+test('feedback privacy copy explains prefill transmission and Submit requirement', async ({ page }) => {
+    const copy = await page.evaluate(() => document.querySelector('.feedback-privacy-note')?.innerText || '');
+    expect(copy).toContain('Opening the feedback form sends these technical details to Google');
+    expect(copy).toContain('round, seed, browser and viewport');
+    expect(copy).toContain('No feedback response is submitted unless you press Submit');
+});
+
 test('manifest Debug access is welcoming and cannot overwrite a saved campaign', async ({ page }) => {
     const result = await page.evaluate(() => {
         const saved = {

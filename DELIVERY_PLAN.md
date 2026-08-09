@@ -47,8 +47,9 @@ human acceptance belong in `TEST_PLAN.md`.
   overlay/rendering issues.
 - Ordinary in-round background music is disabled for RC1.0. Menu and Rooftop music (controlled by the Music slider),
   VIP fanfare, Musak, and SFX remain available.
-- Feedback is opt-in: the linked Google Form does not collect email addresses and receives only the compact diagnostic
-  the player chooses to open/submit.
+- Feedback is opt-in: opening the linked Google Form sends round, seed, browser, and viewport to Google as prefill URL
+  parameters; no feedback response is submitted unless the player presses Submit. The form does not collect email
+  addresses.
 - Settings provides a confirmed local-data deletion action for the browser's campaign, leaderboard, custom automations,
   automation pins/teaching state, and audio settings.
 - Current polish slice: stabilise countdown/message layout, clear final-life warning state between rounds, refine audio

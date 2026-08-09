@@ -14,8 +14,9 @@ Please tell us whether instructions, the automation controls, challenge briefing
 without project guidance. Rate each completed round: **1 = very easy, 3 = about right, 5 = very hard**.
 
 Use **Give Feedback** from Settings or Round Review whenever something is confusing or unexpected. It opens a Google
-Form with a compact diagnostic string already filled in and copies that string locally. The game does not send anything
-automatically.
+Form with a compact diagnostic string already filled in and copies that string locally. Opening the feedback form sends
+these technical details to Google to pre-fill the form: round, seed,
+browser and viewport. No feedback response is submitted unless you press **Submit**.
 
 ## Later session: higher-round access
 

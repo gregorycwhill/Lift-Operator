@@ -35,11 +35,11 @@ Firefox is not currently a supported browser.
 ## Help improve it
 
 - Use **Give Feedback** in Settings or Round Review. It opens the feedback form with a compact diagnostic pre-filled
-  and also copies that string to your clipboard. Nothing is submitted until you choose **Submit** in the form.
+  and also copies that string to your clipboard. Opening the feedback form sends these technical details to Google to
+  pre-fill the form: round, seed, browser and viewport. No feedback response is submitted unless you press **Submit**.
 - Feedback is collected through the configured Google Form for player, technical, balance, and accessibility reports.
   The form is shared by link and does not collect email addresses.
-  Give Feedback sends its diagnostic only as part of the player-initiated form opening; it never submits a response
-  automatically.
+  The form is opened only by your action and the game never submits a response automatically.
 - **Settings → Clear local data…** removes this browser's campaign, local leaderboard, custom automations, and audio
   settings after a confirmation. It does not send or affect anyone else's data.
 - See the concise [RC1 Playtest Pack](docs/playtest/RC1_PLAYTEST_PACK.md) for current priorities and a report template.

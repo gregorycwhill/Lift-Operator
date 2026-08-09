@@ -37,7 +37,8 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
 2. Confirm pause/resume at a round boundary, Settings, Credits & Licences, and Give Feedback are reachable without
    Debug.
 3. Open Give Feedback in a signed-out/private window: confirm the Google Form opens, diagnostic text is prefilled and
-   copied, and the optional media-link field is understandable.
+   copied, and the optional media-link field is understandable. Confirm the privacy wording explains that opening the
+   form sends round, seed, browser, and viewport to Google, while Submit is still required for a response.
 4. Warp only through the supplied Debug manifest URI: spot-check R9 event clarity, R14 zoning/briefing, R21 pair
    routing/manual override, and R24 capsule readability/performance.
 5. Build and open the itch-compatible ZIP locally; confirm it contains `LICENSE`, third-party notices, attribution,
@@ -101,11 +102,11 @@ triage, not automatic retuning instructions.
 
 | ID | Check | Pass condition |
 | --- | --- | --- |
-| H1 | Public feedback form | Works while signed out; diagnostics are prefilled and no data is sent automatically. |
+| H1 | Public feedback form | Works while signed out; opening sends only the stated prefill diagnostics, and no response is submitted automatically. |
 | H2 | Build identity | Settings, Round Review, diagnostic, tester pack, and ZIP identify the same baseline. |
 | H3 | Audio/licence surface | Credits are readable and every bundled file has a verified provenance/status record. |
 | H4 | Package smoke | ZIP opens locally with expected assets/notices and no missing start path. |
-| H5 | Supported-browser play | Chrome/Edge desktop spot-check passes; Firefox/mobile remain explicitly unsupported. |
+| H5 | Supported-browser play | Chrome/Edge desktop has no notice; Firefox, Safari, mobile, and tablet show a non-blocking warning with Continue anyway. |
 | H6 | Campaign feedback | Enough structured observations exist to assess the five campaign arcs and any P0/P1 reports are dispositioned. |
 
 ## Test-data and report governance

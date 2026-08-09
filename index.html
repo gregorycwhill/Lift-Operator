@@ -109,6 +109,14 @@
             </div>
         </div>
 
+        <div class="overlay" id="environmentNoticeOverlay">
+            <div class="modal-content compact-modal shell-modal">
+                <h2>Desktop browser recommended</h2>
+                <p>This test version is designed for a desktop or laptop using Chrome or Edge. You appear to be using <strong id="environmentNoticeDetected">an unsupported environment</strong>. For the intended experience, please reopen this link there.</p>
+                <button id="environmentNoticeContinue" class="btn btn-green btn-full-width">Continue anyway</button>
+            </div>
+        </div>
+
         <div class="overlay" id="howToPlayOverlay"><div class="modal-content compact-modal shell-modal"><h2>How to Play</h2><p>Click a floor to send a lift, collect guests, and deliver them before their patience runs out. Green guests are comfortable, yellow guests are waiting too long, and red guests are about to cost a life. Ground is marked G.</p><p>Boarding and alighting take time. Spend Credits between rounds, then use the Automation Dock and Workshop to manage larger fleets. Progress saves between rounds; restarting a shift begins that round again.</p><p>Some rounds add special traffic: checkout guests need Ground, VIPs need priority, and rooftop demand changes suddenly.</p><button id="closeHowToBtn" class="btn btn-gray btn-full-width">Close</button></div></div>
         <div class="overlay" id="creditsOverlay"><div class="modal-content compact-modal shell-modal"><h2>Credits & Licences</h2><p>Created by Gregory Hill</p><p>Lead playtester: Marie Barnard</p><p>Made with ♥ in Melbourne, Australia.</p><details class="audio-credits"><summary>Audio Credits & Licences</summary><div id="shellAudioAttribution">Loading verified audio credits…</div></details><p><a href="LICENSE" target="_blank">GPL-3.0-only licence</a> · <a href="THIRD_PARTY_NOTICES.md" target="_blank">Third-party notices</a> · <a href="https://github.com/gregorycwhill/Lift-Operator" target="_blank">Source repository</a></p><button id="closeCreditsBtn" class="btn btn-gray btn-full-width">Close</button></div></div>
         <div class="overlay" id="newGameConfirmOverlay"><div class="modal-content compact-modal shell-modal"><h2>Start a new campaign?</h2><p>Your saved campaign progress will be replaced. Custom automations, audio settings, and leaderboard records stay on this device.</p><button id="confirmNewGameBtn" class="btn btn-red btn-full-width">New Campaign</button><button id="cancelNewGameBtn" class="btn btn-gray btn-full-width btn-margin-top">Keep Campaign</button></div></div>
@@ -240,7 +248,7 @@
                     <label>SFX <input type="range" id="settingsAudioSfx" min="0" max="1" step="0.05"></label>
                 </section>
                 <details class="audio-credits"><summary>Audio Credits & Licences</summary><div id="settingsAudioAttribution">Loading verified audio credits…</div></details>
-                <p class="feedback-privacy-note">Give Feedback opens Google Forms with round, seed, browser, and viewport details pre-filled. Nothing is sent until you submit.</p>
+                <p class="feedback-privacy-note">Opening the feedback form sends these technical details to Google to pre-fill the form: round, seed, browser and viewport. No feedback response is submitted unless you press Submit.</p>
                 <p class="build-version" data-build-version>Build</p>
                 <button id="settingsFeedbackBtn" class="btn btn-purple btn-full-width btn-margin-top">Give Feedback</button>
                 <button id="settingsHowToBtn" class="btn btn-blue btn-full-width btn-margin-top">How to Play</button>
@@ -346,6 +354,7 @@
     <script src="ui-debug.js"></script>
     <script src="ui-feedback.js"></script>
     <script src="ui-overlay.js"></script>
+    <script src="environment-guard.js"></script>
 
 </body>
 </html>

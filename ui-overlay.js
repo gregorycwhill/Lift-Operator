@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.openModalExclusive = function(id) {
     window.Game.AutomationController?.closeLibrary?.();
-    ['welcomeOverlay', 'howToPlayOverlay', 'creditsOverlay', 'newGameConfirmOverlay', 'clearLocalDataConfirmOverlay', 'campaignCompleteOverlay', 'roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
+    ['welcomeOverlay', 'environmentNoticeOverlay', 'howToPlayOverlay', 'creditsOverlay', 'newGameConfirmOverlay', 'clearLocalDataConfirmOverlay', 'campaignCompleteOverlay', 'roundModalOverlay', 'roundReviewOverlay', 'roundStartConfirmOverlay', 'settingsOverlay', 'leaderboardOverlay', 'debugOverlay', 'workshopOverlay']
         .filter(otherId => otherId !== id)
         .forEach(otherId => { const overlay = document.getElementById(otherId); if (overlay) overlay.style.display = 'none'; });
     const overlay = document.getElementById(id);

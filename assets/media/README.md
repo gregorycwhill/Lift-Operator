@@ -12,7 +12,7 @@ is the repository-retained record of superseded captures.
 | File | Role | README caption / use | Source status |
 | --- | --- | --- | --- |
 | `campaign-basic-dispatch.png` | README gallery | First dispatch | Curated replacement supplied by product |
-| `campaign-supply-closet.png` | README gallery | Supply Closet | Curated capture |
+| `campaign-supply-closet.png` | README gallery | Supply Closet | Curated replacement supplied by product |
 | `campaign-workshop.png` | README gallery | Automation Workshop | Curated capture supplied by product |
 | `campaign-zoning-fleet.png` | README gallery | Zoned fleet | Curated replacement supplied by product |
 | `campaign-counterweights-live.png` | README gallery | Counterweight puzzle | Curated live capture |
