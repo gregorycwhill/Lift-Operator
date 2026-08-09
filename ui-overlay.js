@@ -389,6 +389,14 @@ window.initializeUI = function() {
     bind("closeLbBtn", () => {
         const lbOverlay = document.getElementById("leaderboardOverlay");
         if (lbOverlay) lbOverlay.style.display = "none";
+        if (Registry.leaderboardReturn === 'campaign-complete') {
+            Registry.leaderboardReturn = null;
+            window.Game.Shell?.showCampaignComplete?.();
+            if (window.Game.Audio) window.Game.Audio.setContext('menu');
+            if (typeof ui.draw === "function") ui.draw();
+            return;
+        }
+        Registry.leaderboardReturn = null;
         if (Registry.roundCountdownActive) {
             if (typeof window.startRoundCountdown === 'function') window.startRoundCountdown(Math.max(0, Registry.countdownRemaining || 0));
         } else if (typeof engine.resume === "function") engine.resume();

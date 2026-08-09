@@ -100,6 +100,12 @@ counterweight policy. This note supersedes the pending status in the historical 
 | PTF-036 | late playtest feedback — 7 August 2026 | In counterweight rounds, Sweep appeared to permit an effective manual override only from the left car. | R21–R23 Counterweights | **Implemented—awaiting replay.** Built-in policies are pair-owned; either car may issue the immediate paired manual command, held until both cars complete service. Custom policies remain an advanced disclosed exception. |
 | PTF-037 | playtest feedback — 8 August 2026 | R15 VIP stranded alone after Rooftop release under Weighted Voting; Infinite Capacity combined with Group Think/Wide Doors/rockets caused boarding and alighting loops; R11 cars appeared not to fill at the rooftop and ordinary guests cycled around Gym Bros; R23 manual VIP pickup did not stop reliably; R23 was reported too difficult. | R11, R15, R23; VIP, Rooftop, capacity, counterweights | **Implemented—awaiting replay.** Capacity expiry is now one-shot and normalises only overflow; onboard VIP delivery outranks incompatible waiting demand; counterweight manual dispatch resets stale door/policy state; R23 candidate spawn curve is `0.7125`–`0.90`. Direction-reversal and rooftop fill behaviour remain explicit replay checks. |
 
+| PTF-038 | final playtest consolidation â€” 9 August 2026 | Counterweight Sweep can immediately reverse after a manual stop; VIP/Rooftop notices shift or obscure the board; restored campaigns may lose Credits; cart text overflows; Leaderboard can resume a finished campaign. | R21â€“R23, shared message rail, campaign shell, Supply Closet, Campaign Complete | **Implementedâ€”targeted regression pending.** Pair-level manual service ownership prevents partner-order release; notices are shaft-only overlays; committed Credits/inventory are explicit restore inputs; cart entries are icon/count tokens; and Campaign Complete returns from Leaderboard without resuming the engine. VIP notices say “Floor”, and Leaderboard no longer duplicates audio controls or attribution. |
+
+PTF-038 supersedes the placement wording in PTF-035 and the completion wording in PTF-036: notices now occupy the
+shaft-only in-world overlay, and a manual counterweight command completes after the selected car's service cycle rather
+than after both cars merely reach their targets.
+
 ## Current intake boundary
 
 The current evidence window begins with the Friends & Family build at `bc59758`. Share the ordinary public URI for a

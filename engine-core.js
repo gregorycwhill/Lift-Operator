@@ -183,6 +183,7 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
         if (partner && options.manualOverride === true) {
             lift.counterweightManualOverride = true;
             partner.counterweightManualOverride = true;
+            Registry.beginCounterweightManualCommand?.(lift, target);
         }
     }
     if (isPolicyCommand && pair) Registry.counterweightLastPolicyFrame = Registry.counterweightPolicyFrame;
@@ -220,6 +221,14 @@ window.setLiftAutomation = function(liftIndex, mode) {
             : null;
         const pairOwned = Boolean(pair && (mode === 'manual' || Registry.getCounterweightPolicyRank?.(mode) > 0));
         const targets = pairOwned ? [lift, pair] : [lift];
+        if (pair && mode !== 'manual') {
+            const commandKey = Registry.getCounterweightPairKey?.(lift);
+            if (commandKey) delete Registry.counterweightManualCommands[commandKey];
+            [lift, pair].forEach(car => {
+                car.manualOverride = false;
+                car.counterweightManualOverride = false;
+            });
+        }
         targets.forEach(targetLift => {
             targetLift.automation = mode;
             if (mode !== 'manual') targetLift.manualOverride = false;
@@ -362,6 +371,7 @@ window.createRoundState = function(round, seed, options = {}) {
     const state = {
         definition,
         seed,
+        points: Number.isFinite(options.restoredPoints) ? Math.max(0, Number(options.restoredPoints)) : Registry.points,
         timeLeft: Registry.autoPilotActive
             ? (Config.autoPilotSettings.shortRoundDuration || 30)
             : Config.roundTime,
@@ -445,6 +455,7 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.stats.timeLeft = roundState.timeLeft;
     Registry.stats.lives = roundState.lives;
     Registry.stats.currentSpawnChance = roundState.currentSpawnChance;
+    Registry.points = Number.isFinite(roundState.points) ? roundState.points : Registry.points;
     Registry.counterweightEnabled = Boolean(roundState.counterweightEnabled);
     Registry.capsuleMode = Boolean(roundState.capsuleMode);
     Registry.capsuleTravelSecPerFloor = Number(roundState.capsuleTravelSecPerFloor || 0);
@@ -480,6 +491,7 @@ window.initializeRound = function(round, options = {}) {
     window.Game.Audio?.publish('rooftop_released', { reason: 'round_initialized', round });
     window.clearAttemptInventory();
     Registry.activeOperation = options.operation || null;
+    Registry.counterweightManualCommands = {};
     const hasRoundOverride = options.seedOverride !== undefined ||
         (Registry.debugSeedOverrideRound === round && Registry.debugSeedOverride !== null);
     const overrideSeed = options.seedOverride !== undefined ? options.seedOverride : Registry.debugSeedOverride;

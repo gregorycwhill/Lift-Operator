@@ -60,6 +60,17 @@ human acceptance belong in `TEST_PLAN.md`.
   reversal; counterweight manual dispatch interrupts stale door/policy state; and R23 uses the reduced candidate spawn
   curve `0.7125`–`0.90`. These changes require focused regression tests and fresh R11/R15/R23 playtest evidence.
 
+## Current post-playtest remediation
+
+- Counterweight manual stops are pair commands: the selected car owns its requested service cycle, so its partner
+  cannot release the command first and a competing parked car cannot claim its eligible pickup.
+- VIP, Rooftop, and Round 2 notices render as fixed shaft-only overlays, never as layout content that moves the board
+  or conceals the lobby.
+- Campaign checkpoints explicitly restore committed Credits and purchased inventory; an unpurchased cart is not saved.
+- The Supply Closet cart uses compact tier-coloured icon/count tokens with accessible tooltips.
+- Leaderboard is results-only. From Campaign Complete its close action returns to the completion modal without resuming
+  a terminal round.
+
 ## Current collateral remediation before broad distribution
 
 1. Verify `assets/audio/manifest.json`, `assets/audio/ATTRIBUTION.md`, and `assets/audio/audio-review.csv` remain

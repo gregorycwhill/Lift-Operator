@@ -42,8 +42,9 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
    routing/manual override, and R24 capsule readability/performance.
 5. Build and open the itch-compatible ZIP locally; confirm it contains `LICENSE`, third-party notices, attribution,
    and a matching `BUILD.txt`.
-6. In R2/R3, confirm countdown and teaching/VIP notices remain outside the board, the board does not shift, cables stay
-   visible, and no transient scrollbar appears. Confirm the final-life warning clears at the next round.
+6. In R2/R3, confirm countdown and teaching/VIP/Rooftop notices remain fixed over the lift shafts only: the board does
+   not shift, lobby queues remain visible, cables stay visible, and no transient scrollbar appears. Confirm the
+   final-life warning clears at the next round.
 7. Confirm Settings starts unmuted with clean storage, persists deliberate audio changes, and stops Musak before menu
    music after a round. Confirm Bronze Wide Doors targets one lift, repeated cart/tray items use quantity badges, and
    tooltips use Bronze/Silver/Gold.
@@ -61,9 +62,14 @@ The latest remediation must pass these focused checks before the next Friends & 
 - A Sweep car that reverses direction while parked re-evaluates the current floor and boards newly compatible guests;
   rooftop evacuation continues until the car is full or no compatible guest remains.
 - A manual command from either counterweight controller interrupts stale door/policy state, dispatches the selected car
-  and its complementary partner, and remains authoritative until both cars complete the service stop.
+  and its complementary partner, and remains authoritative until the selected car completes its service stop. The
+  partner arriving first must not release it; a competing parked car must not take the selected car's eligible guests.
 - R23 uses the candidate `0.7125`–`0.90` spawn curve. Treat difficulty as a playtest observation, not an automated
   simulator proof of human solvability.
+
+- Restore a campaign after purchasing power-ups and starting a round: remaining Credits and committed inventory must
+  return, while an unpurchased cart is intentionally absent. At Campaign Complete, close Leaderboard and confirm the
+  completion modal returns without lift movement, spawns, timers, or active power-ups resuming.
 
 ## Friends & Family evidence window
 

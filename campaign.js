@@ -92,6 +92,7 @@
             window.initializeRound(record.round, {
                 showBriefing: false,
                 restoredLives: record.lives,
+                restoredPoints: record.points,
                 restoredInventory: cloneInventory(record.inventory),
                 preserveCheckpoint: false
             });

@@ -125,7 +125,8 @@ test('briefing removes redundant objective/loadout copy and presents introductio
         roomServiceIntro.startButtonVisible = document.getElementById('startRoundBtn').getBoundingClientRect().height > 0;
         roomServiceIntro.footerPosition = getComputedStyle(document.querySelector('.briefing-footer')).position;
         roomServiceIntro.cartHeader = document.querySelector('.cart-header')?.innerText || '';
-        roomServiceIntro.cartItem = document.querySelector('.cart-item-label')?.innerText || '';
+        roomServiceIntro.cartItemCount = document.querySelector('.cart-item .quantity-badge')?.innerText || '';
+        roomServiceIntro.cartItemLabel = document.querySelector('.cart-item')?.getAttribute('aria-label') || '';
         roomServiceIntro.cartTotal = document.querySelector('.cart-total')?.innerText || '';
         return { roomServiceIntro, laterRound, enduranceRule };
     });
@@ -143,7 +144,8 @@ test('briefing removes redundant objective/loadout copy and presents introductio
     expect(result.roomServiceIntro.startButtonVisible).toBe(true);
     expect(result.roomServiceIntro.footerPosition).toBe('static');
     expect(result.roomServiceIntro.cartHeader).not.toContain('Cart');
-    expect(result.roomServiceIntro.cartItem).toBe('Air Freshener');
+    expect(result.roomServiceIntro.cartItemCount).toBe('1');
+    expect(result.roomServiceIntro.cartItemLabel).toContain('Air Freshener');
     expect(result.roomServiceIntro.cartTotal.split(/\r?\n/)).toEqual(['Total Cost:', '1 Credits']);
     expect(result.laterRound.introTerms).toBe(0);
     expect(result.enduranceRule).toContain('twentieth life');
@@ -177,6 +179,41 @@ test('campaign shell restores only a validated pre-round checkpoint', async ({ p
     expect(result.inventory).toEqual([{ id: 'turbo', tier: 0 }]);
 });
 
+test('campaign checkpoint saves committed purchases but not an unpurchased cart', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        localStorage.removeItem(Game.Keys.CAMPAIGN);
+        initializeRound(3, { showBriefing: false });
+        Registry.playerName = 'Campaign Shop Test';
+        Registry.campaignSeed = 9876;
+        Registry.useCampaignSeeds = true;
+        Registry.points = 5;
+        PowerUps.inventory = [];
+        PowerUps.cart = [{ id: 'freshener', tier: 0 }];
+        checkoutCart();
+        const saved = JSON.parse(localStorage.getItem(Game.Keys.CAMPAIGN));
+        Registry.points = 0;
+        PowerUps.inventory = [];
+        PowerUps.cart = [{ id: 'turbo', tier: 0 }];
+        Game.Campaign.restore();
+        return {
+            savedPoints: saved.points,
+            savedInventory: saved.inventory,
+            savedCart: saved.cart,
+            restoredPoints: Registry.points,
+            restoredInventory: PowerUps.inventory,
+            restoredCart: PowerUps.cart
+        };
+    });
+    expect(result).toEqual({
+        savedPoints: 4,
+        savedInventory: [{ id: 'freshener', tier: 0 }],
+        savedCart: undefined,
+        restoredPoints: 4,
+        restoredInventory: [{ id: 'freshener', tier: 0 }],
+        restoredCart: []
+    });
+});
+
 test('campaign shell rejects stale checkpoints and exposes credited completion', async ({ page }) => {
     const result = await page.evaluate(() => {
         localStorage.setItem(Game.Keys.CAMPAIGN, JSON.stringify({ schemaVersion: 1, balanceVersion: 'stale', playerName: 'Old', seed: 1, round: 3, highestUnlockedRound: 3, lives: 20, points: 2 }));
@@ -192,6 +229,25 @@ test('campaign shell rejects stale checkpoints and exposes credited completion',
     expect(result.completed).toBe('flex');
     expect(result.credits).toContain('Gregory Hill');
     expect(result.credits).toContain('Marie Barnard');
+});
+
+test('Campaign Complete returns from Leaderboard without resuming a terminal round', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(25, { showBriefing: false });
+        Registry.playerName = 'Campaign Test';
+        Registry.gameActive = false;
+        Registry.roundTerminalHandled = true;
+        Game.Shell.showCampaignComplete();
+        showLeaderboard('Campaign Complete');
+        document.getElementById('closeLbBtn').click();
+        return {
+            gameActive: Registry.gameActive,
+            leaderboard: document.getElementById('leaderboardOverlay').style.display,
+            complete: document.getElementById('campaignCompleteOverlay').style.display,
+            closeLabel: document.getElementById('closeLbBtn').textContent
+        };
+    });
+    expect(result).toEqual({ gameActive: false, leaderboard: 'none', complete: 'flex', closeLabel: 'Back' });
 });
 
 test('campaign shell Play reaches Round 1 briefing and New Game only clears its checkpoint', async ({ page }) => {
@@ -1366,7 +1422,7 @@ test('counterweight built-in policy precedence selects one pair driver', async (
     expect(result.rankOrder).toEqual([6, 5, 4, 3, 2, 1]);
 });
 
-test('counterweight built-ins assign symmetrically and manual commands work from either side', async ({ page }) => {
+test('counterweight built-ins assign symmetrically and retain manual commands until selected service completes', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(21, { showBriefing: false });
         Registry.gameActive = true;
@@ -1375,13 +1431,42 @@ test('counterweight built-ins assign symmetrically and manual commands work from
         setLiftTarget(1, 10);
         const manual = Registry.lifts.slice(0, 2).map(lift => ({ target: lift.targetFloor, override: lift.manualOverride }));
         Registry.lifts.slice(0, 2).forEach(lift => { lift.pos = lift.targetFloor * Registry.floorHeight; lift.state = 'IDLE'; });
-        const released = Registry.releaseCounterweightManualOverride(Registry.lifts[1]);
-        return { assigned, manual, released, remaining: Registry.lifts.slice(0, 2).map(lift => lift.manualOverride) };
+        const releasedBeforeService = Registry.releaseCounterweightManualOverride(Registry.lifts[1]);
+        Registry.lifts[1].state = 'DOORS_CLOSING';
+        const releasedAfterService = Registry.completeCounterweightManualCommand(Registry.lifts[1]);
+        return { assigned, manual, releasedBeforeService, releasedAfterService, remaining: Registry.lifts.slice(0, 2).map(lift => lift.manualOverride) };
     });
     expect(result.assigned).toEqual(['sweep', 'sweep']);
     expect(result.manual).toEqual([{ target: 0, override: true }, { target: 10, override: true }]);
-    expect(result.released).toBe(true);
+    expect(result.releasedBeforeService).toBe(false);
+    expect(result.releasedAfterService).toBe(true);
     expect(result.remaining).toEqual([false, false]);
+});
+
+test('selected counterweight manual stop owns boarding against its earlier-processed partner', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        Registry.gameActive = true;
+        setLiftAutomation(1, 'sweep');
+        setLiftTarget(1, 5);
+        const [left, right] = Registry.lifts;
+        [left, right].forEach(lift => {
+            lift.pos = 5 * Registry.floorHeight;
+            lift.targetFloor = 5;
+            lift.state = 'BOARDING';
+            lift.stateProgress = 1;
+        });
+        right.passengers = [{ id: 'downbound', dest: 0, status: GuestStatus.HAPPY, boardingWeight: 1 }];
+        Registry.floors[5].waitingGuests = [{ id: 'manual-upbound', dest: 8, status: GuestStatus.HAPPY, boardingWeight: 1 }];
+        animationTick();
+        return {
+            leftBoarded: left.passengers.some(guest => guest.id === 'manual-upbound'),
+            rightBoarded: right.passengers.some(guest => guest.id === 'manual-upbound'),
+            commandActive: Boolean(Registry.getCounterweightManualCommand(right)),
+            overrides: Registry.lifts.map(lift => lift.manualOverride)
+        };
+    });
+    expect(result).toEqual({ leftBoarded: false, rightBoarded: true, commandActive: true, overrides: [true, true] });
 });
 
 test('Open Plan uses one active hub to transfer a compatible guest between adjacent lifts', async ({ page }) => {
@@ -2442,18 +2527,19 @@ test('Sweep reversal reconsiders compatible guests at the current floor', async 
     expect(result).toEqual({ target: 2, direction: 1 });
 });
 
-test('Round 2 teaching rail is below the countdown rather than overlapping it', async ({ page }) => {
+test('Round 2 teaching rail is a shaft-only overlay that does not alter board layout', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(2, { showBriefing: false });
         startRoundCountdown(10);
-        const countdown = document.getElementById('roundCountdown').getBoundingClientRect();
         const rail = document.getElementById('game-message-rail').getBoundingClientRect();
-        return { railTop: rail.top, countdownBottom: countdown.bottom, stacked: rail.top >= countdown.bottom - 1 };
+        const world = document.getElementById('world').getBoundingClientRect();
+        const lobby = document.getElementById('lobby-0').getBoundingClientRect();
+        return { insideWorld: rail.top >= world.top && rail.bottom <= world.bottom, shaftOnly: rail.left >= lobby.right };
     });
-    expect(result.stacked).toBe(true);
+    expect(result).toEqual({ insideWorld: true, shaftOnly: true });
 });
 
-test('critical notices queue outside the board without obscuring it', async ({ page }) => {
+test('critical notices queue in the shaft overlay without obscuring the lobby', async ({ page }) => {
     const result = await page.evaluate(() => {
         showGameMessage('VIP arrival', { critical: true, durationMs: 5000 });
         showGameMessage('Rooftop Party started', { critical: true, durationMs: 5000 });
@@ -2465,13 +2551,15 @@ test('critical notices queue outside the board without obscuring it', async ({ p
             first,
             second: document.getElementById('game-message-text').textContent,
             queued: rail?.dataset.critical === 'true',
-            separated: rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().top
+            insideWorld: rail.getBoundingClientRect().top >= world.getBoundingClientRect().top && rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().bottom,
+            shaftOnly: rail.getBoundingClientRect().left >= document.getElementById('lobby-0').getBoundingClientRect().right
         };
     });
     expect(result.first).toBe('VIP arrival');
     expect(result.second).toBe('Rooftop Party started');
     expect(result.queued).toBe(true);
-    expect(result.separated).toBe(true);
+    expect(result.insideWorld).toBe(true);
+    expect(result.shaftOnly).toBe(true);
 });
 
 test('four-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {

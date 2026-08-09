@@ -80,7 +80,7 @@ window.runSpawnerTick = function(now) {
         window.Game.BalanceTelemetry?.recordSpawn();
         window.Game.Audio?.publish('vip_journey', { stage: vip.vipStage, floor, destination: vip.dest });
         window.showGameMessage?.(vip.vipStage === 2
-            ? `VIP is leaving her room for Floor ${vip.dest}.`
+            ? `VIP is leaving Floor ${floor} for Floor ${vip.dest}.`
             : 'VIP is departing. Get her back to Ground.', { critical: true, durationMs: 5000 });
     }
 
@@ -108,7 +108,7 @@ window.runSpawnerTick = function(now) {
         });
         window.Game.BalanceTelemetry?.recordSpawn();
         window.Game.Audio?.publish('vip_arrival', { guestType: 'vip', floor: start, destination: roomFloor, stage: 1 });
-        window.showGameMessage?.(`VIP arrival: escort her from G to Room ${roomFloor}.`, { critical: true, durationMs: 5000 });
+        window.showGameMessage?.(`VIP arrival: escort her from G to Floor ${roomFloor}.`, { critical: true, durationMs: 5000 });
         Registry.vipSpawned = true;
     }
 

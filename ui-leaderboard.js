@@ -95,6 +95,7 @@ window.showLeaderboard = function(titleText) {
     
     const closeBtn = document.getElementById('closeLbBtn');
     const restartBtn = document.getElementById('lbRestartBtn');
+    Registry.leaderboardReturn = titleText === 'Campaign Complete' ? 'campaign-complete' : 'resume-game';
     
     let shareBtn = document.getElementById('shareLbBtn');
     if (!shareBtn && document.getElementById('leaderboardOverlay')) {
@@ -111,17 +112,11 @@ window.showLeaderboard = function(titleText) {
     }
 
     if (closeBtn) closeBtn.style.display = (titleText === "Game Over!" || titleText === "You Won!") ? "none" : "block";
+    if (closeBtn) closeBtn.textContent = Registry.leaderboardReturn === 'campaign-complete' ? 'Back' : 'Resume';
     if (restartBtn) restartBtn.style.display = (titleText === "Game Over!" || titleText === "You Won!") ? "block" : "none";
     if (shareBtn) shareBtn.style.display = 'block';
 
     const listContainer = document.getElementById('lbList');
-    const audio = window.Game.Audio;
-    const mute = document.getElementById('audioMute'), music = document.getElementById('audioMusic'), sfx = document.getElementById('audioSfx');
-    if (audio && mute && music && sfx) {
-        const settings = audio.getSettings(); mute.checked = settings.muted; music.value = settings.music; sfx.value = settings.sfx;
-        mute.onchange = () => audio.setMuted(mute.checked); music.oninput = () => audio.setVolume('music', music.value); sfx.oninput = () => audio.setVolume('sfx', sfx.value);
-    }
-    audio?.renderAttributions?.();
     if (listContainer) {
         listContainer.innerHTML = '';
         const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));

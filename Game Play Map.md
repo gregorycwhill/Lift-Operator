@@ -659,9 +659,10 @@ warned, restricted, or given a master/slave interface.
   Sweep-family policies evaluate demand from both cars and issue one legal mirrored target pair, with no hidden
   left-hand policy owner.
 - A floor click on either shaft is a pair manual command: the clicked car receives the requested stop and its partner
-  receives the forced complementary stop. It takes precedence until both cars have completed their service, then the
-  pair's built-in policy resumes. The interaction remains deliberately consequence-rich, but works identically from
-  either side of a pair.
+  receives the forced complementary stop. The clicked car owns that stop through a full service cycle (including a
+  fresh queue check and door close); its partner cannot release the command merely by arriving first. Only then does
+  the pair's built-in policy resume. The interaction remains deliberately consequence-rich, but works identically
+  from either side of a pair.
 - Zoned automation remains optional. Selecting Zoned Low or Zoned High on one car establishes that car's role and gives
   its partner the complementary role; a batch assignment retains the conventional left-low/right-high default. A
   manual command may leave a zone temporarily and zoning resumes afterwards.

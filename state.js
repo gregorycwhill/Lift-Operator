@@ -59,6 +59,7 @@ const Registry = {
     lastLobbyRenderTime: 0,
     automationControllerSelectedPolicy: 'manual',
     automationControllerPreviewPolicy: 'manual',
+    counterweightManualCommands: {},
     
     vipSpawned: false, vipTargetTime: 0, vipStage: 0, vipRoomFloor: -1, vipRandomFloor: -1,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0, sunsetWarningShown: false,
@@ -182,6 +183,55 @@ const Registry = {
         const partner = this.lifts[lift.counterweightPartner];
         return partner ? [lift, partner] : null;
     },
+    getCounterweightPairKey: function(lift) {
+        const pair = this.getCounterweightPair(lift);
+        return pair ? pair.map(car => car.id).sort((a, b) => a - b).join(':') : null;
+    },
+    beginCounterweightManualCommand: function(lift, targetFloor) {
+        const pair = this.getCounterweightPair(lift);
+        const key = this.getCounterweightPairKey(lift);
+        if (!pair || !key) return null;
+        const maxFloor = Math.max(0, Config.numFloors - 1);
+        const command = {
+            id: (this.counterweightManualCommandSequence || 0) + 1,
+            selectedLiftId: lift.id,
+            selectedFloor: targetFloor,
+            partnerLiftId: pair.find(car => car.id !== lift.id)?.id ?? null,
+            partnerFloor: maxFloor - targetFloor,
+            phase: 'travelling'
+        };
+        this.counterweightManualCommandSequence = command.id;
+        this.counterweightManualCommands[key] = command;
+        return command;
+    },
+    getCounterweightManualCommand: function(lift) {
+        const key = this.getCounterweightPairKey(lift);
+        return key ? this.counterweightManualCommands[key] || null : null;
+    },
+    isCounterweightManualServiceLift: function(lift, floor = lift?.targetFloor) {
+        const command = this.getCounterweightManualCommand(lift);
+        return Boolean(command && command.selectedLiftId === lift?.id && command.selectedFloor === floor && command.phase !== 'complete');
+    },
+    getCounterweightManualServiceLiftAtFloor: function(floor) {
+        return Object.values(this.counterweightManualCommands || {})
+            .map(command => this.lifts[command.selectedLiftId])
+            .find(lift => lift && this.isCounterweightManualServiceLift(lift, floor) &&
+                Math.abs(lift.pos - floor * this.floorHeight) <= 1 &&
+                ['DOORS_OPENING', 'BOARDING', 'DOORS_CLOSING'].includes(lift.state)) || null;
+    },
+    completeCounterweightManualCommand: function(lift) {
+        const command = this.getCounterweightManualCommand(lift);
+        if (!command || command.selectedLiftId !== lift?.id) return false;
+        command.phase = 'complete';
+        const pair = this.getCounterweightPair(lift) || [];
+        pair.forEach(car => {
+            car.manualOverride = false;
+            car.counterweightManualOverride = false;
+        });
+        const key = this.getCounterweightPairKey(lift);
+        if (key) delete this.counterweightManualCommands[key];
+        return true;
+    },
     getCounterweightPolicyCoordinator: function(lift) {
         const pair = this.getCounterweightPair(lift);
         if (!pair) return lift;
@@ -196,6 +246,7 @@ const Registry = {
             }
             return false;
         }
+        if (this.getCounterweightManualCommand(lift)) return false;
         const ready = pair.every(car => car.manualOverride && car.state === 'IDLE' &&
             Math.abs(car.pos - car.targetFloor * this.floorHeight) <= 1);
         if (!ready) return false;

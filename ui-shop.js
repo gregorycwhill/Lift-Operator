@@ -65,6 +65,12 @@ window.checkoutCart = function() {
         PowerUps.cart = [];
         purchased.forEach(item => window.Game.Audio?.publish('purchase_confirmed', { id: item.id, tier: item.tier, cost: PowerUps.catalog[item.id].tiers[item.tier].cost }));
         window.updateInventoryUI();
+        // A campaign checkpoint is deliberately pre-round: Credits are only
+        // committed once the cart is purchased, never while merely reserved.
+        window.Game.Campaign?.saveCurrent?.({
+            points: Registry.points,
+            inventory: PowerUps.inventory
+        });
     }
 };
 
@@ -229,29 +235,22 @@ window.renderShop = function() {
         });
         groupedCart.forEach(({ item, count }) => {
             const pu = PowerUps.catalog[item.id];
-            const cartItem = document.createElement('div');
+            const cartItem = document.createElement('button');
+            cartItem.type = 'button';
             cartItem.className = `cart-item cart-item-t${item.tier + 1}`;
             const tierName = ['Bronze', 'Silver', 'Gold'][item.tier] || `Tier ${item.tier + 1}`;
-            cartItem.title = `${pu.name} — ${tierName}. Click to remove one.`;
-            
+            const effect = pu.tiers[item.tier]?.desc || '';
+            const itemDescription = `${pu.name} — ${tierName}${effect ? `: ${effect}` : ''}. ${count} selected. Click to remove one.`;
+            cartItem.title = itemDescription;
+            cartItem.setAttribute('aria-label', itemDescription);
+
             const iconSpan = document.createElement('span');
             iconSpan.textContent = pu.icon;
             
-            const removeSpan = document.createElement('span');
-            removeSpan.className = 'cart-item-remove';
-            removeSpan.textContent = '×';
-            
             const labelSpan = document.createElement('span');
-            labelSpan.className = 'cart-item-label';
-            labelSpan.textContent = pu.name;
+            labelSpan.className = 'quantity-badge';
+            labelSpan.textContent = String(count);
             cartItem.append(iconSpan, labelSpan);
-            if (count > 1) {
-                const badge = document.createElement('span');
-                badge.className = 'quantity-badge';
-                badge.textContent = String(count);
-                cartItem.appendChild(badge);
-            }
-            cartItem.appendChild(removeSpan);
             cartItem.addEventListener('click', () => {
                 const ui = GameUI();
                 if (typeof ui.removeFromCart === 'function') ui.removeFromCart(item.id, item.tier);

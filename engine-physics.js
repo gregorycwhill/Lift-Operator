@@ -595,7 +595,12 @@ window.animationTick = function(timestamp) {
                 );
                 const canPickUp = canBoardAt(f) || (isDouble && canBoardAt(f + 1));
                 
-                if (hasDropoffs || canPickUp) {
+                const isSelectedManualCounterweightStop = Registry.isCounterweightManualServiceLift?.(lift, f);
+                if (isSelectedManualCounterweightStop) {
+                    const command = Registry.getCounterweightManualCommand?.(lift);
+                    if (command) command.phase = 'servicing';
+                }
+                if (hasDropoffs || canPickUp || isSelectedManualCounterweightStop) {
                     lift.state = 'DOORS_OPENING';
                     lift.stateProgress = 0;
                     lift.lastActionTime = now;
@@ -722,7 +727,14 @@ window.animationTick = function(timestamp) {
                             // Fill the most-loaded compatible parked car first. This prevents
                             // several lifts waiting at one floor from fragmenting a queue into
                             // partial loads, while preserving direction/stink/VIP eligibility.
-                            parkedLifts.sort((a, b) => Registry.getLiftWeight(b) - Registry.getLiftWeight(a) || a.id - b.id);
+                            const manualServiceLift = Registry.getCounterweightManualServiceLiftAtFloor?.(targetFloorToBoard);
+                            parkedLifts.sort((a, b) => {
+                                if (manualServiceLift) {
+                                    if (a.id === manualServiceLift.id) return -1;
+                                    if (b.id === manualServiceLift.id) return 1;
+                                }
+                                return Registry.getLiftWeight(b) - Registry.getLiftWeight(a) || a.id - b.id;
+                            });
                             if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
                                 Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1);
                                 if (lift.passengers.length === 0 && ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(lift.automation)) {
@@ -778,11 +790,15 @@ window.animationTick = function(timestamp) {
                 if (lift.stateProgress >= 1) {
                     lift.state = 'IDLE';
                     lift.stateProgress = 0;
-                    // Keep the explicit stop visible through the boarding frame;
-                    // the following idle decision clears it before Sweep resumes.
-                    const released = Registry.releaseCounterweightManualOverride?.(lift);
-                    if (released || !lift.manualOverride) {
-                        window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                    // A counterweight command belongs to the selected car, not
+                    // whichever paired car happens to be processed first.
+                    // Complete it only after the selected car's full service cycle.
+                    const completedManualCommand = Registry.completeCounterweightManualCommand?.(lift);
+                    if (!completedManualCommand) {
+                        const released = Registry.releaseCounterweightManualOverride?.(lift);
+                        if (released || !lift.manualOverride) {
+                            window.runAutomationLogic(lift, index, currentFloor, isStinky, hasStinkImmunity, now);
+                        }
                     }
                 }
             }

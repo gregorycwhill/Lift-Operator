@@ -164,10 +164,12 @@ body {
     overflow-anchor: none;
 }
 .game-message-rail {
-    position: relative;
-    flex: 0 0 auto;
-    z-index: 2;
-    width: min(680px, calc(100% - 32px));
+    position: absolute;
+    z-index: 120;
+    left: calc(var(--label-width) + var(--lobby-width) + 10px);
+    right: 10px;
+    top: 10px;
+    width: auto;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -181,18 +183,9 @@ body {
     font-size: 14px;
     line-height: 1.3;
     pointer-events: auto;
-    margin: 10px auto 0;
-}
-.game-message-rail[hidden] { display: none; }
-.game-message-rail { position: relative; top: 0; left: auto; transform: none; margin: 10px auto; }
-.game-area.countdown-active { justify-content: center; }
-.game-area.countdown-active .game-message-rail {
-    position: absolute;
-    top: 90px;
-    left: 50%;
-    transform: translateX(-50%);
     margin: 0;
 }
+.game-message-rail[hidden] { display: none; }
 .game-message-rail button { margin-left: auto; flex: 0 0 auto; border: 0; background: transparent; color: #53616d; font-size: 20px; line-height: 1; cursor: pointer; }
 #world { 
     position: relative; 
@@ -976,15 +969,15 @@ body {
 .cart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-shrink: 0; font-size: 14px; }
 .cart-header span:first-child { font-weight: bold; color: #2c3e50; }
 .cart-total { color: #7f8c8d; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.15; }
-.cart-items-grid { display: flex; flex-direction: column; gap: 5px; padding-right: 2px; align-content: flex-start; }
-.cart-item { border-radius: 4px; padding: 5px; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0; min-height: 30px; box-sizing: border-box; transition: opacity 0.2s; }
-.cart-item-label { min-width: 0; overflow-wrap: anywhere; line-height: 1.15; }
+.cart-items-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(34px, 1fr)); gap: 6px; padding-right: 2px; align-content: start; }
+.cart-item { position: relative; border-radius: 5px; padding: 5px; font-size: 20px; cursor: pointer; display: grid; place-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); min-height: 36px; box-sizing: border-box; transition: opacity 0.2s, transform 0.15s; }
 .cart-empty { color: #7f8c8d; font-size: 12px; padding: 8px 2px; }
 .cart-item:hover { opacity: 0.7; }
+.cart-item:focus-visible { outline: 3px solid #3498db; outline-offset: 2px; }
 .cart-item-t1 { background: #fdf6e3; border: 2px solid #cd7f32; }
 .cart-item-t2 { background: #f8f9fa; border: 2px solid #bdc3c7; }
 .cart-item-t3 { background: #fffbf0; border: 2px solid #f1c40f; }
-.cart-item-remove { font-size: 10px; color: #e74c3c; font-weight: bold; }
+.cart-item > .quantity-badge { position: absolute; top: -6px; right: -6px; }
 
 /* ==========================================================================
    ANIMATIONS
