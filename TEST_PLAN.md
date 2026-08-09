@@ -43,8 +43,10 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
    routing/manual override, and R24 capsule readability/performance.
 5. Build and open the itch-compatible ZIP locally; confirm it contains `LICENSE`, third-party notices, attribution,
    and a matching `BUILD.txt`.
-6. In R2/R3, confirm countdown and teaching/VIP/Rooftop notices remain fixed over the lift shafts only: the board does
-   not shift, lobby queues remain visible, cables stay visible, and no transient scrollbar appears. Confirm the
+
+6. In R2/R3, confirm countdown and teaching/VIP/Rooftop notices remain fixed over the non-lobby board area: the R2
+   teaching rail may extend beyond the lift shafts, but the board does not shift, lobby queues remain visible, cables
+   stay visible, and no transient scrollbar appears. Confirm the
    final-life warning clears at the next round.
 7. Confirm Settings starts unmuted with clean storage, persists deliberate audio changes, and stops Musak before menu
    music after a round. Confirm Bronze Wide Doors targets one lift, repeated cart/tray items use quantity badges, and
@@ -62,6 +64,13 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
 11. Regenerate balance acceptance evidence and confirm the committed JSON/Markdown contains hashes, per-round/per-seed
     outcomes, compact diagnostics, and aggregate metrics but no frame-by-frame trace. Generate raw traces only with the
     explicit diagnostic option when investigating a balance anomaly.
+
+## Focused UI acceptance checks
+
+- The R2 teaching rail is wide enough for the automation instruction, may extend beyond the lift shafts, and never
+  covers the lobby or changes board layout. Critical VIP/Rooftop notices retain the same non-lobby anchoring.
+- A promotion modal is content-sized around its heading, copy, and Continue button; it does not occupy the full
+  briefing height or introduce a needless vertical scroll area.
 
 ## Lift-state remediation checks
 

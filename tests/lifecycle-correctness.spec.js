@@ -56,7 +56,9 @@ test('campaign promotions appear only at approved progression boundaries and per
         const first = {
             banner: !document.getElementById('promotionBanner').classList.contains('hidden'),
             detailsHidden: document.querySelector('.round-briefing-modal').classList.contains('promotion-pending'),
-            heading: document.getElementById('promotionHeading').innerText
+            heading: document.getElementById('promotionHeading').innerText,
+            modalHeight: document.querySelector('.round-briefing-modal').getBoundingClientRect().height,
+            viewportHeight: window.innerHeight
         };
         document.getElementById('dismissPromotionBtn').click();
         const acknowledged = [...Registry.promotionAcknowledgements];
@@ -68,7 +70,10 @@ test('campaign promotions appear only at approved progression boundaries and per
         const directEntry = !document.getElementById('promotionBanner').classList.contains('hidden');
         return { first, acknowledged, repeated, nonTransition, directEntry };
     });
-    expect(result.first).toEqual({ banner: true, detailsHidden: true, heading: 'PROMOTION — OPERATOR' });
+    expect(result.first.banner).toBe(true);
+    expect(result.first.detailsHidden).toBe(true);
+    expect(result.first.heading).toBe('PROMOTION — OPERATOR');
+    expect(result.first.modalHeight).toBeLessThan(result.first.viewportHeight);
     expect(result.acknowledged).toEqual([3]);
     expect(result.repeated).toBe(false);
     expect(result.nonTransition).toBe(false);
@@ -2594,19 +2599,23 @@ test('Sweep reversal reconsiders compatible guests at the current floor', async 
     expect(result).toEqual({ target: 2, direction: 1 });
 });
 
-test('Round 2 teaching rail is a shaft-only overlay that does not alter board layout', async ({ page }) => {
+test('Round 2 teaching rail is a wide non-lobby overlay that does not alter board layout', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(2, { showBriefing: false });
         startRoundCountdown(10);
         const rail = document.getElementById('game-message-rail').getBoundingClientRect();
         const world = document.getElementById('world').getBoundingClientRect();
         const lobby = document.getElementById('lobby-0').getBoundingClientRect();
-        return { insideWorld: rail.top >= world.top && rail.bottom <= world.bottom, shaftOnly: rail.left >= lobby.right };
+        return {
+            insideWorldVertically: rail.top >= world.top && rail.bottom <= world.bottom,
+            keepsLobbyClear: rail.left >= lobby.right,
+            extendsBeyondShaftBoard: rail.right > world.right
+        };
     });
-    expect(result).toEqual({ insideWorld: true, shaftOnly: true });
+    expect(result).toEqual({ insideWorldVertically: true, keepsLobbyClear: true, extendsBeyondShaftBoard: true });
 });
 
-test('critical notices queue in the shaft overlay without obscuring the lobby', async ({ page }) => {
+test('critical notices queue in the wide overlay without obscuring the lobby', async ({ page }) => {
     const result = await page.evaluate(() => {
         showGameMessage('VIP arrival', { critical: true, durationMs: 5000 });
         showGameMessage('Rooftop Party started', { critical: true, durationMs: 5000 });
@@ -2618,15 +2627,15 @@ test('critical notices queue in the shaft overlay without obscuring the lobby', 
             first,
             second: document.getElementById('game-message-text').textContent,
             queued: rail?.dataset.critical === 'true',
-            insideWorld: rail.getBoundingClientRect().top >= world.getBoundingClientRect().top && rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().bottom,
-            shaftOnly: rail.getBoundingClientRect().left >= document.getElementById('lobby-0').getBoundingClientRect().right
+            insideWorldVertically: rail.getBoundingClientRect().top >= world.getBoundingClientRect().top && rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().bottom,
+            keepsLobbyClear: rail.getBoundingClientRect().left >= document.getElementById('lobby-0').getBoundingClientRect().right
         };
     });
     expect(result.first).toBe('VIP arrival');
     expect(result.second).toBe('Rooftop Party started');
     expect(result.queued).toBe(true);
-    expect(result.insideWorld).toBe(true);
-    expect(result.shaftOnly).toBe(true);
+    expect(result.insideWorldVertically).toBe(true);
+    expect(result.keepsLobbyClear).toBe(true);
 });
 
 test('four-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {

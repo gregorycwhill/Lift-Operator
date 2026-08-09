@@ -66,8 +66,10 @@ human acceptance belong in `TEST_PLAN.md`.
 
 - Counterweight manual stops are pair commands: the selected car owns its requested service cycle, so its partner
   cannot release the command first and a competing parked car cannot claim its eligible pickup.
-- VIP, Rooftop, and Round 2 notices render as fixed shaft-only overlays, never as layout content that moves the board
-  or conceals the lobby.
+- VIP, Rooftop, and Round 2 notices render as fixed non-lobby overlays, never as layout content that moves the board
+  or conceals the lobby. The R2 teaching rail may span beyond the lift shafts for readable instruction text.
+- Promotion notices use content-sized modal geometry: only the promotion copy and Continue action are shown, without
+  reserving the full briefing height.
 - Campaign checkpoints explicitly restore committed Credits and purchased inventory; an unpurchased cart is not saved.
 - The Supply Closet cart uses compact tier-coloured icon/count tokens with accessible tooltips.
 - Leaderboard is results-only. From Campaign Complete its close action returns to the completion modal without resuming
