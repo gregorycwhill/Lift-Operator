@@ -23,7 +23,12 @@ report.rounds.forEach(entry => {
     assert(acceptance.rounds.includes(entry.round), `Unexpected acceptance round ${entry.round}.`);
     assert(entry.allSweep.runs.length === acceptance.seeds.length, `R${entry.round}: missing all-Sweep seeds.`);
     assert(entry.intended.runs.length === acceptance.seeds.length, `R${entry.round}: missing intended seeds.`);
-    entry.intended.runs.forEach(run => assert(Array.isArray(run.metrics.trace), `R${entry.round}, seed ${run.seed}: missing intended diagnostic trace.`));
+    const expectedSeeds = new Set(acceptance.seeds);
+    [...entry.allSweep.runs, ...entry.intended.runs].forEach(run => {
+        assert(expectedSeeds.has(run.seed), `R${entry.round}: unexpected seed ${run.seed}.`);
+        assert(typeof run.metrics.accepted === 'boolean', `R${entry.round}, seed ${run.seed}: missing acceptance result.`);
+        assert(run.metrics.diagnostics && run.metrics.diagnostics.totals, `R${entry.round}, seed ${run.seed}: missing compact diagnostics.`);
+    });
     if (strict) {
         assert(entry.allSweep.accepted, `R${entry.round}: all-Sweep acceptance failed.`);
         // Intended profiles remain diagnostic until human playtesting supplies

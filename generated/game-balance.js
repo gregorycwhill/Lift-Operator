@@ -305,7 +305,7 @@ window.GameBalanceData = {
     "tardis": {
       "tiers": [
         {
-          "cost": 1,
+          "cost": 2,
           "duration": 15,
           "scalar": 999
         },
@@ -359,15 +359,15 @@ window.GameBalanceData = {
     "doubleDecker": {
       "tiers": [
         {
-          "cost": 3,
+          "cost": 1,
           "duration": 30
         },
         {
-          "cost": 5,
+          "cost": 2,
           "duration": 60
         },
         {
-          "cost": 8,
+          "cost": 3,
           "duration": 45
         }
       ]
@@ -375,15 +375,15 @@ window.GameBalanceData = {
     "openPlan": {
       "tiers": [
         {
-          "cost": 4,
+          "cost": 2,
           "duration": 20
         },
         {
-          "cost": 6,
+          "cost": 3,
           "duration": 45
         },
         {
-          "cost": 10,
+          "cost": 5,
           "duration": 60
         }
       ]

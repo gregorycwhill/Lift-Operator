@@ -87,7 +87,12 @@ human acceptance belong in `TEST_PLAN.md`.
   icon/count items.
 - Keep the authored campaign rank visible in the live game sidebar, use the gold-star VIP icon consistently in
   briefings, and return from Settings → Leaderboard to Settings without resuming play.
-- Apply the approved RC1.0 prices: Wide Doors `1/2/3` and Calming Musak `2/4/8` Credits.
+- Apply the approved RC1.0 prices: Wide Doors `1/2/3`, Calming Musak `2/4/8`, Double-Decker `1/2/3`, Open Plan `2/3/5`,
+  and TARDIS `2/3/5` Credits.
+- Keep the Double-Decker and Open Plan tier headers, but remove redundant tier prefixes from their descriptions; use
+  the canonical `🪜` Double-Decker icon everywhere.
+- Keep only compact balance summaries in Git. Raw frame traces are opt-in local outputs and are excluded from release
+  commits.
 - Replace the first-dispatch, zoning, and capsule README captures with the supplied product screenshots and record
   their provenance in `assets/media/README.md`.
 

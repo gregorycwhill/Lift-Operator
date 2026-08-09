@@ -54,7 +54,13 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
    tokens, the live sidebar retains the authored rank after starting a round, and VIP uses the gold star in both
    briefing chips and first-introduction text.
 10. From Settings, open Leaderboard and close it; confirm Settings reappears and gameplay does not resume. Confirm
-    the release-candidate prices are Wide Doors `1/2/3` and Calming Musak `2/4/8` Credits.
+    the release-candidate prices are Wide Doors `1/2/3`, Calming Musak `2/4/8`, Double-Decker `1/2/3`, Open Plan `2/3/5`,
+    and TARDIS `2/3/5` Credits. Confirm Double-Decker and Open Plan descriptions do not repeat their tier names, and
+    Double-Decker uses `🪜` in shop and active-effect displays.
+
+11. Regenerate balance acceptance evidence and confirm the committed JSON/Markdown contains hashes, per-round/per-seed
+    outcomes, compact diagnostics, and aggregate metrics but no frame-by-frame trace. Generate raw traces only with the
+    explicit diagnostic option when investigating a balance anomaly.
 
 ## Lift-state remediation checks
 

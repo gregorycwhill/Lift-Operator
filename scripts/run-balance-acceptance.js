@@ -15,6 +15,7 @@ const roundArgIndex = process.argv.indexOf('--rounds');
 const selectedRounds = roundArgIndex >= 0
     ? process.argv[roundArgIndex + 1].split(',').map(Number)
     : acceptance.rounds;
+const writeRaw = process.argv.includes('--raw');
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
 const repeat = (id, tier, count) => Array.from({ length: count }, () => ({ id, tier }));
 
@@ -64,6 +65,34 @@ function metrics(result, round, mode) {
         trace: result.trace,
         diagnostics: result.diagnostics
     };
+}
+
+function compactDiagnostics(diagnostics = {}) {
+    const totals = diagnostics.totals || {};
+    const lifts = Object.entries(diagnostics.lifts || {}).map(([id, lift]) => ({
+        id,
+        maxPassengers: lift.maxPassengers || 0,
+        passengerTotal: lift.passengerTotal || 0,
+        passengerSamples: lift.passengerSamples || 0
+    }));
+    return {
+        totals: {
+            boardings: totals.boardings || 0,
+            served: totals.served || 0,
+            refusals: totals.refusals || 0,
+            acceptedTargets: totals.acceptedTargets || 0,
+            rejectedTargets: totals.rejectedTargets || 0,
+            lifeLosses: totals.lifeLosses || 0,
+            refusalCauses: totals.refusalCauses || {},
+            lifeLossCauses: totals.lifeLossCauses || {}
+        },
+        lifts
+    };
+}
+
+function compactMetrics(runMetrics) {
+    const { trace, diagnostics, ...summary } = runMetrics;
+    return { ...summary, diagnostics: compactDiagnostics(diagnostics) };
 }
 
 function markdown(report) {
@@ -134,7 +163,7 @@ function markdown(report) {
                 }
             };
         });
-        const report = {
+        const rawReport = {
             schemaVersion: acceptance.schemaVersion,
             traceSchemaVersion: acceptance.traceSchemaVersion,
             balanceVersion: balance.balanceVersion,
@@ -150,7 +179,22 @@ function markdown(report) {
                 intendedRequired: rounds.length
             }
         };
+        const report = {
+            ...rawReport,
+            rounds: rawReport.rounds.map(round => ({
+                ...round,
+                allSweep: {
+                    ...round.allSweep,
+                    runs: round.allSweep.runs.map(run => ({ ...run, metrics: compactMetrics(run.metrics) }))
+                },
+                intended: {
+                    ...round.intended,
+                    runs: round.intended.runs.map(run => ({ ...run, metrics: compactMetrics(run.metrics) }))
+                }
+            }))
+        };
         const reportDir = path.join(root, 'reports');
+        if (writeRaw) fs.writeFileSync(path.join(reportDir, 'campaign-balance-acceptance.raw.json'), `${JSON.stringify(rawReport)}\n`, 'utf8');
         fs.writeFileSync(path.join(reportDir, 'campaign-balance-acceptance.json'), `${JSON.stringify(report, null, 2)}\n`, 'utf8');
         fs.writeFileSync(path.join(reportDir, 'campaign-balance-acceptance.md'), markdown(report), 'utf8');
         const failed = process.argv.includes('--strict') && report.summary.allSweepAccepted !== report.summary.allSweepRequired;

@@ -334,9 +334,9 @@ const PowerUps = {
             ]
         },
         doubleDecker: {
-            id: 'doubleDecker', name: 'Double-Decker', icon: '🚡',
+            id: 'doubleDecker', name: 'Double-Decker', icon: '🪜',
             tiers: [
-                { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].cost, desc: `Bronze: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration}s.`, target: 'lift', 
+                { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].cost, desc: `One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration}s.`, target: 'lift',
                   execute: (liftId, floorId) => { 
                       PowerUps.setLiftTimer(Registry.lifts[liftId], 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration);
                       Registry.lifts[liftId].isDoubleDecker = true;
@@ -344,7 +344,7 @@ const PowerUps = {
                       PowerUps.announceLiftCapacity(liftId);
                   } 
                 },
-                { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].cost, desc: `Silver: One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration}s.`, target: 'lift', 
+                { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].cost, desc: `One lift gains double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration}s.`, target: 'lift',
                   execute: (liftId, floorId) => { 
                       PowerUps.setLiftTimer(Registry.lifts[liftId], 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration);
                       Registry.lifts[liftId].isDoubleDecker = true;
@@ -352,7 +352,7 @@ const PowerUps = {
                       PowerUps.announceLiftCapacity(liftId);
                   } 
                 },
-                { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].cost, desc: `Gold: ALL lifts gain double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration}s.`, target: 'instant', 
+                { cost: window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].cost, desc: `ALL lifts gain double capacity for ${window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration}s.`, target: 'instant',
                   execute: () => { 
                       Registry.lifts.forEach(l => {
                           PowerUps.setLiftTimer(l, 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration);
@@ -367,19 +367,19 @@ const PowerUps = {
         openPlan: {
             id: 'openPlan', name: 'Open Plan', icon: '↔️',
             tiers: [
-                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[0].cost, desc: `Bronze: One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration}s.`, target: 'lift', 
+                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[0].cost, desc: `One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration}s.`, target: 'lift',
                   execute: (liftId, floorId) => { 
                       PowerUps.setLiftTimer(Registry.lifts[liftId], 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration);
                       PowerUps.showEffectOnLift(liftId, '↔️'); 
                   } 
                 },
-                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[1].cost, desc: `Silver: One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration}s.`, target: 'lift', 
+                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[1].cost, desc: `One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration}s.`, target: 'lift',
                   execute: (liftId, floorId) => { 
                       PowerUps.setLiftTimer(Registry.lifts[liftId], 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration);
                       PowerUps.showEffectOnLift(liftId, '↔️'); 
                   } 
                 },
-                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[2].cost, desc: `Gold: ALL lifts allow lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration}s.`, target: 'instant', 
+                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[2].cost, desc: `ALL lifts allow lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration}s.`, target: 'instant',
                   execute: () => { 
                       Registry.lifts.forEach(l => {
                           PowerUps.setLiftTimer(l, 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration);

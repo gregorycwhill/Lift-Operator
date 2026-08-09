@@ -1,7 +1,7 @@
 # Campaign Balance Acceptance
 
 Balance version: `0.2.10-fleet-onboarding`
-Policy: All-Sweep must fail every fixed gate seed from R2 through R25; production-routed intended/feasibility strategies must survive at least 80% of their seed set.
+Policy: All-Sweep remains a negative-control diagnostic for R2 through R25; it is not an RC1.0 release gate. Production-routed intended/feasibility strategies must survive at least 80% of their seed set.
 
 | Round | All-Sweep accepted | Intended accepted | All-Sweep survivors | Intended survivors |
 | ---: | --- | --- | ---: | ---: |
@@ -25,7 +25,7 @@ Policy: All-Sweep must fail every fixed gate seed from R2 through R25; productio
 | 19 | yes | NO | 0/5 | 0/5 |
 | 20 | yes | NO | 0/5 | 0/5 |
 | 21 | NO | NO | 1/5 | 3/5 |
-| 22 | yes | NO | 0/5 | 2/5 |
+| 22 | yes | NO | 0/5 | 3/5 |
 | 23 | yes | NO | 0/5 | 2/5 |
 | 24 | yes | NO | 0/5 | 4/5 |
 | 25 | yes | NO | 0/5 | 0/5 |

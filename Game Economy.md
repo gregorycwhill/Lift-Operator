@@ -8,8 +8,9 @@
 
 **1.0 decision:** The release-candidate power-up prices are the values in `design/game-balance.v1.json`. Wide Doors
 Bronze/Silver/Gold cost `1/2/3` Credits and Calming Musak Bronze/Silver/Gold costs `2/4/8` Credits; all other
-current prices remain unchanged. The candidate scarcity-price bands below remain future design work, not approved
-runtime values.
+current prices remain unchanged. The current puzzle-power-up prices are Double-Decker `1/2/3`, Open Plan `2/3/5`,
+and TARDIS `2/3/5` Credits. The candidate scarcity-price bands below remain future design work, not approved runtime
+values.
 
 **Authority boundary:** Sections labelled *candidate* describe post-1.0 exploration only. They are not runtime policy,
 release acceptance criteria, or a reason to reinterpret `design/game-balance.v1.json`. Current RC1.0 economy rules are

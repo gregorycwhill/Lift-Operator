@@ -3,7 +3,7 @@
 **Document role:** Product outcomes and sequence; not an implementation checklist
 **Status:** Active product roadmap
 **Owner class:** Product
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 9 August 2026
 **Current delivery:** Friends & Family release evidence in `DELIVERY_PLAN.md`
 
 ## Product north star
@@ -113,6 +113,31 @@ new automation and routing decisions rather than encountering an opaque visual r
 
 The working product name for this concept is **Ferris Wheel**: concentric circular tracks using polar-coordinate or
 orbital movement rather than vertical shafts.
+
+## Later — Jack-in-the-box lifts
+
+**Outcome:** Add a deliberately physical, timing-based puzzle lift for a future authored round or puzzle sequence. The
+car starts on Ground and the player winds it up by pressing and holding the lift for between one and ten seconds.
+When released, the car launches upward under gravity; passenger weight influences the launch and therefore the apex.
+The floor reached at the apex becomes the lift's service floor, where a short boarding/alighting window opens before
+the car returns for another launch.
+
+This is a puzzle-style lift, not an arcade replacement for ordinary vertical service. The central decisions are about
+charging time versus reach, reading the predicted apex, and choosing which passengers to carry. It should make weight,
+capacity, timing, and passenger selection meaningful without depending on rapid-fire tapping.
+
+Decisions required before delivery planning:
+
+- whether the player can choose or influence the launch direction after the apex, and how the car returns to Ground;
+- whether the one-to-ten-second wind-up is continuous charge, tiered bands, or a visible power curve;
+- how passenger weight, capacity, Stink, Gym Bros, Room Service, VIP, and power-ups affect the apex;
+- whether the service window is fixed, charge-dependent, or shortened by heavier loads;
+- how automation can express charge, release, target-floor prediction, and passenger selection;
+- whether the lift is a permanent authored lift type, a round-only rule, or a later power-up;
+- how the player reads charge, predicted apex, landing, and the brief service window without cluttering the board.
+
+**Gate:** A player can intentionally trade wind-up time and passenger load for a reachable service floor, understand the
+brief service window, and use the lift as a puzzle instrument rather than experiencing it as an unpredictable miss.
 
 ## Later — Persistent player creations and discovery
 

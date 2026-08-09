@@ -4,6 +4,7 @@ Archive*/
 !docs/archive/**
 *.tmp
 *.log
+reports/campaign-balance-acceptance.raw.json
 
 # Ignore editor settings
 .vscode/

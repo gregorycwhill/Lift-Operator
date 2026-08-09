@@ -128,6 +128,7 @@ test('briefing removes redundant objective/loadout copy and presents introductio
         roomServiceIntro.cartItemCount = document.querySelector('.cart-item .quantity-badge')?.innerText || '';
         roomServiceIntro.cartItemLabel = document.querySelector('.cart-item')?.getAttribute('aria-label') || '';
         roomServiceIntro.cartTotal = document.querySelector('.cart-total')?.innerText || '';
+        roomServiceIntro.cartColumns = getComputedStyle(document.querySelector('.cart-items-grid')).gridTemplateColumns;
         return { roomServiceIntro, laterRound, enduranceRule };
     });
     expect(result.roomServiceIntro.richText).toContain('Room Service');
@@ -147,6 +148,7 @@ test('briefing removes redundant objective/loadout copy and presents introductio
     expect(result.roomServiceIntro.cartItemCount).toBe('1');
     expect(result.roomServiceIntro.cartItemLabel).toContain('Air Freshener');
     expect(result.roomServiceIntro.cartTotal).toBe('1 Credits');
+    expect(result.roomServiceIntro.cartColumns).toBe('38px 38px');
     expect(result.laterRound.introTerms).toBe(0);
     expect(result.enduranceRule).toContain('twentieth life');
 });
@@ -3061,6 +3063,14 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
             pricesMatch: Object.entries(PowerUps.catalog).every(([id, item]) =>
                 item.tiers.every((tier, index) => tier.cost === Config.GAME_DATA.powerups[id].tiers[index].cost)
             ),
+            selectedPrices: {
+                doubleDecker: PowerUps.catalog.doubleDecker.tiers.map(tier => tier.cost),
+                openPlan: PowerUps.catalog.openPlan.tiers.map(tier => tier.cost),
+                tardis: PowerUps.catalog.tardis.tiers.map(tier => tier.cost)
+            },
+            doubleDeckerIcon: PowerUps.catalog.doubleDecker.icon,
+            doubleDeckerDescriptions: PowerUps.catalog.doubleDecker.tiers.map(tier => tier.desc),
+            openPlanDescriptions: PowerUps.catalog.openPlan.tiers.map(tier => tier.desc),
             jamTimer: lift.jamTimer,
             stinkTimer: lift.stinkTimer,
             freshenerTimer: lift.freshenerTimer,
@@ -3071,6 +3081,10 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
     });
 
     expect(result.pricesMatch).toBe(true);
+    expect(result.selectedPrices).toEqual({ doubleDecker: [1, 2, 3], openPlan: [2, 3, 5], tardis: [2, 3, 5] });
+    expect(result.doubleDeckerIcon).toBe('🪜');
+    expect(result.doubleDeckerDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
+    expect(result.openPlanDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
     expect(result.jamTimer).toBe(0);
     expect(result.stinkTimer).toBe(0);
     expect(result.freshenerTimer).toBeGreaterThan(0);
