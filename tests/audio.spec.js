@@ -337,11 +337,17 @@ test('Settings leaderboard link swaps music context without retaining gameplay s
     await page.click('#settingsLeaderboardBtn');
     const paused = await page.evaluate(() => window.Game.Audio.getStatus());
     await page.click('#closeLbBtn');
-    const resumed = await page.evaluate(() => window.Game.Audio.getStatus());
+    const returned = await page.evaluate(() => ({
+        audio: window.Game.Audio.getStatus(),
+        settingsVisible: document.getElementById('settingsOverlay').style.display === 'flex',
+        gameActive: Registry.gameActive
+    }));
     expect(paused.context).toBe('menu');
     expect(paused.musicSourceCount).toBe(0);
     expect(paused.rooftopSourceActive).toBe(false);
-    expect(resumed.context).toBe('gameplay');
+    expect(returned.audio.context).toBe('menu');
+    expect(returned.settingsVisible).toBe(true);
+    expect(returned.gameActive).toBe(false);
 });
 
 test('Settings button toggles its modal and menu music retains a position', async ({ page }) => {

@@ -26,8 +26,8 @@ npm.cmd run test:release
 ```
 
 Record the commit, command result, elapsed time, and report hash in `docs/archive/RELEASE_HISTORY.md`. The all-Sweep
-portion is a strict diagnostic result: it demonstrates whether unattended Sweep fails as intended, but it is not by
-itself a Friends & Family promotion blocker.
+portion is a negative-control diagnostic: it demonstrates unattended Sweep behavior, but it is not by itself a
+Friends & Family promotion blocker. The strict validator remains available for later balance work.
 
 ## Limited internal confirmation — 15 minutes
 
@@ -50,6 +50,11 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
    tooltips use Bronze/Silver/Gold.
 8. Confirm the four-column Supply Closet remains readable at the supported desktop viewport; spot-check R8 traffic and
    the R11/R25 titles.
+9. Confirm the cart total is a compact single-line Credits value even with one item, cart quantities remain icon/count
+   tokens, the live sidebar retains the authored rank after starting a round, and VIP uses the gold star in both
+   briefing chips and first-introduction text.
+10. From Settings, open Leaderboard and close it; confirm Settings reappears and gameplay does not resume. Confirm
+    the release-candidate prices are Wide Doors `1/2/3` and Calming Musak `2/4/8` Credits.
 
 ## Lift-state remediation checks
 

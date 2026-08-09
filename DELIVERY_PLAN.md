@@ -39,7 +39,8 @@ human acceptance belong in `TEST_PLAN.md`.
 ## Known, accepted boundaries
 
 - Chrome and Edge on desktop/laptop are the supported RC1 browsers; Firefox and mobile are outside this window.
-- The strict all-Sweep report is an internal diagnostic, not a Friends & Family release gate.
+- The all-Sweep report is a negative-control diagnostic, not a Friends & Family release gate; the strict validator is
+  retained for later balance work.
 - Normal New Campaign uses a persisted random campaign seed; the supplied Debug URI provides controlled higher-round
   and seed reproduction without changing the normal first-impression path.
 - Elapsed-time movement integration is deferred until after RC1.0. The current release may still address targeted
@@ -79,6 +80,16 @@ human acceptance belong in `TEST_PLAN.md`.
 3. Record a concise August release-history entry and keep completed implementation detail out of this plan.
 4. Decide a retention policy for the 48 MB balance trace: concise summary/digest in Git, bulky trace as an artifact or
    otherwise explicitly justified.
+
+## Current polish slice
+
+- Compact the Supply Closet cart from its first item onward, with a single-line Credits total and tooltip-backed
+  icon/count items.
+- Keep the authored campaign rank visible in the live game sidebar, use the gold-star VIP icon consistently in
+  briefings, and return from Settings → Leaderboard to Settings without resuming play.
+- Apply the approved RC1.0 prices: Wide Doors `1/2/3` and Calming Musak `2/4/8` Credits.
+- Replace the first-dispatch, zoning, and capsule README captures with the supplied product screenshots and record
+  their provenance in `assets/media/README.md`.
 
 ## Release sequence
 

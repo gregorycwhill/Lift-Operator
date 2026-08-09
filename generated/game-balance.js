@@ -270,15 +270,15 @@ window.GameBalanceData = {
     "musak": {
       "tiers": [
         {
-          "cost": 1,
+          "cost": 2,
           "duration": 15
         },
         {
-          "cost": 3,
+          "cost": 4,
           "duration": 15
         },
         {
-          "cost": 5,
+          "cost": 8,
           "duration": 15
         }
       ]
@@ -324,17 +324,17 @@ window.GameBalanceData = {
     "doors": {
       "tiers": [
         {
-          "cost": 2,
+          "cost": 1,
           "duration": 20,
           "scalar": 0.5
         },
         {
-          "cost": 4,
+          "cost": 2,
           "duration": 30,
           "scalar": 0.33
         },
         {
-          "cost": 6,
+          "cost": 3,
           "duration": 30,
           "scalar": 0.05
         }

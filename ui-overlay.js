@@ -289,7 +289,7 @@ window.initializeUI = function() {
         if (Registry.stats.round === 1) {
             Registry.playerName = document.getElementById("playerName")?.value || "Pilot 1";
             window.Game.Storage.set(window.Game.Keys.PLAYER, Registry.playerName);
-            if (document.getElementById("pilotNameDisplay")) document.getElementById("pilotNameDisplay").innerText = Registry.playerName;
+            if (typeof ui.updatePilotNameDisplay === "function") ui.updatePilotNameDisplay();
 
             if (window.Game.Seed) window.Game.Seed.set(Registry.seed);
             if (document.getElementById("seedDisplay")) document.getElementById("seedDisplay").innerText = Registry.seed;
@@ -394,6 +394,13 @@ window.initializeUI = function() {
             window.Game.Shell?.showCampaignComplete?.();
             if (window.Game.Audio) window.Game.Audio.setContext('menu');
             if (typeof ui.draw === "function") ui.draw();
+            return;
+        }
+        if (Registry.leaderboardReturn === 'settings') {
+            Registry.leaderboardReturn = null;
+            window.openModalExclusive?.('settingsOverlay');
+            window.Game.Audio?.setContext('menu');
+            ui.draw?.();
             return;
         }
         Registry.leaderboardReturn = null;

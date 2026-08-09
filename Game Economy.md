@@ -6,9 +6,10 @@
 **Last reviewed:** 8 August 2026
 **Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
 
-**1.0 decision:** Retain the current canonical power-up prices for the release candidate. The candidate scarcity-price
-bands below remain future design work, not approved runtime values. The 1.0 evidence task is to measure and document
-inflation across the full 25-round campaign using current prices.
+**1.0 decision:** The release-candidate power-up prices are the values in `design/game-balance.v1.json`. Wide Doors
+Bronze/Silver/Gold cost `1/2/3` Credits and Calming Musak Bronze/Silver/Gold costs `2/4/8` Credits; all other
+current prices remain unchanged. The candidate scarcity-price bands below remain future design work, not approved
+runtime values.
 
 **Authority boundary:** Sections labelled *candidate* describe post-1.0 exploration only. They are not runtime policy,
 release acceptance criteria, or a reason to reinterpret `design/game-balance.v1.json`. Current RC1.0 economy rules are
@@ -211,8 +212,8 @@ Gold must not be universally best. A precise Bronze item used at the correct tim
 ### 5.1.1 Late-campaign credit uplift
 
 Rounds 14-25 apply a canonical `creditMultiplier` of `0.15`, versus the standard `0.10` multiplier. This is the
-approved 50% increase in Credits awarded from the zoning and late-campaign arcs onward. Prices remain unchanged for
-the 1.0 release candidate; affordability and purchase mix remain playtest evidence questions.
+approved 50% increase in Credits awarded from the zoning and late-campaign arcs onward. Affordability and purchase
+mix remain playtest evidence questions.
 
 ### 5.2 Candidate price bands
 
@@ -222,7 +223,8 @@ the 1.0 release candidate; affordability and purchase mix remain playtest eviden
 | Silver | 10–15 | One major investment |
 | Gold | 20–28 | Saving or excellent performance |
 
-The current 1/3/5-style prices are retired as target values because they trivialize scarcity under almost any useful payout model.
+The former 1/3/5-style values are retired as runtime values for Musak; the candidate bands in this section remain
+post-1.0 exploration and must not override the authoritative JSON.
 
 ## 6. Candidate power-up catalog
 
@@ -373,7 +375,9 @@ The economy is functioning when:
 
 ## 13. Current deterministic baseline
 
-The initial automated campaign projection uses the candidate minimum, typical, and excellent payout bands above while applying the currently implemented 1/3/5-style prices and canonical unlock schedule.
+The initial automated campaign projection uses the candidate minimum, typical, and excellent payout bands above while
+applying the pre-RC1.0 price baseline and canonical unlock schedule. It is historical evidence, not a current price
+assertion; regenerate it before using it for release decisions.
 
 | Profile | Purchases selected | Ending bank | Interpretation |
 | --- | ---: | ---: | --- |

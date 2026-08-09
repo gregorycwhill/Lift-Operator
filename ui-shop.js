@@ -214,10 +214,8 @@ window.renderShop = function() {
         
         const totalSpan = document.createElement('span');
         totalSpan.className = 'cart-total';
-        totalSpan.textContent = 'Total Cost:';
-        const totalStrong = document.createElement('strong');
-        totalStrong.textContent = `${currentCartTotal} Credits`;
-        totalSpan.appendChild(totalStrong);
+        totalSpan.textContent = `${currentCartTotal} Credits`;
+        totalSpan.title = 'Total selected power-up Credits';
         
         cartHeader.append(cartSpan, totalSpan);
         cartSpan.textContent = '🛒';

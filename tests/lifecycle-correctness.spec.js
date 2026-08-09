@@ -146,7 +146,7 @@ test('briefing removes redundant objective/loadout copy and presents introductio
     expect(result.roomServiceIntro.cartHeader).not.toContain('Cart');
     expect(result.roomServiceIntro.cartItemCount).toBe('1');
     expect(result.roomServiceIntro.cartItemLabel).toContain('Air Freshener');
-    expect(result.roomServiceIntro.cartTotal.split(/\r?\n/)).toEqual(['Total Cost:', '1 Credits']);
+    expect(result.roomServiceIntro.cartTotal).toBe('1 Credits');
     expect(result.laterRound.introTerms).toBe(0);
     expect(result.enduranceRule).toContain('twentieth life');
 });
@@ -2204,6 +2204,32 @@ test('Settings links to the scoreboard without presenting deferred achievements'
         return { settingsOpen, hasAchievements, leaderboardOpen: document.getElementById('leaderboardOverlay').style.display === 'flex', settingsClosed: document.getElementById('settingsOverlay').style.display !== 'flex' };
     });
     expect(result).toEqual({ settingsOpen: true, hasAchievements: false, leaderboardOpen: true, settingsClosed: true });
+});
+
+test('Leaderboard opened from Settings closes back to Settings without resuming play', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.gameActive = true;
+        document.getElementById('settingsBtn').click();
+        document.getElementById('settingsLeaderboardBtn').click();
+        document.getElementById('closeLbBtn').click();
+        return {
+            settings: document.getElementById('settingsOverlay').style.display,
+            leaderboard: document.getElementById('leaderboardOverlay').style.display,
+            gameActive: Registry.gameActive,
+            closeLabel: document.getElementById('closeLbBtn').textContent
+        };
+    });
+    expect(result).toEqual({ settings: 'flex', leaderboard: 'none', gameActive: false, closeLabel: 'Close' });
+});
+
+test('release candidate uses the approved power-up prices and VIP star icon', async ({ page }) => {
+    const result = await page.evaluate(() => ({
+        doors: Config.GAME_DATA.powerups.doors.tiers.map(tier => tier.cost),
+        musak: Config.GAME_DATA.powerups.musak.tiers.map(tier => tier.cost),
+        vipChallengeIcon: getRoundChallengePresentation(8).find(item => item.id === 'vip')?.icon,
+        vipIntroIcon: getCampaignIntroductionTerms(8).find(term => term.label === 'VIP')?.icon
+    }));
+    expect(result).toEqual({ doors: [1, 2, 3], musak: [2, 4, 8], vipChallengeIcon: '⭐', vipIntroIcon: '⭐' });
 });
 
 test('Debug seed controls expose transient replay actions', async ({ page }) => {

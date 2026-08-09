@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "traceSchemaVersion": 1,
   "policy": "campaign-balance-1.0",
-  "description": "All-Sweep must fail every fixed gate seed from R2 through R25; production-routed intended/feasibility strategies must survive at least 80% of their seed set.",
+  "description": "All-Sweep remains a negative-control diagnostic for R2 through R25; it is not an RC1.0 release gate. Production-routed intended/feasibility strategies must survive at least 80% of their seed set.",
   "intendedProfile": "Production-routed dispatch comparator with round-appropriate automation and declared loadout; human playtest evidence remains a separate gate.",
   "seeds": [1234, 3141, 6060, 7777, 8888],
   "rounds": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],

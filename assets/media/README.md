@@ -11,12 +11,12 @@ is the repository-retained record of superseded captures.
 
 | File | Role | README caption / use | Source status |
 | --- | --- | --- | --- |
-| `campaign-basic-dispatch.png` | README gallery | First dispatch | Curated capture |
+| `campaign-basic-dispatch.png` | README gallery | First dispatch | Curated replacement supplied by product |
 | `campaign-supply-closet.png` | README gallery | Supply Closet | Curated capture |
 | `campaign-workshop.png` | README gallery | Automation Workshop | Curated capture supplied by product |
-| `campaign-zoning-fleet.png` | README gallery | Zoned fleet | Curated replacement |
+| `campaign-zoning-fleet.png` | README gallery | Zoned fleet | Curated replacement supplied by product |
 | `campaign-counterweights-live.png` | README gallery | Counterweight puzzle | Curated live capture |
-| `campaign-capsule-operations.png` | README gallery | Capsule dispatch at scale | Curated capture |
+| `campaign-capsule-operations.png` | README gallery | Capsule dispatch at scale | Curated replacement supplied by product |
 | `social-preview.png` | Open Graph/social preview | 1200×630 project preview | Canonical generated/curated preview |
 
 ## Superseded or candidate captures

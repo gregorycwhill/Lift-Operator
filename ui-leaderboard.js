@@ -95,7 +95,7 @@ window.showLeaderboard = function(titleText) {
     
     const closeBtn = document.getElementById('closeLbBtn');
     const restartBtn = document.getElementById('lbRestartBtn');
-    Registry.leaderboardReturn = titleText === 'Campaign Complete' ? 'campaign-complete' : 'resume-game';
+    Registry.leaderboardReturn = titleText === 'Campaign Complete' ? 'campaign-complete' : 'settings';
     
     let shareBtn = document.getElementById('shareLbBtn');
     if (!shareBtn && document.getElementById('leaderboardOverlay')) {
@@ -112,7 +112,7 @@ window.showLeaderboard = function(titleText) {
     }
 
     if (closeBtn) closeBtn.style.display = (titleText === "Game Over!" || titleText === "You Won!") ? "none" : "block";
-    if (closeBtn) closeBtn.textContent = Registry.leaderboardReturn === 'campaign-complete' ? 'Back' : 'Resume';
+    if (closeBtn) closeBtn.textContent = Registry.leaderboardReturn === 'campaign-complete' ? 'Back' : 'Close';
     if (restartBtn) restartBtn.style.display = (titleText === "Game Over!" || titleText === "You Won!") ? "block" : "none";
     if (shareBtn) shareBtn.style.display = 'block';
 
