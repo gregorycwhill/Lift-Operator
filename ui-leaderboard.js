@@ -119,13 +119,24 @@ window.showLeaderboard = function(titleText) {
     const listContainer = document.getElementById('lbList');
     if (listContainer) {
         listContainer.innerHTML = '';
-        const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'));
+        const records = JSON.parse(window.Game.Storage.get(window.Game.Keys.LEADERBOARD, '[]'))
+            .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0) ||
+                (Number(left.completedAt) || 0) - (Number(right.completedAt) || 0));
         if (records.length === 0) {
             listContainer.innerHTML = '<li>No scores registered yet!</li>';
         } else {
-            records.slice(0, 10).forEach((record, index) => { 
+            let visibleRecords = records.slice(0, 10);
+            if (titleText === 'Campaign Complete') {
+                const activeRunId = `${Config.balanceVersion}:${window.Game.Seed.normalize(Registry.campaignSeed)}`;
+                const activeRecord = records.find(record => record.runId === activeRunId);
+                if (activeRecord && !visibleRecords.includes(activeRecord)) {
+                    visibleRecords = [...visibleRecords.slice(0, 9), activeRecord];
+                }
+            }
+            visibleRecords.forEach((record) => {
+                const rank = records.indexOf(record) + 1;
                 const li = document.createElement('li');
-                const name = document.createElement('span'); name.textContent = `#${index + 1} ${String(record.name || 'Operator').slice(0, 120)}`;
+                const name = document.createElement('span'); name.textContent = `#${rank} ${String(record.name || 'Operator').slice(0, 120)}`;
                 const score = document.createElement('strong'); score.textContent = String(Number(record.score) || 0);
                 li.append(name, score);
                 listContainer.appendChild(li);

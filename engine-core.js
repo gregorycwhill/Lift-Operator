@@ -291,9 +291,11 @@ window.evaluateRoundPayout = function() {
 
     const pointsEarned = PowerUps.calculateRoundPoints();
     Registry.points += pointsEarned;
+    Registry.campaignScore = Math.max(0, Number(Registry.campaignScore) || 0) + pointsEarned;
     Registry.roundEvaluation = {
         pointsEarned,
         totalPoints: Registry.points,
+        campaignScore: Registry.campaignScore,
         guestsServed: stats.servedThisRound,
         averageWaitTime: stats.servedThisRound > 0
             ? (stats.totalWaitTimeServed / stats.servedThisRound).toFixed(1)
@@ -631,6 +633,7 @@ window.resetGame = function(options = {}) {
         Registry.debugSeedOverride = null;
         Registry.debugSeedOverrideRound = null;
         Registry.points = 99999;
+        Registry.campaignScore = 0;
         Registry.highestUnlockedRound = 25;
     } else {
         Registry.useCampaignSeeds = true;
@@ -639,6 +642,7 @@ window.resetGame = function(options = {}) {
         Registry.debugSeedOverride = null;
         Registry.debugSeedOverrideRound = null;
         Registry.points = 0;
+        Registry.campaignScore = 0;
         Registry.highestUnlockedRound = 1;
     }
     

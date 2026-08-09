@@ -100,6 +100,25 @@ test('structured briefing uses the compact modal while keeping Supply Closet ite
     expect(result.gridColumns).toBe(4);
 });
 
+test('briefings without a Supply Closet use compact content-sized geometry', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(2, { showBriefing: false });
+        showRoundModal(2, { showPromotion: false });
+        const modal = document.querySelector('.round-briefing-modal');
+        return {
+            compact: modal.classList.contains('briefing-compact'),
+            promotion: modal.classList.contains('promotion-pending'),
+            height: modal.getBoundingClientRect().height,
+            viewportHeight: window.innerHeight,
+            shopVisible: document.getElementById('shopContainer').style.display !== 'none'
+        };
+    });
+    expect(result.compact).toBe(true);
+    expect(result.promotion).toBe(false);
+    expect(result.height).toBeLessThan(result.viewportHeight * 0.75);
+    expect(result.shopVisible).toBe(false);
+});
+
 test('briefing removes redundant objective/loadout copy and presents introductions and shop tiers', async ({ page }) => {
     const result = await page.evaluate(() => {
         skipToRound(3, { showBriefing: false });
@@ -257,6 +276,35 @@ test('Campaign Complete returns from Leaderboard without resuming a terminal rou
     expect(result).toEqual({ gameActive: false, leaderboard: 'none', complete: 'flex', closeLabel: 'Back' });
 });
 
+test('campaign completion records every completed seed once and shows the active run on the Leaderboard', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        localStorage.removeItem(Game.Keys.LEADERBOARD);
+        Registry.debugSession = false;
+        Registry.playerName = 'Campaign Score Test';
+        Registry.useCampaignSeeds = true;
+        Registry.campaignSeed = 111;
+        Registry.campaignScore = 73;
+        Game.Shell.showCampaignComplete();
+        Game.Shell.showCampaignComplete();
+        const afterRepeat = JSON.parse(localStorage.getItem(Game.Keys.LEADERBOARD));
+        Registry.campaignSeed = 222;
+        Registry.campaignScore = 41;
+        Game.Shell.showCampaignComplete();
+        showLeaderboard('Campaign Complete');
+        const records = JSON.parse(localStorage.getItem(Game.Keys.LEADERBOARD));
+        return {
+            records,
+            afterRepeatCount: afterRepeat.length,
+            rendered: [...document.querySelectorAll('#lbList li')].map(item => item.textContent)
+        };
+    });
+    expect(result.afterRepeatCount).toBe(1);
+    expect(result.records).toHaveLength(2);
+    expect(result.records.map(record => record.score).sort((a, b) => a - b)).toEqual([41, 73]);
+    expect(result.records.every(record => record.name === 'Campaign Score Test')).toBe(true);
+    expect(result.rendered.some(item => item.includes('41'))).toBe(true);
+});
+
 test('campaign shell Play reaches Round 1 briefing and New Game only clears its checkpoint', async ({ page }) => {
     await page.evaluate(() => {
         localStorage.setItem(Game.Keys.CAMPAIGN, JSON.stringify({ schemaVersion: 1, balanceVersion: Config.balanceVersion, playerName: 'Saved', seed: 77, round: 4, highestUnlockedRound: 4, lives: 20, points: 4, inventory: [], completed: false }));
@@ -382,6 +430,7 @@ test('round evaluation commits payout only once', async ({ page }) => {
     const result = await page.evaluate(() => {
         Registry.playerName = 'Evaluation Test';
         Registry.points = 10;
+        Registry.campaignScore = 0;
         Registry.stats.round = 1;
         Registry.stats.timeLeft = 20;
         Registry.roundStats = createRoundStats();
@@ -392,16 +441,21 @@ test('round evaluation commits payout only once', async ({ page }) => {
 
         const first = evaluateRoundPayout();
         const afterFirst = Registry.points;
+        const campaignScoreAfterFirst = Registry.campaignScore;
         const second = evaluateRoundPayout();
 
         return {
             afterFirst,
             afterSecond: Registry.points,
+            campaignScoreAfterFirst,
+            campaignScoreAfterSecond: Registry.campaignScore,
             sameEvaluation: first === second
         };
     });
 
     expect(result.afterSecond).toBe(result.afterFirst);
+    expect(result.campaignScoreAfterSecond).toBe(result.campaignScoreAfterFirst);
+    expect(result.campaignScoreAfterFirst).toBe(result.afterFirst - 10);
     expect(result.sameEvaluation).toBe(true);
 });
 
@@ -2609,10 +2663,11 @@ test('Round 2 teaching rail is a wide non-lobby overlay that does not alter boar
         return {
             insideWorldVertically: rail.top >= world.top && rail.bottom <= world.bottom,
             keepsLobbyClear: rail.left >= lobby.right,
-            extendsBeyondShaftBoard: rail.right > world.right
+            extendsBeyondShaftBoard: rail.right > world.right,
+            width: Math.round(rail.width)
         };
     });
-    expect(result).toEqual({ insideWorldVertically: true, keepsLobbyClear: true, extendsBeyondShaftBoard: true });
+    expect(result).toEqual({ insideWorldVertically: true, keepsLobbyClear: true, extendsBeyondShaftBoard: true, width: 360 });
 });
 
 test('critical notices queue in the wide overlay without obscuring the lobby', async ({ page }) => {
@@ -3106,6 +3161,7 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
         PowerUps.catalog.turbo.tiers[0].execute(0, 0);
         PowerUps.catalog.tardis.tiers[0].execute(0, 0);
         PowerUps.catalog.doubleDecker.tiers[0].execute(0, 0);
+        draw();
 
         return {
             pricesMatch: Object.entries(PowerUps.catalog).every(([id, item]) =>
@@ -3117,6 +3173,7 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
                 tardis: PowerUps.catalog.tardis.tiers.map(tier => tier.cost)
             },
             doubleDeckerIcon: PowerUps.catalog.doubleDecker.icon,
+            activeDoubleDeckerIcon: document.getElementById('lift-effects-0')?.textContent,
             doubleDeckerDescriptions: PowerUps.catalog.doubleDecker.tiers.map(tier => tier.desc),
             openPlanDescriptions: PowerUps.catalog.openPlan.tiers.map(tier => tier.desc),
             jamTimer: lift.jamTimer,
@@ -3131,6 +3188,7 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
     expect(result.pricesMatch).toBe(true);
     expect(result.selectedPrices).toEqual({ doubleDecker: [1, 2, 3], openPlan: [2, 3, 5], tardis: [2, 3, 5] });
     expect(result.doubleDeckerIcon).toBe('🪜');
+    expect(result.activeDoubleDeckerIcon).toContain('🪜');
     expect(result.doubleDeckerDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
     expect(result.openPlanDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
     expect(result.jamTimer).toBe(0);

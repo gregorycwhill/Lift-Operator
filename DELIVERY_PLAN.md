@@ -67,13 +67,15 @@ human acceptance belong in `TEST_PLAN.md`.
 - Counterweight manual stops are pair commands: the selected car owns its requested service cycle, so its partner
   cannot release the command first and a competing parked car cannot claim its eligible pickup.
 - VIP, Rooftop, and Round 2 notices render as fixed non-lobby overlays, never as layout content that moves the board
-  or conceals the lobby. The R2 teaching rail may span beyond the lift shafts for readable instruction text.
-- Promotion notices use content-sized modal geometry: only the promotion copy and Continue action are shown, without
-  reserving the full briefing height.
+  or conceals the lobby. The R2 teaching rail is capped at 360px, may span beyond the lift shafts, and retains a clear
+  right gutter for readable instruction text.
+- Promotion interstitials and briefings without a Supply Closet use explicit content-sized modal geometry. Only the
+  shop briefing mode reserves the full-height internal shop layout.
 - Campaign checkpoints explicitly restore committed Credits and purchased inventory; an unpurchased cart is not saved.
 - The Supply Closet cart uses compact tier-coloured icon/count tokens with accessible tooltips.
 - Leaderboard is results-only. From Campaign Complete its close action returns to the completion modal without resuming
-  a terminal round.
+  a terminal round. Every completed campaign seed is retained as one local score record, using total Credits earned
+  before spending so the active player's score is always visible at conclusion.
 
 ## Current collateral remediation before broad distribution
 
@@ -93,7 +95,7 @@ human acceptance belong in `TEST_PLAN.md`.
 - Apply the approved RC1.0 prices: Wide Doors `1/2/3`, Calming Musak `2/4/8`, Double-Decker `1/2/3`, Open Plan `2/3/5`,
   and TARDIS `2/3/5` Credits.
 - Keep the Double-Decker and Open Plan tier headers, but remove redundant tier prefixes from their descriptions; use
-  the canonical `🪜` Double-Decker icon everywhere.
+  the canonical `🪜` Double-Decker icon everywhere, including active lift overlays and activation feedback.
 - Keep only compact balance summaries in Git. Raw frame traces are opt-in local outputs and are excluded from release
   commits.
 - Replace the first-dispatch, zoning, and capsule README captures with the supplied product screenshots and record

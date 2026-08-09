@@ -9,6 +9,9 @@ const Registry = {
     stats: { lives: Config.startingLives, round: 1, timeLeft: Config.roundTime, served: 0, currentSpawnChance: Config.spawnR1Start, totalPointsEarned: 0 },
     
     points: 0,
+    // Lifetime Credits earned in this campaign. This is score, rather than the
+    // spendable balance, so using the Supply Closet never lowers a completed run.
+    campaignScore: 0,
     inventory: [],
     
     // Round telemetry and review state

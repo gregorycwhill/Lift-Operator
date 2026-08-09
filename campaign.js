@@ -26,6 +26,14 @@
         value = Math.imul(value ^ (value >>> 13), 0x45d9f3b) >>> 0;
         return normalizeSeed(value ^ (value >>> 16));
     };
+    const leaderboardRecords = () => {
+        try {
+            const records = JSON.parse(Game.Storage.get(Game.Keys.LEADERBOARD, '[]'));
+            return Array.isArray(records) ? records.filter(record => record && typeof record === 'object') : [];
+        } catch (error) {
+            return [];
+        }
+    };
 
     const parse = () => {
         const raw = Game.Storage.get(Game.Keys.CAMPAIGN, '');
@@ -36,7 +44,8 @@
                 value.balanceVersion === Config.balanceVersion && typeof value.playerName === 'string' &&
                 value.playerName.trim() && Number.isInteger(value.seed) && Number.isInteger(value.round) &&
                 value.round >= 1 && value.round <= maxRound() && Number.isFinite(value.points) &&
-                Number.isFinite(value.lives) && Number.isInteger(value.highestUnlockedRound);
+                Number.isFinite(value.lives) && Number.isInteger(value.highestUnlockedRound) &&
+                (value.campaignScore === undefined || Number.isFinite(value.campaignScore));
             return valid ? value : null;
         } catch (error) { return null; }
     };
@@ -72,6 +81,7 @@
                 highestUnlockedRound: Math.max(1, Math.min(maxRound(), Number(options.highestUnlockedRound || Registry.highestUnlockedRound) || 1)),
                 lives: Math.max(0, Number(options.lives ?? Registry.stats.lives) || 0),
                 points: Math.max(0, Number(options.points ?? Registry.points) || 0),
+                campaignScore: Math.max(0, Number(options.campaignScore ?? Registry.campaignScore) || 0),
                 inventory: cloneInventory(options.inventory ?? (typeof PowerUps !== 'undefined' ? PowerUps.inventory : [])),
                 promotionAcknowledgements: clonePromotions(options.promotionAcknowledgements ?? Registry.promotionAcknowledgements),
                 completed: Boolean(options.completed)
@@ -86,6 +96,7 @@
             Registry.useCampaignSeeds = true;
             Registry.seed = Registry.campaignSeed;
             Registry.points = record.points;
+            Registry.campaignScore = Math.max(0, Number(record.campaignScore ?? record.points) || 0);
             Registry.highestUnlockedRound = record.highestUnlockedRound;
             Registry.promotionAcknowledgements = clonePromotions(record.promotionAcknowledgements);
             Game.Storage.set(Game.Keys.PLAYER, record.playerName);
@@ -103,6 +114,27 @@
             if (record.completed) Game.Shell?.showCampaignComplete?.();
             else ui.showRoundModal?.(record.round, { showPromotion: false });
             return true;
+        },
+        recordCompletion: () => {
+            if (!Registry.playerName || Registry.debugSession) return null;
+            const seed = normalizeSeed(Registry.campaignSeed);
+            const runId = `${Config.balanceVersion}:${seed}`;
+            const score = Math.max(0, Number(Registry.campaignScore) || 0);
+            const records = leaderboardRecords();
+            const existingIndex = records.findIndex(record => record.runId === runId);
+            const prior = existingIndex >= 0 ? records[existingIndex] : null;
+            const entry = {
+                runId,
+                name: Registry.playerName,
+                score,
+                campaignSeed: seed,
+                balanceVersion: Config.balanceVersion,
+                completedAt: prior?.completedAt || Date.now()
+            };
+            if (existingIndex >= 0) records[existingIndex] = entry;
+            else records.push(entry);
+            Game.Storage.set(Game.Keys.LEADERBOARD, JSON.stringify(records));
+            return entry;
         }
     };
 
@@ -156,6 +188,7 @@
         },
         showCampaignComplete: () => {
             Game.Campaign.saveCurrent({ round: maxRound(), completed: true, inventory: [] });
+            Game.Campaign.recordCompletion();
             show('campaignCompleteOverlay');
         }
     };

@@ -104,7 +104,7 @@ const PowerUps = {
         // Timed power-ups are rendered by the lift itself for their full active
         // duration. Keep the effect state for simulation/tests, but do not create
         // a second free-floating animation for them.
-        if (['🚀', '🌌', '🌲', '🎵', '⚡', '↔️'].includes(icon)) return;
+        if (['🚀', '🌌', '🌲', '🎵', String.fromCodePoint(0x1fa9c), '↔️'].includes(icon)) return;
 
         const world = document.getElementById('world');
         const car = document.getElementById(`lift-el-${liftId}`);
@@ -340,7 +340,7 @@ const PowerUps = {
                   execute: (liftId, floorId) => { 
                       PowerUps.setLiftTimer(Registry.lifts[liftId], 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[0].duration);
                       Registry.lifts[liftId].isDoubleDecker = true;
-                      PowerUps.showEffectOnLift(liftId, '🚡'); 
+                      PowerUps.showEffectOnLift(liftId, PowerUps.catalog.doubleDecker.icon);
                       PowerUps.announceLiftCapacity(liftId);
                   } 
                 },
@@ -348,7 +348,7 @@ const PowerUps = {
                   execute: (liftId, floorId) => { 
                       PowerUps.setLiftTimer(Registry.lifts[liftId], 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[1].duration);
                       Registry.lifts[liftId].isDoubleDecker = true;
-                      PowerUps.showEffectOnLift(liftId, '🚡'); 
+                      PowerUps.showEffectOnLift(liftId, PowerUps.catalog.doubleDecker.icon);
                       PowerUps.announceLiftCapacity(liftId);
                   } 
                 },
@@ -357,7 +357,7 @@ const PowerUps = {
                       Registry.lifts.forEach(l => {
                           PowerUps.setLiftTimer(l, 'doubleDeckerTimer', window.Config.GAME_DATA.powerups.doubleDecker.tiers[2].duration);
                           l.isDoubleDecker = true;
-                          PowerUps.showEffectOnLift(l.id, '🚡');
+                          PowerUps.showEffectOnLift(l.id, PowerUps.catalog.doubleDecker.icon);
                           PowerUps.announceLiftCapacity(l.id);
                       });
                   } 

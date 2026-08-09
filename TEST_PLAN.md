@@ -67,10 +67,13 @@ Use current Chrome or Edge on desktop/laptop. Record the build identifier shown 
 
 ## Focused UI acceptance checks
 
-- The R2 teaching rail is wide enough for the automation instruction, may extend beyond the lift shafts, and never
-  covers the lobby or changes board layout. Critical VIP/Rooftop notices retain the same non-lobby anchoring.
-- A promotion modal is content-sized around its heading, copy, and Continue button; it does not occupy the full
-  briefing height or introduce a needless vertical scroll area.
+- The R2 teaching rail is capped at 360px, may extend beyond the lift shafts, and never covers the lobby, reaches the
+  right margin, or changes board layout. Critical VIP/Rooftop notices retain the same non-lobby anchoring.
+- Promotion interstitials and no-shop briefings are content-sized around their rendered copy and button; neither uses
+  the full briefing height or introduces a needless vertical scroll area. Shop briefings retain their fixed layout.
+- Trigger Double-Decker and confirm `🪜` appears on the active lift for the effect duration. Complete two campaigns
+  with different seeds and reopen one: each completed run appears once on the local Leaderboard, including the current
+  player's score, while reopening a completed campaign does not duplicate it.
 
 ## Lift-state remediation checks
 

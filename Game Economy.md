@@ -92,7 +92,8 @@ Therefore:
 - The pre-attempt snapshot is not restored.
 - Purchases and consumed items commit.
 - The Endurance payout is awarded once.
-- The score records survival time and guests served.
+- The Endurance payout records survival time and guests served. Campaign score is the cumulative Credits earned across
+  all completed rounds before shop spending, so it remains comparable even when players choose different loadouts.
 - The campaign automatically advances to Round 13.
 - Round 12 cannot be farmed by replaying from the normal campaign flow.
 

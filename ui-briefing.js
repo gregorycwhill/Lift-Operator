@@ -233,6 +233,7 @@ window.showRoundModal = function(round, options = {}) {
         window.Game.Campaign?.shouldShowPromotion?.(round));
     if (promotionBanner) promotionBanner.classList.toggle('hidden', !shouldShowPromotion);
     if (modalContent) modalContent.classList.toggle('promotion-pending', shouldShowPromotion);
+    if (modalContent) modalContent.classList.toggle('briefing-compact', !shouldShowPromotion && !hasShopUnlocks);
     if (shouldShowPromotion) {
         if (promotionHeading) promotionHeading.innerText = `${briefing.promotion.label} — ${briefing.promotion.rank}`;
         if (promotionCopy) promotionCopy.innerText = briefing.promotion.copy;

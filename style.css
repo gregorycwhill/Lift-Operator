@@ -169,7 +169,7 @@ body {
     left: calc(var(--label-width) + var(--lobby-width) + 10px);
     right: auto;
     top: 10px;
-    width: min(720px, calc(100vw - 32px));
+    width: min(360px, calc(100vw - 32px));
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -566,11 +566,14 @@ body {
 .promotion-heading { color: #b8860b; font-size: 14px; }
 .promotion-copy { margin: 10px auto 14px; max-width: 470px; color: #2c3e50; font-size: 16px; line-height: 1.3; }
 .round-briefing-modal.promotion-pending #briefingDetails { display: none; }
+.round-briefing-modal.briefing-compact,
 .round-briefing-modal.promotion-pending {
-    width: 468px;
     height: auto;
     min-height: 0;
     max-height: calc(100vh - 48px);
+}
+.round-briefing-modal.promotion-pending {
+    width: 468px;
 }
 .round-briefing-modal.promotion-pending .promotion-banner {
     flex: 0 0 auto;

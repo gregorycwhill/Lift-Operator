@@ -441,7 +441,13 @@ window.draw = function() {
             if (lift.turboTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.globalTurbo > 0)) activeIcons.push({type: 'emoji', val: '🚀'});
             if (lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0)) activeIcons.push({type: 'emoji', val: '🌲'});
             if (lift.musakTimer > 0) activeIcons.push({type: 'emoji', val: '🎵'});
-            if (lift.doubleDeckerTimer > 0 || lift.isDoubleDecker) activeIcons.push({type: 'emoji', val: '⚡'});
+            if (lift.doubleDeckerTimer > 0 || lift.isDoubleDecker) {
+                activeIcons.push({
+                    type: 'emoji',
+                    val: (typeof PowerUps !== 'undefined' && PowerUps.catalog?.doubleDecker?.icon) ||
+                        String.fromCodePoint(0x1fa9c)
+                });
+            }
             if (lift.openPlanTimer > 0) activeIcons.push({type: 'emoji', val: '↔️'});
             if (lift.wideDoorsTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0)) activeIcons.push({type: 'emoji', val: '🚪'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) activeIcons.push({type: 'emoji', val: '🔧'});
