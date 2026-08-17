@@ -255,7 +255,8 @@ window.createRoundStats = function() {
         happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
         defenestrationsThisRound: 0, totalWaitTimeServed: 0,
         lateralTransfers: 0, doubleDeckerServed: 0, guestsSpawned: 0, livesLost: 0,
-        journeyTimes: [], zoneRefusals: 0, uncoveredRoutes: 0
+        journeyTimes: [], zoneRefusals: 0, uncoveredRoutes: 0,
+        openingCredits: Math.max(0, Number(Registry.points) || 0), creditsSpent: 0
     };
 };
 
@@ -296,6 +297,12 @@ window.evaluateRoundPayout = function() {
         pointsEarned,
         totalPoints: Registry.points,
         campaignScore: Registry.campaignScore,
+        creditLedger: {
+            opening: Math.max(0, Number(stats.openingCredits) || 0),
+            earned: pointsEarned,
+            spent: Math.max(0, Number(stats.creditsSpent) || 0),
+            closing: Registry.points
+        },
         guestsServed: stats.servedThisRound,
         averageWaitTime: stats.servedThisRound > 0
             ? (stats.totalWaitTimeServed / stats.servedThisRound).toFixed(1)
@@ -354,6 +361,7 @@ window.createLiftState = function(id) {
         musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0, wideDoorsTimer: 0, wideDoorsMultiplier: 1,
         sardineScored: false, isDoubleDecker: false,
         state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,
+        serviceCycleId: 0, serviceBoarded: 0,
         lastEffectiveCapacity: Config.liftCapacity,
         servicePolicy: { id: null, version: null, mode: 'none', active: false, lower: 0, upper: Math.max(0, Config.numFloors - 1) },
         serviceLower: 0,

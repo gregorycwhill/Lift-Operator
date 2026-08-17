@@ -4,7 +4,7 @@
 **Campaign scope:** 25 implemented authored rounds; tuning remains evidence-led
 **Status:** Active product design reference; not a delivery-status or test-evidence record
 **Owner class:** Product and design
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 17 August 2026
 **Companion documents:** `Lift-Operator_GDD.md`, `Game Economy.md`, `BALANCE_WORKFLOW.md`
 
 **Authority boundary:** This map describes intended progression and candidate tuning. Canonical numerical values live in
@@ -58,7 +58,9 @@ Every attempt begins with a visible countdown after the briefing closes: ten sec
 and five seconds in every other round. The round timer and guest spawning remain frozen, while lift automation controls
 are usable. The countdown can be dismissed through its dedicated start-now control.
 
-Teaching cues are transient rather than permanent HUD elements. When built-in automation first becomes available, its controls pulse in a friendly, colourful way. The same cue system must support first-use discovery of player-authored custom automation and automations shared with the player. Interaction acknowledges a cue so it does not repeatedly nag an established player.
+Teaching is a reusable, opportunity-led tutorial system rather than a collection of one-off messages. A tutorial activates only when its mechanic is relevant and the player has not yet completed the taught action. It gives a concise instruction and numbered, glowing targets, advances only after the correct action, and permanently retires only after completion. Dismissal suppresses it for the current round only; unrelated gameplay remains usable.
+
+Round 2 teaches the first three automation steps on its one-car fleet: (1) use the carousel controls until Sweep is displayed, (2) click the Sweep label to arm it, and (3) click the highlighted lift controller to deploy it. Round 3 repeats the flow on its new two-car fleet and adds the fourth step: deploy Sweep to the second controller. The same system teaches first-use power-ups, VIP service, jam repair, Stink recovery, counterweights, Zoning, and Open Plan through the relevant controls and board targets. It must never cover the lobby or intercept lift commands.
 
 Automation deployment follows a deliberate two-step pattern. When disarmed, select one or more lift controllers as a
 batch; then click a carousel policy to arm it and assign it immediately. Alternatively, arm a policy first: lift
@@ -657,7 +659,9 @@ warned, restricted, or given a master/slave interface.
 - Built-in automations are pair-owned in counterweight rounds. Applying a built-in to either controller assigns the
   matching pair behaviour to both cars; applying Manual to either controller makes the whole pair Manual. Pair-aware
   Sweep-family policies evaluate demand from both cars and issue one legal mirrored target pair, with no hidden
-  left-hand policy owner.
+  left-hand policy owner. Counterweight Sweep is a dependable paired circuit, not a series of opportunistic nearest
+  targets: it services compatible demand for either car in a deterministic paired direction before reversing. Manual
+  targeting remains an immediate exception and should improve a plan, not be required for ordinary passenger service.
 - A floor click on either shaft is a pair manual command: the clicked car receives the requested stop and its partner
   receives the forced complementary stop. The clicked car owns that stop through a full service cycle (including a
   fresh queue check and door close); its partner cannot release the command merely by arriving first. Only then does

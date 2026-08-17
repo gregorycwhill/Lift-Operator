@@ -3,7 +3,7 @@
 **Document role:** Current release evidence, human acceptance, and playtest protocol only
 **Status:** Active acceptance plan
 **Owner class:** Engineering and playtest
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 17 August 2026
 **Delivery scope:** `DELIVERY_PLAN.md`
 **Test principles:** `TESTING_STRATEGY.md`
 **Baseline:** `master` at `bc59758` — Friends & Family playtest build
@@ -94,6 +94,70 @@ The latest remediation must pass these focused checks before the next Friends & 
 - Restore a campaign after purchasing power-ups and starting a round: remaining Credits and committed inventory must
   return, while an unpurchased cart is intentionally absent. At Campaign Complete, close Leaderboard and confirm the
   completion modal returns without lift movement, spawns, timers, or active power-ups resuming.
+
+## PTF-040 remediation acceptance
+
+Targeted implementation checks passed on 17 August 2026. These checks remain required for the next Friends & Family
+replay and supersede the earlier “implemented—awaiting replay” claims where the same behaviour was reported again.
+
+### Automated service invariants
+
+1. **Shared rooftop queue:** with two or more compatible parked cars and a queue above the shared-pressure threshold,
+   each eligible car receives boarding work. With all-lift Infinite Capacity active, no single car may monopolise the
+   queue while another eligible parked car departs empty.
+2. **Ordinary queue preservation:** at low queue pressure, allocation remains consolidated enough to avoid needless
+   partial loads; it must not indiscriminately spread one or two guests across every car.
+3. **Reversal:** a Sweep lift stopped at a floor with newly compatible guests after reversal opens/services that floor
+   before moving away.
+4. **Bounded service cycle:** Group Think, Wide Doors, TARDIS activation/expiry, and changing passenger destinations
+   cannot cause an endless same-floor board/alight loop. A just-alighted guest cannot immediately reboard the same
+   car at the same floor/service cycle.
+5. **VIP departure:** an otherwise suitable car containing only a VIP leaves for the VIP destination under Weighted
+   Voting after its current service transaction; a waiting VIP still receives no automatic dispatch.
+6. **Manual stop:** a manually targeted car—including a counterweight car in R23—opens and performs a full service
+   cycle for an eligible VIP or ordinary guest before automation may retarget it.
+
+### Counterweight Sweep checks
+
+1. R21 two-car Sweep visits compatible demand for either car through a deterministic paired direction, then reverses;
+   it must not oscillate without service.
+2. R23 multi-pair Sweep honours the same pair itinerary and accepts a manual command from either car immediately.
+3. The selected car’s manual stop takes precedence over its partner, while the forced complement remains geometrically
+   correct. Ordinary service must work without mandatory manual floor-by-floor intervention.
+
+### Guidance and presentation checks
+
+1. Clean-storage R2 teaches display Sweep, arm Sweep, and deploy to its one controller; R3 repeats the sequence and
+   adds deployment to its second controller. Each numbered glow advances only on the correct action.
+2. Dismiss suppresses the prompt for that attempt only. Completing the final action prevents it in future campaigns.
+3. First-use prompts for a power-up, VIP, Jam, Stink, Counterweights, Zoning, and Open Plan highlight only relevant
+   targets, do not block unrelated controls, and never obscure the lobby.
+4. Initial instructions state that a guest’s number is its destination floor; normal guest token rendering is unchanged.
+5. Every power-up tier exposes a standard scope statement in the shop, tooltip, and cart. The pre-shop briefing/closet
+   identifies the round fleet as `X lifts · Y floors`.
+6. Last Drinks is visible for its intended duration but does not capture pointer input; lifts remain targetable through
+   the notice.
+7. VIP fanfare output is `0.75×` the previous dedicated gain and still obeys Mute/SFX settings.
+
+### Economy evidence
+
+1. The balance command records a compact credit ledger per round/seed: opening Credits, earned Credits, spent Credits,
+   and closing Credits. Raw frame traces remain opt-in and uncommitted.
+2. Targeted ledger scenarios cover R17, R18, and R23, including a carry-forward inventory case. The report must make
+   a 72-Credit R17 and 13-Credit R23 outcome diagnosable rather than merely observable.
+3. Before canonical tuning, test candidate Gold Wide Doors against a bounded all-lift boarding rate; it must improve
+   recovery materially without creating an unattended/visually unreadable R18 run.
+
+### Human replay matrix
+
+| Round | Required observation |
+| --- | --- |
+| R2–R3 | A new player can complete the Sweep tutorial and understands guest destination numbers. |
+| R11 | Multiple lifts participate in rooftop evacuation, including during Infinite Capacity; no board/alight loops. |
+| R15 | Weighted Voting carries a lone onboard VIP away after Rooftop release; power-up combinations remain stable. |
+| R21 | Sweep is understandable and useful without mandatory manual routing. |
+| R23 | Manual VIP pickup stops reliably; Sweep is usable across three-plus pairs; credit availability is recorded. |
+| R17–R18 | Record the credit ledger and whether Gold Wide Doors or accumulated inventory removes meaningful decisions. |
 
 ## Friends & Family evidence window
 

@@ -5,7 +5,7 @@
 /**
  * Display a temporary on-screen toast message.
  */
-window.showToast = function(message) {
+window.showToast = function(message, durationMs = 3500) {
     let toast = document.getElementById("game-toast");
     if (!toast) {
         toast = document.createElement("div");
@@ -16,10 +16,102 @@ window.showToast = function(message) {
     toast.innerText = message;
     void toast.offsetWidth; // Force reflow
     toast.classList.add("show");
-    setTimeout(() => { toast.classList.remove("show"); }, 3500);
+    setTimeout(() => { toast.classList.remove("show"); }, Math.max(1, Number(durationMs) || 3500));
 };
 
 const criticalGameMessages = [];
+
+// Opportunity-led campaign teaching. Tutorials are deliberately soft: they
+// illuminate the next correct control without freezing the rest of the game.
+window.Game = window.Game || {};
+window.Game.Tutorial = (function () {
+    const state = { id: null, step: 0, suppressed: false, context: null };
+    const automationKey = 'liftOp_teaching_automation_sweep_v2';
+    const fleetAutomationKey = 'liftOp_teaching_automation_fleet_v2';
+    const clearTargets = () => document.querySelectorAll('.tutorial-step-target').forEach(node => {
+        node.classList.remove('tutorial-step-target');
+        delete node.dataset.tutorialStep;
+    });
+    const render = () => {
+        clearTargets();
+        if (state.suppressed) return;
+        if (state.context) {
+            document.querySelectorAll(state.context.selector).forEach(node => {
+                node.classList.add('tutorial-step-target');
+                node.dataset.tutorialStep = '!';
+            });
+            window.showGameMessage?.(state.context.message);
+            return;
+        }
+        if (state.id !== 'automation-sweep') return;
+        const definitions = Registry.stats.round === 3 ? [
+            { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Sweep is displayed.' },
+            { selector: '.automation-carousel-card[data-policy="sweep"]', text: '2. Click Sweep to activate it.' },
+            { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the first glowing lift controller to deploy Sweep.' },
+            { selector: '.automation-status[data-lift-index="1"]', text: '4. Click the second glowing lift controller to deploy Sweep.' }
+        ] : [
+            { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Sweep is displayed.' },
+            { selector: '.automation-carousel-card[data-policy="sweep"]', text: '2. Click Sweep to activate it.' },
+            { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the glowing lift controller to deploy Sweep.' }
+        ];
+        const definition = definitions[state.step];
+        if (!definition) return;
+        document.querySelectorAll(definition.selector).forEach(node => {
+            node.classList.add('tutorial-step-target');
+            node.dataset.tutorialStep = String(state.step + 1);
+        });
+        window.showGameMessage?.(definition.text);
+    };
+    const complete = () => {
+        window.Game.Storage.set(Registry.stats.round === 3 ? fleetAutomationKey : automationKey, '1');
+        state.id = null;
+        clearTargets();
+        window.clearGameMessage?.();
+    };
+    return {
+        startAutomationSweep() {
+            const round = Registry.stats.round;
+            const key = round === 3 ? fleetAutomationKey : automationKey;
+            if (![2, 3].includes(round) || window.Game.Storage.get(key, '0') === '1') return false;
+            state.id = 'automation-sweep'; state.step = 0; state.suppressed = false; render(); return true;
+        },
+        startContext(id, options = {}) {
+            const key = `liftOp_teaching_context_${id}_v1`;
+            if (state.id || window.Game.Storage.get(key, '0') === '1') return false;
+            state.id = `context:${id}`;
+            state.context = { id, key, message: options.message || '', selector: options.selector || '' };
+            state.suppressed = false;
+            render();
+            return true;
+        },
+        completeContext(id) {
+            if (state.context?.id !== id) return;
+            window.Game.Storage.set(state.context.key, '1');
+            state.id = null; state.context = null; clearTargets(); window.clearGameMessage?.();
+        },
+        action(action, detail = {}) {
+            if (state.id !== 'automation-sweep' || state.suppressed) return;
+            const needsSecondLift = Registry.stats.round === 3;
+            const matches = (state.step === 0 && action === 'browse' && detail.policy === 'sweep') ||
+                (state.step === 1 && action === 'arm' && detail.policy === 'sweep') ||
+                (state.step === 2 && action === 'deploy' && detail.index === 0) ||
+                (needsSecondLift && state.step === 3 && action === 'deploy' && detail.index === 1);
+            if (!matches) return;
+            state.step++;
+            if (state.step >= (needsSecondLift ? 4 : 3)) complete(); else render();
+        },
+        dismissCurrentRound() {
+            if (!state.id) return;
+            state.suppressed = true;
+            clearTargets();
+        },
+        isActive() { return Boolean(state.id && !state.suppressed); }
+    };
+})();
+
+document.addEventListener('automation-tutorial-action', event => {
+    window.Game.Tutorial?.action(event.detail?.action, event.detail || {});
+});
 
 window.clearGameMessage = function() {
     criticalGameMessages.length = 0;
@@ -62,6 +154,7 @@ window.showGameMessage = function(message, options = {}) {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('game-message-dismiss')?.addEventListener('click', () => {
+        window.Game.Tutorial?.dismissCurrentRound();
         const rail = document.getElementById('game-message-rail');
         if (rail?.dataset.critical === 'true' && criticalGameMessages.length) {
             const next = criticalGameMessages.shift();
@@ -101,7 +194,7 @@ window.startRoundCountdown = function(seconds = 5) {
         if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(index, Math.max(1800, remaining * 1000 - 150));
     });
     if (typeof ui.applyAutomationTeachingCue === 'function') ui.applyAutomationTeachingCue();
-    if (Registry.stats.round === 2) window.showGameMessage?.('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
+    if ([2, 3].includes(Registry.stats.round)) window.Game.Tutorial?.startAutomationSweep();
 
     const begin = () => {
         if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);

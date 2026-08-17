@@ -7,6 +7,15 @@ const PowerUps = {
     cart: [], 
     activeTargeting: null,
 
+    getScopeLabel: function(powerUpId, tierIndex) {
+        const ability = this.catalog?.[powerUpId]?.tiers?.[tierIndex];
+        if (!ability) return '';
+        if (ability.target === 'floor') return 'Target floor';
+        if (ability.target === 'lift') return '1 lift';
+        if (['doors', 'freshener', 'tardis', 'turbo', 'doubleDecker', 'openPlan'].includes(powerUpId)) return 'All lifts';
+        return 'Building';
+    },
+
     // Global timers for Tier 3 abilities
     timers: {
         jamImmunity: 0,

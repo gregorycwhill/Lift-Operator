@@ -4,7 +4,7 @@
 **Status:** Active release-evidence slice
 **Release target:** `1.0` (no release tag has been created)
 **Owner class:** Product and engineering
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 17 August 2026
 **Implementation baseline:** `master` at `bc59758` — Friends & Family playtest build
 
 ## Outcome
@@ -76,6 +76,44 @@ human acceptance belong in `TEST_PLAN.md`.
 - Leaderboard is results-only. From Campaign Complete its close action returns to the completion modal without resuming
   a terminal round. Every completed campaign seed is retained as one local score record, using total Credits earned
   before spending so the active player's score is always visible at conclusion.
+
+## Next remediation slice — service, guidance, and economy
+
+**Status:** Implemented — targeted automated checks passed; human replay remains required.
+
+This slice is a correctness and comprehension fix, not new gameplay content. It consolidates PTF-040 and the related
+earlier reports that reopening has shown to be incomplete. Gold Wide Doors now uses the bounded `0.20×`/20-second
+all-lift candidate; per-round Credit changes remain evidence-led.
+
+| Workstream | Implementation outcome | Feedback covered |
+| --- | --- | --- |
+| Shared-floor service | Replace per-guest “most-loaded car first” arbitration with a floor-level service session. Under genuine shared-queue pressure, compatible parked cars receive concurrent/rotating boarding allocations rather than one car monopolising demand. Preserve consolidated loading for ordinary low-pressure queues. | Rooftop/Infinite Capacity single-car loading; R11 capacity reports. |
+| Service-cycle correctness | Re-evaluate a stopped floor after direction, target, load, Group Think, or capacity changes. Bound a service cycle; prevent a guest who just alighted from immediately reboarding the same lift at that floor; commit a departure for an onboard VIP after its current service transaction. | Reversal non-pickup; VIP stranded under Weighted Voting; Group Think/TARDIS/Wide Doors loops; Gym Bro/ordinary loops. |
+| Manual-stop integrity | A manual target reserves a complete selected-car service stop, including VIP boarding, before normal policy can retarget it. | R23 manual VIP and ordinary pickup reports. |
+| Counterweight Sweep | Implement a deterministic pair itinerary that considers compatible demand for both cars, completes the current paired direction, then reverses. Keep manual pair commands highest priority. | R21 Sweep failure; R23 counterweight confusion and excessive manual burden. |
+| Guided tutorial framework | Add a durable, opportunity-led, numbered/glowing tutorial framework. R2 teaches display Sweep, arm it, and deploy it to its single controller; R3 repeats the sequence and deploys to both controllers. The reusable context API is ready for later first-use flows for power-ups, VIP, Jam, Stink, Counterweights, Zoning, and Open Plan. Dismissal is round-local; correct completion persists. | R3/Sweep failures and general first-use confusion. |
+| Player information | Explain guest destination numbers in initial instructions without changing guest appearance. Show fleet size in the briefing/closet and standardise power-up scope labels (`1 lift`, `All lifts`, `Building`, `Target floor`) in cards, tooltips, and cart. | Guest-number confusion; Silver scope; Wide Doors purchasing context. |
+| Message rail | Move informational event notices such as Last Drinks to a non-interactive toast treatment that cannot consume pointer input or block shaft controls. | Last Drinks blocking rooftop commands. |
+| Economy diagnosis and tuning | Produce compact per-round credit ledgers (opening, earned, spent, closing) and set target bands for R17, R18, and R23. Rebalance Gold Wide Doors from near-instant building-wide service toward a bounded high-throughput effect only after that evidence. | Gold Doors strength; R17 surplus; R18 hands-off inventory; R23 scarcity. |
+| Audio | Apply the accepted VIP fanfare gain multiplier of `0.75`. | VIP music volume. |
+
+### Delivery order
+
+1. Add focused service-cycle state/telemetry fixtures first; use them to reproduce the shared-rooftop, reversal,
+   Group Think, Infinite Capacity, VIP, and manual-target scenarios before changing arbitration.
+2. Implement shared-floor allocation and bounded service-cycle rules; then land manual-stop and counterweight Sweep
+   changes behind the same service invariants.
+3. Implement the tutorial framework, contextual information, non-blocking Last Drinks toast, and VIP gain adjustment.
+4. Generate compact credit-ledger evidence, select candidate Gold Wide Doors and round-credit values, and run the
+   focused balance/human replay protocol.
+5. Update feedback dispositions only after targeted automated checks and the named human replays pass.
+
+### Explicit non-goals
+
+- Do not alter guest-token appearance; destination-number clarity belongs in onboarding.
+- Do not introduce auto-dispatch for waiting VIPs.
+- Do not change carry-forward Credits; diagnose their source before tuning payouts or power-up potency.
+- Do not implement elapsed-time movement integration in this slice; it remains post-RC1.0 work.
 
 ## Current collateral remediation before broad distribution
 

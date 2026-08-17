@@ -61,6 +61,7 @@ window.checkoutCart = function() {
     if (Registry.points >= totalCost) {
         const purchased = PowerUps.cart.slice();
         Registry.points -= totalCost;
+        Registry.roundStats.creditsSpent = (Registry.roundStats.creditsSpent || 0) + totalCost;
         PowerUps.inventory.push(...purchased);
         PowerUps.cart = [];
         purchased.forEach(item => window.Game.Audio?.publish('purchase_confirmed', { id: item.id, tier: item.tier, cost: PowerUps.catalog[item.id].tiers[item.tier].cost }));
@@ -149,7 +150,7 @@ window.renderShop = function() {
     pointsSpan.className = pointsClass;
     pointsSpan.textContent = remainingPoints;
     header.appendChild(pointsSpan);
-    header.appendChild(document.createTextNode(')'));
+    header.appendChild(document.createTextNode(`) · Fleet: ${Registry.lifts.length} lifts · ${Config.numFloors} floors`));
     shopDiv.appendChild(header);
 
     const shopContainer = document.createElement('div');
@@ -196,8 +197,11 @@ window.renderShop = function() {
             const descSpan = document.createElement('span');
             descSpan.className = 'shop-btn-desc';
             descSpan.textContent = tier.desc;
+            const scopeSpan = document.createElement('span');
+            scopeSpan.className = 'shop-btn-scope';
+            scopeSpan.textContent = PowerUps.getScopeLabel(pu.id, index);
             
-            button.append(tierDiv, iconDiv, costStrong, descSpan);
+            button.append(tierDiv, iconDiv, costStrong, descSpan, scopeSpan);
             itemsGrid.appendChild(button);
         });
     });
@@ -238,9 +242,15 @@ window.renderShop = function() {
             cartItem.className = `cart-item cart-item-t${item.tier + 1}`;
             const tierName = ['Bronze', 'Silver', 'Gold'][item.tier] || `Tier ${item.tier + 1}`;
             const effect = pu.tiers[item.tier]?.desc || '';
+            const scope = PowerUps.getScopeLabel?.(item.id, item.tier) || '';
             const itemDescription = `${pu.name} — ${tierName}${effect ? `: ${effect}` : ''}. ${count} selected. Click to remove one.`;
             cartItem.title = itemDescription;
             cartItem.setAttribute('aria-label', itemDescription);
+            if (scope) {
+                const scopedDescription = `${pu.name} (${tierName}, ${scope}). ${count} selected. Click to remove one.`;
+                cartItem.title = scopedDescription;
+                cartItem.setAttribute('aria-label', scopedDescription);
+            }
 
             const iconSpan = document.createElement('span');
             iconSpan.textContent = pu.icon;

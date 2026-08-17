@@ -118,7 +118,9 @@ window.runSpawnerTick = function(now) {
             const warningTime = Registry.sunsetEndTime - 5000;
             if (!Registry.sunsetWarningShown && now >= warningTime && now < Registry.sunsetEndTime) {
                 Registry.sunsetWarningShown = true;
-                window.showGameMessage?.('Last drinks! Rooftop Party ends in 5 seconds.', { critical: true, durationMs: 5000 });
+                // Informational countdown: never occupy the interactive
+                // message rail that can sit over the rooftop shafts.
+                window.showToast?.('Last drinks! Rooftop Party ends in 5 seconds.', 5000);
             }
             if (now >= Registry.sunsetEndTime) {
                 Registry.sunsetActive = false;

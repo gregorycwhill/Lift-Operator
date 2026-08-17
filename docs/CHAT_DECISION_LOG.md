@@ -2,7 +2,7 @@
 
 **Document role:** Curated durable record of material product, design, release, and documentation instructions from chat  
 **Status:** Active, append-only decision record  
-**Coverage:** Reconstructed from the available project chat through 8 August 2026
+**Coverage:** Reconstructed from the available project chat through 17 August 2026
 **Not a substitute for:** The service-hosted chat transcript, Git history, or active delivery/test plans
 
 ## Recording rule
@@ -60,6 +60,8 @@ document after the decision is applied there.
 | DEC-041 | 8 August 2026 | The Polar Lifts concept is named Ferris Wheel: concentric circular tracks using polar-coordinate/orbital movement rather than vertical shafts. It remains a future topology/routing concept, not RC1.0 scope. | `ROADMAP.md`. |
 | DEC-042 | 8 August 2026 | Playtest polish slice: keep audio preferences persistent while clean storage defaults to music/SFX on; remove New Campaign ellipsis, stabilise countdown/message geometry, shorten promotion presentation, clear final-life warnings at round reset, use Bronze/Silver/Gold terminology, increase R8 traffic 20%, stop Musak at round end, make Bronze Wide Doors single-lift, group repeated power-ups with quantity badges, and rename R11/R25 briefings. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, canonical balance, UI/audio implementation. |
 | DEC-043 | 8 August 2026 | Lift-state remediation: Infinite Capacity expiry is a one-shot normal-capacity recovery at the next stop; onboard passengers, especially a VIP, outrank incompatible waiting demand in policy selection; a direction reversal rechecks the parked floor; manual counterweight commands interrupt stale door/policy state and remain pair-authoritative; R23 adopts the candidate `0.7125`–`0.90` spawn curve pending human replay. | `Game Play Map.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`, `docs/playtest/PLAYTEST_FEEDBACK_LOG.md`. |
+| DEC-044 | 17 August 2026 | RC1.0 remediation uses a general opportunity-led tutorial system: relevant uncompleted actions receive numbered, glowing step targets; dismissal lasts only for the current round, while permanent retirement requires successful completion. Round 2 teaches Sweep carousel selection, arming, and one-car deployment; Round 3 repeats this on its two-car fleet and teaches deployment to both controllers. Guest tokens remain visually unchanged; initial instructions explain that their number is the destination. | `Game Play Map.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
+| DEC-045 | 17 August 2026 | Counterweight Sweep must be a dependable pair-owned circuit that services compatible demand for either car before reversing; manual targeting remains an immediate paired exception, not a mandatory substitute for normal service. VIP fanfare plays at `0.75×` its current gain. | `Game Play Map.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
 
 ## Chat persistence limitation
 

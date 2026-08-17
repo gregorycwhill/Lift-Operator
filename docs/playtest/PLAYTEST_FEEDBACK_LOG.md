@@ -2,7 +2,7 @@
 
 **Document role:** Authoritative intake and disposition record for playtest feedback  
 **Status:** Active, append-only source record  
-**Coverage:** Reconstructed from the available project chat through 8 August 2026
+**Coverage:** Reconstructed from the available project chat through 17 August 2026
 **Companion records:** `../CHAT_DECISION_LOG.md`, `../../DELIVERY_PLAN.md`, `../../TEST_PLAN.md`
 
 ## How to use this log
@@ -23,6 +23,7 @@ older row where a later correction exists.
 | --- | --- | --- |
 | PTF-013, PTF-019, PTF-020, PTF-022, PTF-035, PTF-036 | Implemented — awaiting Friends & Family replay | Published-build visual/behaviour confirmation. |
 | PTF-023 | Implemented canonical tuning | Human R11 difficulty observation against the canonical `0.96`–`1.15` curve. |
+| PTF-040 | Implemented — awaiting human replay | Focused automated service invariants passed; replay R2–R3/R11/R15/R17–R18/R21/R23. |
 | PTF-024 | Implemented | Rooftop and R11 briefing observation only. |
 | PTF-028 | Implemented — awaiting balance replay | Endurance evidence with VIP/Rooftop excluded and hazards retained. |
 | PTF-030, PTF-033, PTF-034 | Implemented — awaiting replay | Published-build routing, R13 balance, and seed-reproduction observations. |
@@ -107,6 +108,37 @@ fixed non-lobby overlay that may span beyond the lift shafts, and a manual count
 selected car's service cycle rather than after both cars merely reach their targets.
 
 | PTF-039 | UI polish feedback — 9 August 2026 | R2 briefing retained the tall Supply Closet geometry; the teaching rail reached the page edge; active Double-Decker lifts used legacy effect symbols; Campaign Complete showed an empty Leaderboard. | Briefing modes, shared message rail, Double-Decker effects, campaign shell | **Implemented—targeted regression passed.** No-shop briefings and promotion interstitials are content-sized; the rail is capped at 360px; Double-Decker uses `🪜` across shop and active-lift surfaces; every completed campaign seed records its pre-spend cumulative Credit score once. |
+
+| PTF-040 | Friends & Family consolidation — 17 August 2026 | Three players could not defeat R3, likely failing to deploy Sweep; a guest destination number was mistaken for a count. Reports also describe single-car rooftop loading during Infinite Capacity, missed pickup after Sweep reversal, VIP/manual-stop failures, Group Think/TARDIS/Wide Doors board-alight loops, ineffective Counterweight Sweep, unclear power-up scope/fleet context, blocking Last Drinks notices, late-campaign Credit extremes, and loud VIP fanfare. | R2–R3 onboarding; R11/R15 rooftop service; R17–R18 economy; R21–R23 counterweights; power-up and notification UI; audio | **Implemented — awaiting human replay.** `DELIVERY_PLAN.md` defines the integrated service/guidance/economy slice. R2 teaches the single-controller flow; R3 adds the second controller. Focused automated checks pass; named human replays remain. |
+
+### PTF-040 traceability
+
+**Implementation update — 17 August 2026:** shared-floor allocation, bounded service-cycle protection, same-cycle
+reboarding prevention, parked reversal recheck, pair-itinerary Counterweight Sweep, R2/R3 staged Sweep tutorials,
+scope/fleet information, non-interactive Last Drinks toast, compact round credit ledger, bounded Gold Wide Doors, and
+VIP fanfare at `0.75×` are implemented. Targeted syntax, config, UTF-8, documentation, mechanics, unit, smoke, and
+focused lifecycle checks passed. The matrix below now records human replay acceptance rather than pending design.
+
+| Item | Observation | Planned disposition |
+| ---: | --- | --- |
+| U1 | R3 players may not deploy Sweep. | R2 teaches the one-car Sweep flow; R3 repeats it and adds deployment to its second controller; replay R2–R3 with new players. |
+| U2 | Guest number mistaken for a count. | Explain destination numbers in initial instructions; preserve tokens. |
+| 1 | One rooftop lift monopolises a shared queue. | Shared-floor boarding session. |
+| 2 | R21 Sweep fails while Manual works. | Deterministic pair-itinerary Counterweight Sweep. |
+| 3 | Reversal does not pick up newly compatible guests. | Current-floor re-evaluation within the physical service cycle. |
+| 4 | Lone VIP car does not leave under Weighted Voting. | VIP departure commitment after current service transaction. |
+| 5 | Group Think/TARDIS/Wide Doors/Rockets loop boarding and alighting. | Bounded service cycle and same-floor reboarding guard. |
+| 6 | R11 rooftop loading and Gym Bro loops make TARDIS ineffective. | Shared-floor service plus bounded cycle; focused R11 replay. |
+| 7 | R23 manual VIP target does not stop. | Reserved selected-car manual service stop. |
+| 8 | Silver power-up scope is unclear. | Standard scope labels in card, tooltip, and cart. |
+| 9 | Player cannot assess Bronze Wide Doors without fleet size. | Briefing/closet fleet summary. |
+| 10 | Last Drinks blocks rooftop controls. | Non-interactive informational toast. |
+| 11 | Gold Wide Doors is too strong. | Candidate bounded all-lift throughput; validate before canonical change. |
+| 12 | R17 grants 72 Credits. | Credit ledger and R17 target band. |
+| 13 | R18 becomes hands-off with accumulated power-ups. | Credit ledger; assess Gold Doors and stockpile impact. |
+| 14 | R23 opens with only 13 Credits. | Credit ledger and R23 target band. |
+| 15 | R23 counterweights are unintuitive and too manual. | Pair itinerary, clearer briefing/tutorial, R23 replay. |
+| 16 | VIP fanfare is too loud. | Dedicated gain multiplier `0.75`. |
 
 ## Current intake boundary
 

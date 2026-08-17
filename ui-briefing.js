@@ -170,7 +170,7 @@ window.showRoundModal = function(round, options = {}) {
     const ruleHeading = document.getElementById('roundRuleHeading');
     const ruleBody = document.getElementById('roundRuleBody');
     const challengeList = document.getElementById('roundChallengeList');
-    if (roundRank) roundRank.innerText = `${briefing.rank} · Round ${round}`;
+    if (roundRank) roundRank.innerText = `${briefing.rank} · Round ${round} · ${definition.lifts} lifts · ${definition.floors} floors`;
     title.innerText = briefing.title;
     const seenTerms = new Set();
     instructions.innerHTML = window.renderBriefingCopy(briefing.narrative, round, seenTerms);

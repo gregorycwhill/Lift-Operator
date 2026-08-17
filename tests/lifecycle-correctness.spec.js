@@ -2630,10 +2630,38 @@ test('Round 2 shows the basement automation instruction during its extended coun
         };
     });
     expect(result.countdownVisible).toBe(true);
-    expect(result.message).toBe('Automation tip: choose an automation from the menu in the basement level, then click on any glowing lift controller to deploy it.');
+    expect(result.message).toBe('1. Use the arrows in the basement Automation Dock until Sweep is displayed.');
     expect(result.railVisible).toBe(true);
     await page.evaluate(() => document.getElementById('roundCountdownSkip').click());
     await expect(page.locator('#game-message-rail')).toBeHidden();
+});
+
+test('Round 3 fleet tutorial advances through Sweep display, arming, and both lift deployments', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        localStorage.removeItem('liftOp_teaching_automation_fleet_v2');
+        initializeRound(3, { showBriefing: false });
+        startRoundCountdown(5);
+        const next = document.querySelector('.automation-carousel-arrow:last-of-type');
+        next.click();
+        const afterBrowse = document.getElementById('game-message-text').textContent;
+        document.querySelector('.automation-carousel-card[data-policy="sweep"]').click();
+        const afterArm = document.getElementById('game-message-text').textContent;
+        document.querySelector('.automation-status[data-lift-index="0"]').click();
+        const afterFirst = document.getElementById('game-message-text').textContent;
+        document.querySelector('.automation-status[data-lift-index="1"]').click();
+        return {
+            afterBrowse,
+            afterArm,
+            afterFirst,
+            completed: localStorage.getItem('liftOp_teaching_automation_fleet_v2'),
+            automation: Registry.lifts.map(lift => lift.automation)
+        };
+    });
+    expect(result.afterBrowse).toContain('2. Click Sweep');
+    expect(result.afterArm).toContain('3. Click the first');
+    expect(result.afterFirst).toContain('4. Click the second');
+    expect(result.completed).toBe('1');
+    expect(result.automation).toEqual(['sweep', 'sweep']);
 });
 
 test('Sweep reversal reconsiders compatible guests at the current floor', async ({ page }) => {
@@ -2651,6 +2679,33 @@ test('Sweep reversal reconsiders compatible guests at the current floor', async 
         return { target: lift.targetFloor, direction: lift.sweepDirection };
     });
     expect(result).toEqual({ target: 2, direction: 1 });
+});
+
+test('shared high-pressure queues rotate boarding assignments while ordinary queues remain consolidated', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(11, { showBriefing: false });
+        const floor = Config.numFloors - 1;
+        Registry.lifts.forEach(lift => { lift.pos = floor * Registry.floorHeight; lift.targetFloor = floor; lift.passengers = []; lift.state = 'BOARDING'; });
+        Registry.floors[floor].waitingGuests = Array.from({ length: 12 }, (_, id) => ({ id: `queue-${id}`, dest: 0, status: GuestStatus.HAPPY, boardingWeight: 1 }));
+        const guest = Registry.floors[floor].waitingGuests[0];
+        const first = getSharedFloorBoardingLift(Registry.lifts[0], guest, floor)?.id;
+        const second = getSharedFloorBoardingLift(Registry.lifts[1], guest, floor)?.id;
+        Registry.floors[floor].waitingGuests = [guest];
+        const consolidated = getSharedFloorBoardingLift(Registry.lifts[1], guest, floor)?.id;
+        return { first, second, consolidated };
+    });
+    expect(result.first).toBe(0);
+    expect(result.second).toBe(1);
+    expect(result.consolidated).toBe(0);
+});
+
+test('same-service-cycle alighting blocks an immediate reboard to the same car', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const lift = { id: 0, automation: 'manual', manualOverride: false, sweepDirection: 1, passengers: [], serviceCycleId: 4 };
+        const guest = { dest: 4, status: GuestStatus.HAPPY, lastAlightedLiftId: 0, lastAlightedFloor: 2, lastAlightedServiceCycle: 4 };
+        return Game.Engine.canGuestBoardLift(lift, guest, 2, false, 10);
+    });
+    expect(result).toBe(false);
 });
 
 test('Round 2 teaching rail is a wide non-lobby overlay that does not alter board layout', async ({ page }) => {

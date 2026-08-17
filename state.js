@@ -30,7 +30,7 @@ const Registry = {
         doubleDeckerServed: 0,
         guestsSpawned: 0,
         livesLost: 0,
-        journeyTimes: []
+        journeyTimes: [], openingCredits: 0, creditsSpent: 0
     },
     
     // Social sharing and manifest state
@@ -269,8 +269,8 @@ const Registry = {
         if (!partner) return -1;
         const maxFloor = Math.max(0, Config.numFloors - 1);
         const current = Math.round(driver.pos / Registry.floorHeight);
-        const partnerCurrent = Math.round(partner.pos / Registry.floorHeight);
-        const direction = driver.sweepDirection || dir || 1;
+        const direction = Number(dir) || driver.sweepDirection || 1;
+        const circuitPolicy = ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(driver.automation);
         const scoreAt = (targetLift, floor) => {
             let score = targetLift.passengers.filter(passenger => passenger.dest === floor).length * 10;
             const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
@@ -293,6 +293,10 @@ const Registry = {
             const partnerTarget = maxFloor - target;
             if (!this.isFloorInLiftZone(driver, target) || !this.isFloorInLiftZone(partner, partnerTarget)) continue;
             const score = scoreAt(driver, target) + scoreAt(partner, partnerTarget);
+            // Sweep is a circuit, not a nearest-demand auction. The first
+            // reachable paired stop with a reason to service it wins, so the
+            // pair completes a readable direction before any reversal.
+            if (circuitPolicy && score > 0) return lift.id === driver.id ? target : maxFloor - target;
             if (score > bestScore || (score === bestScore && score > 0 && (best < 0 || Math.abs(target - current) < Math.abs(best - current)))) {
                 best = target;
                 bestScore = score;

@@ -335,8 +335,8 @@ window.GameBalanceData = {
         },
         {
           "cost": 3,
-          "duration": 30,
-          "scalar": 0.05
+          "duration": 20,
+          "scalar": 0.2
         }
       ]
     },

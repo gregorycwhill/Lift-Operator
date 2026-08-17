@@ -3,7 +3,7 @@
 **Document role:** Active economy design reference for earning, spending, retry, and progression
 **Status:** Active design; numerical authority remains `design/game-balance.v1.json`
 **Owner class:** Product and design
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 17 August 2026
 **Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
 
 **1.0 decision:** The release-candidate power-up prices are the values in `design/game-balance.v1.json`. Wide Doors
@@ -216,6 +216,18 @@ Gold must not be universally best. A precise Bronze item used at the correct tim
 Rounds 14-25 apply a canonical `creditMultiplier` of `0.15`, versus the standard `0.10` multiplier. This is the
 approved 50% increase in Credits awarded from the zoning and late-campaign arcs onward. Affordability and purchase
 mix remain playtest evidence questions.
+
+### 5.1.2 RC1.0 economy evidence remediation
+
+Current Friends & Family evidence reports both late-campaign surplus (for example, 72 Credits at R17 and a largely
+hands-off R18) and scarcity (13 Credits at R23). Credits carry forward by design, so a report is not interpretable
+without its opening Credits, earned Credits, spend, and closing Credits. The next remediation slice therefore adds a
+compact deterministic credit ledger to balance checks before changing canonical payouts.
+
+Gold Wide Doors now uses a bounded building-wide service effect: `0.20×` normal boarding delay for 20 seconds, rather
+than near-instant service for 30 seconds. It remains deliberately powerful, but cannot by itself turn a stocked R18
+into an unreadable hands-off run. Per-round payout changes remain candidate values until the ledger and focused human
+replay establish a target band.
 
 ### 5.2 Candidate price bands
 

@@ -33,6 +33,40 @@ window.isGuestDirectionCompatible = function(lift, guest, floor) {
     return true;
 };
 
+window.getServiceBoardingLimit = function(lift, maxCapacity) {
+    // TARDIS capacity is intentionally very large, but an unlimited dwell at
+    // one floor starves the rest of the fleet. A generous batch lets the
+    // effect absorb a surge while still committing the car to a journey.
+    if (maxCapacity >= 999) return Math.max(12, Number(Config.liftCapacity || 10) * 2);
+    return Infinity;
+};
+
+window.getSharedFloorBoardingLift = function(lift, guest, floor, serviceFloor = floor) {
+    const parked = Registry.lifts.filter(candidate => {
+        if (candidate.targetFloor !== serviceFloor || Math.abs(candidate.pos - serviceFloor * Registry.floorHeight) >= 1 || candidate.jamTimer > 0) return false;
+        const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(candidate.id) : Config.liftCapacity;
+        return Registry.getLiftWeight(candidate) < capacity &&
+            (candidate.serviceBoarded || 0) < window.getServiceBoardingLimit(candidate, capacity) &&
+            window.canGuestBoardLift(candidate, guest, floor, Registry.isLiftStinky(candidate), capacity);
+    });
+    if (!parked.length) return null;
+    const manualServiceLift = Registry.getCounterweightManualServiceLiftAtFloor?.(serviceFloor);
+    if (manualServiceLift && parked.includes(manualServiceLift)) return manualServiceLift;
+
+    const queue = Registry.floors[floor]?.waitingGuests || [];
+    const sharedPressure = queue.length >= Math.max(4, parked.length * 2);
+    if (sharedPressure && parked.length > 1) {
+        parked.sort((a, b) => a.id - b.id);
+        const floorState = Registry.floors[floor];
+        const cursor = Number(floorState.boardingCursor || 0);
+        const selected = parked[cursor % parked.length];
+        floorState.boardingCursor = (cursor + 1) % parked.length;
+        return selected;
+    }
+    parked.sort((a, b) => Registry.getLiftWeight(b) - Registry.getLiftWeight(a) || a.id - b.id);
+    return parked[0];
+};
+
 window.getGuestBoardingRejectionReason = function(lift, guest, floor, isStinky, maxCapacity) {
     if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.canLiftDirectlyServe(lift, floor, guest.dest)) return 'zone-or-route';
     if (guest.isPartying) return 'party-state';
@@ -42,6 +76,8 @@ window.getGuestBoardingRejectionReason = function(lift, guest, floor, isStinky, 
     if (isStinky && !guest.isGymBro) return 'stink';
     if (lift.passengers.some(passenger => passenger.isVip)) return 'vip-occupied';
     if (guest.isVip && lift.passengers.length > 0) return 'vip-queue';
+    if (guest.lastAlightedLiftId === lift.id && guest.lastAlightedFloor === floor &&
+        guest.lastAlightedServiceCycle === lift.serviceCycleId) return 'same-service-cycle';
     if (!window.isGuestDirectionCompatible(lift, guest, floor)) return 'direction';
     return null;
 };
@@ -603,6 +639,8 @@ window.animationTick = function(timestamp) {
                 if (hasDropoffs || canPickUp || isSelectedManualCounterweightStop) {
                     lift.state = 'DOORS_OPENING';
                     lift.stateProgress = 0;
+                    lift.serviceCycleId = (lift.serviceCycleId || 0) + 1;
+                    lift.serviceBoarded = 0;
                     lift.lastActionTime = now;
                 } else {
                     const released = Registry.releaseCounterweightManualOverride?.(lift);
@@ -646,6 +684,9 @@ window.animationTick = function(timestamp) {
                     if (indexToDrop !== -1) {
                         const p = lift.passengers.splice(indexToDrop, 1)[0];
                         const exitF = (isDouble && p.dest === f + 1) ? f + 1 : f;
+                        p.lastAlightedLiftId = lift.id;
+                        p.lastAlightedFloor = exitF;
+                        p.lastAlightedServiceCycle = lift.serviceCycleId;
                         
                         if (!forceExodus || p.dest === exitF) {
                             if (typeof window.Game.Audio !== 'undefined') window.Game.Audio.publish('lift_arrived', { liftId: lift.id, floor: lift.currentFloor });
@@ -717,30 +758,17 @@ window.animationTick = function(timestamp) {
                             boardableGuestIndex = findBoardableGuest(f + 1);
                         }
 
-                        if (boardableGuestIndex !== -1) {
+                        const serviceLimitReached = (lift.serviceBoarded || 0) >= window.getServiceBoardingLimit(lift, maxCap);
+                        if (boardableGuestIndex !== -1 && !serviceLimitReached) {
                             const guestToBoard = Registry.floors[targetFloorToBoard].waitingGuests[boardableGuestIndex];
-                            let parkedLifts = Registry.lifts.filter(l => {
-                                if (l.targetFloor !== f || Math.abs(l.pos - f * Registry.floorHeight) >= 1 || l.jamTimer > 0) return false;
-                                const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(l.id) : Config.liftCapacity;
-                                return Registry.getLiftWeight(l) < capacity && window.canGuestBoardLift(l, guestToBoard, targetFloorToBoard, Registry.isLiftStinky(l), capacity);
-                            });
-                            // Fill the most-loaded compatible parked car first. This prevents
-                            // several lifts waiting at one floor from fragmenting a queue into
-                            // partial loads, while preserving direction/stink/VIP eligibility.
-                            const manualServiceLift = Registry.getCounterweightManualServiceLiftAtFloor?.(targetFloorToBoard);
-                            parkedLifts.sort((a, b) => {
-                                if (manualServiceLift) {
-                                    if (a.id === manualServiceLift.id) return -1;
-                                    if (b.id === manualServiceLift.id) return 1;
-                                }
-                                return Registry.getLiftWeight(b) - Registry.getLiftWeight(a) || a.id - b.id;
-                            });
-                            if (parkedLifts.length > 0 && parkedLifts[0].id === lift.id) {
+                            const assignedLift = window.getSharedFloorBoardingLift(lift, guestToBoard, targetFloorToBoard, f);
+                            if (assignedLift?.id === lift.id) {
                                 Registry.floors[targetFloorToBoard].waitingGuests.splice(boardableGuestIndex, 1);
                                 if (lift.passengers.length === 0 && ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(lift.automation)) {
                                     lift.sweepDirection = guestToBoard.dest > targetFloorToBoard ? 1 : -1;
                                 }
                                 lift.passengers.push(guestToBoard);
+                                lift.serviceBoarded = (lift.serviceBoarded || 0) + 1;
                                 window.Game.Audio?.publish('guest_boarded', { id: guestToBoard.type || 'guest', liftId: lift.id, floor: f });
                                 performedAction = true;
                                 lift.stateProgress = 0;
@@ -825,7 +853,10 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
     lift.lastAutomationTime = decisionTime;
     if (policyLift !== lift) policyLift.lastAutomationTime = decisionTime;
 
-    // Dispatch to VM for all modes
+    // Dispatch to VM for all modes. If a Sweep-family policy reverses while
+    // already parked, reserve the current floor for a fresh service decision
+    // instead of letting the old down/up eligibility result carry it away.
+    const directionBefore = policyLift.sweepDirection || 1;
     if (policyLift.automation === 'sweep') {
         VM.execute(policyLift, 'sys_sweep');
     } else if (policyLift.automation === 'priority-sweep') {
@@ -840,6 +871,16 @@ window.runAutomationLogic = function(lift, index, currentFloor, isStinky, hasSti
         VM.execute(policyLift, 'sys_zoned_high');
     } else if (policyLift.automation.startsWith('custom_')) {
         VM.execute(policyLift, policyLift.automation);
+    }
+    const sweepFamily = ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(policyLift.automation);
+    const parkedFloor = Math.round(policyLift.pos / Registry.floorHeight);
+    const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(policyLift.id) : Config.liftCapacity;
+    const hasNewlyCompatiblePickup = Registry.floors[currentFloor]?.waitingGuests.some(guest =>
+        window.canGuestBoardLift(policyLift, guest, currentFloor, Registry.isLiftStinky(policyLift), capacity)
+    );
+    if (sweepFamily && directionBefore !== policyLift.sweepDirection && parkedFloor === currentFloor &&
+        policyLift.state === 'IDLE' && hasNewlyCompatiblePickup) {
+        window.applyLiftTarget?.(policyLift.id, currentFloor, { manualOverride: false });
     }
 };
 

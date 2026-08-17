@@ -182,11 +182,11 @@ body {
     box-shadow: 0 3px 12px rgba(0,0,0,.18);
     font-size: 14px;
     line-height: 1.3;
-    pointer-events: auto;
+    pointer-events: none;
     margin: 0;
 }
 .game-message-rail[hidden] { display: none; }
-.game-message-rail button { margin-left: auto; flex: 0 0 auto; border: 0; background: transparent; color: #53616d; font-size: 20px; line-height: 1; cursor: pointer; }
+.game-message-rail button { margin-left: auto; flex: 0 0 auto; border: 0; background: transparent; color: #53616d; font-size: 20px; line-height: 1; cursor: pointer; pointer-events: auto; }
 #world { 
     position: relative; 
     background: #bdc3c7; 
@@ -293,6 +293,8 @@ body {
 .automation-status-row { display: contents; }
 .automation-status { flex: 0 0 var(--shaft-width); width: var(--shaft-width); height: 36px; box-sizing: border-box; border: 0; border-right: 2px solid #ddd; background: transparent; color: #34495e; font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 .automation-status.automation-target-hint { animation: automationTargetHint 0.75s ease-in-out infinite alternate; outline: 2px solid #f1c40f; outline-offset: -3px; }
+.tutorial-step-target { position: relative; z-index: 3; animation: automationTargetHint .75s ease-in-out infinite alternate; outline: 3px solid #f1c40f; outline-offset: -3px; }
+.tutorial-step-target::after { content: attr(data-tutorial-step); position: absolute; top: -12px; right: -8px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #f1c40f; color: #1f2d3d; border: 2px solid #fff; font: 800 12px/1 Arial, sans-serif; box-shadow: 0 1px 4px rgba(0,0,0,.35); pointer-events: none; }
 @keyframes automationTargetHint { from { background: #fff; } to { background: #f9e79f; } }
 @keyframes automationApplyGlow { from { box-shadow: 0 0 4px rgba(46, 204, 113, .55); } to { box-shadow: 0 0 10px rgba(46, 204, 113, 1); } }
 @keyframes automationPolicyHint { from { background: #fff; } to { background: #f9e79f; } }
@@ -976,6 +978,7 @@ body {
 .shop-btn-icon { font-size: 32px; margin-bottom: 2px; margin-top: 12px; display: flex; justify-content: center; align-items: center; }
 .shop-btn-cost { color: #333; font-size: 12px; }
 .shop-btn-desc { font-size: 11px; color: #666; margin-top: 5px; line-height: 1.2; }
+.shop-btn-scope { margin-top: 5px; font-size: 10px; font-weight: 700; color: #425566; text-transform: uppercase; letter-spacing: .03em; }
 
 .cart-container { min-width: 104px; background: #f8f9fa; border: 1px dashed #f39c12; border-radius: 6px; padding: 8px; box-sizing: border-box; text-align: left; display: flex; flex-direction: column; min-height: 261px; }
 .cart-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-shrink: 0; font-size: 14px; }

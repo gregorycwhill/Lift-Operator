@@ -368,6 +368,7 @@ window.Game = window.Game || {};
             state.previewPolicy = policy;
             state.armedPolicy = policy;
             Registry.automationControllerSelectedPolicy = policy;
+            document.dispatchEvent(new CustomEvent('automation-tutorial-action', { detail: { action: 'arm', policy } }));
             renderPreview();
             if (state.lifts.size) assignTo(policy, [...state.lifts], true);
             else requestGuidance('lifts');
@@ -382,8 +383,8 @@ window.Game = window.Game || {};
             } else armPolicy(state.previewPolicy);
         };
         card.addEventListener('click', event => { event.stopPropagation(); togglePolicy(); });
-        previous.addEventListener('click', event => { event.stopPropagation(); clearGuidance(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; renderPreview(); });
-        next.addEventListener('click', event => { event.stopPropagation(); clearGuidance(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; renderPreview(); });
+        previous.addEventListener('click', event => { event.stopPropagation(); clearGuidance(); state.carouselIndex = (state.carouselIndex - 1 + policies.length) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; document.dispatchEvent(new CustomEvent('automation-tutorial-action', { detail: { action: 'browse', policy: state.previewPolicy } })); renderPreview(); });
+        next.addEventListener('click', event => { event.stopPropagation(); clearGuidance(); state.carouselIndex = (state.carouselIndex + 1) % policies.length; state.previewPolicy = policies[state.carouselIndex].value; document.dispatchEvent(new CustomEvent('automation-tutorial-action', { detail: { action: 'browse', policy: state.previewPolicy } })); renderPreview(); });
         viewport.append(card); carousel.append(previous, viewport, next, indicator); dock.insertBefore(carousel, actions);
 
         Registry.lifts.forEach((lift, index) => {
@@ -395,7 +396,7 @@ window.Game = window.Game || {};
             status.setAttribute('aria-pressed', 'false');
             status.addEventListener('click', event => {
                 event.stopPropagation();
-                if (state.armedPolicy) { assignTo(state.armedPolicy, [index]); return; }
+                if (state.armedPolicy) { const policy = state.armedPolicy; assignTo(policy, [index]); document.dispatchEvent(new CustomEvent('automation-tutorial-action', { detail: { action: 'deploy', index, policy } })); return; }
                 state.lifts.has(index) ? state.lifts.delete(index) : state.lifts.add(index);
                 clearGuidance();
                 if (state.lifts.size) requestGuidance('policy'); else renderInteraction();
