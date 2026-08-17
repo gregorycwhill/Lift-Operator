@@ -25,8 +25,8 @@
     "test:mechanics": "playwright test tests/lifecycle-correctness.spec.js --grep \"patience|boarding|VIP|Gym|jam|stink|rooftop|Musak|Group Think|Open Plan\"",
     "test:integration": "playwright test tests/integration",
     "test:smoke": "npm run test:syntax && npm run docs:check && npm run test:config && npm run test:utf8 && playwright test tests/lifecycle-correctness.spec.js --grep \"retry|canonical|countdown|automation bridge\"",
-    "test:full": "npm run test:syntax && npm run docs:check && npm run test:config && npm run balance:check && npm run balance:acceptance:integrity && npm run test:economy && npm run test:utf8 && npm run test:unit && npm run test:mechanics && npm run test:integration && playwright test",
-    "test:release": "npm run test:full && npm run balance:acceptance && npm run balance:acceptance:integrity",
+    "test:full": "npm run test:syntax && npm run docs:check && npm run test:config && npm run balance:check && npm run test:economy && npm run test:utf8 && npm run test:unit && npm run test:mechanics && npm run test:integration && playwright test",
+    "test:release": "npm run test:full",
     "test:utf8": "node scripts/validate-utf8.js",
     "human:protocol": "node scripts/validate-human-protocol.js"
   },

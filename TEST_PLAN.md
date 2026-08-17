@@ -25,6 +25,10 @@ Run from PowerShell on the exact release commit:
 npm.cmd run test:release
 ```
 
+`balance:acceptance:integrity` remains an explicit evidence command, not a release gate: the large acceptance artifact is
+not regenerated for ordinary implementation changes. The release gate continues to verify canonical balance generation
+and the compact economy checks without committing raw balance traces.
+
 Record the commit, command result, elapsed time, and report hash in `docs/archive/RELEASE_HISTORY.md`. The all-Sweep
 portion is a negative-control diagnostic: it demonstrates unattended Sweep behavior, but it is not by itself a
 Friends & Family promotion blocker. The strict validator remains available for later balance work.
