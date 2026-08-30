@@ -2,9 +2,9 @@
 
 **Document role:** Current delivery scope and release decision only
 **Status:** Active release-evidence slice
-**Release target:** `1.0` (no release tag has been created)
+**Release target:** Friends & Family RC1.0 minor release (no release tag has been created)
 **Owner class:** Product and engineering
-**Last reviewed:** 17 August 2026
+**Last reviewed:** 30 August 2026
 **Implementation baseline:** `master` at `bc59758` — Friends & Family playtest build
 
 ## Outcome
@@ -13,6 +13,21 @@ Place the complete 25-round desktop campaign in the hands of Friends & Family te
 actionable, attributable to a build, and safe to interpret. This is an evidence and packaging slice, not a feature
 expansion. Product sequencing belongs in `ROADMAP.md`; durable rules belong in the design documents; test evidence and
 human acceptance belong in `TEST_PLAN.md`.
+
+## Current minor release — automation and zoned-flow clarity
+
+**Status:** Ready for Friends & Family replay — full automated gate passed 30 August 2026.
+
+This small Friends & Family release contains no roadmap functionality. It fixes the fresh playtest reports that obscure
+automation onboarding, make Zoning less valuable than intended, and leave Counterweight Sweep unreliable.
+
+| Workstream | Release outcome |
+| --- | --- |
+| Passenger display | Sort in-car tokens visually by VIP, Critical, Annoyed, Happy, then destination. The authoritative passenger array and all simulation/boarding order remain unchanged. |
+| Campaign tutorials | R2 remains Manual and teaches Sweep. R3 begins with both lifts on Sweep and teaches assigning Priority Sweep to one lift. Tutorial completion is scoped to the campaign seed, retained for retry/restore, and reset by New Campaign. |
+| Sweep baseline | Every post-R2 Sweep-eligible authored round begins with all lifts on Sweep; players may replace any assignment during countdown. |
+| Zoned transit | A zoned lift traverses no-service floors at `2×` its current movement speed. Counterweight pairs receive this boost only when both cars are in their own no-service sections. |
+| Counterweight Sweep | Use a canonical pair direction and stop at the first compatible pickup/drop-off for either car, then reverse only when the paired direction has no remaining service reason. Manual pair targets remain immediate exceptions. |
 
 ## In scope
 

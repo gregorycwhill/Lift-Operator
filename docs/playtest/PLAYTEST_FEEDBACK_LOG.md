@@ -24,6 +24,7 @@ older row where a later correction exists.
 | PTF-013, PTF-019, PTF-020, PTF-022, PTF-035, PTF-036 | Implemented — awaiting Friends & Family replay | Published-build visual/behaviour confirmation. |
 | PTF-023 | Implemented canonical tuning | Human R11 difficulty observation against the canonical `0.96`–`1.15` curve. |
 | PTF-040 | Implemented — awaiting human replay | Focused automated service invariants passed; replay R2–R3/R11/R15/R17–R18/R21/R23. |
+| PTF-041 | Implemented — awaiting Friends & Family replay | Replay R2–R3 onboarding, R14+ zoning transit, and R21–R23 counterweight Sweep. |
 | PTF-024 | Implemented | Rooftop and R11 briefing observation only. |
 | PTF-028 | Implemented — awaiting balance replay | Endurance evidence with VIP/Rooftop excluded and hazards retained. |
 | PTF-030, PTF-033, PTF-034 | Implemented — awaiting replay | Published-build routing, R13 balance, and seed-reproduction observations. |
@@ -110,6 +111,8 @@ selected car's service cycle rather than after both cars merely reach their targ
 | PTF-039 | UI polish feedback — 9 August 2026 | R2 briefing retained the tall Supply Closet geometry; the teaching rail reached the page edge; active Double-Decker lifts used legacy effect symbols; Campaign Complete showed an empty Leaderboard. | Briefing modes, shared message rail, Double-Decker effects, campaign shell | **Implemented—targeted regression passed.** No-shop briefings and promotion interstitials are content-sized; the rail is capped at 360px; Double-Decker uses `🪜` across shop and active-lift surfaces; every completed campaign seed records its pre-spend cumulative Credit score once. |
 
 | PTF-040 | Friends & Family consolidation — 17 August 2026 | Three players could not defeat R3, likely failing to deploy Sweep; a guest destination number was mistaken for a count. Reports also describe single-car rooftop loading during Infinite Capacity, missed pickup after Sweep reversal, VIP/manual-stop failures, Group Think/TARDIS/Wide Doors board-alight loops, ineffective Counterweight Sweep, unclear power-up scope/fleet context, blocking Last Drinks notices, late-campaign Credit extremes, and loud VIP fanfare. | R2–R3 onboarding; R11/R15 rooftop service; R17–R18 economy; R21–R23 counterweights; power-up and notification UI; audio | **Implemented — awaiting human replay.** `DELIVERY_PLAN.md` defines the integrated service/guidance/economy slice. R2 teaches the single-controller flow; R3 adds the second controller. Focused automated checks pass; named human replays remain. |
+
+| PTF-041 | playtest feedback — 30 August 2026 | In-car passenger tokens are hard to scan; Zoned service lacks a travel-time advantage; the Sweep tutorial appeared in R3 rather than R2; Sweep should start enabled once taught; cable/counterweight Sweep skips compatible service stops. | R2–R3, R14+, R21–R23 | **Implemented — awaiting Friends & Family replay.** Visual-only passenger priority order; campaign-scoped R2/R3 tutorials; post-R2 Sweep baseline; zoned no-service `2×` transit; deterministic paired stop-by-stop Sweep. The full automated gate passed 30 August 2026. |
 
 ### PTF-040 traceability
 

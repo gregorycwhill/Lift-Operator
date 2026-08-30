@@ -1501,6 +1501,57 @@ test('counterweight pairs start complementary and mirror commanded targets', asy
     expect(result.unpairedPartner).toBe(null);
 });
 
+test('zoned no-service transit doubles speed only when a counterweight pair is jointly outside service', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const measure = (round, setup) => {
+            initializeRound(round, { showBriefing: false });
+            const lifts = Registry.lifts;
+            setup(lifts);
+            const before = lifts.map(lift => lift.pos);
+            animationTick(1000);
+            return lifts.map((lift, index) => Math.abs(lift.pos - before[index]));
+        };
+        const standard = measure(14, ([lift]) => {
+            lift.serviceLower = 5; lift.serviceUpper = 19; lift.pos = 2 * Registry.floorHeight; lift.targetFloor = 10; lift.automation = 'zoned-high';
+        })[0];
+        const served = measure(14, ([lift]) => {
+            lift.serviceLower = 5; lift.serviceUpper = 19; lift.pos = 6 * Registry.floorHeight; lift.targetFloor = 10; lift.automation = 'zoned-high';
+        })[0];
+        const pairBoost = measure(23, ([left, right]) => {
+            left.serviceLower = 8; left.serviceUpper = 28; right.serviceLower = 8; right.serviceUpper = 28;
+            left.pos = 2 * Registry.floorHeight; left.targetFloor = 10;
+            right.pos = 3 * Registry.floorHeight; right.targetFloor = 12;
+        })[0];
+        const pairHeld = measure(23, ([left, right]) => {
+            left.serviceLower = 8; left.serviceUpper = 28; right.serviceLower = 0; right.serviceUpper = 28;
+            left.pos = 2 * Registry.floorHeight; left.targetFloor = 10;
+            right.pos = 3 * Registry.floorHeight; right.targetFloor = 12;
+        })[0];
+        return { standard, served, pairBoost, pairHeld };
+    });
+    expect(result.standard).toBeCloseTo(result.served * 2, 5);
+    expect(result.pairBoost).toBeCloseTo(result.pairHeld * 2, 5);
+});
+
+test('counterweight Sweep selects the first compatible stop for either car in paired direction', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        const [left, right] = Registry.lifts;
+        left.automation = 'sweep'; right.automation = 'sweep';
+        left.pos = 5 * Registry.floorHeight; right.pos = 5 * Registry.floorHeight;
+        left.targetFloor = 10; right.targetFloor = 0;
+        left.sweepDirection = 1; right.sweepDirection = -1;
+        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
+        Registry.floors[7].waitingGuests.push({ id: 'left-up', dest: 9, status: GuestStatus.HAPPY, boardingWeight: 1 });
+        Registry.floors[2].waitingGuests.push({ id: 'right-down', dest: 1, status: GuestStatus.HAPPY, boardingWeight: 1 });
+        const sharedFirstStop = Registry.findSweepTarget(left, 1);
+        Registry.floors[7].waitingGuests = [];
+        const partnerOnlyStop = Registry.findSweepTarget(left, 1);
+        return { sharedFirstStop, partnerOnlyStop };
+    });
+    expect(result).toEqual({ sharedFirstStop: 7, partnerOnlyStop: 8 });
+});
+
 test('counterweight built-in policy precedence selects one pair driver', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(22, { showBriefing: false });
@@ -2546,7 +2597,6 @@ test('Round 13 playtest tuning reduces spawn pressure by 25% and gravity by 20%'
 
 test('round countdown freezes play while allowing automation setup and transient capacity cues', async ({ page }) => {
     await page.evaluate(() => {
-        window.Game.Storage.set('liftOp_teaching_automation_built-in', '0');
         skipToRound(2, { showBriefing: false });
         startRoundCountdown(1);
     });
@@ -2566,13 +2616,9 @@ test('round countdown freezes play while allowing automation setup and transient
     await expect(page.locator('#roundCountdown')).toBeHidden();
     await expect(page.locator('.capacity-float')).toHaveCount(0);
 
-    const liftController = page.locator('.automation-status').first();
-    await expect(liftController).toHaveClass(/automation-teaching-cue/);
-    await page.evaluate(() => document.querySelector('.automation-status')?.click());
-    await expect(liftController).not.toHaveClass(/automation-teaching-cue/);
     await page.evaluate(() => document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click());
-    await page.evaluate(() => document.querySelector('.automation-carousel-card')?.click());
-    await page.evaluate(() => document.querySelector('.automation-dock-actions .btn-green')?.click());
+    await page.evaluate(() => document.querySelector('.automation-carousel-card[data-policy="sweep"]')?.click());
+    await page.evaluate(() => document.querySelector('.automation-status')?.click());
     expect(await page.evaluate(() => Registry.lifts[0].automation)).toBe('sweep');
 
     await expect(page.locator('#roundCountdown')).toBeHidden({ timeout: 2500 });
@@ -2636,32 +2682,72 @@ test('Round 2 shows the basement automation instruction during its extended coun
     await expect(page.locator('#game-message-rail')).toBeHidden();
 });
 
-test('Round 3 fleet tutorial advances through Sweep display, arming, and both lift deployments', async ({ page }) => {
+test('Round 3 starts in Sweep and teaches Priority Sweep assignment to one lift', async ({ page }) => {
     const result = await page.evaluate(() => {
-        localStorage.removeItem('liftOp_teaching_automation_fleet_v2');
         initializeRound(3, { showBriefing: false });
         startRoundCountdown(5);
         const next = document.querySelector('.automation-carousel-arrow:last-of-type');
         next.click();
+        next.click();
         const afterBrowse = document.getElementById('game-message-text').textContent;
-        document.querySelector('.automation-carousel-card[data-policy="sweep"]').click();
+        document.querySelector('.automation-carousel-card[data-policy="priority-sweep"]').click();
         const afterArm = document.getElementById('game-message-text').textContent;
         document.querySelector('.automation-status[data-lift-index="0"]').click();
-        const afterFirst = document.getElementById('game-message-text').textContent;
-        document.querySelector('.automation-status[data-lift-index="1"]').click();
         return {
             afterBrowse,
             afterArm,
-            afterFirst,
-            completed: localStorage.getItem('liftOp_teaching_automation_fleet_v2'),
             automation: Registry.lifts.map(lift => lift.automation)
         };
     });
-    expect(result.afterBrowse).toContain('2. Click Sweep');
+    expect(result.afterBrowse).toContain('2. Click Priority Sweep');
     expect(result.afterArm).toContain('3. Click the first');
-    expect(result.afterFirst).toContain('4. Click the second');
-    expect(result.completed).toBe('1');
-    expect(result.automation).toEqual(['sweep', 'sweep']);
+    expect(result.automation).toEqual(['priority-sweep', 'sweep']);
+});
+
+test('Sweep onboarding is campaign-scoped and post-R2 fleets begin in Sweep', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        Registry.campaignSeed = 111;
+        initializeRound(2, { showBriefing: false });
+        startRoundCountdown(10);
+        const r2Manual = Registry.lifts.map(lift => lift.automation);
+        document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
+        document.querySelector('.automation-carousel-card[data-policy="sweep"]')?.click();
+        document.querySelector('.automation-status[data-lift-index="0"]')?.click();
+        const completedMessage = document.getElementById('game-message-rail')?.hidden;
+        initializeRound(2, { showBriefing: false });
+        startRoundCountdown(10);
+        const hiddenInSameCampaign = document.getElementById('game-message-rail')?.hidden;
+        Registry.campaignSeed = 222;
+        initializeRound(2, { showBriefing: false });
+        startRoundCountdown(10);
+        const shownInNewCampaign = !document.getElementById('game-message-rail')?.hidden;
+        initializeRound(3, { showBriefing: false });
+        const r3 = Registry.lifts.map(lift => lift.automation);
+        initializeRound(21, { showBriefing: false });
+        const r21 = Registry.lifts.map(lift => lift.automation);
+        return { r2Manual, completedMessage, hiddenInSameCampaign, shownInNewCampaign, r3, r21 };
+    });
+    expect(result).toEqual({
+        r2Manual: ['manual'], completedMessage: true, hiddenInSameCampaign: true, shownInNewCampaign: true,
+        r3: ['sweep', 'sweep'], r21: ['sweep', 'sweep']
+    });
+});
+
+test('passenger display prioritises urgency without changing service order', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const passengers = [
+            { id: 'happy-9', dest: 9, status: GuestStatus.HAPPY },
+            { id: 'annoyed-8', dest: 8, status: GuestStatus.ANNOYED },
+            { id: 'critical-7', dest: 7, status: GuestStatus.CRITICAL },
+            { id: 'vip-2', dest: 2, status: GuestStatus.HAPPY, isVip: true },
+            { id: 'happy-3', dest: 3, status: GuestStatus.HAPPY }
+        ];
+        return { displayed: getPassengerDisplayOrder(passengers).map(passenger => passenger.id), original: passengers.map(passenger => passenger.id) };
+    });
+    expect(result).toEqual({
+        displayed: ['vip-2', 'critical-7', 'annoyed-8', 'happy-3', 'happy-9'],
+        original: ['happy-9', 'annoyed-8', 'critical-7', 'vip-2', 'happy-3']
+    });
 });
 
 test('Sweep reversal reconsiders compatible guests at the current floor', async ({ page }) => {
@@ -2748,15 +2834,21 @@ test('critical notices queue in the wide overlay without obscuring the lobby', a
     expect(result.keepsLobbyClear).toBe(true);
 });
 
-test('four-or-more-lift rounds start in Sweep while smaller fleets remain manual', async ({ page }) => {
+test('Round 2 is Manual while every later Sweep-eligible fleet starts in Sweep', async ({ page }) => {
     const result = await page.evaluate(() => {
+        initializeRound(2, { showBriefing: false });
+        const tutorialFleet = Registry.lifts.map(lift => lift.automation);
+        initializeRound(3, { showBriefing: false });
+        const firstFleet = Registry.lifts.map(lift => lift.automation);
         initializeRound(6, { showBriefing: false });
-        const smallerFleet = Registry.lifts.map(lift => lift.automation);
+        const laterFleet = Registry.lifts.map(lift => lift.automation);
         initializeRound(7, { showBriefing: false });
         const largerFleet = Registry.lifts.map(lift => lift.automation);
-        return { smallerFleet, largerFleet };
+        return { tutorialFleet, firstFleet, laterFleet, largerFleet };
     });
-    expect(result.smallerFleet.every(mode => mode === 'manual')).toBe(true);
+    expect(result.tutorialFleet).toEqual(['manual']);
+    expect(result.firstFleet.every(mode => mode === 'sweep')).toBe(true);
+    expect(result.laterFleet.every(mode => mode === 'sweep')).toBe(true);
     expect(result.largerFleet).toHaveLength(4);
     expect(result.largerFleet.every(mode => mode === 'sweep')).toBe(true);
 });

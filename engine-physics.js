@@ -583,6 +583,18 @@ window.animationTick = function(timestamp) {
             actualPixelsPerTick *= window.getGravitySpeedMultiplier(currentWeight, maxCap, liftGravity);
         }
 
+        // Zoned cars may travel rapidly through floors that they are not
+        // configured to serve. Counterweighted partners share a single cable,
+        // so the boost is safe only while both cars are in their own
+        // no-service transit sections.
+        const noServiceTransit = Boolean(Registry.isZoningEnabled?.() &&
+            !Registry.isFloorInLiftZone(lift, currentFloor));
+        const partnerNoServiceTransit = !partner || Boolean(Registry.isZoningEnabled?.() &&
+            !Registry.isFloorInLiftZone(partner, Math.round(partner.pos / Registry.floorHeight)));
+        if (noServiceTransit && partnerNoServiceTransit) {
+            actualPixelsPerTick *= Number(Config.GAME_DATA.system.zoningNoServiceSpeedMultiplier || 2);
+        }
+
         let isStinky = Registry.isLiftStinky(lift);
         let hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
 

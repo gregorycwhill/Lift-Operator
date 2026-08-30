@@ -101,6 +101,23 @@ The latest remediation must pass these focused checks before the next Friends & 
 
 ## PTF-040 remediation acceptance
 
+## Friends & Family minor-release acceptance — 30 August 2026
+
+1. R2 starts Manual and presents the three Sweep deployment steps on a clean campaign.
+2. R3 starts both lifts on Sweep and presents the three Priority Sweep assignment steps; completing R2 in a prior
+   campaign must not suppress either new-campaign tutorial.
+3. R4 onward, including R21–R23, starts every lift in Sweep unless a test explicitly assigns another policy.
+4. Passenger rendering orders VIP, Critical, Annoyed, Happy, then destination without mutating `lift.passengers`.
+5. Zoned standard lifts move at `2×` through no-service floors and normal speed in served floors. A counterweight
+   pair gets the boost only when both complementary cars are in no-service transit.
+6. In R21 and R23, paired Sweep stops for an eligible board/alight reason on either car in its current paired
+   direction. It must not skip that reason, oscillate, or require manual routing; a manual target from either car
+   still interrupts immediately.
+
+**Automated result — 30 August 2026:** `npm.cmd run test:full` passed: syntax, documentation, configuration,
+generated-balance, economy, UTF-8, unit, mechanics (29), integration (3), and 181 Playwright checks. The remaining
+release evidence is the focused Friends & Family human replay above.
+
 Targeted implementation checks passed on 17 August 2026. These checks remain required for the next Friends & Family
 replay and supersede the earlier “implemented—awaiting replay” claims where the same behaviour was reported again.
 

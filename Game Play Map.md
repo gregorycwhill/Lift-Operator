@@ -60,7 +60,7 @@ are usable. The countdown can be dismissed through its dedicated start-now contr
 
 Teaching is a reusable, opportunity-led tutorial system rather than a collection of one-off messages. A tutorial activates only when its mechanic is relevant and the player has not yet completed the taught action. It gives a concise instruction and numbered, glowing targets, advances only after the correct action, and permanently retires only after completion. Dismissal suppresses it for the current round only; unrelated gameplay remains usable.
 
-Round 2 teaches the first three automation steps on its one-car fleet: (1) use the carousel controls until Sweep is displayed, (2) click the Sweep label to arm it, and (3) click the highlighted lift controller to deploy it. Round 3 repeats the flow on its new two-car fleet and adds the fourth step: deploy Sweep to the second controller. The same system teaches first-use power-ups, VIP service, jam repair, Stink recovery, counterweights, Zoning, and Open Plan through the relevant controls and board targets. It must never cover the lobby or intercept lift commands.
+Round 2 is the sole Manual exception: it teaches the first three automation steps on its one-car fleet—(1) use the carousel controls until Sweep is displayed, (2) click Sweep to arm it, and (3) click the highlighted controller to deploy it. Every later Sweep-eligible round starts in Sweep. Round 3 starts both cars in Sweep and introduces Priority Sweep: select it in the Dock, then deploy it to one controller while the other remains on Sweep. Tutorial completion is campaign-scoped: it persists through retries/restores, resets for every New Campaign, and dismissal lasts only for the current round. The same system teaches first-use power-ups, VIP service, jam repair, Stink recovery, counterweights, Zoning, and Open Plan through the relevant controls and board targets. It must never cover the lobby or intercept lift commands.
 
 Automation deployment follows a deliberate two-step pattern. When disarmed, select one or more lift controllers as a
 batch; then click a carousel policy to arm it and assign it immediately. Alternatively, arm a policy first: lift
@@ -160,7 +160,7 @@ capsule finale, combining Rooftop, VIP, Jams, and Zoning.
 | Manual routing | 1 | 2 | Hybrid intervention throughout |
 | Sweep | 2 | 3 | Directional/zoned roles |
 | Room Service | 3 | 4 | 11 |
-| Priority Sweep | 4 | 6 | 8, 11–13 |
+| Priority Sweep | 3 | 4 | 8, 11–13 |
 | Voting | 5 | 7 | 9, 12 |
 | Weighted Voting | 5 | 8 | 11–13 |
 | Wrench | 6 | 6 | 9, 12–13 |
@@ -206,8 +206,8 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | ---: | --- | --- | ---: | ---: | ---: | --- | --- |
 | 1 | First Shift | Survive 180s | 10 | 1 | 0.15→0.30 | Manual routing | None |
 | 2 | Probation by Automation | Survive 180s | 10 | 1 | 0.60→0.75 | Sweep | None |
-| 3 | Room Service, Going Up | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles | Wide Doors |
-| 4 | Code Red | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep | Wide Doors T2 |
+| 3 | Room Service, Going Up | Survive 180s | 10 | 2 | 1.00→1.20 | Room Service, lift roles, Priority Sweep | Wide Doors |
+| 4 | Code Red | Survive 180s | 10 | 2 | 0.99→1.17 | Priority Sweep pressure test | Wide Doors T2 |
 | 5 | The Guests Have Spoken | Survive 180s | 10 | 3 | 1.47→1.68 | Voting and Weighted Voting | None |
 | 6 | Out of Service | Survive 180s | 15 | 3 | 1.00→1.20 | Lift jams, redundancy | Wrench |
 | 7 | Everybody Out | Survive 150s | 12 | 4 | 1.00→1.30 | Ground-floor funnel | Turbo |
@@ -236,8 +236,8 @@ contractual rules. The following is the human authoring source; each record is t
 | ---: | --- | --- | --- | --- |
 | 1 | Trainee | First Shift | Welcome to the Grand Hotel. Click a floor to send the lift, collect waiting guests and deliver them before their patience runs out. Boarding and alighting take time; guests who turn red are one bad wait away from costing you a life. | Manual shaft control; guest patience; boarding and alighting; mixed destinations. |
 | 2 | Trainee | Probation by Automation | Management has installed an Automation Dock and confidently described it as “self-managing”. Use the extended countdown to deploy Sweep, then stay alert: automation can handle routine movement, but it cannot recognise every developing crisis for you. | Automation Dock; Sweep; automation as assistance rather than autoplay. |
-| 3 | Operator | Room Service, Going Up | Your promotion comes with a second lift—and a procession of bulky Room Service carts. They are heavy and slow to board, so sending whichever car is nearest will not always work. Divide the workload and consider giving each lift a distinct role. | Second lift; Room Service; lift specialisation; Wide Doors. |
-| 4 | Operator | Code Red | Dinner service is peaking and several guests are approaching breaking point. Priority Sweep can seek out Critical passengers, but rescuing every emergency while neglecting ordinary queues only creates the next emergency. | Priority Sweep; triage without starving routine service. |
+| 3 | Operator | Room Service, Going Up | Your promotion comes with a second lift—and a procession of bulky Room Service carts. Both cars begin on Sweep. Priority Sweep is now available: assign it to one car when a queue turns Critical, while the other keeps routine traffic moving. | Second lift; Room Service; Sweep versus Priority Sweep; lift specialisation; Wide Doors. |
+| 4 | Operator | Code Red | Dinner service is peaking and several guests are approaching breaking point. Priority Sweep can seek out Critical passengers, but rescuing every emergency while neglecting ordinary queues only creates the next emergency. | Priority Sweep pressure test; triage without starving routine service. |
 | 5 | Operator | The Guests Have Spoken | Three lifts now serve floors that all believe their queue is the most important in the hotel. Voting responds to concentrated demand; Weighted Voting listens more closely to urgency. Decide how much democracy the transport system can withstand. | Voting; Weighted Voting; allocating policies across three lifts. |
 | 6 | Manager | Out of Service | The maintenance budget has delivered its verdict: lifts can now jam. A disabled car leaves a hole in the fleet while queues continue to grow across fifteen floors. Use the Wrench, preserve redundancy and avoid plans that work only while everything works. | Jams; Wrench; redundancy and recovery. |
 | 7 | Manager | Everybody Out | Checkout has begun. Many guests are funnelling toward Ground, but the rest of the hotel has not stopped moving just because reception is busy. Turbo can recover distance quickly; your real task is deciding which lifts serve the funnel and which preserve ordinary traffic. | Checkout traffic; directional funnels; Turbo. |
@@ -617,6 +617,7 @@ direct-service band for each lift.
 - Including G reflects real lift operation and is especially useful for Room Service and Checkout traffic, which often
   begins or ends at the ground/lobby floor.
 - If a guest’s origin or destination is outside a lift’s zone, that lift refuses boarding with a plain explanation.
+- A zoned lift moves at double its current traversal speed while passing through floors outside its service zone. For a counterweight pair, the boost applies only while both cars are simultaneously in their own no-service sections.
 - Round 14 introduces the optional Zoned Low and Zoned High built-in policies; all existing built-ins remain available.
 - Workshop policies can be copied and adapted with a Service Zone block, then assigned from the normal in-game lift menu.
 - Workshop edits to a Service Zone block show covered floors, uncovered floors, and whether any direct origin-to-destination route is absent.

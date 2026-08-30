@@ -139,6 +139,27 @@ Decisions required before delivery planning:
 **Gate:** A player can intentionally trade wind-up time and passenger load for a reachable service floor, understand the
 brief service window, and use the lift as a puzzle instrument rather than experiencing it as an unpredictable miss.
 
+## Later — Pet passengers
+
+**Outcome:** Add cats and dogs as no-weight, no-space passenger companions. A dog and cat sharing a lift trigger a
+disruptive conflict: owners become critical and the cabin clears. **Water Spray** is the associated recovery Power-up.
+
+## Later — Family groups
+
+**Outcome:** Add guest groups of two to five who only board when every member fits in the same lift. A subtle shared
+outline identifies each family in the queue.
+
+## Later — Evacuation operations
+
+**Outcome:** Add a puzzle round where an initial population is fixed, further spawning stops, guests have infinite
+patience, and the player must clear the building from the highest floor downward within a time limit. Infinite Capacity
+is unavailable.
+
+## Later — Water lifts
+
+**Outcome:** Convert lift tubes into water-filled shafts. Guests travel one floor at a time while holding their breath;
+**Scuba Gear** is the associated Power-up.
+
 ## Later — Persistent player creations and discovery
 
 **Outcome:** Let players retain, discover, and voluntarily share their own automations and authored rounds beyond a

@@ -255,6 +255,20 @@ window.updateZoneVisuals = function() {
     });
 };
 
+// Passenger order is a visual aid only. Do not sort lift.passengers itself:
+// boarding order remains authoritative for service and simulation behaviour.
+window.getPassengerDisplayOrder = function(passengers) {
+    const urgency = passenger => passenger.isVip ? 0 : ({
+        [GuestStatus.CRITICAL]: 1,
+        [GuestStatus.ANNOYED]: 2,
+        [GuestStatus.HAPPY]: 3
+    })[passenger.status] ?? 4;
+    return (passengers || []).map((passenger, order) => ({ passenger, order }))
+        .sort((left, right) => urgency(left.passenger) - urgency(right.passenger) ||
+            Number(left.passenger.dest || 0) - Number(right.passenger.dest || 0) || left.order - right.order)
+        .map(entry => entry.passenger);
+};
+
 window.updateLiftVisualState = function(lift, index, carEl) {
     const car = carEl || document.getElementById(`lift-el-${index}`);
     if (!car) return;
@@ -338,6 +352,8 @@ window.clearTransientLiftCues = function() {
 
 window.applyAutomationTeachingCue = function() {
     const round = Registry.stats.round;
+    // R2 and R3 have their own numbered campaign tutorials in ui-overlay.
+    if (round <= 3) return null;
     const unlocks = Config.GAME_DATA.automationUnlocks;
     const currentPlayer = Registry.playerName || window.Game.Storage.get(window.Game.Keys.PLAYER, 'Pilot 1');
     const scripts = window.Game.Automation?.scripts || [];
@@ -348,7 +364,8 @@ window.applyAutomationTeachingCue = function() {
     else if (round >= unlocks.custom && hasShared) cueId = 'shared';
     if (!cueId) return null;
 
-    const storageKey = `liftOp_teaching_automation_${cueId}`;
+    const campaignSeed = Number.isInteger(Registry.campaignSeed) ? Registry.campaignSeed : Registry.seed;
+    const storageKey = `liftOp_teaching_campaign_${Number(campaignSeed) || 'session'}_automation_${cueId}_v1`;
     if (window.Game.Storage.get(storageKey, '0') === '1') return null;
     const controls = [...document.querySelectorAll('.automation-status')];
     controls.forEach(control => {
@@ -384,7 +401,8 @@ window.draw = function() {
         const car = document.getElementById(`lift-el-${index}`);
         if (car) {
             // OPTIMIZATION: Only update if passenger state has changed
-            const guestStateKey = lift.passengers.map(p => `${p.dest}-${p.status}`).join('|');
+            const displayPassengers = window.getPassengerDisplayOrder(lift.passengers);
+            const guestStateKey = displayPassengers.map(p => `${p.dest}-${p.status}-${p.isVip ? 1 : 0}`).join('|');
             const isDouble = !Registry.capsuleMode && (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
             const stateHash = `${guestStateKey}-${isDouble}`;
 
@@ -402,7 +420,7 @@ window.draw = function() {
                     car.appendChild(topDeck);
                     car.appendChild(bottomDeck);
 
-                    lift.passengers.forEach((p, i) => {
+                    displayPassengers.forEach((p, i) => {
                         const guest = document.createElement('div');
                         let classList = `guest ${p.status}`;
                         if (p.isVip) classList += ' vip';
@@ -418,7 +436,7 @@ window.draw = function() {
                         else bottomDeck.appendChild(guest);
                     });
                 } else {
-                    lift.passengers.forEach(p => {
+                    displayPassengers.forEach(p => {
                         const guest = document.createElement('div');
                         let classList = `guest ${p.status}`;
                         if (p.isVip) classList += ' vip';

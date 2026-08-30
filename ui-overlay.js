@@ -26,8 +26,11 @@ const criticalGameMessages = [];
 window.Game = window.Game || {};
 window.Game.Tutorial = (function () {
     const state = { id: null, step: 0, suppressed: false, context: null };
-    const automationKey = 'liftOp_teaching_automation_sweep_v2';
-    const fleetAutomationKey = 'liftOp_teaching_automation_fleet_v2';
+    const campaignKey = id => {
+        const seed = Number.isInteger(Registry.campaignSeed) ? Registry.campaignSeed : Registry.seed;
+        return `liftOp_teaching_campaign_${Number(seed) || 'session'}_${id}_v1`;
+    };
+    const automationKey = round => campaignKey(round === 3 ? 'automation_priority_sweep' : 'automation_sweep');
     const clearTargets = () => document.querySelectorAll('.tutorial-step-target').forEach(node => {
         node.classList.remove('tutorial-step-target');
         delete node.dataset.tutorialStep;
@@ -45,10 +48,9 @@ window.Game.Tutorial = (function () {
         }
         if (state.id !== 'automation-sweep') return;
         const definitions = Registry.stats.round === 3 ? [
-            { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Sweep is displayed.' },
-            { selector: '.automation-carousel-card[data-policy="sweep"]', text: '2. Click Sweep to activate it.' },
-            { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the first glowing lift controller to deploy Sweep.' },
-            { selector: '.automation-status[data-lift-index="1"]', text: '4. Click the second glowing lift controller to deploy Sweep.' }
+            { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Priority Sweep is displayed.' },
+            { selector: '.automation-carousel-card[data-policy="priority-sweep"]', text: '2. Click Priority Sweep to activate it.' },
+            { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the first glowing lift controller to deploy Priority Sweep. The other lift remains on Sweep.' }
         ] : [
             { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Sweep is displayed.' },
             { selector: '.automation-carousel-card[data-policy="sweep"]', text: '2. Click Sweep to activate it.' },
@@ -63,7 +65,7 @@ window.Game.Tutorial = (function () {
         window.showGameMessage?.(definition.text);
     };
     const complete = () => {
-        window.Game.Storage.set(Registry.stats.round === 3 ? fleetAutomationKey : automationKey, '1');
+        window.Game.Storage.set(automationKey(Registry.stats.round), '1');
         state.id = null;
         clearTargets();
         window.clearGameMessage?.();
@@ -71,12 +73,12 @@ window.Game.Tutorial = (function () {
     return {
         startAutomationSweep() {
             const round = Registry.stats.round;
-            const key = round === 3 ? fleetAutomationKey : automationKey;
+            const key = automationKey(round);
             if (![2, 3].includes(round) || window.Game.Storage.get(key, '0') === '1') return false;
             state.id = 'automation-sweep'; state.step = 0; state.suppressed = false; render(); return true;
         },
         startContext(id, options = {}) {
-            const key = `liftOp_teaching_context_${id}_v1`;
+            const key = campaignKey(`context_${id}`);
             if (state.id || window.Game.Storage.get(key, '0') === '1') return false;
             state.id = `context:${id}`;
             state.context = { id, key, message: options.message || '', selector: options.selector || '' };
@@ -91,14 +93,13 @@ window.Game.Tutorial = (function () {
         },
         action(action, detail = {}) {
             if (state.id !== 'automation-sweep' || state.suppressed) return;
-            const needsSecondLift = Registry.stats.round === 3;
-            const matches = (state.step === 0 && action === 'browse' && detail.policy === 'sweep') ||
-                (state.step === 1 && action === 'arm' && detail.policy === 'sweep') ||
-                (state.step === 2 && action === 'deploy' && detail.index === 0) ||
-                (needsSecondLift && state.step === 3 && action === 'deploy' && detail.index === 1);
+            const policy = Registry.stats.round === 3 ? 'priority-sweep' : 'sweep';
+            const matches = (state.step === 0 && action === 'browse' && detail.policy === policy) ||
+                (state.step === 1 && action === 'arm' && detail.policy === policy) ||
+                (state.step === 2 && action === 'deploy' && detail.index === 0);
             if (!matches) return;
             state.step++;
-            if (state.step >= (needsSecondLift ? 4 : 3)) complete(); else render();
+            if (state.step >= 3) complete(); else render();
         },
         dismissCurrentRound() {
             if (!state.id) return;

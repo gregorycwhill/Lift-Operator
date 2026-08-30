@@ -89,7 +89,7 @@ window.GameBalanceData = {
   "automationUnlocks": {
     "manual": 1,
     "sweep": 2,
-    "priority": 4,
+    "priority": 3,
     "voting": 5,
     "weighted-voting": 5,
     "custom": 10
@@ -411,6 +411,7 @@ window.GameBalanceData = {
     "shortBuildingLiftSpeedSec": 0.45,
     "tallBuildingLiftSpeedSec": 0.4166666667,
     "shortBuildingMaxFloors": 15,
+    "zoningNoServiceSpeedMultiplier": 2,
     "doorSpeedSec": 0.5,
     "boardSpeedSec": 0.5,
     "roomServiceChance": 0.05,

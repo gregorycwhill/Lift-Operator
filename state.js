@@ -269,20 +269,32 @@ const Registry = {
         if (!partner) return -1;
         const maxFloor = Math.max(0, Config.numFloors - 1);
         const current = Math.round(driver.pos / Registry.floorHeight);
-        const direction = Number(dir) || driver.sweepDirection || 1;
+        const direction = Number(dir) === -1 ? -1 : 1;
         const circuitPolicy = ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(driver.automation);
+        const hasServiceReasonAt = (targetLift, floor) => {
+            const isDouble = targetLift.isDoubleDecker || targetLift.doubleDeckerTimer > 0;
+            if (targetLift.passengers.some(passenger => passenger.dest === floor || (isDouble && passenger.dest === floor + 1))) return true;
+            const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
+            const isStinky = this.isLiftStinky(targetLift);
+            if (this.getLiftWeight(targetLift) >= capacity) return false;
+            return Boolean(Registry.floors[floor]?.waitingGuests.some(guest => {
+                if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return false;
+                return typeof window.canGuestBoardLift === 'function'
+                    ? window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity)
+                    : this.canLiftDirectlyServe(targetLift, floor, guest.dest);
+            }));
+        };
         const scoreAt = (targetLift, floor) => {
             let score = targetLift.passengers.filter(passenger => passenger.dest === floor).length * 10;
             const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
             const isStinky = this.isLiftStinky(targetLift);
-            if (this.getLiftWeight(targetLift) < capacity) {
-                Registry.floors[floor]?.waitingGuests.forEach(guest => {
-                    if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return;
-                    if (typeof window.canGuestBoardLift === 'function' && window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity)) {
-                        score += weighted && guest.status === 'critical' ? 10 : (guest.status === 'annoyed' ? 3 : 1);
-                    }
-                });
-            }
+            if (this.getLiftWeight(targetLift) >= capacity) return score;
+            Registry.floors[floor]?.waitingGuests.forEach(guest => {
+                if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return;
+                if (typeof window.canGuestBoardLift === 'function' && window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity)) {
+                    score += weighted && guest.status === 'critical' ? 10 : (guest.status === 'annoyed' ? 3 : 1);
+                }
+            });
             return score;
         };
         let best = -1;
@@ -292,18 +304,22 @@ const Registry = {
             if (target === current && !includeCurrentFloor) continue;
             const partnerTarget = maxFloor - target;
             if (!this.isFloorInLiftZone(driver, target) || !this.isFloorInLiftZone(partner, partnerTarget)) continue;
-            const score = scoreAt(driver, target) + scoreAt(partner, partnerTarget);
-            // Sweep is a circuit, not a nearest-demand auction. The first
-            // reachable paired stop with a reason to service it wins, so the
-            // pair completes a readable direction before any reversal.
-            if (circuitPolicy && score > 0) return lift.id === driver.id ? target : maxFloor - target;
-            if (score > bestScore || (score === bestScore && score > 0 && (best < 0 || Math.abs(target - current) < Math.abs(best - current)))) {
-                best = target;
-                bestScore = score;
+            // A paired Sweep is a physical circuit, not a demand auction:
+            // the first compatible board/alight stop for either car in the
+            // current paired direction wins. This makes every service stop
+            // predictable and prevents one side from sailing past demand.
+            if (circuitPolicy && (hasServiceReasonAt(driver, target) || hasServiceReasonAt(partner, partnerTarget))) {
+                return lift.id === driver.id ? target : partnerTarget;
+            }
+            if (!circuitPolicy) {
+                const score = scoreAt(driver, target) + scoreAt(partner, partnerTarget);
+                if (score > bestScore || (score === bestScore && score > 0 && (best < 0 || Math.abs(target - current) < Math.abs(best - current)))) {
+                    best = target;
+                    bestScore = score;
+                }
             }
         }
-        if (best < 0) return -1;
-        return lift.id === driver.id ? best : maxFloor - best;
+        return best < 0 ? -1 : (lift.id === driver.id ? best : maxFloor - best);
     },
     isLiftStinky: function(lift) {
         if (!lift) return false;

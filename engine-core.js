@@ -408,9 +408,10 @@ window.createRoundState = function(round, seed, options = {}) {
         gymFloor: -1
     };
 
-    // Larger fleets begin in a safe operational baseline. Players can still
-    // replace any Sweep assignment during the pre-round countdown.
-    if (state.lifts.length >= 4) {
+    // Sweep is the normal operational baseline once the player has completed
+    // the Round 2 deployment lesson. Round 2 deliberately remains Manual so
+    // that its tutorial has a genuine action to teach.
+    if (definition.round >= Number(Config.GAME_DATA.automationUnlocks.sweep || 2) && definition.round !== 2) {
         state.lifts.forEach(lift => { lift.automation = 'sweep'; });
     }
 
