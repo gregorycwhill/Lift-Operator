@@ -1819,7 +1819,7 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
     ]);
     expect(result.r2SpawnStart).toBe(0.27);
     expect(result.r2SpawnEnd).toBe(0.3375);
-    expect(result.version).toBe('0.2.10-fleet-onboarding');
+    expect(result.version).toBe('0.2.11-sweep-zoning-flow');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -2441,15 +2441,15 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=RC1.0-friends-family-2026-08-07');
-    expect(result.copied).toContain('balance=0.2.10-fleet-onboarding');
+    expect(result.copied).toContain('build=RC1.0-friends-family-2026-08-30');
+    expect(result.copied).toContain('balance=0.2.11-sweep-zoning-flow');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
     expect(result.copied).toContain('seed=');
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('RC1.0-friends-family-2026-08-07');
+    expect(result.build).toContain('RC1.0-friends-family-2026-08-30');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {

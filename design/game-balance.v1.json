@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.10-fleet-onboarding",
+  "balanceVersion": "0.2.11-sweep-zoning-flow",
   "events": {
     "jam": { "introducedRound": 6 },
     "checkout": { "introducedRound": 7 },

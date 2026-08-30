@@ -5,7 +5,7 @@
 **Release target:** Friends & Family RC1.0 minor release (no release tag has been created)
 **Owner class:** Product and engineering
 **Last reviewed:** 30 August 2026
-**Implementation baseline:** `master` at `bc59758` — Friends & Family playtest build
+**Implementation baseline:** `master` at `189826f` — Friends & Family automation-flow build
 
 ## Outcome
 
@@ -16,7 +16,8 @@ human acceptance belong in `TEST_PLAN.md`.
 
 ## Current minor release — automation and zoned-flow clarity
 
-**Status:** Ready for Friends & Family replay — full automated gate passed 30 August 2026.
+**Status:** Ready for Friends & Family replay — full automated gate passed 30 August 2026. Release metadata is
+`RC1.0-friends-family-2026-08-30` / balance `0.2.11-sweep-zoning-flow`.
 
 This small Friends & Family release contains no roadmap functionality. It fixes the fresh playtest reports that obscure
 automation onboarding, make Zoning less valuable than intended, and leave Counterweight Sweep unreliable.

@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.10-fleet-onboarding
+// Balance version: 0.2.11-sweep-zoning-flow
 window.GameBalanceData = {
-  "balanceVersion": "0.2.10-fleet-onboarding",
+  "balanceVersion": "0.2.11-sweep-zoning-flow",
   "events": {
     "jam": {
       "introducedRound": 6
