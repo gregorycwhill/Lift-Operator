@@ -23,13 +23,16 @@ window.getGravitySpeedMultiplier = function(currentWeight, maxCapacity, gravityS
     return Math.max(0.1, 1 - ((currentWeight / maxCapacity) * gravityScalar));
 };
 
-window.isGuestDirectionCompatible = function(lift, guest, floor) {
+window.isGuestDirectionCompatible = function(lift, guest, floor, directionOverride = null) {
     // A clicked floor is an explicit pickup instruction. The lift's previous
     // Sweep direction must not make that instruction appear to be ignored.
     if (lift.manualOverride) return true;
     if (lift.automation === 'manual' || lift.automation === 'voting' || lift.automation === 'weighted-voting' || lift.automation.startsWith('custom_')) return true;
     const guestDirection = guest.dest > floor ? 1 : -1;
-    if (lift.passengers.length > 0) return guestDirection === lift.sweepDirection;
+    const travelDirection = directionOverride === 1 || directionOverride === -1
+        ? directionOverride
+        : lift.sweepDirection;
+    if (lift.passengers.length > 0) return guestDirection === travelDirection;
     return true;
 };
 
@@ -43,7 +46,10 @@ window.getServiceBoardingLimit = function(lift, maxCapacity) {
 
 window.getSharedFloorBoardingLift = function(lift, guest, floor, serviceFloor = floor) {
     const parked = Registry.lifts.filter(candidate => {
-        if (candidate.targetFloor !== serviceFloor || Math.abs(candidate.pos - serviceFloor * Registry.floorHeight) >= 1 || candidate.jamTimer > 0) return false;
+        // Only a car actually in its boarding phase may claim this guest.
+        // An aligned car that is idle, closing doors, or leaving is not an
+        // alternate service provider and must not starve the active car.
+        if (candidate.state !== 'BOARDING' || candidate.targetFloor !== serviceFloor || Math.abs(candidate.pos - serviceFloor * Registry.floorHeight) >= 1 || candidate.jamTimer > 0) return false;
         const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(candidate.id) : Config.liftCapacity;
         return Registry.getLiftWeight(candidate) < capacity &&
             (candidate.serviceBoarded || 0) < window.getServiceBoardingLimit(candidate, capacity) &&
@@ -67,7 +73,7 @@ window.getSharedFloorBoardingLift = function(lift, guest, floor, serviceFloor = 
     return parked[0];
 };
 
-window.getGuestBoardingRejectionReason = function(lift, guest, floor, isStinky, maxCapacity) {
+window.getGuestBoardingRejectionReason = function(lift, guest, floor, isStinky, maxCapacity, options = {}) {
     if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.canLiftDirectlyServe(lift, floor, guest.dest)) return 'zone-or-route';
     if (guest.isPartying) return 'party-state';
     const guestWeight = guest.boardingWeight || (guest.type === 'room-service' ? 3 : (guest.isGymBro ? 2 : 1));
@@ -78,12 +84,12 @@ window.getGuestBoardingRejectionReason = function(lift, guest, floor, isStinky, 
     if (guest.isVip && lift.passengers.length > 0) return 'vip-queue';
     if (guest.lastAlightedLiftId === lift.id && guest.lastAlightedFloor === floor &&
         guest.lastAlightedServiceCycle === lift.serviceCycleId) return 'same-service-cycle';
-    if (!window.isGuestDirectionCompatible(lift, guest, floor)) return 'direction';
+    if (!window.isGuestDirectionCompatible(lift, guest, floor, options.directionOverride)) return 'direction';
     return null;
 };
 
-window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity) {
-    return window.getGuestBoardingRejectionReason(lift, guest, floor, isStinky, maxCapacity) === null;
+window.canGuestBoardLift = function(lift, guest, floor, isStinky, maxCapacity, options = {}) {
+    return window.getGuestBoardingRejectionReason(lift, guest, floor, isStinky, maxCapacity, options) === null;
 };
 
 window.processOpenPlanTransfers = function() {

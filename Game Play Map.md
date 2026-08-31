@@ -214,7 +214,7 @@ Initial numerical candidates are deliberately conservative. Spawn values use the
 | 8 | The Important Guest | Survive 150s | 12 | 4 | 0.95→1.20 | VIP exclusivity | Musak |
 | 9 | Party at the Top | Survive 180s | 15 | 5 | 1.10→1.40 | Stink and rooftop event | Freshener |
 | 10 | Build It Yourself | Deliver 40 | 15 | 5 | 1.20→1.50 | Custom scripts | TARDIS, Group Think |
-| 11 | Peak Performance | Survive 180s | 15 | 5 | 0.96→1.15 | Gym Bros and mixed weight | Double-Decker |
+| 11 | Do you even lift, bro? | Survive 180s | 15 | 5 | 0.96→1.15 | Gym Bros and mixed weight | Double-Decker |
 | 12 | The Longest Shift | Survive until 20 lives are lost | 15 | 4 | 0.80→1.00 | Resource endurance and recombination | Higher tiers |
 | 13 | Uphill Battle | Deliver 50 | 15 | 5 | 1.20→1.55 | Gravity and load optimization | Full catalog |
 
@@ -244,7 +244,7 @@ contractual rules. The following is the human authoring source; each record is t
 | 8 | Manager | The Important Guest | A VIP has arrived with an itinerary, a schedule and no interest in sharing a cabin. She takes priority when a suitable empty lift reaches her. Calming Musak may buy patience elsewhere while you provide the discreet three-leg service management promised. | VIP priority and empty-cabin rule; three-leg journey; Calming Musak. |
 | 9 | Manager | Party at the Top | The rooftop bar has declared Happy Hour, pulling traffic sharply upward. Worse, one inconsiderate passenger can now contaminate a cabin so badly that most guests refuse to enter. Redirect the surge, quarantine bad air and deploy Air Freshener before one foul lift poisons the network. | Rooftop Party; Stink; Air Freshener; temporary traffic redirection. |
 | 10 | Engineer | Build It Yourself | Standard policies have taken you this far. The Automation Workshop is now open, and management expects you to turn operational insight into actual logic. Build or adapt a custom policy while Checkout traffic, a VIP, breakdowns and contaminated cabins compete for attention. | Custom Workshop automation; TARDIS Mode; Group Think. |
-| 11 | Engineer | Peak Performance | The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate heavy passengers, increase capacity or redesign the fleet’s work. | Gym Bros; mixed passenger weights; Double-Decker. |
+| 11 | Engineer | Do you even lift, bro? | The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet’s work. | Gym Bros; mixed passenger weights; Double-Decker. |
 | 12 | Engineer | The Longest Shift | There is no tidy finish tonight. Every familiar problem is active, resources are scarce and the only question is how long you can keep the Grand Hotel operating before the twentieth guest gives up spectacularly. Spend for endurance and turn inevitable defeat into a record shift. | Endurance scoring; higher-tier resources; death as the completion condition. |
 | 13 | Engineer | Uphill Battle | Sustainability consultants have connected the lift system to pedal power. Heavy cars now climb more slowly, so filling every cabin is no longer automatically efficient. Balance load against upward travel while familiar carts, Gym Bros, jams and contaminated cabins test your command of the whole system. | Gravity; load versus upward speed; full-system optimisation. |
 | 14 | Director | Divide and Conquer | The tower is now too large for every lift to serve every floor effectively. Service Zoning lets you assign Low and High service bands, reducing wasteful cross-building travel. Ground remains part of every zone, and a poor boundary can strand demand as effectively as no plan at all. | Service Zoning; Zoned Low; Zoned High; zone boundaries. |
@@ -521,7 +521,7 @@ track of the VIP after her first trip.
 - Complete with at least one custom lift.
 - Observe a measurable advantage or learn why the script underperformed.
 
-### Round 11 — Peak Performance
+### Round 11 — Do you even lift, bro?
 
 **Role in arc:** Capacity versus speed mastery wall  
 **New problem:** Gym Bros and Room Service create mixed weight and boarding pressure; groups can trigger stink.  

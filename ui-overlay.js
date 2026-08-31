@@ -123,6 +123,35 @@ window.clearGameMessage = function() {
     document.getElementById('game-area')?.classList.remove('countdown-active');
 };
 
+// The message rail is a sibling of #world, so it cannot inherit the world's
+// sizing variables. Place it from the rendered board geometry instead: above
+// the shaft bank where there is roof/headroom, never over the lobby.
+window.positionGameMessageRail = function() {
+    const rail = document.getElementById('game-message-rail');
+    const world = document.getElementById('world');
+    const area = document.getElementById('game-area');
+    if (!rail || rail.hidden || !world || !area) return;
+    const worldBounds = world.getBoundingClientRect();
+    const areaBounds = area.getBoundingClientRect();
+    const worldStyle = window.getComputedStyle(world);
+    const labelWidth = Number.parseFloat(worldStyle.getPropertyValue('--label-width')) || 50;
+    const lobbyWidth = Number.parseFloat(worldStyle.getPropertyValue('--lobby-width')) || 360;
+    const shaftLeft = worldBounds.left - areaBounds.left + area.scrollLeft + labelWidth + lobbyWidth + 8;
+    // R2's teaching rail may run beyond a narrow shaft bank; constrain it by
+    // the visible game area, not the world width, while retaining the lobby
+    // exclusion established by shaftLeft.
+    const availableWidth = Math.max(220, areaBounds.right - (worldBounds.left + labelWidth + lobbyWidth) - 12);
+    const desiredWidth = Math.min(360, availableWidth);
+    rail.style.width = `${desiredWidth}px`;
+
+    // Measuring after width assignment gives a stable roof placement. If a
+    // compact viewport has no headroom, retain an in-board fallback at its top.
+    const roofTop = worldBounds.top - areaBounds.top + area.scrollTop - rail.offsetHeight - 8;
+    const fallbackTop = worldBounds.top - areaBounds.top + area.scrollTop + 8;
+    rail.style.left = `${Math.max(8, shaftLeft)}px`;
+    rail.style.top = `${Math.max(8, roofTop >= 8 ? roofTop : fallbackTop)}px`;
+};
+
 function renderGameMessage(message, options = {}) {
     const rail = document.getElementById('game-message-rail');
     const text = document.getElementById('game-message-text');
@@ -130,6 +159,8 @@ function renderGameMessage(message, options = {}) {
     text.textContent = message;
     rail.dataset.critical = options.critical ? 'true' : 'false';
     rail.hidden = false;
+    window.positionGameMessageRail?.();
+    window.requestAnimationFrame?.(() => window.positionGameMessageRail?.());
     window.clearTimeout?.(rail._dismissTimer);
     if (options.durationMs > 0) {
         rail._dismissTimer = window.setTimeout(() => {
@@ -154,6 +185,8 @@ window.showGameMessage = function(message, options = {}) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('resize', () => window.positionGameMessageRail?.());
+    document.getElementById('game-area')?.addEventListener('scroll', () => window.positionGameMessageRail?.(), { passive: true });
     document.getElementById('game-message-dismiss')?.addEventListener('click', () => {
         window.Game.Tutorial?.dismissCurrentRound();
         const rail = document.getElementById('game-message-rail');

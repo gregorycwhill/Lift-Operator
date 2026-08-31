@@ -3,10 +3,30 @@
 **Document role:** Current release evidence, human acceptance, and playtest protocol only
 **Status:** Active acceptance plan
 **Owner class:** Engineering and playtest
-**Last reviewed:** 17 August 2026
+**Last reviewed:** 31 August 2026
 **Delivery scope:** `DELIVERY_PLAN.md`
 **Test principles:** `TESTING_STRATEGY.md`
-**Baseline:** `master` at `bc59758` — Friends & Family playtest build
+**Baseline:** `master` at `3b31f07` — Friends & Family metadata build
+
+## PTF-042 polish-release acceptance — 31 August 2026
+
+1. The shared message rail is positioned from the actual `#world` bounds: above the shaft bank/roof headroom where
+   space permits, never over the lobby, and recomputed after resize or board scrolling. VIP, Rooftop, Last Drinks,
+   and teaching messages share this treatment.
+2. On a coarse/touch pointer, tapping a shaft does not leave a pale hover surface behind. On a fine pointer, hover
+   feedback remains available and clears normally.
+3. R11 says “separate bulky passengers” in both canonical briefing sources and the rendered briefing.
+4. Shared-floor allocation considers only actively boarding, aligned, compatible cars. A closing or idle aligned car
+   cannot receive a guest allocation. Under high pressure, two active cars both board; under low pressure, the
+   existing consolidated behaviour remains intentional.
+5. Counterweight Sweep tests a candidate guest against the direction that car will travel on the proposed pair leg,
+   not its stale previous direction. Reversal and Critical-guest cases must complete a real board/alight stop.
+6. Settings and Give Feedback report the same current build/balance identifiers; the Google Form prefill includes the
+   diagnostic unchanged.
+
+**Automated result — 31 August 2026:** `npm.cmd run test:full` passed: syntax, documentation, configuration,
+generated-balance, economy, UTF-8, unit, mechanics (29), integration (3), and 183 Playwright checks. The remaining
+evidence is the focused Friends & Family replay above.
 
 ## Evidence already available
 

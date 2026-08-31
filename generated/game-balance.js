@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.11-sweep-zoning-flow
+// Balance version: 0.2.12-service-stop-reliability
 window.GameBalanceData = {
-  "balanceVersion": "0.2.11-sweep-zoning-flow",
+  "balanceVersion": "0.2.12-service-stop-reliability",
   "events": {
     "jam": {
       "introducedRound": 6
@@ -708,7 +708,7 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Engineer",
         "title": "Do you even lift, bro?",
-        "narrative": "The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate heavy passengers, increase capacity or redesign the fleet's work.",
+        "narrative": "The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet's work.",
         "learningFocus": "Gym Bros; mixed passenger weights; Double-Decker.",
         "ruleCard": {
           "heading": "New operating rule",

@@ -277,10 +277,14 @@ const Registry = {
             const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
             const isStinky = this.isLiftStinky(targetLift);
             if (this.getLiftWeight(targetLift) >= capacity) return false;
+            // Pair routing examines the next physical leg. A stale direction
+            // from the previous leg must not reject a guest just as the pair
+            // reverses toward that guest.
+            const prospectiveDirection = targetLift.id === driver.id ? direction : -direction;
             return Boolean(Registry.floors[floor]?.waitingGuests.some(guest => {
                 if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return false;
                 return typeof window.canGuestBoardLift === 'function'
-                    ? window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity)
+                    ? window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity, { directionOverride: prospectiveDirection })
                     : this.canLiftDirectlyServe(targetLift, floor, guest.dest);
             }));
         };

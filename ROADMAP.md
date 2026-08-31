@@ -3,7 +3,7 @@
 **Document role:** Product outcomes and sequence; not an implementation checklist
 **Status:** Active product roadmap
 **Owner class:** Product
-**Last reviewed:** 9 August 2026
+**Last reviewed:** 31 August 2026
 **Current delivery:** Friends & Family release evidence in `DELIVERY_PLAN.md`
 
 ## Product north star
@@ -185,6 +185,19 @@ Decisions required before delivery planning:
 
 **Gate:** A player can safely publish and discover a valid automation or round, understand that import is optional,
 and recover a creation on another device without weakening content containment or privacy.
+
+## Later — Credit grants and player-funded transfers
+
+**Outcome:** Extend the existing URL/UFI Manifest mechanism so Credits can travel through an intentionally
+tamper-resistant ("encrypted-ish") claim rather than an editable query parameter.
+
+Two distinct use cases are in scope for future design:
+
+1. **Publisher grant:** the game publisher sends a player a Lift Operator link with a preset Credit amount.
+2. **Player-funded transfer:** a player creates a similar link by spending Credits from their own Credit pool.
+
+This is post-RC functionality. It must not be implemented as a plain client-editable Credit value or alter the
+current local campaign economy until its claim, spending, redemption, and abuse rules are designed.
 
 ## Later — Meta-progression and achievements
 

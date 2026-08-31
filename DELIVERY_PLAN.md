@@ -5,7 +5,7 @@
 **Release target:** Friends & Family RC1.0 minor release (no release tag has been created)
 **Owner class:** Product and engineering
 **Last reviewed:** 30 August 2026
-**Implementation baseline:** `master` at `189826f` — Friends & Family automation-flow build
+**Implementation baseline:** `master` at `3b31f07` — Friends & Family metadata build
 
 ## Outcome
 
@@ -16,8 +16,8 @@ human acceptance belong in `TEST_PLAN.md`.
 
 ## Current minor release — automation and zoned-flow clarity
 
-**Status:** Ready for Friends & Family replay — full automated gate passed 30 August 2026. Release metadata is
-`RC1.0-friends-family-2026-08-30` / balance `0.2.11-sweep-zoning-flow`.
+**Status:** Ready for Friends & Family replay — full automated gate passed 30 August 2026. It is superseded by the
+current service-stop reliability polish release below.
 
 This small Friends & Family release contains no roadmap functionality. It fixes the fresh playtest reports that obscure
 automation onboarding, make Zoning less valuable than intended, and leave Counterweight Sweep unreliable.
@@ -29,6 +29,25 @@ automation onboarding, make Zoning less valuable than intended, and leave Counte
 | Sweep baseline | Every post-R2 Sweep-eligible authored round begins with all lifts on Sweep; players may replace any assignment during countdown. |
 | Zoned transit | A zoned lift traverses no-service floors at `2×` its current movement speed. Counterweight pairs receive this boost only when both cars are in their own no-service sections. |
 | Counterweight Sweep | Use a canonical pair direction and stop at the first compatible pickup/drop-off for either car, then reverse only when the paired direction has no remaining service reason. Manual pair targets remain immediate exceptions. |
+
+## Next Friends & Family polish release — service-stop reliability
+
+**Status:** Ready for Friends & Family replay — full automated gate passed 31 August 2026. Release metadata is
+`RC1.0-friends-family-2026-08-31` / balance `0.2.12-service-stop-reliability`.
+
+This minor release addresses PTF-042 without adding roadmap functionality. It anchors the shared notice rail over the
+building roof/headroom, removes sticky touch hover state from lift shafts, updates the R11 Gym Bros copy, and makes
+service allocation explicit when cars share a busy floor. Counterweight Sweep evaluates a candidate stop using the
+pair's prospective physical direction, so a reversing pair cannot reject a guest using the direction of its previous
+leg. Release metadata increments with the canonical balance source and is visible in Settings and feedback diagnostics.
+
+| Workstream | Acceptance outcome |
+| --- | --- |
+| Notice rail | VIP, Rooftop, Last Drinks, and teaching notices anchor above the shaft bank without covering the lobby, board controls, or active guests. |
+| Touch polish | Shaft hover feedback is limited to fine-pointer devices and cannot remain after a touchscreen tap. |
+| Shared-floor service | Only actively boarding, eligible cars participate in high-pressure allocation; an inactive/closing car cannot claim a guest from a car ready to board. |
+| Counterweight Sweep | Each paired candidate evaluates the direction it will travel to the stop. Compatible board/alight opportunities, including Critical guests, are serviced before the pair continues or reverses. |
+| Release identity | Settings and prefilled feedback identify the same current immutable build and balance versions. |
 
 ## In scope
 

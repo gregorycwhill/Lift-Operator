@@ -2,7 +2,7 @@
 
 **Document role:** Curated durable record of material product, design, release, and documentation instructions from chat  
 **Status:** Active, append-only decision record  
-**Coverage:** Reconstructed from the available project chat through 17 August 2026
+**Coverage:** Reconstructed from the available project chat through 31 August 2026
 **Not a substitute for:** The service-hosted chat transcript, Git history, or active delivery/test plans
 
 ## Recording rule
@@ -65,6 +65,8 @@ document after the decision is applied there.
 
 | DEC-046 | 30 August 2026 | Friends & Family minor-release decisions: R2 is the sole Manual Sweep-teaching exception; every post-R2 Sweep-eligible round starts in Sweep. R3 starts both cars in Sweep and teaches Priority Sweep assignment to one car. Tutorial completion is campaign-scoped, not player-scoped. In-car token display prioritises VIP, Critical, Annoyed, Happy, then destination without changing gameplay order. Zoned transit is `2×` only when a car (and, for counterweights, both paired cars) is in no-service space. Counterweight Sweep must stop for the first compatible service reason on either car in its paired direction. | `Game Play Map.md`, `DELIVERY_PLAN.md`, `TEST_PLAN.md`. |
 | DEC-047 | 30 August 2026 | Friends & Family diagnostics must identify the current immutable release and balance metadata. The automation/zoned-flow minor release is build `RC1.0-friends-family-2026-08-30`, balance `0.2.11-sweep-zoning-flow`. | `release-config.js`, `design/game-balance.v1.json`, generated artifact, feedback and Settings checks. |
+| DEC-048 | 30 August 2026 | Future Credit forwarding may use URL/UFI Manifest claims: publisher links may carry preset Credits, while player-created links spend from the creator's own Credit pool. The claim must be tamper-resistant rather than a client-editable amount. It is post-RC roadmap work only. | `ROADMAP.md`. |
+| DEC-049 | 31 August 2026 | Friends & Family polish: shared commentary belongs above the building roof/headroom, not over lobby or live play. Shaft hover must not persist after touch. Counterweight Sweep and shared-floor allocation must complete eligible service rather than relying on stale direction or inactive-car allocation. This is a minor release, with matching Settings and feedback diagnostics. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, PTF-042. |
 
 ## Chat persistence limitation
 

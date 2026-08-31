@@ -1819,7 +1819,7 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
     ]);
     expect(result.r2SpawnStart).toBe(0.27);
     expect(result.r2SpawnEnd).toBe(0.3375);
-    expect(result.version).toBe('0.2.11-sweep-zoning-flow');
+    expect(result.version).toBe('0.2.12-service-stop-reliability');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -2441,15 +2441,15 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=RC1.0-friends-family-2026-08-30');
-    expect(result.copied).toContain('balance=0.2.11-sweep-zoning-flow');
+    expect(result.copied).toContain('build=RC1.0-friends-family-2026-08-31');
+    expect(result.copied).toContain('balance=0.2.12-service-stop-reliability');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
     expect(result.copied).toContain('seed=');
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('RC1.0-friends-family-2026-08-30');
+    expect(result.build).toContain('RC1.0-friends-family-2026-08-31');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
@@ -2778,11 +2778,66 @@ test('shared high-pressure queues rotate boarding assignments while ordinary que
         const second = getSharedFloorBoardingLift(Registry.lifts[1], guest, floor)?.id;
         Registry.floors[floor].waitingGuests = [guest];
         const consolidated = getSharedFloorBoardingLift(Registry.lifts[1], guest, floor)?.id;
-        return { first, second, consolidated };
+        Registry.lifts.forEach((lift, index) => {
+            lift.pos = index < 2 ? floor * Registry.floorHeight : 0;
+            lift.targetFloor = index < 2 ? floor : 0;
+            lift.passengers = [];
+            lift.state = index === 0 ? 'BOARDING' : (index === 1 ? 'DOORS_CLOSING' : 'TRANSIT');
+        });
+        Registry.floors[floor].waitingGuests = Array.from({ length: 12 }, (_, id) => ({ id: `active-${id}`, dest: 0, status: GuestStatus.HAPPY, boardingWeight: 1 }));
+        const ignoresInactive = getSharedFloorBoardingLift(Registry.lifts[0], Registry.floors[floor].waitingGuests[0], floor)?.id;
+        return { first, second, consolidated, ignoresInactive };
     });
     expect(result.first).toBe(0);
     expect(result.second).toBe(1);
     expect(result.consolidated).toBe(0);
+    expect(result.ignoresInactive).toBe(0);
+});
+
+test('message rail anchors over the shaft roof and shaft hover is fine-pointer-only', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        buildWorld();
+        showGameMessage('VIP is departing. Get her back to Ground.');
+        const rail = document.getElementById('game-message-rail');
+        const world = document.getElementById('world');
+        const area = document.getElementById('game-area');
+        const railRect = rail.getBoundingClientRect();
+        const worldRect = world.getBoundingClientRect();
+        const areaRect = area.getBoundingClientRect();
+        const styleText = Array.from(document.styleSheets)
+            .flatMap(sheet => Array.from(sheet.cssRules || []))
+            .filter(rule => rule.conditionText === '(hover: hover) and (pointer: fine)')
+            .map(rule => Array.from(rule.cssRules || []).map(child => child.cssText).join('\n'))
+            .join('\n');
+        const label = Number.parseFloat(getComputedStyle(world).getPropertyValue('--label-width')) || 50;
+        const lobby = Number.parseFloat(getComputedStyle(world).getPropertyValue('--lobby-width')) || 360;
+        return {
+            overRoofWhenSpaceAllows: worldRect.top - areaRect.top > railRect.height + 8 ? railRect.bottom <= worldRect.top : railRect.top >= worldRect.top,
+            startsAtShaftBank: railRect.left >= worldRect.left + label + lobby,
+            finePointerHover: styleText.includes('.shaft:hover')
+        };
+    });
+    expect(result).toEqual({ overRoofWhenSpaceAllows: true, startsAtShaftBank: true, finePointerHover: true });
+});
+
+test('counterweight Sweep checks a proposed leg rather than its stale previous direction', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        const [left, right] = Registry.lifts;
+        const maxFloor = Config.numFloors - 1;
+        left.automation = 'sweep'; right.automation = 'sweep';
+        left.pos = 5 * Registry.floorHeight;
+        right.pos = (maxFloor - 5) * Registry.floorHeight;
+        left.targetFloor = 5; right.targetFloor = maxFloor - 5;
+        left.sweepDirection = 1; right.sweepDirection = -1;
+        left.passengers = [{ id: 'onboard-other-leg', dest: 9, boardingWeight: 1 }];
+        right.passengers = [];
+        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
+        Registry.floors[3].waitingGuests.push({ id: 'critical-down', dest: 1, status: GuestStatus.CRITICAL, boardingWeight: 1 });
+        return Registry.findSweepTarget(left, -1);
+    });
+    expect(result).toBe(3);
 });
 
 test('same-service-cycle alighting blocks an immediate reboard to the same car', async ({ page }) => {
