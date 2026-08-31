@@ -303,9 +303,12 @@ const Registry = {
         };
         let best = -1;
         let bestScore = 0;
-        for (let target = 0; target <= maxFloor; target++) {
-            if (target !== current && (direction > 0 ? target < current : target > current)) continue;
-            if (target === current && !includeCurrentFloor) continue;
+        // Sweep must inspect stops in the actual direction of travel. The old
+        // ground-to-roof loop selected the farthest valid down stop first,
+        // allowing a pair to sail past nearer board/alight demand.
+        for (let target = includeCurrentFloor ? current : current + direction;
+            target >= 0 && target <= maxFloor;
+            target += direction) {
             const partnerTarget = maxFloor - target;
             if (!this.isFloorInLiftZone(driver, target) || !this.isFloorInLiftZone(partner, partnerTarget)) continue;
             // A paired Sweep is a physical circuit, not a demand auction:

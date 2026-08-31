@@ -25,7 +25,7 @@ const criticalGameMessages = [];
 // illuminate the next correct control without freezing the rest of the game.
 window.Game = window.Game || {};
 window.Game.Tutorial = (function () {
-    const state = { id: null, step: 0, suppressed: false, context: null };
+    const state = { id: null, step: 0, suppressed: false, context: null, message: '', timeoutId: null };
     const campaignKey = id => {
         const seed = Number.isInteger(Registry.campaignSeed) ? Registry.campaignSeed : Registry.seed;
         return `liftOp_teaching_campaign_${Number(seed) || 'session'}_${id}_v1`;
@@ -35,6 +35,33 @@ window.Game.Tutorial = (function () {
         node.classList.remove('tutorial-step-target');
         delete node.dataset.tutorialStep;
     });
+    const clearTutorialTimeout = () => {
+        if (state.timeoutId) window.clearTimeout(state.timeoutId);
+        state.timeoutId = null;
+    };
+    const clearOwnMessage = () => {
+        const rail = document.getElementById('game-message-rail');
+        const text = document.getElementById('game-message-text');
+        if (rail && text && rail.dataset.critical !== 'true' && text.textContent === state.message) {
+            rail.hidden = true;
+            text.textContent = '';
+        }
+        state.message = '';
+    };
+    const expire = () => {
+        clearTutorialTimeout();
+        clearTargets();
+        clearOwnMessage();
+        state.id = null;
+        state.context = null;
+        state.suppressed = true;
+    };
+    const showTutorialMessage = message => {
+        state.message = message;
+        window.showGameMessage?.(message);
+        clearTutorialTimeout();
+        state.timeoutId = window.setTimeout(expire, 30000);
+    };
     const render = () => {
         clearTargets();
         if (state.suppressed) return;
@@ -43,7 +70,7 @@ window.Game.Tutorial = (function () {
                 node.classList.add('tutorial-step-target');
                 node.dataset.tutorialStep = '!';
             });
-            window.showGameMessage?.(state.context.message);
+            showTutorialMessage(state.context.message);
             return;
         }
         if (state.id !== 'automation-sweep') return;
@@ -62,13 +89,14 @@ window.Game.Tutorial = (function () {
             node.classList.add('tutorial-step-target');
             node.dataset.tutorialStep = String(state.step + 1);
         });
-        window.showGameMessage?.(definition.text);
+        showTutorialMessage(definition.text);
     };
     const complete = () => {
+        clearTutorialTimeout();
         window.Game.Storage.set(automationKey(Registry.stats.round), '1');
         state.id = null;
         clearTargets();
-        window.clearGameMessage?.();
+        clearOwnMessage();
     };
     return {
         startAutomationSweep() {
@@ -89,7 +117,7 @@ window.Game.Tutorial = (function () {
         completeContext(id) {
             if (state.context?.id !== id) return;
             window.Game.Storage.set(state.context.key, '1');
-            state.id = null; state.context = null; clearTargets(); window.clearGameMessage?.();
+            clearTutorialTimeout(); state.id = null; state.context = null; clearTargets(); clearOwnMessage();
         },
         action(action, detail = {}) {
             if (state.id !== 'automation-sweep' || state.suppressed) return;
@@ -104,7 +132,9 @@ window.Game.Tutorial = (function () {
         dismissCurrentRound() {
             if (!state.id) return;
             state.suppressed = true;
+            clearTutorialTimeout();
             clearTargets();
+            clearOwnMessage();
         },
         isActive() { return Boolean(state.id && !state.suppressed); }
     };
@@ -123,9 +153,8 @@ window.clearGameMessage = function() {
     document.getElementById('game-area')?.classList.remove('countdown-active');
 };
 
-// The message rail is a sibling of #world, so it cannot inherit the world's
-// sizing variables. Place it from the rendered board geometry instead: above
-// the shaft bank where there is roof/headroom, never over the lobby.
+    // The rail is a stable sibling of #world. Place it in the reserved roof lane
+    // from rendered board geometry; it must never fall back into live floors.
 window.positionGameMessageRail = function() {
     const rail = document.getElementById('game-message-rail');
     const world = document.getElementById('world');
@@ -147,9 +176,8 @@ window.positionGameMessageRail = function() {
     // Measuring after width assignment gives a stable roof placement. If a
     // compact viewport has no headroom, retain an in-board fallback at its top.
     const roofTop = worldBounds.top - areaBounds.top + area.scrollTop - rail.offsetHeight - 8;
-    const fallbackTop = worldBounds.top - areaBounds.top + area.scrollTop + 8;
     rail.style.left = `${Math.max(8, shaftLeft)}px`;
-    rail.style.top = `${Math.max(8, roofTop >= 8 ? roofTop : fallbackTop)}px`;
+    rail.style.top = `${Math.max(8, roofTop)}px`;
 };
 
 function renderGameMessage(message, options = {}) {

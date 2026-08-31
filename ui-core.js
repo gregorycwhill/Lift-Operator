@@ -21,7 +21,6 @@ window.buildWorld = function() {
     const ui = GameUI();
     const world = document.getElementById('world');
     if (!world) return;
-    const messageRail = document.getElementById('game-message-rail');
     world.innerHTML = ''; 
     world.classList.toggle('capsule-bank', Boolean(Registry.capsuleMode));
     world.classList.toggle('zoning-active', Boolean(Registry.isZoningEnabled?.()));
@@ -172,10 +171,10 @@ window.buildWorld = function() {
     
     world.style.width = (410 + Registry.lifts.length * layout.shaftWidth) + 'px';
 
-    // Operational notices are an in-world shaft overlay. Moving the shared
-    // rail here keeps VIP, Rooftop and teaching messages out of flex layout
-    // and leaves the lobby queue visible.
-    if (messageRail) world.appendChild(messageRail);
+    // The shared message rail remains a sibling of #world. Its geometry is
+    // calculated in game-area coordinates, so re-parenting it into the board
+    // would make an above-roof notice appear over live floor cells.
+    window.positionGameMessageRail?.();
 
     // Pedal Power Decoration (Roof Top)
     if (Registry.stats.round === 13) {

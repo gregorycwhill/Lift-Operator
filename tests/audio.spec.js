@@ -472,11 +472,14 @@ test('RC1 disables ordinary gameplay background music while retaining menu, Roof
         audio.publish('rooftop_started', { floor: 14 });
         const rooftop = audio.getStatus();
         audio.publish('vip_arrival', { id: 'test-vip' });
-        return { gameplay, rooftop };
+        const vip = audio.getStatus();
+        return { gameplay, rooftop, vip };
     });
     expect(result.gameplay.gameplayBackgroundMusicEnabled).toBe(false);
     expect(result.gameplay.musicSourceCount).toBe(0);
     expect(result.rooftop.rooftopActive).toBe(true);
+    expect(result.rooftop.rooftopTrackGain).toBe(0.75);
+    expect(result.vip.vipFanfareGain).toBe(0.675);
 });
 
 test('manifested production event mappings resolve to local assets', async ({ request }) => {

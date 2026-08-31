@@ -2794,31 +2794,67 @@ test('shared high-pressure queues rotate boarding assignments while ordinary que
     expect(result.ignoresInactive).toBe(0);
 });
 
-test('message rail anchors over the shaft roof and shaft hover is fine-pointer-only', async ({ page }) => {
+test('message rail remains a game-area sibling in the roof lane across messages, rebuilds, and resize', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(21, { showBriefing: false });
         buildWorld();
-        showGameMessage('VIP is departing. Get her back to Ground.');
         const rail = document.getElementById('game-message-rail');
         const world = document.getElementById('world');
         const area = document.getElementById('game-area');
+        const messages = ['Automation tip', 'VIP arrival', 'Rooftop Party started', 'Last drinks!'];
+        const placements = messages.map(message => {
+            showGameMessage(message);
+            const railRect = rail.getBoundingClientRect();
+            const worldRect = world.getBoundingClientRect();
+            const lobbyRect = document.getElementById('lobby-0').getBoundingClientRect();
+            return {
+                aboveWorld: railRect.bottom <= worldRect.top,
+                clearsLobby: railRect.left >= lobbyRect.right,
+                parent: rail.parentElement?.id
+            };
+        });
+        buildWorld();
+        window.dispatchEvent(new Event('resize'));
         const railRect = rail.getBoundingClientRect();
         const worldRect = world.getBoundingClientRect();
-        const areaRect = area.getBoundingClientRect();
-        const styleText = Array.from(document.styleSheets)
-            .flatMap(sheet => Array.from(sheet.cssRules || []))
-            .filter(rule => rule.conditionText === '(hover: hover) and (pointer: fine)')
-            .map(rule => Array.from(rule.cssRules || []).map(child => child.cssText).join('\n'))
-            .join('\n');
         const label = Number.parseFloat(getComputedStyle(world).getPropertyValue('--label-width')) || 50;
         const lobby = Number.parseFloat(getComputedStyle(world).getPropertyValue('--lobby-width')) || 360;
         return {
-            overRoofWhenSpaceAllows: worldRect.top - areaRect.top > railRect.height + 8 ? railRect.bottom <= worldRect.top : railRect.top >= worldRect.top,
+            placements,
+            remainsAboveAfterRebuild: railRect.bottom <= worldRect.top,
             startsAtShaftBank: railRect.left >= worldRect.left + label + lobby,
-            finePointerHover: styleText.includes('.shaft:hover')
+            noPersistentShaftHover: !Array.from(document.styleSheets)
+                .flatMap(sheet => Array.from(sheet.cssRules || []))
+                .some(rule => rule.cssText.includes('.shaft:hover'))
         };
     });
-    expect(result).toEqual({ overRoofWhenSpaceAllows: true, startsAtShaftBank: true, finePointerHover: true });
+    expect(result.placements).toEqual(Array.from({ length: 4 }, () => ({ aboveWorld: true, clearsLobby: true, parent: 'game-area' })));
+    expect(result.remainsAboveAfterRebuild).toBe(true);
+    expect(result.startsAtShaftBank).toBe(true);
+    expect(result.noPersistentShaftHover).toBe(true);
+});
+
+test('abandoned tutorial clears numbered targets after its 30-second opportunity timeout', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(2, { showBriefing: false });
+        const originalSetTimeout = window.setTimeout;
+        let expiry = null;
+        window.setTimeout = (callback, delay) => {
+            if (delay === 30000) expiry = callback;
+            return 1;
+        };
+        const started = Game.Tutorial.startAutomationSweep();
+        const before = document.querySelectorAll('.tutorial-step-target').length;
+        expiry?.();
+        const after = document.querySelectorAll('.tutorial-step-target').length;
+        const railHidden = document.getElementById('game-message-rail').hidden;
+        const persisted = Game.Storage.get(`liftOp_teaching_campaign_${Registry.campaignSeed}_automation_sweep_v1`, '0');
+        window.setTimeout = originalSetTimeout;
+        return { started, before, after, railHidden, active: Game.Tutorial.isActive(), persisted };
+    });
+    expect(result.started).toBe(true);
+    expect(result.before).toBeGreaterThan(0);
+    expect(result).toMatchObject({ after: 0, railHidden: true, active: false, persisted: '0' });
 });
 
 test('counterweight Sweep checks a proposed leg rather than its stale previous direction', async ({ page }) => {
@@ -2840,6 +2876,42 @@ test('counterweight Sweep checks a proposed leg rather than its stale previous d
     expect(result).toBe(3);
 });
 
+test('counterweight Sweep takes the nearest service stop in both directions and services its live down leg', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        Registry.gameActive = true;
+        const [left, right] = Registry.lifts;
+        const maxFloor = Config.numFloors - 1;
+        left.automation = 'sweep'; right.automation = 'sweep';
+        left.pos = 8 * Registry.floorHeight;
+        right.pos = (maxFloor - 8) * Registry.floorHeight;
+        left.targetFloor = 8; right.targetFloor = maxFloor - 8;
+        left.state = 'IDLE'; right.state = 'IDLE';
+        left.sweepDirection = -1; right.sweepDirection = 1;
+        left.passengers = [{ id: 'alight-near', dest: 7, boardingWeight: 1, isVip: false, isGymBro: false }];
+        right.passengers = [];
+        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
+        Registry.floors[3].waitingGuests.push({ id: 'farther-down', dest: 1, status: GuestStatus.CRITICAL, boardingWeight: 1, isVip: false, isGymBro: false, isPartying: false });
+        const downTarget = Registry.findSweepTarget(left, -1);
+
+        left.passengers = [];
+        Registry.floors[7].waitingGuests.push({ id: 'nearer-down', dest: 2, status: GuestStatus.HAPPY, boardingWeight: 1, isVip: false, isGymBro: false, isPartying: false });
+        const pickupTarget = Registry.findSweepTarget(left, -1);
+        window.applyLiftTarget(left.id, pickupTarget, { manualOverride: false });
+        const now = 1000000;
+        for (let tick = 0; tick < 500 && Registry.floors[7].waitingGuests.some(guest => guest.id === 'nearer-down'); tick++) {
+            Game.Engine.animationTick(now + tick * 16);
+        }
+        return {
+            downTarget,
+            pickupTarget,
+            boardedNearer: left.passengers.some(guest => guest.id === 'nearer-down'),
+            stoppedAtNearer: left.serviceCycleId > 0
+        };
+    });
+    expect(result).toEqual({ downTarget: 7, pickupTarget: 7, boardedNearer: true, stoppedAtNearer: true });
+});
+
 test('same-service-cycle alighting blocks an immediate reboard to the same car', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = { id: 0, automation: 'manual', manualOverride: false, sweepDirection: 1, passengers: [], serviceCycleId: 4 };
@@ -2849,7 +2921,7 @@ test('same-service-cycle alighting blocks an immediate reboard to the same car',
     expect(result).toBe(false);
 });
 
-test('Round 2 teaching rail is a wide non-lobby overlay that does not alter board layout', async ({ page }) => {
+test('Round 2 teaching rail is a wide roof overlay that does not alter board layout', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(2, { showBriefing: false });
         startRoundCountdown(10);
@@ -2857,16 +2929,16 @@ test('Round 2 teaching rail is a wide non-lobby overlay that does not alter boar
         const world = document.getElementById('world').getBoundingClientRect();
         const lobby = document.getElementById('lobby-0').getBoundingClientRect();
         return {
-            insideWorldVertically: rail.top >= world.top && rail.bottom <= world.bottom,
+            aboveWorld: rail.bottom <= world.top,
             keepsLobbyClear: rail.left >= lobby.right,
             extendsBeyondShaftBoard: rail.right > world.right,
             width: Math.round(rail.width)
         };
     });
-    expect(result).toEqual({ insideWorldVertically: true, keepsLobbyClear: true, extendsBeyondShaftBoard: true, width: 360 });
+    expect(result).toEqual({ aboveWorld: true, keepsLobbyClear: true, extendsBeyondShaftBoard: true, width: 360 });
 });
 
-test('critical notices queue in the wide overlay without obscuring the lobby', async ({ page }) => {
+test('critical notices queue in the roof overlay without obscuring the lobby or floors', async ({ page }) => {
     const result = await page.evaluate(() => {
         showGameMessage('VIP arrival', { critical: true, durationMs: 5000 });
         showGameMessage('Rooftop Party started', { critical: true, durationMs: 5000 });
@@ -2878,14 +2950,14 @@ test('critical notices queue in the wide overlay without obscuring the lobby', a
             first,
             second: document.getElementById('game-message-text').textContent,
             queued: rail?.dataset.critical === 'true',
-            insideWorldVertically: rail.getBoundingClientRect().top >= world.getBoundingClientRect().top && rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().bottom,
+            aboveWorld: rail.getBoundingClientRect().bottom <= world.getBoundingClientRect().top,
             keepsLobbyClear: rail.getBoundingClientRect().left >= document.getElementById('lobby-0').getBoundingClientRect().right
         };
     });
     expect(result.first).toBe('VIP arrival');
     expect(result.second).toBe('Rooftop Party started');
     expect(result.queued).toBe(true);
-    expect(result.insideWorldVertically).toBe(true);
+    expect(result.aboveWorld).toBe(true);
     expect(result.keepsLobbyClear).toBe(true);
 });
 

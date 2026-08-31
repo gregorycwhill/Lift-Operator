@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.12-service-stop-reliability
+// Balance version: 0.2.13-rail-pair-regressions
 window.GameBalanceData = {
-  "balanceVersion": "0.2.12-service-stop-reliability",
+  "balanceVersion": "0.2.13-rail-pair-regressions",
   "events": {
     "jam": {
       "introducedRound": 6
@@ -501,11 +501,11 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Operator",
         "title": "Room Service, Going Up",
-        "narrative": "Your promotion comes with a second lift—and a procession of bulky Room Service carts. They are heavy and slow to board, so sending whichever car is nearest will not always work. Divide the workload and consider giving each lift a distinct role.",
+        "narrative": "Your promotion comes with a second lift—and a procession of bulky Room Service carts. They occupy more space and are slow to board, so sending whichever car is nearest will not always work. Divide the workload and consider giving each lift a distinct role.",
         "learningFocus": "Second lift; Room Service; lift specialisation; Wide Doors.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Room Service carts are heavier and take longer to board. Give lifts distinct roles and consider Wide Doors when boarding throughput becomes the bottleneck."
+          "body": "Room Service carts occupy more space and take longer to board. Give lifts distinct roles and consider Wide Doors when boarding throughput becomes the bottleneck."
         },
         "promotion": {
           "rank": "Operator",
@@ -704,15 +704,15 @@ window.GameBalanceData = {
         "stink"
       ],
       "rooftopReleaseBufferSec": 45,
-      "briefingRuleBody": "Gym Bros are heavy, immune to Stink, and three or more Gym Bros make a lift stinky. Double-Decker increases capacity, but heavy loading can still slow the fleet and create poor service patterns.",
+      "briefingRuleBody": "Gym Bros are bulky, immune to Stink, and three or more Gym Bros make a lift stinky. Double-Decker increases capacity, but bulky loading can still slow the fleet and create poor service patterns.",
       "briefing": {
         "rank": "Engineer",
         "title": "Do you even lift, bro?",
-        "narrative": "The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet's work.",
-        "learningFocus": "Gym Bros; mixed passenger weights; Double-Decker.",
+        "narrative": "The hotel gym has launched a membership drive. Gym Bros are bulky, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet's work.",
+        "learningFocus": "Gym Bros; bulky boarding patterns; Double-Decker.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Gym Bros are heavy and immune to Stink. Double-Decker increases capacity, but heavy loading can still slow the fleet and create poor service patterns."
+          "body": "Gym Bros are bulky and immune to Stink. Double-Decker increases capacity, but bulky loading can still slow the fleet and create poor service patterns."
         },
         "promotion": null
       }
@@ -827,7 +827,7 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Director",
         "title": "The Sky Lounge Gala",
-        "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, heavy gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.",
+        "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, bulky gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.",
         "learningFocus": "Scaling zoning to six lifts; shared rooftop and VIP pressure.",
         "ruleCard": null,
         "promotion": null
@@ -915,7 +915,7 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Director",
         "title": "Festival Weekend",
-        "narrative": "The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, heavy passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue.",
+        "narrative": "The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, bulky passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue.",
         "learningFocus": "Exception-safe zoning; large-scale recombination.",
         "ruleCard": null,
         "promotion": null
@@ -980,7 +980,7 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Architect",
         "title": "The Grand Network",
-        "narrative": "This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, heavy traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode.",
+        "narrative": "This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, dense traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode.",
         "learningFocus": "Ten-lift conventional fleet mastery; whole-network design.",
         "ruleCard": null,
         "promotion": null

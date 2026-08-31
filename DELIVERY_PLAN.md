@@ -49,6 +49,24 @@ leg. Release metadata increments with the canonical balance source and is visibl
 | Counterweight Sweep | Each paired candidate evaluates the direction it will travel to the stop. Compatible board/alight opportunities, including Critical guests, are serviced before the pair continues or reverses. |
 | Release identity | Settings and prefilled feedback identify the same current immutable build and balance versions. |
 
+## Current Friends & Family regression remediation — rail and paired Sweep
+
+**Status:** Implemented — full release gate pending. Release metadata is
+`RC1.0-friends-family-2026-08-31.1` / balance `0.2.13-rail-pair-regressions`.
+
+This is a regression-hardening slice for reports that survived earlier targeted fixes. It removes the message rail's
+mixed parent-coordinate model, reserves stable roof headroom, retires sticky shaft hover feedback, expires abandoned
+tutorial glows after 30 seconds, and makes Counterweight Sweep scan stops in the actual direction of travel. It also
+normalises non-Gravity briefing language from mass/weight to space/bulk and lowers Rooftop/VIP audio.
+
+| Workstream | Acceptance outcome |
+| --- | --- |
+| Notice rail | Rail remains a `#game-area` sibling across every board rebuild and is always above `#world`, clear of lobby and service cells. VIP, Rooftop, Last Drinks, and teaching notices share this invariant. |
+| Tutorials and touch | An abandoned numbered tutorial clears its targets/message after 30 seconds without recording completion. Shafts have no persistent hover-background state after touch. |
+| Counterweight Sweep | Pair candidates are iterated nearest-first in both directions; the next compatible pickup or drop-off for either car is serviced before the pair continues. |
+| Briefing/audio polish | Only active Gravity briefings use load/weight language. Rooftop music is `0.75×`; VIP fanfare is `0.675×` original effect gain. |
+| Regression evidence | Browser tests cover all rail-message categories, rebuild/resize parent stability, tutorial expiry, and an actual downward pair service cycle in addition to target selection. |
+
 ## In scope
 
 - Publish and verify the public GitHub Pages build from the baseline commit.
@@ -130,7 +148,7 @@ all-lift candidate; per-round Credit changes remain evidence-led.
 | Player information | Explain guest destination numbers in initial instructions without changing guest appearance. Show fleet size in the briefing/closet and standardise power-up scope labels (`1 lift`, `All lifts`, `Building`, `Target floor`) in cards, tooltips, and cart. | Guest-number confusion; Silver scope; Wide Doors purchasing context. |
 | Message rail | Move informational event notices such as Last Drinks to a non-interactive toast treatment that cannot consume pointer input or block shaft controls. | Last Drinks blocking rooftop commands. |
 | Economy diagnosis and tuning | Produce compact per-round credit ledgers (opening, earned, spent, closing) and set target bands for R17, R18, and R23. Rebalance Gold Wide Doors from near-instant building-wide service toward a bounded high-throughput effect only after that evidence. | Gold Doors strength; R17 surplus; R18 hands-off inventory; R23 scarcity. |
-| Audio | Apply the accepted VIP fanfare gain multiplier of `0.75`. | VIP music volume. |
+| Audio | Apply the current Rooftop/VIP gain multipliers of `0.75`/`0.675`. | Rooftop and VIP music volume. |
 
 ### Delivery order
 

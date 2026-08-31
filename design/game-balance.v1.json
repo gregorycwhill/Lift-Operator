@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.12-service-stop-reliability",
+  "balanceVersion": "0.2.13-rail-pair-regressions",
   "events": {
     "jam": { "introducedRound": 6 },
     "checkout": { "introducedRound": 7 },
@@ -417,7 +417,7 @@
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": ["roomService"],
-      "briefing": {"rank": "Operator", "title": "Room Service, Going Up", "narrative": "Your promotion comes with a second lift—and a procession of bulky Room Service carts. They are heavy and slow to board, so sending whichever car is nearest will not always work. Divide the workload and consider giving each lift a distinct role.", "learningFocus": "Second lift; Room Service; lift specialisation; Wide Doors.", "ruleCard": {"heading": "New operating rule", "body": "Room Service carts are heavier and take longer to board. Give lifts distinct roles and consider Wide Doors when boarding throughput becomes the bottleneck."}, "promotion": {"rank": "Operator", "label": "PROMOTION", "copy": "You have demonstrated the two qualities management values most: basic competence and continued attendance."}}
+      "briefing": {"rank": "Operator", "title": "Room Service, Going Up", "narrative": "Your promotion comes with a second lift—and a procession of bulky Room Service carts. They occupy more space and are slow to board, so sending whichever car is nearest will not always work. Divide the workload and consider giving each lift a distinct role.", "learningFocus": "Second lift; Room Service; lift specialisation; Wide Doors.", "ruleCard": {"heading": "New operating rule", "body": "Room Service carts occupy more space and take longer to board. Give lifts distinct roles and consider Wide Doors when boarding throughput becomes the bottleneck."}, "promotion": {"rank": "Operator", "label": "PROMOTION", "copy": "You have demonstrated the two qualities management values most: basic competence and continued attendance."}}
     },
     "4": {
       "floors": 10,
@@ -499,8 +499,8 @@
       "gravityScalar": 0,
       "activeChallenges": ["roomService", "gym", "rooftop", "jam", "stink"],
       "rooftopReleaseBufferSec": 45,
-      "briefingRuleBody": "Gym Bros are heavy, immune to Stink, and three or more Gym Bros make a lift stinky. Double-Decker increases capacity, but heavy loading can still slow the fleet and create poor service patterns.",
-      "briefing": {"rank": "Engineer", "title": "Do you even lift, bro?", "narrative": "The hotel gym has launched a membership drive. Gym Bros are heavy, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet's work.", "learningFocus": "Gym Bros; mixed passenger weights; Double-Decker.", "ruleCard": {"heading": "New operating rule", "body": "Gym Bros are heavy and immune to Stink. Double-Decker increases capacity, but heavy loading can still slow the fleet and create poor service patterns."}, "promotion": null}
+      "briefingRuleBody": "Gym Bros are bulky, immune to Stink, and three or more Gym Bros make a lift stinky. Double-Decker increases capacity, but bulky loading can still slow the fleet and create poor service patterns.",
+      "briefing": {"rank": "Engineer", "title": "Do you even lift, bro?", "narrative": "The hotel gym has launched a membership drive. Gym Bros are bulky, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet's work.", "learningFocus": "Gym Bros; bulky boarding patterns; Double-Decker.", "ruleCard": {"heading": "New operating rule", "body": "Gym Bros are bulky and immune to Stink. Double-Decker increases capacity, but bulky loading can still slow the fleet and create poor service patterns."}, "promotion": null}
     },
     "12": {
       "floors": 15,
@@ -547,7 +547,7 @@
       "vipEvent": true,
       "rooftopEvent": true,
       "activeChallenges": ["roomService", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Director", "title": "The Sky Lounge Gala", "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, heavy gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.", "learningFocus": "Scaling zoning to six lifts; shared rooftop and VIP pressure.", "ruleCard": null, "promotion": null}
+      "briefing": {"rank": "Director", "title": "The Sky Lounge Gala", "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, bulky gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.", "learningFocus": "Scaling zoning to six lifts; shared rooftop and VIP pressure.", "ruleCard": null, "promotion": null}
     },
     "16": {
       "floors": 20,
@@ -590,7 +590,7 @@
       "stinkEvent": true,
       "gymEvent": true,
       "activeChallenges": ["roomService", "gym", "checkout", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Director", "title": "Festival Weekend", "narrative": "The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, heavy passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue.", "learningFocus": "Exception-safe zoning; large-scale recombination.", "ruleCard": null, "promotion": null}
+      "briefing": {"rank": "Director", "title": "Festival Weekend", "narrative": "The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, bulky passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue.", "learningFocus": "Exception-safe zoning; large-scale recombination.", "ruleCard": null, "promotion": null}
     },
     "19": {
       "floors": 30,
@@ -621,7 +621,7 @@
       "stinkEvent": true,
       "gymEvent": true,
       "activeChallenges": ["roomService", "gym", "checkout", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Architect", "title": "The Grand Network", "narrative": "This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, heavy traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode.", "learningFocus": "Ten-lift conventional fleet mastery; whole-network design.", "ruleCard": null, "promotion": null}
+      "briefing": {"rank": "Architect", "title": "The Grand Network", "narrative": "This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, dense traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode.", "learningFocus": "Ten-lift conventional fleet mastery; whole-network design.", "ruleCard": null, "promotion": null}
     },
     "21": {
       "floors": 11,

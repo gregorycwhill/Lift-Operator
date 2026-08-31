@@ -162,6 +162,10 @@ body {
     overflow-y: auto;
     scrollbar-gutter: stable both-edges;
     overflow-anchor: none;
+    /* Stable roof headroom for notices. This prevents an in-board fallback
+       without a message-triggered layout shift. */
+    padding-top: 72px;
+    box-sizing: border-box;
 }
 .game-message-rail {
     position: absolute;
@@ -244,9 +248,6 @@ body {
     background: #d0d6d9; 
     cursor: crosshair; 
     box-sizing: border-box; 
-}
-@media (hover: hover) and (pointer: fine) {
-    .shaft:hover { background: #e0e6e9; }
 }
 .capsule-bank .shaft {
     position: relative;

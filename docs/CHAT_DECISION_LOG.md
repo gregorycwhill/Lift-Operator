@@ -68,6 +68,8 @@ document after the decision is applied there.
 | DEC-048 | 30 August 2026 | Future Credit forwarding may use URL/UFI Manifest claims: publisher links may carry preset Credits, while player-created links spend from the creator's own Credit pool. The claim must be tamper-resistant rather than a client-editable amount. It is post-RC roadmap work only. | `ROADMAP.md`. |
 | DEC-049 | 31 August 2026 | Friends & Family polish: shared commentary belongs above the building roof/headroom, not over lobby or live play. Shaft hover must not persist after touch. Counterweight Sweep and shared-floor allocation must complete eligible service rather than relying on stale direction or inactive-car allocation. This is a minor release, with matching Settings and feedback diagnostics. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, PTF-042. |
 
+| DEC-050 | 31 August 2026 | Persistent rail and Counterweight reports require behavioural regression coverage. The rail has one stable `#game-area` coordinate system and permanent roof headroom; it never falls back into a live floor. Tutorials time out after 30 seconds without consuming future teaching eligibility. Paired Sweep inspects stops nearest-first in its actual travel direction. Non-Gravity briefings use bulk/space language. Rooftop music is `0.75×`; VIP fanfare is `0.675×` original gain. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, PTF-043. |
+
 ## Chat persistence limitation
 
 The complete source conversation is retained by the chat service, outside this repository. This file is a curated

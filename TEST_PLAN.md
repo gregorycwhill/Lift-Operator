@@ -1,5 +1,21 @@
 # Friends & Family Release Candidate Test Plan
 
+## PTF-043 regression-hardening acceptance — 31 August 2026
+
+1. The shared rail remains a direct `#game-area` child after every `buildWorld()` call. Tutorial, VIP, Rooftop, and
+   Last Drinks messages all render wholly above `#world`, begin at the shaft bank, and leave the lobby and every
+   serviceable cell unobscured after resize.
+2. A tutorial that receives no correct action clears every numbered/gold target and its own non-critical message after
+   30 seconds. It is not marked complete, so a future campaign remains eligible to teach it.
+3. Gameplay shafts have no `:hover` background rule that a touch-capable Chrome device can retain after a tap.
+4. Counterweight Sweep selects and completes the nearest compatible stop in both physical directions. The test suite
+   includes a live down-leg board/alight cycle with a farther Critical demand, not only a target-selection helper.
+5. All non-Gravity canonical briefing copy describes Room Service/Gym Bros as bulky or space-consuming rather than
+   heavy. Rooftop music uses `0.75×` track gain; VIP fanfare uses `0.675×` original effect gain.
+
+**Required automated evidence:** syntax, documentation, config/generation, UTF-8, unit, mechanics, integration, and
+the full Playwright suite. Human replay remains focused on R2/R9 and R21–R23.
+
 **Document role:** Current release evidence, human acceptance, and playtest protocol only
 **Status:** Active acceptance plan
 **Owner class:** Engineering and playtest
@@ -178,7 +194,7 @@ replay and supersede the earlier “implemented—awaiting replay” claims wher
    identifies the round fleet as `X lifts · Y floors`.
 6. Last Drinks is visible for its intended duration but does not capture pointer input; lifts remain targetable through
    the notice.
-7. VIP fanfare output is `0.75×` the previous dedicated gain and still obeys Mute/SFX settings.
+7. Rooftop music output is `0.75×` and VIP fanfare output is `0.675×` original effect gain; both still obey Mute/SFX settings.
 
 ### Economy evidence
 
