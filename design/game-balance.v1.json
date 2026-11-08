@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.2.13-rail-pair-regressions",
+  "balanceVersion": "0.3.0-maries-birthday",
   "events": {
     "jam": { "introducedRound": 6 },
     "checkout": { "introducedRound": 7 },
@@ -7,7 +7,10 @@
     "rooftop": { "introducedRound": 9 },
     "stink": { "introducedRound": 9 },
     "gym": { "introducedRound": 11 },
-    "roomService": { "introducedRound": 3 }
+    "roomService": { "introducedRound": 3 },
+    "pets": { "introducedRound": 5 },
+    "zoning": { "introducedRound": 10 },
+    "transfers": { "introducedRound": 21 }
   },
   "payouts": {
     "standard": {
@@ -31,7 +34,7 @@
     "doors": [3, 4, 12],
     "groupThink": [10, 10, 12],
     "doubleDecker": [11, 11, 12],
-    "openPlan": [22, 22, 22]
+    "petSnacks": [5, 5, 12]
   },
   "automationUnlocks": {
     "manual": 1,
@@ -319,26 +322,25 @@
         }
       ]
     },
-    "openPlan": {
+    "petSnacks": {
       "tiers": [
         {
-          "cost": 2,
-          "duration": 20
+          "cost": 1,
+          "duration": 10
         },
         {
           "cost": 3,
-          "duration": 45
+          "duration": 30
         },
         {
           "cost": 5,
-          "duration": 60
+          "duration": 20
         }
       ]
     }
   },
   "system": {
     "showcaseLimit": 6,
-    "lateralTolerance": 0.2,
     "maxSpawnDelaySec": 3,
     "vipArrivalDelayMinRatio": 0.25,
     "vipArrivalDelayMaxRatio": 0.35,
@@ -348,7 +350,7 @@
       "secondsPerLift": 3,
       "minimumSeconds": 5,
       "maximumSeconds": 30,
-      "roundOverrides": { "2": 10 }
+      "roundOverrides": {}
     },
     "startingLives": 20,
     "liftCapacity": 10,
@@ -369,8 +371,10 @@
     "stink": {
       "chancePerSec": 0.005,
       "durationSec": 20,
-      "gymBroThreshold": 3
+      "gymBroThreshold": 3,
+      "petThreshold": 5
     },
+    "petConflictWarningSec": 5,
     "checkoutChance": 0.5,
     "sunset": {
       "minSec": 30,
@@ -401,12 +405,12 @@
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.27,
-      "spawnEnd": 0.3375,
+      "spawnStart": 0.65,
+      "spawnEnd": 0.8,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [],
-      "briefing": {"rank": "Trainee", "title": "Probation by Automation", "narrative": "Management has installed an Automation Dock and confidently described it as “self-managing”. Use the extended countdown to deploy Sweep, then stay alert: automation can handle routine movement, but it cannot recognise every developing crisis for you.", "learningFocus": "Automation Dock; Sweep; automation as assistance rather than autoplay.", "ruleCard": {"heading": "New operating rule", "body": "Choose Sweep in the Automation Dock, then click a lift controller to deploy it. Sweep handles routine movement but still needs manual intervention."}, "promotion": null}
+      "briefing": {"rank": "Trainee", "title": "Probation by Automation", "narrative": "Management has switched on Sweep for you. It handles routine movement, but it cannot recognise every developing crisis. Click a floor whenever you need to intervene; after that stop, Sweep resumes automatically.", "learningFocus": "Sweep by default; manual rescue; automation as assistance rather than autoplay.", "ruleCard": {"heading": "New operating rule", "body": "Sweep is already active. Click any floor for an immediate manual stop; Sweep resumes after that service stop."}, "promotion": null}
     },
     "3": {
       "floors": 10,
@@ -436,8 +440,9 @@
       "spawnEnd": 1.8,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService"],
-      "briefing": {"rank": "Operator", "title": "The Guests Have Spoken", "narrative": "Three lifts now serve floors that all believe their queue is the most important in the hotel. Voting responds to concentrated demand; Weighted Voting listens more closely to urgency. Decide how much democracy the transport system can withstand.", "learningFocus": "Voting; Weighted Voting; allocating policies across three lifts.", "ruleCard": {"heading": "New operating rule", "body": "Voting targets concentrated demand. Weighted Voting gives urgency more influence. Assign policies across the fleet instead of giving every lift the same job."}, "promotion": null}
+      "petChance": 0.15,
+      "activeChallenges": ["roomService", "pets"],
+      "briefing": {"rank": "Operator", "title": "Pet-Friendly Hotel", "narrative": "The hotel now welcomes cats and dogs. Give lifts simple pet rules to keep rivals apart, use Pet Snacks when tempers flare, and avoid packing five furry companions into one increasingly fragrant cabin.", "learningFocus": "Cats and dogs; pet admission; Pet Snacks; pet congregation Stink.", "ruleCard": {"heading": "New operating rule", "body": "Cats and dogs sharing a lift will fight after a short warning. Pet Snacks keep the peace. Five pets make a cabin stinky; pet owners tolerate the smell, but ordinary guests do not."}, "promotion": null}
     },
     "6": {
       "floors": 15,
@@ -446,7 +451,8 @@
       "spawnEnd": 1.5,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "jam"],
+      "petChance": 0.08,
+      "activeChallenges": ["roomService", "pets", "jam"],
       "briefing": {"rank": "Manager", "title": "Out of Service", "narrative": "The maintenance budget has delivered its verdict: lifts can now jam. A disabled car leaves a hole in the fleet while queues continue to grow across fifteen floors. Use the Wrench, preserve redundancy and avoid plans that work only while everything works.", "learningFocus": "Jams; Wrench; redundancy and recovery.", "ruleCard": {"heading": "New operating rule", "body": "A jam stops a lift until repaired. Use the Wrench to recover it, but keep other lifts able to cover the gap while it is out of service."}, "promotion": {"rank": "Manager", "label": "PROMOTION", "copy": "You are now responsible not only for moving guests, but for explaining why they were not moved sooner."}}
     },
     "7": {
@@ -456,7 +462,9 @@
       "spawnEnd": 1.4,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "checkout", "jam"],
+      "petChance": 0.08,
+      "checkoutWaves": [{"startSec": 35, "endSec": 80, "chance": 0.8}],
+      "activeChallenges": ["roomService", "pets", "checkout", "jam"],
       "briefing": {"rank": "Manager", "title": "Everybody Out", "narrative": "Checkout has begun. Many guests are funnelling toward Ground, but the rest of the hotel has not stopped moving just because reception is busy. Turbo can recover distance quickly; your real task is deciding which lifts serve the funnel and which preserve ordinary traffic.", "learningFocus": "Checkout traffic; directional funnels; Turbo.", "ruleCard": {"heading": "New operating rule", "body": "Checkout guests need Ground, but ordinary traffic continues. Turbo increases travel speed temporarily; reserve fleet coverage for both the Ground funnel and other floors."}, "promotion": null}
     },
     "8": {
@@ -466,7 +474,8 @@
       "spawnEnd": 1.5,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "vip", "jam"],
+      "petChance": 0.08,
+      "activeChallenges": ["roomService", "pets", "vip", "jam"],
       "briefing": {"rank": "Manager", "title": "The Important Guest", "narrative": "A VIP has arrived with an itinerary, a schedule and no interest in sharing a cabin. She takes priority when a suitable empty lift reaches her. Calming Musak may buy patience elsewhere while you provide the discreet three-leg service management promised.", "learningFocus": "VIP priority and empty-cabin rule; three-leg journey; Calming Musak.", "ruleCard": {"heading": "New operating rule", "body": "The VIP needs an empty suitable lift and travels Ground to room, room to a random floor, then back to Ground. A rage-quit costs ten lives."}, "promotion": null}
     },
     "9": {
@@ -477,7 +486,8 @@
       "spawnEnd": 1.7,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "rooftop", "jam", "stink"],
+      "petChance": 0.12,
+      "activeChallenges": ["roomService", "pets", "rooftop", "jam", "stink"],
       "briefing": {"rank": "Manager", "title": "Party at the Top", "narrative": "The rooftop bar has declared Happy Hour, pulling traffic sharply upward. Worse, one inconsiderate passenger can now contaminate a cabin so badly that most guests refuse to enter. Redirect the surge, quarantine bad air and deploy Air Freshener before one foul lift poisons the network.", "learningFocus": "Rooftop Party; Stink; Air Freshener; temporary traffic redirection.", "ruleCard": {"heading": "New operating rule", "body": "Rooftop Party redirects traffic upward. Stink blocks most guests from boarding a contaminated lift; use Air Freshener to restore it."}, "promotion": null}
     },
     "10": {
@@ -487,8 +497,11 @@
       "spawnEnd": 1.75,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "checkout", "vip", "jam", "stink"],
-      "briefing": {"rank": "Engineer", "title": "Build It Yourself", "narrative": "Standard policies have taken you this far. The Automation Workshop is now open, and management expects you to turn operational insight into actual logic. Build or adapt a custom policy while Checkout traffic, a VIP, breakdowns and contaminated cabins compete for attention.", "learningFocus": "Custom Workshop automation; TARDIS Mode; Group Think.", "ruleCard": {"heading": "New operating rule", "body": "Use the Automation Workshop to copy or build a custom policy. TARDIS Mode and Group Think are temporary tools for exceptional operational pressure."}, "promotion": {"rank": "Engineer", "label": "PROMOTION", "copy": "Repeated success with unreliable machinery has qualified you to design more unreliable machinery."}}
+      "zoningEnabled": true,
+      "petChance": 0.12,
+      "checkoutWaves": [{"startSec": 90, "endSec": 140, "chance": 0.85}],
+      "activeChallenges": ["roomService", "pets", "checkout", "vip", "jam", "stink", "zoning"],
+      "briefing": {"rank": "Engineer", "title": "Divide the Work", "narrative": "Five Sweep lifts no longer need to chase every floor. Give each car All, Low or High service coverage, then intervene manually when the network needs an exception. The Automation Workshop is also open for anyone who wants deeper control.", "learningFocus": "Independent service zones; Sweep inside zones; optional Workshop.", "ruleCard": {"heading": "New operating rule", "body": "A lift's zone and routing are separate. Keep Sweep running while assigning All, Low or High coverage. Ground remains shared, and manual commands may temporarily leave a zone."}, "promotion": {"rank": "Engineer", "label": "PROMOTION", "copy": "Repeated success with unreliable machinery has qualified you to design more unreliable machinery."}}
     },
     "11": {
       "floors": 15,
@@ -497,7 +510,8 @@
       "spawnEnd": 1.15,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "gym", "rooftop", "jam", "stink"],
+      "petChance": 0.12,
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "jam", "stink"],
       "rooftopReleaseBufferSec": 45,
       "briefingRuleBody": "Gym Bros are bulky, immune to Stink, and three or more Gym Bros make a lift stinky. Double-Decker increases capacity, but bulky loading can still slow the fleet and create poor service patterns.",
       "briefing": {"rank": "Engineer", "title": "Do you even lift, bro?", "narrative": "The hotel gym has launched a membership drive. Gym Bros are bulky, travel in awkward combinations and are strangely untroubled by foul-smelling lifts. With rooftop traffic adding vertical pressure, decide whether to separate bulky passengers, increase capacity or redesign the fleet's work.", "learningFocus": "Gym Bros; bulky boarding patterns; Double-Decker.", "ruleCard": {"heading": "New operating rule", "body": "Gym Bros are bulky and immune to Stink. Double-Decker increases capacity, but bulky loading can still slow the fleet and create poor service patterns."}, "promotion": null}
@@ -509,7 +523,8 @@
       "spawnEnd": 2.6,
       "objective": "ENDURANCE",
       "gravityScalar": 0,
-      "activeChallenges": ["roomService", "gym", "jam", "stink", "endurance"],
+      "petChance": 0.1,
+      "activeChallenges": ["roomService", "pets", "gym", "jam", "stink", "endurance"],
       "briefing": {"rank": "Engineer", "title": "The Longest Shift", "narrative": "There is no tidy finish tonight. Room Service, Gym Bros, jams and contaminated cabins will keep the hotel under pressure while you manage a finite supply of recovery tools. The question is how long you can keep the Grand Hotel operating before the twentieth guest gives up spectacularly.", "learningFocus": "Endurance scoring; resource timing; sustained hazard management.", "ruleCard": {"heading": "New operating rule", "body": "Endurance has no countdown. Keep operating until the twentieth life is lost; VIP and Rooftop events are disabled so your resources can focus on sustained operations."}, "promotion": null}
     },
     "13": {
@@ -520,7 +535,8 @@
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.12,
       "creditMultiplier": 0.15,
-      "activeChallenges": ["roomService", "gym", "gravity", "jam", "stink"],
+      "petChance": 0.12,
+      "activeChallenges": ["roomService", "pets", "gym", "gravity", "jam", "stink"],
       "briefing": {"rank": "Engineer", "title": "Uphill Battle", "narrative": "Sustainability consultants have connected the lift system to pedal power. Heavy cars now climb more slowly, so filling every cabin is no longer automatically efficient. Balance load against upward travel while familiar carts, Gym Bros, jams and contaminated cabins test your command of the whole system.", "learningFocus": "Gravity; load versus upward speed; full-system optimisation.", "ruleCard": {"heading": "New operating rule", "body": "Gravity slows loaded upward travel. A full lift is not always the fastest lift; balance passenger load against the time needed to climb."}, "promotion": null}
     },
     "14": {
@@ -532,8 +548,9 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
-      "activeChallenges": ["roomService", "gym", "checkout", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Director", "title": "Divide and Conquer", "narrative": "The tower is now too large for every lift to serve every floor effectively. Service Zoning lets you assign Low and High service bands, reducing wasteful cross-building travel. Ground remains part of every zone, and a poor boundary can strand demand as effectively as no plan at all.", "learningFocus": "Service Zoning; Zoned Low; Zoned High; zone boundaries.", "ruleCard": {"heading": "New operating rule", "body": "Service Zoning assigns a lift a direct-service floor band. Ground is included in every zone. Passenger transfers are not supported outside timed Open Plan."}, "promotion": {"rank": "Director", "label": "PROMOTION", "copy": "You no longer operate lifts. You operate the people, policies and machinery that operate lifts."}}
+      "petChance": 0.15,
+      "activeChallenges": ["roomService", "pets", "gym", "vip", "jam", "stink", "zoning"],
+      "briefing": {"rank": "Director", "title": "Divide and Conquer", "narrative": "The tower is now too large for every lift to serve every floor effectively. Extend the Low and High service patterns you learned earlier, reducing wasteful travel while preserving enough overlap to rescue a failing zone.", "learningFocus": "Scaled Service Zoning; overlap; zone boundaries.", "ruleCard": {"heading": "Operating challenge", "body": "Ground remains shared by every zone. Until transfer service begins later, each guest still needs one lift that covers both origin and destination."}, "promotion": {"rank": "Director", "label": "PROMOTION", "copy": "You no longer operate lifts. You operate the people, policies and machinery that operate lifts."}}
     },
     "15": {
       "floors": 20,
@@ -544,9 +561,10 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.15,
       "vipEvent": true,
       "rooftopEvent": true,
-      "activeChallenges": ["roomService", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
       "briefing": {"rank": "Director", "title": "The Sky Lounge Gala", "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, bulky gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.", "learningFocus": "Scaling zoning to six lifts; shared rooftop and VIP pressure.", "ruleCard": null, "promotion": null}
     },
     "16": {
@@ -558,10 +576,11 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.18,
       "jamEvent": true,
       "stinkEvent": true,
-      "activeChallenges": ["roomService", "gym", "checkout", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Director", "title": "No Zone Is an Island", "narrative": "Maintenance failures are striking inside a carefully divided fleet. A perfect zone with one working lift is not a resilient zone. Build overlapping coverage, preserve recovery paths and keep Checkout traffic moving when a jam removes the car your plan depended on most.", "learningFocus": "Overlapping zones; resilient coverage; recovery design.", "ruleCard": null, "promotion": null}
+      "activeChallenges": ["roomService", "pets", "gym", "vip", "jam", "stink", "zoning"],
+      "briefing": {"rank": "Director", "title": "No Zone Is an Island", "narrative": "Maintenance failures are striking inside a carefully divided fleet. A perfect zone with one working lift is not resilient. Build overlapping coverage, preserve recovery paths and keep cat, dog and ordinary service moving when a jam removes the car your plan depended on most.", "learningFocus": "Overlapping zones; pet-aware resilience; recovery design.", "ruleCard": null, "promotion": null}
     },
     "17": {
       "floors": 25,
@@ -572,8 +591,8 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
-      "checkoutEvent": true,
-      "activeChallenges": ["roomService", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
+      "petChance": 0.18,
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
       "briefing": {"rank": "Director", "title": "Rooftop Express", "narrative": "Twenty-five floors now stand between the lobby and the party. The VIP expects priority, rooftop guests expect speed and everyone else expects not to be abandoned midway. Create local service and express coverage without allowing your fastest route to consume the whole fleet.", "learningFocus": "Express roles inside a zoned fleet; long-distance service.", "ruleCard": null, "promotion": null}
     },
     "18": {
@@ -585,11 +604,13 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.2,
+      "checkoutWaves": [{"startSec": 45, "endSec": 105, "chance": 0.9}],
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
-      "activeChallenges": ["roomService", "gym", "checkout", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "checkout", "vip", "jam", "stink", "zoning"],
       "briefing": {"rank": "Director", "title": "Festival Weekend", "narrative": "The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, bulky passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue.", "learningFocus": "Exception-safe zoning; large-scale recombination.", "ruleCard": null, "promotion": null}
     },
     "19": {
@@ -601,11 +622,12 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.2,
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
-      "activeChallenges": ["roomService", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
       "briefing": {"rank": "Architect", "title": "The Vertical City", "narrative": "Thirty floors and eight lifts have turned the hotel into a small city standing on end. Local service, rooftop demand and VIP movement now require an architecture rather than a collection of settings. Design roles that remain legible when failures begin tearing holes in the plan.", "learningFocus": "Eight-lift zone architecture; legible fleet roles.", "ruleCard": null, "promotion": {"rank": "Architect", "label": "PROMOTION", "copy": "The hotel has expanded your remit to include several parts of the skyline."}}
     },
     "20": {
@@ -616,52 +638,56 @@
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "zoningEnabled": true,
+      "petChance": 0.22,
+      "checkoutWaves": [{"startSec": 70, "endSec": 145, "chance": 0.95}],
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
-      "activeChallenges": ["roomService", "gym", "checkout", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "checkout", "vip", "jam", "stink", "zoning"],
       "briefing": {"rank": "Architect", "title": "The Grand Network", "narrative": "This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, dense traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode.", "learningFocus": "Ten-lift conventional fleet mastery; whole-network design.", "ruleCard": null, "promotion": null}
     },
     "21": {
-      "floors": 11,
-      "lifts": 2,
-      "spawnStart": 0.25,
-      "spawnEnd": 0.4,
+      "floors": 20,
+      "lifts": 6,
+      "spawnStart": 1.35,
+      "spawnEnd": 1.75,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "counterweightEnabled": true,
-      "counterweightIntro": true,
-      "activeChallenges": ["counterweights", "jam", "stink"],
-      "briefing": {"rank": "Executive", "title": "Joined at the Cable", "narrative": "Engineering has installed a counterweight pair. Move one lift upward and its neighbour moves down, whether that helps your plan or ruins it. The cabins remain independent, but a jam stops travel for the pair. Learn the geometry while demand is restrained and mistakes are still educational.", "learningFocus": "Counterweighted pairs; complementary motion; paired jam behaviour.", "ruleCard": {"heading": "New operating rule", "body": "Counterweight partners move in opposite directions. Their cabins board independently, but a jam stops travel for both cars until the jammed lift is repaired."}, "promotion": {"rank": "Executive", "label": "PROMOTION", "copy": "Conventional lift operations are now beneath your pay grade. Safety has been informed."}}
+      "zoningEnabled": true,
+      "transfersEnabled": true,
+      "petChance": 0.15,
+      "activeChallenges": ["roomService", "pets", "gym", "jam", "stink", "zoning", "transfers"],
+      "briefing": {"rank": "Executive", "title": "Changing Lifts", "narrative": "The hotel is too tall for every route to remain direct. Guests may now leave at one shared interchange and join a connecting queue, keeping their original patience throughout the trip. Build overlapping zones that create useful connections instead of dead ends.", "learningFocus": "One-transfer journeys; interchange coverage; continuous patience.", "ruleCard": {"heading": "New operating rule", "body": "A guest uses direct service when possible. Otherwise they may change lifts once at a floor served by both legs. Their patience never resets."}, "promotion": {"rank": "Executive", "label": "PROMOTION", "copy": "You now manage a transport network rather than a collection of shafts."}}
     },
     "22": {
-      "floors": 15,
-      "lifts": 4,
-      "spawnStart": 0.55,
-      "spawnEnd": 0.75,
+      "floors": 25,
+      "lifts": 7,
+      "spawnStart": 1.3,
+      "spawnEnd": 1.65,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "counterweightEnabled": true,
-      "openPlanIntro": true,
-      "activeChallenges": ["gym", "counterweights", "jam", "stink", "openPlan"],
-      "briefing": {"rank": "Executive", "title": "Meet in the Middle", "narrative": "Four paired lifts have created a passenger-placement problem: the right guest can easily end up in the wrong car. Open Plan temporarily permits destination-aware transfers between adjacent lifts stopped at the same floor. Use it to repair the network, not to avoid planning one.", "learningFocus": "Open Plan; timed adjacent-lift transfers; passenger redistribution.", "ruleCard": {"heading": "New operating rule", "body": "Open Plan temporarily permits compatible guests to transfer between adjacent lifts stopped at the same floor. The effect expires, so use it to repair placement deliberately."}, "promotion": null}
+      "zoningEnabled": true,
+      "transfersEnabled": true,
+      "petChance": 0.3,
+      "activeChallenges": ["roomService", "pets", "gym", "jam", "stink", "zoning", "transfers"],
+      "briefing": {"rank": "Executive", "title": "Best in Show", "narrative": "The Grand Hotel pet show has filled every zone. Cats and dogs need reliable connections without sharing the wrong cabins, while five furry passengers can make even a peaceful lift unbearable. Design species-aware routes and spend recovery tools carefully.", "learningFocus": "Pet filters across transfers; Pet Snacks; congregation Stink; resilient interchanges.", "ruleCard": {"heading": "Operating challenge", "body": "Pet filters apply to both legs of a journey. A connection is useful only when the owner can board every lift required to reach the final destination."}, "promotion": null}
     },
     "23": {
-      "floors": 29,
+      "floors": 30,
       "lifts": 8,
-      "spawnStart": 0.7125,
-      "spawnEnd": 0.9,
+      "spawnStart": 1.25,
+      "spawnEnd": 1.6,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "counterweightEnabled": true,
       "zoningEnabled": true,
-      "openPlanIntro": true,
-      "activeChallenges": ["roomService", "gym", "vip", "counterweights", "jam", "stink", "zoning", "openPlan"],
-      "briefing": {"rank": "Executive", "title": "The Entangled Hotel", "narrative": "The prototype is now an eight-lift counterweight network carrying real hotel traffic. Zoning determines where cars should serve; linked motion determines where they can be; Open Plan provides a brief chance to correct passenger placement. The laboratory conditions are officially over.", "learningFocus": "Counterweights, Zoning and Open Plan at fleet scale.", "ruleCard": null, "promotion": null}
+      "transfersEnabled": true,
+      "petChance": 0.25,
+      "activeChallenges": ["roomService", "pets", "gym", "vip", "jam", "stink", "zoning", "transfers"],
+      "briefing": {"rank": "Executive", "title": "The Grand Interchange", "narrative": "Eight independent lifts now form a thirty-floor network. Pets, VIP service, failures and dense connecting traffic will expose every uncovered route and fragile interchange. Keep the plan legible enough to repair while it is under pressure.", "learningFocus": "Advanced zoning; transfer-network resilience; pet-aware recovery.", "ruleCard": null, "promotion": null}
     },
     "24": {
       "floors": 15,
@@ -677,7 +703,8 @@
       "jamMinSec": 6,
       "jamMaxSec": 10,
       "demandCurrents": 2.0,
-      "activeChallenges": ["vip", "capsule", "jam"],
+      "petChance": 0.1,
+      "activeChallenges": ["pets", "vip", "capsule", "jam"],
       "briefing": {"rank": "Commissioner", "title": "Welcome to the Future", "narrative": "The old shafts have been replaced by ten high-speed, single-passenger capsules. They cross the building quickly, but each carries only one guest, so manual control cannot keep pace with the demand currents for long. Dispatch through automation, protect VIP service and recover from frequent short jams.", "learningFocus": "Capsule lifts; single-passenger capacity; continuous demand currents.", "ruleCard": {"heading": "New operating rule", "body": "Capsule lifts carry one guest each and demand currents change continuously. Automation is the practical primary control; jams are shorter but frequent."}, "promotion": {"rank": "Commissioner", "label": "APPOINTMENT", "copy": "You have successfully operated every lift the hotel owns. Engineering has therefore removed the lifts."}}
     },
     "25": {
@@ -695,7 +722,8 @@
       "jamMinSec": 6,
       "jamMaxSec": 10,
       "demandCurrents": 2.5,
-      "activeChallenges": ["rooftop", "vip", "capsule", "jam", "zoning"],
+      "petChance": 0.12,
+      "activeChallenges": ["pets", "rooftop", "vip", "capsule", "jam", "zoning"],
       "briefing": {"rank": "Commissioner", "title": "A series of tubes", "narrative": "Twenty capsules. Thirty floors. One final live demonstration for the board. Demand shifts between ordinary travel, VIP movements and rooftop surges, while zoning must give the fleet enough structure to respond without becoming rigid. You began by clicking one lift; now design the nervous system of an entire building.", "learningFocus": "Twenty-capsule fleet mastery; capsule zoning; final campaign synthesis.", "ruleCard": null, "promotion": null}
     }
   }

@@ -11,6 +11,25 @@
     const clonePromotions = (promotions) => Array.isArray(promotions)
         ? [...new Set(promotions.filter(round => Number.isInteger(round) && Config.GAME_DATA.rounds[round]?.briefing?.promotion))]
         : [];
+    const legacyBalancePrefix = '0.2.';
+    const removedOpenPlanCosts = [2, 3, 5];
+    const migrateLegacyRecord = value => {
+        if (!String(value?.balanceVersion || '').startsWith(legacyBalancePrefix)) return null;
+        const inventory = cloneInventory(value.inventory);
+        const refund = inventory
+            .filter(item => item.id === 'openPlan')
+            .reduce((sum, item) => sum + (removedOpenPlanCosts[item.tier] || 0), 0);
+        const migrated = {
+            ...value,
+            balanceVersion: Config.balanceVersion,
+            // Checkpoints are pre-round, so restarting the same authored round
+            // cannot resume removed Counterweight/Open Plan live state.
+            points: Math.max(0, Number(value.points) || 0) + refund,
+            inventory: inventory.filter(item => item.id !== 'openPlan' && Config.GAME_DATA.powerups[item.id])
+        };
+        Game.Storage.set(Game.Keys.CAMPAIGN, JSON.stringify(migrated));
+        return migrated;
+    };
     const normalizeSeed = (seed) => window.Game.Seed?.normalize?.(seed) || 1234;
     const randomSeed = () => {
         if (window.crypto?.getRandomValues) {
@@ -40,13 +59,14 @@
         if (!raw) return null;
         try {
             const value = JSON.parse(raw);
-            const valid = value && value.schemaVersion === schemaVersion &&
-                value.balanceVersion === Config.balanceVersion && typeof value.playerName === 'string' &&
-                value.playerName.trim() && Number.isInteger(value.seed) && Number.isInteger(value.round) &&
-                value.round >= 1 && value.round <= maxRound() && Number.isFinite(value.points) &&
-                Number.isFinite(value.lives) && Number.isInteger(value.highestUnlockedRound) &&
-                (value.campaignScore === undefined || Number.isFinite(value.campaignScore));
-            return valid ? value : null;
+            const candidate = value?.balanceVersion === Config.balanceVersion ? value : migrateLegacyRecord(value);
+            const valid = candidate && candidate.schemaVersion === schemaVersion &&
+                candidate.balanceVersion === Config.balanceVersion && typeof candidate.playerName === 'string' &&
+                candidate.playerName.trim() && Number.isInteger(candidate.seed) && Number.isInteger(candidate.round) &&
+                candidate.round >= 1 && candidate.round <= maxRound() && Number.isFinite(candidate.points) &&
+                Number.isFinite(candidate.lives) && Number.isInteger(candidate.highestUnlockedRound) &&
+                (candidate.campaignScore === undefined || Number.isFinite(candidate.campaignScore));
+            return valid ? candidate : null;
         } catch (error) { return null; }
     };
 

@@ -7,6 +7,7 @@ const source = fs.readFileSync(path.join(root, 'design', 'game-balance.v1.json')
 const acceptanceSource = fs.readFileSync(path.join(root, 'tests', 'balance-acceptance.json'), 'utf8');
 const acceptance = JSON.parse(acceptanceSource);
 const report = JSON.parse(fs.readFileSync(path.join(root, 'reports', 'campaign-balance-acceptance.json'), 'utf8'));
+const markdown = fs.readFileSync(path.join(root, 'reports', 'campaign-balance-acceptance.md'), 'utf8');
 const integrityOnly = process.argv.includes('--integrity');
 const strict = process.argv.includes('--strict');
 const hash = value => crypto.createHash('sha256').update(value).digest('hex');
@@ -29,6 +30,9 @@ report.rounds.forEach(entry => {
         assert(typeof run.metrics.accepted === 'boolean', `R${entry.round}, seed ${run.seed}: missing acceptance result.`);
         assert(run.metrics.diagnostics && run.metrics.diagnostics.totals, `R${entry.round}, seed ${run.seed}: missing compact diagnostics.`);
     });
+    const intendedAccepted = entry.intended.acceptedRate >= acceptance.intended.minimumSurvivalRate;
+    const expectedMarkdownRow = `| ${entry.round} | ${entry.allSweep.accepted ? 'yes' : 'NO'} | ${intendedAccepted ? 'yes' : 'NO'} | ${entry.allSweep.survivors}/${report.seedCount} | ${entry.intended.survivors}/${report.seedCount} |`;
+    assert(markdown.includes(expectedMarkdownRow), `R${entry.round}: Markdown summary does not match JSON evidence.`);
     if (strict) {
         assert(entry.allSweep.accepted, `R${entry.round}: all-Sweep acceptance failed.`);
         // Intended profiles remain diagnostic until human playtesting supplies

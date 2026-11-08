@@ -12,7 +12,7 @@ const PowerUps = {
         if (!ability) return '';
         if (ability.target === 'floor') return 'Target floor';
         if (ability.target === 'lift') return '1 lift';
-        if (['doors', 'freshener', 'tardis', 'turbo', 'doubleDecker', 'openPlan'].includes(powerUpId)) return 'All lifts';
+        if (['doors', 'freshener', 'tardis', 'turbo', 'doubleDecker', 'petSnacks'].includes(powerUpId)) return 'All lifts';
         return 'Building';
     },
 
@@ -23,7 +23,8 @@ const PowerUps = {
         globalAngerPause: 0,
         globalTurbo: 0, // Replaced globalTeleport
         globalTardis: 0,
-        wideDoors: 0
+        wideDoors: 0,
+        petSnacksImmunity: 0
     },
 
     timerNow: function() {
@@ -74,8 +75,8 @@ const PowerUps = {
         if (!Registry.gameActive) return;
         // Expiry is derived from the active gameplay clock, not from the
         // number of setInterval callbacks received by the browser.
-        ['jamImmunity', 'stinkImmunity', 'globalAngerPause', 'globalTurbo', 'globalTardis', 'wideDoors'].forEach(key => this.refreshTimer(this.timers, key, now));
-        Registry.lifts.forEach(lift => ['tardisTimer', 'turboTimer', 'freshenerTimer', 'musakTimer', 'doubleDeckerTimer', 'openPlanTimer', 'wideDoorsTimer'].forEach(key => this.refreshTimer(lift, key, now)));
+        ['jamImmunity', 'stinkImmunity', 'globalAngerPause', 'globalTurbo', 'globalTardis', 'wideDoors', 'petSnacksImmunity'].forEach(key => this.refreshTimer(this.timers, key, now));
+        Registry.lifts.forEach(lift => ['tardisTimer', 'turboTimer', 'freshenerTimer', 'musakTimer', 'doubleDeckerTimer', 'petSnacksTimer', 'wideDoorsTimer'].forEach(key => this.refreshTimer(lift, key, now)));
         Registry.lifts.forEach(lift => { if (lift.wideDoorsTimer <= 0) lift.wideDoorsMultiplier = 1; });
         if (this.timers.globalTardis <= 0 && this.timerExpiresAt.globalTardis && this.timerExpiresAt.globalTardis <= now && !this.timers.globalTardisExpiryHandled) {
             Registry.lifts.forEach(lift => { lift.tardisExpiryExodus = true; });
@@ -373,26 +374,34 @@ const PowerUps = {
                 }
             ]
         },
-        openPlan: {
-            id: 'openPlan', name: 'Open Plan', icon: '↔️',
+        petSnacks: {
+            id: 'petSnacks', name: 'Pet Snacks', icon: '🦴',
             tiers: [
-                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[0].cost, desc: `One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration}s.`, target: 'lift',
+                { cost: window.Config.GAME_DATA.powerups.petSnacks.tiers[0].cost, desc: `Calm pets in one lift for ${window.Config.GAME_DATA.powerups.petSnacks.tiers[0].duration}s.`, target: 'lift',
                   execute: (liftId, floorId) => { 
-                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[0].duration);
-                      PowerUps.showEffectOnLift(liftId, '↔️'); 
+                      const lift = Registry.lifts[liftId];
+                      if (lift.petConflictPending || lift.petConflictEjectPending) Registry.roundStats.petConflictResolutions++;
+                      PowerUps.setLiftTimer(lift, 'petSnacksTimer', window.Config.GAME_DATA.powerups.petSnacks.tiers[0].duration);
+                      lift.petConflictPending = false; lift.petConflictDeadline = 0; lift.petConflictEjectPending = false;
+                      PowerUps.showEffectOnLift(liftId, '🦴');
                   } 
                 },
-                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[1].cost, desc: `One lift allows lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration}s.`, target: 'lift',
+                { cost: window.Config.GAME_DATA.powerups.petSnacks.tiers[1].cost, desc: `Keep pets calm in one lift for ${window.Config.GAME_DATA.powerups.petSnacks.tiers[1].duration}s.`, target: 'lift',
                   execute: (liftId, floorId) => { 
-                      PowerUps.setLiftTimer(Registry.lifts[liftId], 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[1].duration);
-                      PowerUps.showEffectOnLift(liftId, '↔️'); 
+                      const lift = Registry.lifts[liftId];
+                      if (lift.petConflictPending || lift.petConflictEjectPending) Registry.roundStats.petConflictResolutions++;
+                      PowerUps.setLiftTimer(lift, 'petSnacksTimer', window.Config.GAME_DATA.powerups.petSnacks.tiers[1].duration);
+                      lift.petConflictPending = false; lift.petConflictDeadline = 0; lift.petConflictEjectPending = false;
+                      PowerUps.showEffectOnLift(liftId, '🦴');
                   } 
                 },
-                { cost: window.Config.GAME_DATA.powerups.openPlan.tiers[2].cost, desc: `ALL lifts allow lateral transfer for ${window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration}s.`, target: 'instant',
+                { cost: window.Config.GAME_DATA.powerups.petSnacks.tiers[2].cost, desc: `Keep pets calm across ALL lifts for ${window.Config.GAME_DATA.powerups.petSnacks.tiers[2].duration}s.`, target: 'instant',
                   execute: () => { 
+                      Registry.roundStats.petConflictResolutions += Registry.lifts.filter(l => l.petConflictPending || l.petConflictEjectPending).length;
+                      PowerUps.setGlobalTimer('petSnacksImmunity', window.Config.GAME_DATA.powerups.petSnacks.tiers[2].duration);
                       Registry.lifts.forEach(l => {
-                          PowerUps.setLiftTimer(l, 'openPlanTimer', window.Config.GAME_DATA.powerups.openPlan.tiers[2].duration);
-                          PowerUps.showEffectOnLift(l.id, '↔️');
+                          l.petConflictPending = false; l.petConflictDeadline = 0; l.petConflictEjectPending = false;
+                          PowerUps.showEffectOnLift(l.id, '🦴');
                       });
                   } 
                 }
@@ -493,24 +502,25 @@ const PowerUps = {
             turbo: lift.turboTimer > 0 || global.globalTurbo > 0,
             tardis: lift.tardisTimer > 0 || global.globalTardis > 0,
             doubleDecker: lift.doubleDeckerTimer > 0 || lift.isDoubleDecker,
-            openPlan: lift.openPlanTimer > 0
+            petSnacks: lift.petSnacksTimer > 0 || global.petSnacksImmunity > 0
         })[powerUpId] === true;
     },
 
     isPowerUpAvailableForRound: function(powerUpId, round = Registry.stats.round) {
         const definition = Config.GAME_DATA.rounds[round];
         if (!definition?.capsuleMode) return true;
-        return !['freshener', 'tardis', 'doubleDecker'].includes(powerUpId);
+        return !['freshener', 'tardis', 'doubleDecker', 'petSnacks'].includes(powerUpId);
     },
 
     isGlobalPowerUpActive: function(powerUpId) {
         if (powerUpId === 'doors') return this.timers.wideDoors > 0;
-        if (!['freshener', 'musak', 'turbo', 'tardis', 'doubleDecker', 'openPlan'].includes(powerUpId)) return false;
+        if (!['freshener', 'musak', 'turbo', 'tardis', 'doubleDecker', 'petSnacks'].includes(powerUpId)) return false;
         const globalTimer = ({
             freshener: this.timers.stinkImmunity,
             musak: this.timers.globalAngerPause,
             turbo: this.timers.globalTurbo,
-            tardis: this.timers.globalTardis
+            tardis: this.timers.globalTardis,
+            petSnacks: this.timers.petSnacksImmunity
         })[powerUpId];
         return globalTimer > 0 || Registry.lifts.some(lift => this.isLiftPowerUpActive(powerUpId, lift));
     },

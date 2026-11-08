@@ -1,430 +1,126 @@
 # Lift Operator — Game Design Document
 
-**Document role:** Product vision and design intent
-**Status:** Active product design reference
-**Owner class:** Product and design
-**Last reviewed:** 8 August 2026
-**Current phase:** Implemented 25-round desktop campaign entering major release-candidate playtesting
-**Campaign scope:** R1–R25 are implemented; balance, usability, performance, and device acceptance remain evidence gates.
+**Edition:** Marie's Birthday Edition  
+**Canonical parameters:** `design/game-balance.v1.json`  
+**Detailed sequence:** `Game Play Map.md`
 
-**Authority boundary:** This document defines durable player experience and cross-system rules for the full campaign.
-Round-by-round learning intent belongs in `Game Play Map.md`; canonical numbers live in `design/game-balance.v1.json`;
-current delivery status and acceptance evidence belong in `DELIVERY_PLAN.md` and `TEST_PLAN.md`.
+## Premise
 
-## 1. High concept
+The player operates lifts in an increasingly strange hotel. Guests lose patience from spawn until final delivery; the
+twentieth lost life ends an ordinary attempt. The game begins as a quick dispatch arcade game and becomes a strategic
+network puzzle involving limited resources, lift specialisation, zoning, and one-transfer journeys.
 
-Lift Operator is an arcade management game that gradually becomes an automation and resource-planning puzzle.
+The project is also a teaching game for children moving from Scratch toward purposeful JavaScript and automation.
+Readable browser code and light security-by-obscurity are intentional. Discovering how the game works—even exploiting
+the XOR-gated Debug tools—is a successful learning outcome, not a security incident.
 
-The player operates a hotel lift system under escalating traffic pressure. Early play is direct and physical: click floors, react quickly, rescue angry guests, and enjoy the increasing chaos. As the building grows and exceptions accumulate, manual reactions become insufficient. The player must assign lift roles, select automations, buy a constrained loadout, time emergency power-ups, and eventually create custom routing logic.
+## Core loop
 
-The game teaches systems thinking through play:
+1. Read the round briefing and optional Supply Closet.
+2. Use the five-second orientation countdown to inspect lift capacity and operating controls.
+3. Let Sweep handle routine service from R2 onward.
+4. Notice an emerging bottleneck, intervene manually, adjust zones/pet admission, or spend a power-up.
+5. Survive the round, review performance, buy for the next problem, and apply learned mastery.
 
-- Identify the real bottleneck.
-- Distinguish travel, capacity, boarding, routing, and patience problems.
-- Allocate specialized lifts.
-- Compare algorithms using repeatable seeded traffic.
-- Improve a strategy after a visible failure.
-- Trade immediate consumable power against long-term automation quality.
+The intended emotional loop is problem → struggle/failure → hypothesis → purchase/strategy → survival → mastery.
+Early rounds are frenetic and novel. Later rounds reduce dependence on novel hazards and deepen resource allocation.
 
-## 2. Design north star
+## Input and service rules
 
-> Lift Operator begins as a frenetic arcade management game and becomes an operational strategy puzzle. Each round introduces or recombines a diagnosable bottleneck. Players are expected to fail difficult rounds, learn their traffic and hazard patterns, revise their automation and power-up loadout, and overcome them through planning, timing, and system mastery—not grinding or one mandatory solution.
+- Round 1 begins Manual. All eligible lifts from R2 onward begin in Sweep.
+- Clicking a lift and floor is an explicit service instruction. On that stop, previous Sweep direction does not reject
+  otherwise-compatible waiting guests. Sweep resumes afterward.
+- Capacity, VIP exclusivity, rage, zones, pet admission, and active hazards remain binding.
+- Guest wait time is spawn-to-final-destination delivery, including boarding, travel, and transfer waiting.
+- The player sees guests, queues, lives, time, inventory, Credits, capacity cues, and operating controls. Internal
+  telemetry and Survival Index are never player-facing.
 
-The game already has enough mechanics. Development should deepen interaction between existing mechanics rather than adding more.
+## Failure, success, and Endurance
 
-### Automation engagement invariant
+Ordinary rounds last 180 seconds. On success, Round Review is explicitly congratulatory. On failure, Round Review still
+appears, then the player retries the same round from its shop with pre-attempt Credits restored and empty inventory.
 
-Automation reduces repetitive workload but never replaces the operator. From Round 2 onward, setting every lift to Sweep and then making no manual decisions, policy changes, or power-up interventions must not complete a campaign round.
+R12 Endurance begins with 20 lives, has no quota, and continues until the twentieth guest is lost. Death advances to
+the next round. The competent-survival target is 4–8 minutes.
 
-The player supervises automated flow, identifies exceptions, and intervenes with high-leverage decisions. Round 2 teaches this hybrid relationship with minimal intervention; later rounds require specialization, policy selection, resource timing, and customization. A built-in automation that completes a round unattended has become an autoplay solution and violates the arcade-to-strategy design.
+## Automation philosophy
 
-Player-authored custom automation remains the deliberate exception: it is the player’s route to mastering advanced
-rounds without manual intervention. Achievements are deferred from RC1.0; any future Hands-Free recognition must reward
-clear authored-play evidence, not raw runtime tick counts.
+Automation removes repetitive movement but does not solve the game unattended. Sweep is the default baseline and
+Marie's primary automation. Other built-ins and the Workshop remain optional enrichment, not campaign prerequisites.
+Hands-Free achievements are reserved for custom automation, never built-ins.
 
-### Automation deployment experience
+Unattended all-Sweep is a balance negative control. It should expose a diagnosable bottleneck, while a small number of
+good manual decisions or operating changes materially improves the result. Simulation evidence guides tuning but does
+not replace novice and target-player playtests.
 
-Selecting a policy is an operational decision, not form filling. The player uses an in-world basement Automation Dock
-to choose a policy, select one or more lifts, and explicitly deploy it. Lift-side controls report the current assignment
-rather than presenting a dense menu per lift. Built-ins and a compact pinned set remain immediately accessible; the
-complete custom and shared collection belongs in a separate library. The dock uses wide carousel navigation, compact
-policy text, and colour/state feedback rather than a visible “Armed” label. Its Library button toggles the library, which
-has an icon-only `×` close control. This preserves fast tactical reassignment while scaling from early single lifts to
-late-game fleets.
+## Zoning and lift operating controls
 
-## 3. Player experience arc
+Zoning begins in R10. Every lift can cycle All, Low, or High service independently of its automation. Ground remains
+shared so the network cannot be accidentally severed at reception. A lift may be Sweep + Low, Manual + High, or any
+other valid combination.
 
-### 3.1 Early game: arcade operations
+Pet admission appears from R5 with All, Cats, Dogs, and No Pets. It is also independent of automation and zoning. These
+compact controls are the primary late-game strategy surface for a Sweep-focused player.
 
-The early game should feel lively, readable, and forgiving.
+## Pets
 
-The player:
+Cats and dogs accompany ordinary guests. Their owner consumes normal capacity; the pet consumes no additional space or
+weight. Pet owners cannot simultaneously be VIP, Checkout, Room Service, or Gym Bro traffic.
 
-- Learns direct lift control.
-- Receives frequent visual feedback.
-- Encounters one major idea at a time.
-- Can recover from small mistakes.
-- Feels increasing speed and competence.
-- Learns that automation and power-ups are tactical tools.
+- Mixed cat/dog cabins start a five-second conflict warning.
+- Pet Snacks prevent or resolve conflict but do not suppress Stink.
+- An unresolved conflict clears the entire cabin at the next stop. All passengers requeue; pet owners become Critical;
+  spawn time and final destination remain unchanged.
+- Five or more pets create Stink. Pet owners tolerate it; ordinary guests do not.
+- Air Freshener suppresses Stink but does not resolve cat/dog conflict.
 
-Failure should be uncommon in the first two rounds and plausible from round three onward.
+Pets start in R5 **Pet-Friendly Hotel**, recur through the campaign, and peak in R22 **Best in Show**. They are a
+persistent traffic class like Gym Bros or VIPs, not a two-round novelty or replacement for a retired mechanic.
 
-### 3.2 Middle game: tactical coordination
+## Transfers
 
-The middle game asks the player to diagnose traffic and assign roles.
+R21–R23 are conventional independent-lift networks. A guest prefers direct service. If zones prevent it and transfers
+are enabled, the engine chooses a deterministic interchange served by a compatible first and second leg. The same
+guest may change lifts once, with original patience retained. Pet admission must be compatible on both legs.
 
-The player:
+Transfer behavior must be legible, loop-free, and conservative: no teleportation, no hidden patience allowance, no
+second transfer, and no silent deletion when coverage changes. An uncovered guest remains visible and waits.
 
-- Chooses between built-in automations.
-- Creates dedicated lift roles.
-- Responds to jams, traffic funnels, and VIP exclusivity.
-- Buys one strong answer or several narrower answers.
-- Learns that power-up timing matters as much as purchase choice.
-- Uses manual control as intervention rather than the default strategy.
-- Remains actively engaged while automation handles routine movement.
+## Traffic and hazards
 
-### 3.3 Late game: operational puzzle
+- **Room Service:** bulky/slow traffic from R3.
+- **Pets:** persistent admission/conflict/congregation decisions from R5.
+- **Jams:** lift outage recoverable by Wrench from R6.
+- **Checkout:** strong temporary waves only in R7, R10, R18, and R20.
+- **VIP:** exclusive staged journey with higher life penalty from R8.
+- **Rooftop Party:** temporary destination shock from R9; dedicated party music is disabled.
+- **Stink:** random or congregation-based cabin rejection; Freshener handles it.
+- **Gym Bros:** heavy guests and threshold Stink from R11.
+- **Gravity:** weight-sensitive speed in R13.
+- **Capsules:** independent single-passenger fleet in R24–R25.
 
-The late game emphasizes planning, scarcity, automation, and mastery.
+## Economy
 
-The player:
+Credits are spendable campaign currency; campaign score records earned Credits and is not reduced by spending. Prices
+and unlocks live in canonical balance data. Power-ups should provide a tactical answer, not an automatic round win.
+Pet Snacks costs `1/3/5` Credits for short targeted, long targeted, and shorter all-lift protection.
 
-- Studies the round briefing and prior failure.
-- Selects a loadout with meaningful opportunity cost.
-- Uses custom automation to reduce reliance on consumables.
-- Accepts that not every threat can be neutralized.
-- Chooses which queues, lifts, or guests deserve priority.
-- Replays seeded rounds to refine strategy.
+Removed saved inventory from the previous balance version receives a narrow cost refund. This is a one-release
+migration, not a general migration framework.
 
-Late-game novelty should come from combinations, topology, objectives, timing, and resource constraints—not additional systems.
+## Telemetry and balance
 
-## 4. The problem–solution–mastery loop
+Design-only telemetry includes arrivals, delivery rate, queues, critical guests, losses, projected Survival Index,
+Little's Law residual, utilisation, manual decisions, pets spawned/served, conflict outcomes, pet Stink episodes,
+filters, direct deliveries, transfers, transfer waits, uncovered passengers, and route recalculations.
 
-Every major round must define:
+Simulations use fixed seeds and report aggregates plus anomalous cases. They do not expose metrics to players or ask an
+LLM to reason over every replay. See `BALANCE_WORKFLOW.md` and `TEST_PLAN.md` for thresholds and stopping rules.
 
-1. **Problem:** The operational bottleneck introduced or emphasized.
-2. **Likely first failure:** The understandable mistake a player may make.
-3. **Evidence:** What the player can observe that explains the failure.
-4. **Insight:** The strategic conclusion the round is teaching.
-5. **Solution space:** At least three viable approaches where practical.
-6. **Mastery:** The behaviour proving that the lesson has been learned.
-7. **Recombination:** How a later round tests the lesson again.
+## Non-goals for this edition
 
-Example:
-
-| Element | Room Service example |
-| --- | --- |
-| Problem | Boarding throughput collapses when bulky carts enter mixed queues |
-| Likely failure | Player buys extra capacity and still loses guests |
-| Evidence | Lift has spare space but remains at the floor boarding |
-| Insight | The bottleneck is service time, not capacity |
-| Solutions | Wide Doors; isolate carts; route urgent guests elsewhere |
-| Mastery | Player keeps bulky service from blocking critical traffic |
-
-## 5. Failure and retry
-
-Failure is part of the intended learning loop, particularly from the middle campaign onward.
-
-A good failure must be:
-
-- **Short enough to retry.**
-- **Diagnosable.**
-- **Repeatable through the same seed.**
-- **Actionable through a different plan.**
-- **Free from irreversible grind.**
-
-Default retry should preserve the round seed. The player may later be offered a deliberate “new traffic pattern” option, but retrying the learned pattern is the primary puzzle experience.
-
-Ordinary failure performs a complete attempt rollback:
-
-- Return to the shop for the same round.
-- Restore the point balance earned at the end of the previous round.
-- Clear the inventory and shopping cart.
-- Remove every runtime consequence of the failed attempt.
-- Preserve the round and seed so the player can apply what they learned.
-
-Purchases are provisional until the round is completed. Credits earned across successful rounds carry forward, while a
-failed attempt restores the pre-round Credit checkpoint and clears the attempt loadout. The player keeps the knowledge
-gained from the failed attempt.
-
-Round 12 is the deliberate exception: death is its completion condition. The attempt, spending, score, and payout commit when the last of the normal 20 lives is lost, and the campaign automatically advances.
-
-## 6. Core rules
-
-### 6.1 Building and lifts
-
-- Floors are indexed from Ground (`G`, floor 0) upward.
-- Lifts have limited weight capacity.
-- Players can route manually or assign automation.
-- Lifts transition through explicit movement and door states.
-- Different guest types change weight and boarding time.
-- Later hazards temporarily disrupt availability or throughput.
-
-### 6.2 Guest patience
-
-Guests progress through readable urgency states:
-
-- Happy
-- Annoyed
-- Critical
-- Rage
-
-Rage removes the guest and costs lives. Exact thresholds are balance parameters governed by the target configuration, not repeated throughout narrative documentation.
-
-### 6.3 Seeded traffic
-
-Each round uses a seeded random sequence. A Game ID should reproduce:
-
-- Guest origins and destinations.
-- Guest types.
-- Hazard timing.
-- Scheduled events.
-
-Automation decisions should not consume the same random stream as environment generation. Separate streams are required for deterministic comparison.
-
-### 6.4 Round completion
-
-Rounds may use:
-
-- Timed survival.
-- Delivery quota.
-- Endurance until all 20 lives are lost.
-- A special operating constraint such as gravity.
-
-Every round must state its win condition and failure reason clearly before play.
-
-### 6.5 Endurance completion
-
-Round 12 has no conventional victory state. It asks:
-
-> How many minutes can you operate before the 20th guest defenestrates?
-
-The player:
-
-- Starts with the normal 20 lives.
-- Continues until lives reach zero.
-- Earns score and Credits from survival duration, guests served, and service quality.
-- Does not retry the round after death.
-- Automatically progresses to Round 13.
-
-This is an earned-loss round: eventual death is expected, but better planning produces a longer run and a larger economic reward for the final challenge.
-
-## 7. Automation
-
-Built-in automations are not simple upgrades. They represent different operational policies:
-
-- **Sweep:** Efficient directional throughput.
-- **Priority Sweep:** Emergency triage.
-- **Voting:** Concentrated demand response.
-- **Weighted Voting:** Urgency-aware demand response.
-- **Custom:** Player-designed routing for a known traffic problem.
-- **Service Zoning:** Saved Workshop policies with scalable or custom direct-service bands that apply while assigned to
-  a lift.
-
-No built-in automation should complete a campaign round unattended. A round should reward active supervision, selecting or combining policies, and intervening according to traffic structure. Player-authored custom automation may eventually achieve unattended mastery and qualify for Hands-Free recognition.
-
-Custom automation is the long-term strategic progression. A better script should reduce emergency spending and manual intervention rather than merely increase a score counter.
-
-Service Zoning is a later scale-oriented Workshop progression unlocked at Round 14. Zoned Low and Zoned High are
-scalable built-in policy examples; players can copy them or create a Custom Service Zone block in Workshop. A zoned
-lift accepts a guest only when both the current floor and destination are within its configured range. G is included as
-an ordinary serviced floor, not as a transfer hub; this mirrors real lift behavior and supports Room Service and Checkout
-journeys that use the lobby. Transfers, G-hub routing, and arbitrary multi-lift passenger journeys remain deferred.
-Every zoned policy includes G, and G is weighted threefold as both a normal guest origin and destination. This makes
-the lobby a shared direct-service demand, not an upper-zone exclusion or a passenger-transfer hub.
-
-The ordinary navigation control is **Settings**, containing sound controls, attribution, and a link to Leaderboard.
-End-of-campaign completion continues to open Leaderboard directly. Achievements are deferred from RC1.0.
-
-## 8. Power-ups
-
-Power-ups are consumable operational interventions. They should:
-
-- Solve a particular class of bottleneck.
-- Be dramatic and legible.
-- Have meaningful timing.
-- Carry opportunity cost.
-- Avoid completely invalidating a hazard.
-- Support multiple solution combinations.
-
-The current catalog is sufficient:
-
-| Power-up | Primary bottleneck |
-| --- | --- |
-| Wrench | Lift availability after jams |
-| Air Freshener | Stink quarantine and evacuation |
-| Calming Musak | Patience pressure |
-| Turbo Module | Travel time and recovery distance |
-| TARDIS Mode | Capacity |
-| Wide Doors | Boarding and unloading throughput |
-| Group Think | Destination fragmentation |
-| Double-Decker | Sustained high-capacity movement |
-| Open Plan | Multi-lift coordination and lateral transfer |
-
-## 9. Hazards and special traffic
-
-### VIP queue priority
-
-A waiting VIP is a priority passenger: she occupies the front of her floor queue and an eligible VIP boards before
-ordinary guests. The priority does not bypass capacity, stink, zoning, or the VIP empty-cabin constraint. If a lift is
-unsuitable for the VIP, an eligible ordinary guest may board instead; the VIP remains first for the next suitable car.
-
-An explicit manual lift target is a rescue instruction. It must not be replaced by an automation result already in
-flight; the lift honours the selected stop through arrival and one boarding attempt, then its assigned policy resumes.
-
-### Authored challenge schedule
-
-Each authored round has an explicit challenge set in `Game Play Map.md`; omitted challenges are inactive. There is no
-inheritance rule after a mechanic is introduced. The Game Play Map matrix, canonical balance configuration, briefing,
-and runtime activation must agree.
-
-Checkout eligibility does not replace ordinary traffic: each eligible standard spawn independently uses the canonical
-Checkout probability. The remaining guests retain ordinary, varied floor-to-floor journeys. Rooftop redirection is a
-separate temporary event and likewise leaves unaffected guests on their ordinary journeys. Room Service and Gym Bros
-are never Checkout; Gym Bros can board a stinky lift.
-
-### Counterweight network (post-R20 authored arc)
-
-Rounds 21–23 add fixed, immediately adjacent counterweight pairs. Each pair has complementary floor positions: moving one
-car upward moves the other downward. The player commands either car normally; the game does not expose a master/slave
-interface or protect the player from a bad consequence. Built-in automations are pair-owned: applying one to either car
-assigns matching pair behaviour to both, and the policy plans legal mirrored targets from both cars' demand. Pair identity
-is visible through matching colours and a continuous cable/pulley loop above and below the adjacent shafts.
-
-The rule changes movement, not cabin independence. Passenger load, doors, boarding, alighting, patience, and destination
-state remain per car. A jam prevents both cars in the pair travelling, while the unjammed partner may still complete
-boarding/alighting at its current floor. Turbo drives both cars and therefore supplies half its normal speed advantage;
-Gravity always evaluates the upward leg. A manual floor click immediately commands the clicked car and its forced
-complementary partner, then holds the pair override until both cars have completed service. Applying Manual to either
-controller makes both cars Manual. Zoned Low/High assigns a selected role to the clicked car and the complement to its
-partner. Saved custom Workshop policies remain an advanced per-cabin exception and disclose their coupled consequence.
-Other power-ups and automation policies remain available.
-
-Open Plan enters in Round 22 as a timed tiered recovery tool. Bronze and Silver target one lift as a transfer hub;
-during their effect, guests may automatically make a destination-aware transfer between that car and either adjacent car
-stopped at the same floor. The transfer obeys normal capacity, stink, Gym Bro, VIP, and boarding constraints. Bronze lasts
-20 seconds, Silver 45 seconds, and Gold 60 seconds; Gold allows the whole building to use adjacent transfers. This makes
-it possible to repair a bad passenger distribution without removing the counterweight constraint.
-Every counterweight building uses an odd floor count so paired cars can align at the middle floor. Open Plan expiry ends
-the transfer window and its active state; it is never persistent.
-
-### SciiFi capsule dispatch (post-R23 implemented arc)
-
-R24 and R25 use narrow, tube-bound single-passenger capsules rather than conventional lift cars. R24 has 10 capsules
-over 15 floors at about three seconds end-to-end; R25 has 20 capsules over 30 floors at about six seconds. Existing
-zoned and custom automation remains the intended dispatch mechanism; manual targeting is legal but not the primary
-solution. Demand is generated through continuous seeded currents with no in-round wave announcement beyond the briefing.
-
-Gym Bros, Room Service, and Stink are excluded; VIP remains active. Freshener, TARDIS, and Double-Decker are unavailable. Jams remain
-common but are shorter and retain their passenger. Open Plan keeps its normal adjacent/same-floor behaviour; Turbo is
-available with a 15% boost but intentionally low value for already fast capsules.
-
-Capsule shafts are pneumatic tubes, not suspension systems: they have no central cable above or below a car. Each
-capsule controller discloses its active automation without requiring the player to infer it from the narrow car.
-
-Hazards exist to change decisions, not just subtract performance.
-
-| Mechanic | Decision it should create |
-| --- | --- |
-| Room Service | Separate bulky traffic or accelerate boarding |
-| Lift jam | Preserve redundancy, repair, or tolerate local failure |
-| Checkout rush | Dedicate capacity to a directional funnel |
-| VIP | Reserve exclusivity without starving normal traffic |
-| Stink | Quarantine, cleanse, or reroute |
-| Rooftop event | Prepare for a synchronized destination spike and release |
-| Gym Bros | Manage weight and crowd composition |
-| Gravity | Trade fuller loads against upward speed |
-
-Randomness must remain bounded. A hazard should create pressure without producing an unavoidable loss before the player can respond.
-
-## 10. Economy principles
-
-The economy exists to create loadout decisions.
-
-For most shop visits:
-
-- A typical player can buy one meaningful item or save.
-- A strong player can buy one premium item or several small items.
-- A struggling player retains access to a recovery option.
-- The player cannot buy every relevant answer.
-- Gold tiers require saving or excellent performance.
-
-Credits should reward the behaviour a round teaches. Remaining-time bonuses should only be used where time remaining is a meaningful performance measure.
-
-Future career achievements should primarily represent mastery and long-term status. They are deferred from RC1.0 and
-must not overwhelm repeatable operational income if reintroduced.
-
-Detailed targets are defined in `Game Economy.md`.
-
-## 11. Difficulty and fairness
-
-The target campaign is not a smooth linear ramp. It alternates:
-
-- Introduction
-- Practice
-- Pressure test
-- Combination
-- Mastery wall
-- Recovery or expression round
-
-Difficulty walls are desirable when failure is instructive. Difficulty spikes caused only by higher spawn rates are not.
-
-A difficult round should support at least three solution classes where practical:
-
-- Power-up/loadout solution
-- Automation/routing solution
-- High-skill manual or hybrid solution
-
-## 12. Feedback requirements
-
-The game must help the player diagnose:
-
-- Queue growth by floor.
-- Guest urgency.
-- Lift utilization and load.
-- Boarding versus travel delay.
-- Hazard state and remaining duration.
-- Why a guest refused to board.
-- Why the round ended.
-- What consumed lives.
-
-Round review should report actionable information, not just totals.
-
-Planned audio reinforces operational state without becoming a hidden rule system: effects make power-ups and hazards recognizable, gameplay music signals pressure, menus/modals remain neutral and quiet, and victory has a distinct fanfare. Pressure-derived audio must not expose developer telemetry or influence simulation decisions.
-
-## 13. Scope boundaries
-
-Current stabilization excludes:
-
-- New power-ups or hazards.
-- Additional campaign rounds.
-- Global online leaderboards.
-- Multiple save profiles.
-- Theme systems.
-- Mod/plugin APIs.
-- Major visual redesign.
-
-Audio is a post-stabilization feedback improvement, not a theme system or new mechanic. Its current delivery boundary
-and acceptance tests are maintained in `DELIVERY_PLAN.md` and `TEST_PLAN.md`; attribution is recorded under
-`assets/audio/`.
-
-These may return after the core progression, economy, configuration, testing, and execution-containment model are stable.
-
-## 14. Security and curiosity
-
-Lift Operator is designed for children and friends learning programming. It is not intended to resist a determined attacker.
-
-The design rule is:
-
-> Protect the experience from accidents, not the source from curious players.
-
-XOR-obfuscated debug manifests are appropriate because they prevent accidental access while remaining discoverable to anyone motivated to inspect and understand the code. A player who finds the secret and constructs a debug payload has achieved a valuable learning outcome.
-
-Containment work should focus on:
-
-- Preventing accidental script lockups.
-- Recovering cleanly from malformed data.
-- Making Debug and Monkey sessions visible.
-- Avoiding accidental corruption of ordinary saves.
-
-Anti-cheat, strong authentication, and hiding implementation details are not product goals.
+- More than one transfer or general group/party architecture.
+- Mandatory Workshop/custom automation.
+- Pet boosts, extra capacity cost, species beyond cats/dogs, or pet achievements.
+- Generic topology, event-authoring, or save-migration frameworks.
+- Player-facing Survival Index or design telemetry.

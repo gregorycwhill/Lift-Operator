@@ -23,8 +23,8 @@ function scriptsFor(round, lifts, mode) {
     if (mode === 'all-sweep') return Object.fromEntries(Array.from({ length: lifts }, (_, index) => [index, 'sweep']));
     if (mode === 'intended' && round === 3) return { 0: 'weighted-voting', 1: 'sweep' };
     const profile = getStrategyProfile(roundProfiles[round].intended);
-    const defaultMode = profile.scripts === 'zoned' || profile.scripts === 'paired-zoned'
-        ? 'zoned'
+    const defaultMode = profile.scripts === 'zoned'
+        ? 'sweep'
         : profile.family === 'triage-redundancy' || profile.family === 'event-handling'
             ? 'priority-sweep'
                 : profile.family === 'advanced-control'
@@ -34,8 +34,7 @@ function scriptsFor(round, lifts, mode) {
     if (mode === 'intended' && profile.family === 'advanced-control') {
         return Object.fromEntries(Array.from({ length: lifts }, (_, index) => [index, index === 0 ? 'manual' : selected]));
     }
-    if (selected !== 'zoned') return Object.fromEntries(Array.from({ length: lifts }, (_, index) => [index, selected]));
-    return Object.fromEntries(Array.from({ length: lifts }, (_, index) => [index, index % 2 === 0 ? 'zoned-low' : 'zoned-high']));
+    return Object.fromEntries(Array.from({ length: lifts }, (_, index) => [index, selected]));
 }
 
 function loadoutFor(round) {
@@ -43,7 +42,7 @@ function loadoutFor(round) {
     if (round === 3) return repeat('doors', 0, 4);
     if (round < 4) return [];
     const ids = round >= 14
-        ? ['wrench', 'freshener', 'musak', 'doors', 'tardis', 'doubleDecker', 'turbo', 'openPlan']
+        ? ['wrench', 'freshener', 'musak', 'doors', 'tardis', 'doubleDecker', 'turbo', 'petSnacks']
         : ['doors', 'wrench', 'turbo', 'musak', 'freshener'];
     return ids.flatMap(id => repeat(id, round >= 12 ? 1 : 0, 2));
 }
@@ -104,11 +103,11 @@ function markdown(report) {
         '| ---: | --- | --- | ---: | ---: |'
     ];
     report.rounds.forEach(entry => lines.push(
-        `| ${entry.round} | ${entry.allSweep.accepted ? 'yes' : 'NO'} | ${entry.intended.acceptedRate >= report.policy.minimumIntendedSurvivalRate ? 'yes' : 'NO'} | ${entry.allSweep.survivors}/${report.seedCount} | ${entry.intended.survivors}/${report.seedCount} |`
+        `| ${entry.round} | ${entry.allSweep.accepted ? 'yes' : 'NO'} | ${entry.intended.acceptedRate >= report.policy.intended.minimumSurvivalRate ? 'yes' : 'NO'} | ${entry.allSweep.survivors}/${report.seedCount} | ${entry.intended.survivors}/${report.seedCount} |`
     ));
     lines.push('', `- All-Sweep failures accepted: ${report.summary.allSweepAccepted}/${report.summary.allSweepRequired}`);
     lines.push(`- Intended-strategy comparator rounds currently positive (diagnostic only): ${report.summary.intendedAccepted}/${report.summary.intendedRequired}`);
-    lines.push('', 'This report is internal balance diagnostic evidence. RC1.0 Friends & Family distribution does not require every all-Sweep classification to pass; run the strict gate explicitly when evaluating a later balance release.');
+    lines.push('', "This report is internal balance diagnostic evidence. Marie's Birthday Edition does not require every all-Sweep classification to pass; use the strict gate when evaluating a later balance release.");
     return `${lines.join('\n')}\n`;
 }
 

@@ -1,402 +1,73 @@
-# Lift Operator — Target Game Economy
+# Lift Operator — Game Economy
 
-**Document role:** Active economy design reference for earning, spending, retry, and progression
-**Status:** Active design; numerical authority remains `design/game-balance.v1.json`
-**Owner class:** Product and design
-**Last reviewed:** 17 August 2026
-**Principle:** The economy creates decisions; it does not reward grinding or allow every problem to be purchased away.
+**Status:** Marie's Birthday Edition authority  
+**Parameter source:** `design/game-balance.v1.json`
 
-**1.0 decision:** The release-candidate power-up prices are the values in `design/game-balance.v1.json`. Wide Doors
-Bronze/Silver/Gold cost `1/2/3` Credits and Calming Musak Bronze/Silver/Gold costs `2/4/8` Credits; all other
-current prices remain unchanged. The current puzzle-power-up prices are Double-Decker `1/2/3`, Open Plan `2/3/5`,
-and TARDIS `2/3/5` Credits. The candidate scarcity-price bands below remain future design work, not approved runtime
-values.
+## Currency model
 
-**Authority boundary:** Sections labelled *candidate* describe post-1.0 exploration only. They are not runtime policy,
-release acceptance criteria, or a reason to reinterpret `design/game-balance.v1.json`. Current RC1.0 economy rules are
-the currency, retry, carry-forward, payout, unlock, and purchase constraints that are explicitly marked as current.
+**Credits** are spendable. **Campaign score** is the lifetime Credits earned in the current campaign and does not fall
+when the player buys an item. “Total Credits” in player-facing summaries means the spendable balance.
 
-## 1. Economy goals
+Standard rounds award one raw point per served guest plus one raw point per ten seconds remaining, then apply the
+canonical standard multiplier (`0.1`) and any round multiplier. Endurance awards from survival intervals and service
+intervals, capped at 50 Credits. Runtime calculations must read canonical balance data.
 
-The economy should make the player ask:
+On ordinary death, the attempt is rolled back completely: pre-attempt Credits return and attempt inventory is empty.
+On success, purchased/unused inventory and earned Credits commit at the round boundary.
 
-- What caused my last failure?
-- Which one or two interventions would change the outcome?
-- Should I buy a premium answer or combine smaller tools?
-- Should I save for a later mastery wall?
-- Can better automation replace consumable spending?
-- When during the round is the item most valuable?
+## Current catalog
 
-For most shop visits:
+| Power-up | Tier costs | Unlock rounds | Tactical role |
+|---|---:|---:|---|
+| Wrench | 1 / 3 / 5 | 6 / 6 / 12 | Repair jams / provide protection |
+| Pet Snacks | 1 / 3 / 5 | 5 / 5 / 12 | Prevent or resolve pet conflict; does not prevent Stink |
+| Wide Doors | 1 / 2 / 3 | 3 / 4 / 12 | Faster boarding during pressure |
+| Rocket | 1 / 3 / 5 | 7 / 7 / 12 | Faster lift travel |
+| Musak | 2 / 4 / 8 | 8 / 8 / 12 | Pause or reduce patience pressure |
+| Air Freshener | 1 / 3 / 5 | 9 / 9 / 12 | Suppress Stink; does not resolve pet conflict |
+| TARDIS | 2 / 3 / 5 | 10 / 10 / 12 | Temporary extreme capacity |
+| Group Think | 2 / 4 / 6 | 10 / 10 / 12 | Coordinate demand response |
+| Double-Decker | 1 / 2 / 3 | 11 / 11 / 12 | Temporary double capacity |
 
-- A typical player can afford one meaningful purchase.
-- An excellent player can afford a premium purchase or several tactical items.
-- A struggling player has access to at least one recovery option.
-- The player cannot afford every relevant answer.
-- Saving is a valid and visible strategy.
+Pet Snacks tiers are deliberately asymmetric:
 
-## 2. Currency model
+- Bronze: one lift for 10 seconds.
+- Silver: one lift for 30 seconds.
+- Gold: every lift for 20 seconds.
 
-### 2.1 Operational Credits
+This makes targeted timing cheaper and stronger than indiscriminate protection. It is a conflict tool, not a universal
+pet solution; admission filters and five-pet Stink remain meaningful.
 
-Credits are the visible shop currency. Internal code may retain `points` identifiers until a deliberate compatibility migration, but player-facing and design language uses Credits.
+## Economy design rules
 
-They are:
+1. A new mechanic receives an affordable first countermeasure before or at introduction.
+2. A power-up should create a recovery window, not erase the round's core decision.
+3. Tier costs increase monotonically; higher tiers may trade duration for broader scope.
+4. The player should be able to fail, reconsider a small loadout, and retry without grinding earlier rounds.
+5. Balance changes consider the full campaign budget, not one isolated round.
+6. Pets recur often enough that Pet Snacks are useful, but filters must remain a viable no-spend response.
+7. Checkout waves should reward timing throughput tools within the wave rather than continuous purchase pressure.
 
-- Earned from completed round performance.
-- Spent on attempt loadouts.
-- Carried forward between successful rounds.
-- Not farmable through repeated failed attempts.
+## Save compatibility
 
-### 2.2 Future career achievements (deferred from RC1.0)
+The Birthday release contains a narrow migration from `0.2.x` campaign checkpoints. Removed inventory is filtered and
+its purchase cost is refunded (`2/3/5` by stored tier) to spendable Credits. Campaign score is unchanged because a
+refund is not new earning. Checkpoints are pre-round, so a late campaign resumes at the same round under the new
+conventional-lift rules rather than inside removed live state.
 
-Achievements are not part of the 1.0 player experience and award no Credits. Legacy browser storage is retained
-inertly for compatibility; it has no runtime or economic effect.
+This migration is intentionally specific. Do not build a general migration framework for the time-bound release.
 
-For a later release, achievements should be permanent records of mastery.
+## Balance review outputs
 
-Their primary rewards should be:
+Economy sweeps report, by band and seed:
 
-- Badge/trophy progression.
-- Rank or showcase recognition.
-- Optional small one-time Credit bonuses.
-- Potential future cosmetic or sandbox unlocks.
+- opening/closing Credits and Credits spent;
+- inventory selected/used/unspent;
+- completion rate and lives remaining;
+- improvement over the no-purchase and unattended-Sweep controls;
+- pet conflict resolution rate and Freshener/Pet Snacks misuse;
+- anomalous runs where a single purchase dominates or the intended profile cannot recover.
 
-Achievements must not be the main source of routine purchasing power.
-
-## 3. Retry and transaction model
-
-The retry model uses a checkpoint created immediately after the previous round’s payout and before the next shop:
-
-1. Save the Credit balance, target round, and round seed.
-2. Enter the shop and choose a provisional loadout.
-3. Start the attempt with those items in inventory.
-4. If the player dies in an ordinary round, discard the entire attempt.
-5. Restore the saved Credit balance in full.
-6. Clear inventory and cart.
-7. Recreate the same round with the same seed.
-8. Return to the shop so the player can choose a different loadout.
-9. On successful completion, commit spending and award the round payout once.
-
-Nothing from the failed gameplay attempt carries forward: no spent Credits, inventory, cart, served counts, timers,
-hazard state, or lift state. The player keeps only the knowledge gained from the attempt.
-
-This makes difficult rounds repeatable strategy puzzles without enabling Credit farming.
-
-### 3.1 Endurance exception
-
-Round 12 ends when the player loses the 20th and final life. That death is the expected completion condition, not a failed attempt.
-
-Therefore:
-
-- The pre-attempt snapshot is not restored.
-- Purchases and consumed items commit.
-- The Endurance payout is awarded once.
-- The Endurance payout records survival time and guests served. Campaign score is the cumulative Credits earned across
-  all completed rounds before shop spending, so it remains comparable even when players choose different loadouts.
-- The campaign automatically advances to Round 13.
-- Round 12 cannot be farmed by replaying from the normal campaign flow.
-
-## 4. Round payout model
-
-### 4.1 Principles
-
-Payout should:
-
-- Be predictable enough for planning.
-- Reward the behaviour taught by the round.
-- Avoid large positive feedback loops where strong players buy everything.
-- Avoid punishing a successful player for using a power-up.
-- Be capped tightly enough to protect scarcity.
-
-### 4.2 Proposed formula
-
-Each normally completed round awards:
-
-```text
-base completion award
-+ service quality bonus
-+ lives preserved bonus
-+ round objective bonus
-```
-
-Do not award one point per guest. Guest counts increase substantially across rounds and would inflate the economy.
-
-Do not award remaining-time bonuses in fixed-duration survival rounds. Time remaining is meaningful only for delivery-quota rounds.
-
-### 4.3 Candidate payout bands
-
-| Round | Minimum success | Typical success | Excellent success | Cumulative typical before spending |
-| ---: | ---: | ---: | ---: | ---: |
-| 1 | 3 | 4 | 5 | 4 |
-| 2 | 4 | 5 | 6 | 9 |
-| 3 | 5 | 6 | 8 | 15 |
-| 4 | 5 | 7 | 9 | 22 |
-| 5 | 6 | 8 | 10 | 30 |
-| 6 | 7 | 9 | 12 | 39 |
-| 7 | 8 | 10 | 13 | 49 |
-| 8 | 8 | 11 | 14 | 60 |
-| 9 | 9 | 12 | 16 | 72 |
-| 10 | 10 | 13 | 17 | 85 |
-| 11 | 11 | 14 | 18 | 99 |
-| 12 | 18 | 28 | 45+ | 127 |
-| 13 | 15 | 20 | 25 | 147 |
-
-These cumulative figures intentionally ignore spending. They are used to evaluate total campaign purchasing capacity.
-
-Round 12 is intentionally wider and more generous than other rounds. A strong Endurance performance should create a noticeable final-round preparation dividend.
-
-### 4.4 Candidate component weights
-
-For timed survival rounds:
-
-| Component | Candidate award |
-| --- | ---: |
-| Complete round | Round-specific base: 3–10 |
-| Lose no lives | +2 |
-| Lose no more than 10% of starting lives | +1 |
-| Average wait below target | +1 |
-| 90th-percentile wait below target | +1 |
-| Round-specific mastery condition | +1 to +3 |
-
-For quota rounds:
-
-| Component | Candidate award |
-| --- | ---: |
-| Complete quota | Round-specific base |
-| Finish faster than target | +1 to +3 |
-| Lives preserved | +0 to +2 |
-| Resource efficiency | +0 to +2 |
-| Round-specific mastery | +1 to +3 |
-
-All bonuses require caps. A player should understand the maximum possible award before starting.
-
-### 4.5 Endurance payout
-
-Round 12 uses a separate formula because it has no success threshold and may run much longer than a normal round.
-
-```text
-Endurance payout
-= floor(survival seconds / survival-point interval)
-+ floor(guests served / service-point interval)
-+ service-quality bonuses
-+ Endurance achievements
-```
-
-Initial candidate:
-
-| Component | Candidate |
-| --- | ---: |
-| Survival | 1 point per completed 30 seconds |
-| Service | 1 point per 10 guests served |
-| Average wait below Endurance target | +2 |
-| 90th-percentile wait below target | +2 |
-| Survive 5 / 10 / 15 minutes | one-time achievement tiers |
-
-The payout should be generous without making Round 13 purchases meaningless. Candidate safeguards:
-
-- Cap repeatable Credits at 40–50.
-- Continue recording uncapped survival time and score for personal-best purposes.
-- Award time achievements once per tier.
-
-The correct cap should be chosen after observing plausible survival times.
-
-## 5. Price architecture
-
-### 5.1 Tier philosophy
-
-- **Bronze:** Tactical, narrow, affordable in the round it is introduced.
-- **Silver:** Reliable, broader, and usually requires most of one round’s income.
-- **Gold:** Transformative and scarce; normally requires saving across rounds.
-
-Gold must not be universally best. A precise Bronze item used at the correct time should often outperform a mistimed Gold item.
-
-### 5.1.1 Late-campaign credit uplift
-
-Rounds 14-25 apply a canonical `creditMultiplier` of `0.15`, versus the standard `0.10` multiplier. This is the
-approved 50% increase in Credits awarded from the zoning and late-campaign arcs onward. Affordability and purchase
-mix remain playtest evidence questions.
-
-### 5.1.2 RC1.0 economy evidence remediation
-
-Current Friends & Family evidence reports both late-campaign surplus (for example, 72 Credits at R17 and a largely
-hands-off R18) and scarcity (13 Credits at R23). Credits carry forward by design, so a report is not interpretable
-without its opening Credits, earned Credits, spend, and closing Credits. The next remediation slice therefore adds a
-compact deterministic credit ledger to balance checks before changing canonical payouts.
-
-Gold Wide Doors now uses a bounded building-wide service effect: `0.20×` normal boarding delay for 20 seconds, rather
-than near-instant service for 30 seconds. It remains deliberately powerful, but cannot by itself turn a stocked R18
-into an unreadable hands-off run. Per-round payout changes remain candidate values until the ledger and focused human
-replay establish a target band.
-
-### 5.2 Candidate price bands
-
-| Tier | Candidate cost range | Intended affordability |
-| --- | ---: | --- |
-| Bronze | 4–7 | Common tactical purchase |
-| Silver | 10–15 | One major investment |
-| Gold | 20–28 | Saving or excellent performance |
-
-The former 1/3/5-style values are retired as runtime values for Musak; the candidate bands in this section remain
-post-1.0 exploration and must not override the authoritative JSON.
-
-## 6. Candidate power-up catalog
-
-These are initial prices and effect directions. Exact durations require simulation and playtesting.
-
-| Power-up | Bronze | Silver | Gold | Balance role |
-| --- | --- | --- | --- | --- |
-| Wrench | 4: repair one lift | 10: repair all lifts | 22: repair all + short immunity | Availability recovery |
-| Wide Doors | 5: 2× boarding, 15s | 12: 3× boarding, 20s | 24: near-instant, 15s | Boarding throughput |
-| Turbo | 5: one lift, 10s | 12: one lift, 20s | 25: all lifts, 12s | Travel/recovery |
-| Musak | 5: one lift, 15s | 11: all onboard guests, 15s | 23: global pause + partial soothe | Patience |
-| Freshener | 4: clear one lift | 10: clear all active stink | 22: clear all + short immunity | Quarantine recovery |
-| TARDIS | 7: one lift, 12s | 14: one lift, 25s | 28: all lifts, 12s | Capacity |
-| Group Think | 6: one floor | 13: one lift + one floor | 26: global consensus | Destination concentration |
-| Double-Decker | 7: one lift, 20s | 15: one lift, 45s | 28: all lifts, 20s | Sustained capacity with risk |
-| Open Plan | Experimental | Experimental | Experimental | Outside campaign economy |
-
-### Design cautions
-
-- TARDIS does not solve boarding delay or gravity.
-- Double-Decker should increase gravity sensitivity and retain its footprint constraint.
-- Gold global effects should be shorter than Silver single-target effects where breadth is the main upgrade.
-- Wrench immunity must not make jams irrelevant for most of a round.
-- Musak should buy time, not erase accumulated failure.
-- Group Think changes demand and may be powerful enough to require limited availability.
-
-## 7. Shop unlock schedule
-
-The shop should not display the full catalog from Round 2. Too many options obscure the problem–solution relationship.
-
-| Available before round | Newly visible items |
-| ---: | --- |
-| 3 | Wide Doors Bronze |
-| 4 | Wide Doors Silver |
-| 6 | Wrench Bronze/Silver |
-| 7 | Turbo Bronze/Silver |
-| 8 | Musak Bronze/Silver |
-| 9 | Freshener Bronze/Silver; selected Gold tiers begin appearing |
-| 10 | TARDIS and Group Think Bronze/Silver |
-| 11 | Double-Decker Bronze/Silver |
-| 12 | Gold tiers for established items |
-| 13 | Full campaign catalog except Open Plan |
-
-An item may become visible one round before it becomes strategically necessary, allowing anticipation and saving.
-
-## 8. Loadout constraints
-
-Currency alone may not create sufficient choice once the bank grows.
-
-Candidate additional constraint:
-
-- Maximum of three carried power-up items per attempt during rounds 6–9.
-- Maximum of four during rounds 10–13.
-
-This turns the shop into a loadout puzzle and prevents stockpiling every answer. It also improves UI clarity.
-
-The constraint should be playtested before adoption. If prices alone create strong scarcity, inventory slots may be unnecessary.
-
-## 9. Future achievement concept (deferred from RC1.0)
-
-### 9.1 Achievement categories
-
-| Category | Purpose |
-| --- | --- |
-| Progress | Celebrate campaign milestones |
-| Execution | Reward skillful operation |
-| Automation | Reward policy and custom-script mastery |
-| Efficiency | Reward solving problems with fewer resources |
-| Experimentation | Encourage alternative strategies |
-
-### 9.2 Candidate achievement families
-
-| Achievement | Bronze | Silver | Gold | Future reward |
-| --- | --- | --- | --- | --- |
-| Service Award | Campaign delivery milestone | Higher milestone | Major milestone | Status/cosmetic only by default |
-| Active Supervisor | Recover one built-in-automation round through timely manual intervention | 3 rounds | 6 rounds | Status/cosmetic only by default |
-| Hands-Free Inventor | Complete an eligible round hands-free using player-authored custom automation | 3 eligible rounds | Late mastery round | Status/cosmetic only by default |
-
-Any future achievement bonus must be intentionally small relative to item prices, modelled before release, and optional
-rather than a progression requirement. Their primary value is status and long-term identity.
-
-Achievements based only on raw script tick counts are rejected because inefficient scripts can generate more ticks without
-demonstrating mastery. Any future Hands-Free recognition must use clear authored-play evidence rather than an
-implementation counter.
-
-## 10. Anti-inflation rules
-
-- Award points only once per successful round completion per campaign progression state.
-- Ordinary failed attempts restore the previous-round point checkpoint, clear inventory/cart, and award nothing.
-- Round 12 death counts as completion, commits the attempt, and awards its Endurance payout once.
-- Debug and simulation modes never write career or bank progress.
-- Payouts are capped.
-- No repeatable time bonus in survival rounds.
-- Endurance survival time is a deliberate exception and uses its own capped formula.
-- Shop prices and payout bands are versioned together.
-
-## 11. Economic balance tests
-
-For each campaign version, simulate at least three player profiles:
-
-For the 1.0 release candidate, the model must cover all 25 authored rounds and use canonical payouts, unlocks,
-consumable purchases, and retries. It must report affordability, savings, and dominant-purchase share. A fixed 13-round
-payout table is historical diagnostic evidence only.
-
-### Struggling player
-
-- Minimum successful payouts.
-- Buys reactive Bronze items frequently.
-- Fails wall rounds multiple times.
-- Must never become permanently unable to continue.
-
-### Typical player
-
-- Typical payouts.
-- Buys one item most rounds.
-- Saves occasionally for Silver/Gold.
-- Faces meaningful shop choices throughout.
-
-### Expert player
-
-- Excellent payouts.
-- Uses automation to reduce consumption.
-- Can access more Gold items, but still cannot trivialize every round.
-
-Measure:
-
-- Bank before and after each shop.
-- Items affordable and selected.
-- Unspent bank.
-- Total item uses.
-- Percentage of rounds solved without purchases.
-- Whether one power-up dominates purchasing.
-- Whether any intended solution is economically unavailable.
-
-## 12. Acceptance criteria
-
-The economy is functioning when:
-
-- Round 1 does not fund most of the catalog.
-- A typical player cannot buy every relevant item before a wall.
-- Multiple viable loadouts exist.
-- Saving is sometimes better than spending.
-- Failure encourages experimentation rather than grinding.
-- Achievements feel rewarding without causing inflation.
-- Better automation measurably reduces expected consumable cost.
-- No player is permanently trapped by earlier purchases.
-- Gold effects feel exceptional and remain scarce.
-
-## 13. Current deterministic baseline
-
-The initial automated campaign projection uses the candidate minimum, typical, and excellent payout bands above while
-applying the pre-RC1.0 price baseline and canonical unlock schedule. It is historical evidence, not a current price
-assertion; regenerate it before using it for release decisions.
-
-| Profile | Purchases selected | Ending bank | Interpretation |
-| --- | ---: | ---: | --- |
-| Struggling | 12 Bronze | 81 | Recovery remains affordable, but currency accumulates too easily. |
-| Typical | 11 Silver | 99 | A meaningful purchase nearly every round still leaves excessive reserves. |
-| Expert | 3 Gold | 174 | Gold availability is delayed correctly, but low prices cannot absorb expert earnings. |
-
-This baseline confirms the predicted inflation problem. It does not approve the candidate prices or payout bands yet. The next balance version should test coordinated price and payout changes against these same profiles and human Rounds 1–3 playtests.
+Stop tuning when correctness is green, competent profiles meet the thresholds in `TEST_PLAN.md`, human play identifies
+no P0 confusion, and two consecutive accepted sweeps produce no material threshold improvement. Do not optimise a few
+rounds at the cost of end-to-end campaign delivery.

@@ -2,7 +2,7 @@
 
 **Status:** Active licensing and attribution record  
 **Owner class:** Product and engineering  
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 8 November 2026
 
 The title/menu context uses:
 
@@ -10,9 +10,9 @@ The title/menu context uses:
   ([OpenGameArt source](https://opengameart.org/content/somewhere-in-the-elevator)), CC-BY 4.0 attribution.
   The OGG file is stored as `assets/audio/menu-somewhere-in-the-elevator.ogg` and is looped without modification.
 
-Menu music, Rooftop music, VIP fanfare, Musak, and SFX use the locally imported assets below, with procedural Web
-Audio fallback tones authored in `audio.js` where no asset is intentionally assigned. Ordinary gameplay background
-tracks are intentionally disabled for RC1.0.
+Menu music, VIP fanfare, Musak, and SFX use the locally imported assets below, with procedural Web Audio fallback tones
+authored in `audio.js` where no asset is intentionally assigned. Ordinary gameplay and Rooftop Party background tracks
+are intentionally disabled for Marie's Birthday Edition.
 
 Additional imported music assets:
 
@@ -31,8 +31,6 @@ Additional imported music assets:
   stored as `assets/audio/sfx/powerup-rocket-launch.wav` without modification. Credit dklon in distributed builds.
 - “Jazz Chromatic” by Pro Sensory/Alex McCulloch ([source](https://opengameart.org/content/jazz-chromatic)), CC0.
   Attribution is appreciated; the local MP3 is `assets/audio/sfx/musak-electronic-jazz.mp3`.
-- “Trance Boss Battle” by MintoDog ([source](https://opengameart.org/content/trance-boss-battle)), CC0. The local
-  loop is `assets/audio/gameplay-rooftop-trance.mp3`.
 - “Air Whoosh” by pyranostudios ([source](https://opengameart.org/content/air-whoosh)), CC0. The local WAV is
   `assets/audio/sfx/tardis-air-whoosh.wav`.
 - “Old Elevator Door” by sinny ([source](https://opengameart.org/content/old-elevator-door)), CC0. The local MP3 is
@@ -52,9 +50,6 @@ Additional imported music assets:
 - “Robotic mechanic step sounds” by Lee Barkovich, submitted by qubodup
   ([source](https://opengameart.org/content/robotic-mechanic-step-sounds)), CC-BY 3.0. Stored as
   `assets/audio/sfx/powerup-double-decker-robot-step.wav`.
-- Selected CC0 metal collision from “27 Metal Audio Samples” by blacklodgegames
-  ([source](https://opengameart.org/content/27-metal-audio-samples-sfx)), stored as
-  `assets/audio/sfx/powerup-open-plan-metal.wav`.
 - Selected CC0 metal interaction by qubodup ([source](https://opengameart.org/content/metal-interactions)), stored as
   `assets/audio/sfx/hazard-metal-interaction.wav`.
 - “Fanfares” by Spring Spring ([source](https://opengameart.org/content/fanfare-2)), CC-BY 4.0. Credit

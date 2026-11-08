@@ -1,9 +1,8 @@
-# RC1 Friends & Family Playtest Pack
+# Marie's Birthday Edition Playtest Pack
 
 **Document role:** Tester-facing session guide and distribution checklist
-**Status:** Active Friends & Family guide
-**Baseline:** `master` commit `bc59758`; read the matching build identifier in Settings or Round Review. It is also
-added to Give Feedback automatically.
+**Status:** Active Birthday release guide  
+**Build:** `Maries-Birthday-2026-11-08.1`; confirm the matching identifier in Settings or Round Review.
 
 ## First session: normal campaign
 
@@ -24,9 +23,9 @@ After initial feedback, selected testers may receive the existing Debug URI. Acc
 Playtest Tools, Warp, and seed replay for support reproduction. This is the same game with temporary testing access;
 normal campaign progress remains separate. Do not share or use this URI for a first impression.
 
-Useful later checks include zoning and event clarity from R14, counterweight behaviour and Open Plan in R21-R23, and
-capsule responsiveness in R24-R25. Report what you expected, tried, and observed rather than trying to optimise for an
-automated test.
+Useful later checks include pets in R5, zoning in R10, Checkout waves in R7/R10/R18/R20, one-transfer journeys in
+R21-R23, **Best in Show** specifically in R22, and capsule responsiveness in R24-R25. Report what you expected, tried, and observed rather
+than trying to optimise for an automated test.
 
 ## What to include in feedback
 
@@ -47,7 +46,7 @@ automated test.
 
 ## Known limitations
 
-- The campaign is desktop-first. Mobile, Firefox, and Endless mode are not part of RC1.0.
+- The campaign is desktop-first. Mobile, Firefox, and Endless mode are not part of this release.
 - R24/R25 have automated layout coverage; real-device responsiveness feedback remains valuable.
-- Counterweight rounds intentionally couple adjacent cars. Report any controller that behaves differently when clicked
-  from the left or right side of a pair.
+- Pets and transfers are new. Report any pet/owner separation, invisible route, second transfer, lost patience history,
+  or control that changes Sweep unexpectedly.

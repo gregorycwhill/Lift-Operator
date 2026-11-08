@@ -26,7 +26,19 @@ const Registry = {
         vipServed: 0,
         defenestrationsThisRound: 0,
         totalWaitTimeServed: 0,
-        lateralTransfers: 0,
+        transfers: 0,
+        directDeliveries: 0,
+        transferWaitTotalSec: 0,
+        transferWaits: [],
+        uncoveredPassengers: 0,
+        routeRecalculations: 0,
+        petConflicts: 0,
+        petConflictResolutions: 0,
+        petConflictEjections: 0,
+        petStinkEpisodes: 0,
+        petFilterChanges: 0,
+        petsSpawned: 0,
+        petsServed: 0,
         doubleDeckerServed: 0,
         guestsSpawned: 0,
         livesLost: 0,
@@ -62,7 +74,6 @@ const Registry = {
     lastLobbyRenderTime: 0,
     automationControllerSelectedPolicy: 'manual',
     automationControllerPreviewPolicy: 'manual',
-    counterweightManualCommands: {},
     
     vipSpawned: false, vipTargetTime: 0, vipStage: 0, vipRoomFloor: -1, vipRandomFloor: -1,
     sunsetHasHappened: false, sunsetTargetTime: 0, sunsetActive: false, sunsetEndTime: 0, sunsetWarningShown: false,
@@ -105,6 +116,75 @@ const Registry = {
         if (!this.isZoningEnabled()) return true;
         return this.isFloorInLiftZone(lift, originFloor) && this.isFloorInLiftZone(lift, destinationFloor);
     },
+    canLiftAcceptPet: function(lift, guest) {
+        const filter = ['all', 'cats', 'dogs', 'none'].includes(lift?.petFilter) ? lift.petFilter : 'all';
+        if (!guest?.petType) return true;
+        if (filter === 'all') return true;
+        if (filter === 'none') return false;
+        return filter === `${guest.petType}s`;
+    },
+    canLiftServeGuest: function(lift, originFloor, destinationFloor, guest) {
+        return this.canLiftAcceptPet(lift, guest) && this.canLiftDirectlyServe(lift, originFloor, destinationFloor);
+    },
+    isTransfersEnabled: function() {
+        return Boolean(Config.GAME_DATA.rounds[Registry.stats.round]?.transfersEnabled);
+    },
+    findGuestRoute: function(originFloor, finalDestination, guest) {
+        const direct = this.lifts.find(lift => this.canLiftServeGuest(lift, originFloor, finalDestination, guest));
+        if (direct) return { legDestination: finalDestination, transferFloor: null, direct: true };
+        if (!this.isTransfersEnabled() || Number(guest?.transferCount || 0) >= 1) return null;
+        const candidates = [];
+        for (let interchange = 0; interchange < Config.numFloors; interchange++) {
+            if (interchange === originFloor || interchange === finalDestination) continue;
+            const firstLeg = this.lifts.some(lift => this.canLiftServeGuest(lift, originFloor, interchange, guest));
+            if (!firstLeg) continue;
+            const secondLeg = this.lifts.some(lift => this.canLiftServeGuest(lift, interchange, finalDestination, guest));
+            if (!secondLeg) continue;
+            candidates.push({
+                legDestination: interchange,
+                transferFloor: interchange,
+                direct: false,
+                distance: Math.abs(originFloor - interchange) + Math.abs(interchange - finalDestination)
+            });
+        }
+        candidates.sort((a, b) => a.distance - b.distance || a.transferFloor - b.transferFloor);
+        return candidates[0] || null;
+    },
+    prepareGuestRoute: function(guest, originFloor) {
+        if (!guest || guest.isVip || guest.isPartying) return true;
+        const finalDestination = Number.isInteger(guest.finalDestination) ? guest.finalDestination : guest.dest;
+        const previousLeg = guest.dest;
+        const previousTransfer = guest.transferFloor;
+        const hadPreparedRoute = Boolean(guest.routePrepared);
+        guest.finalDestination = finalDestination;
+        if (Number(guest.transferCount || 0) >= 1) {
+            guest.dest = finalDestination;
+            const covered = this.lifts.some(lift => this.canLiftServeGuest(lift, originFloor, finalDestination, guest));
+            guest.routePrepared = covered;
+            if (!covered && !guest.routeUncovered) Registry.roundStats.uncoveredPassengers++;
+            guest.routeUncovered = !covered;
+            return covered;
+        }
+        const currentRouteValid = Number.isInteger(guest.transferFloor) && guest.dest === guest.transferFloor &&
+            this.lifts.some(lift => this.canLiftServeGuest(lift, originFloor, guest.transferFloor, guest)) &&
+            this.lifts.some(lift => this.canLiftServeGuest(lift, guest.transferFloor, finalDestination, guest));
+        if (currentRouteValid) return true;
+        const route = this.findGuestRoute(originFloor, finalDestination, guest);
+        if (!route) {
+            if (!guest.routeUncovered) Registry.roundStats.uncoveredPassengers++;
+            guest.routeUncovered = true;
+            guest.routePrepared = false;
+            return false;
+        }
+        guest.dest = route.legDestination;
+        guest.transferFloor = route.transferFloor;
+        guest.routePrepared = true;
+        guest.routeUncovered = false;
+        if (hadPreparedRoute && (previousLeg !== guest.dest || previousTransfer !== guest.transferFloor)) {
+            Registry.roundStats.routeRecalculations++;
+        }
+        return true;
+    },
     validateServiceRange: function(lower, upper, floorCount = Config.numFloors) {
         const lowerText = String(lower ?? '').trim();
         const upperText = String(upper ?? '').trim();
@@ -139,8 +219,15 @@ const Registry = {
         const uncoveredFloors = floors.filter(floor => coverage[floor] === 0);
         const overlapFloors = floors.filter(floor => coverage[floor] > 1);
         const uncoveredRoutes = [];
+        const zoneCovers = (zone, origin, destination) => zone.valid &&
+            origin >= zone.lower && origin <= zone.upper && destination >= zone.lower && destination <= zone.upper;
         floors.forEach(origin => floors.forEach(destination => {
-            if (!zones.some(zone => zone.valid && origin >= zone.lower && origin <= zone.upper && destination >= zone.lower && destination <= zone.upper)) {
+            const direct = zones.some(zone => zoneCovers(zone, origin, destination));
+            const transfer = this.isTransfersEnabled() && floors.some(interchange =>
+                interchange !== origin && interchange !== destination &&
+                zones.some(zone => zoneCovers(zone, origin, interchange)) &&
+                zones.some(zone => zoneCovers(zone, interchange, destination)));
+            if (!direct && !transfer) {
                 uncoveredRoutes.push([origin, destination]);
             }
         }));
@@ -168,166 +255,6 @@ const Registry = {
     getLiftWeight: function(lift) {
         return lift.passengers.reduce((sum, p) => sum + (p.boardingWeight || (p.isGymBro ? 2 : 1)), 0);
     },
-    getCounterweightPolicyRank: function(policy) {
-        if (String(policy || '').startsWith('custom_')) return 6;
-        return ({ 'priority-voting': 5, 'weighted-voting': 5, 'priority-sweep': 4, 'zoned-low': 3, 'zoned-high': 3, voting: 2, sweep: 1 })[policy] || 0;
-    },
-    getCounterweightPolicyDriver: function(lift) {
-        if (!Registry.counterweightEnabled || !Number.isInteger(lift?.counterweightPartner)) return lift;
-        const partner = Registry.lifts[lift.counterweightPartner];
-        if (!partner) return lift;
-        const liftRank = this.getCounterweightPolicyRank(lift.automation);
-        const partnerRank = this.getCounterweightPolicyRank(partner.automation);
-        if (partnerRank > liftRank || (partnerRank === liftRank && partner.id < lift.id)) return partner;
-        return lift;
-    },
-    getCounterweightPair: function(lift) {
-        if (!this.counterweightEnabled || !Number.isInteger(lift?.counterweightPartner)) return null;
-        const partner = this.lifts[lift.counterweightPartner];
-        return partner ? [lift, partner] : null;
-    },
-    getCounterweightPairKey: function(lift) {
-        const pair = this.getCounterweightPair(lift);
-        return pair ? pair.map(car => car.id).sort((a, b) => a - b).join(':') : null;
-    },
-    beginCounterweightManualCommand: function(lift, targetFloor) {
-        const pair = this.getCounterweightPair(lift);
-        const key = this.getCounterweightPairKey(lift);
-        if (!pair || !key) return null;
-        const maxFloor = Math.max(0, Config.numFloors - 1);
-        const command = {
-            id: (this.counterweightManualCommandSequence || 0) + 1,
-            selectedLiftId: lift.id,
-            selectedFloor: targetFloor,
-            partnerLiftId: pair.find(car => car.id !== lift.id)?.id ?? null,
-            partnerFloor: maxFloor - targetFloor,
-            phase: 'travelling'
-        };
-        this.counterweightManualCommandSequence = command.id;
-        this.counterweightManualCommands[key] = command;
-        return command;
-    },
-    getCounterweightManualCommand: function(lift) {
-        const key = this.getCounterweightPairKey(lift);
-        return key ? this.counterweightManualCommands[key] || null : null;
-    },
-    isCounterweightManualServiceLift: function(lift, floor = lift?.targetFloor) {
-        const command = this.getCounterweightManualCommand(lift);
-        return Boolean(command && command.selectedLiftId === lift?.id && command.selectedFloor === floor && command.phase !== 'complete');
-    },
-    getCounterweightManualServiceLiftAtFloor: function(floor) {
-        return Object.values(this.counterweightManualCommands || {})
-            .map(command => this.lifts[command.selectedLiftId])
-            .find(lift => lift && this.isCounterweightManualServiceLift(lift, floor) &&
-                Math.abs(lift.pos - floor * this.floorHeight) <= 1 &&
-                ['DOORS_OPENING', 'BOARDING', 'DOORS_CLOSING'].includes(lift.state)) || null;
-    },
-    completeCounterweightManualCommand: function(lift) {
-        const command = this.getCounterweightManualCommand(lift);
-        if (!command || command.selectedLiftId !== lift?.id) return false;
-        command.phase = 'complete';
-        const pair = this.getCounterweightPair(lift) || [];
-        pair.forEach(car => {
-            car.manualOverride = false;
-            car.counterweightManualOverride = false;
-        });
-        const key = this.getCounterweightPairKey(lift);
-        if (key) delete this.counterweightManualCommands[key];
-        return true;
-    },
-    getCounterweightPolicyCoordinator: function(lift) {
-        const pair = this.getCounterweightPair(lift);
-        if (!pair) return lift;
-        return pair.reduce((lowest, candidate) => candidate.id < lowest.id ? candidate : lowest, pair[0]);
-    },
-    releaseCounterweightManualOverride: function(lift) {
-        const pair = this.getCounterweightPair(lift);
-        if (!pair) {
-            if (lift?.manualOverride && lift.state === 'IDLE' && Math.round(lift.pos / this.floorHeight) === lift.targetFloor) {
-                lift.manualOverride = false;
-                return true;
-            }
-            return false;
-        }
-        if (this.getCounterweightManualCommand(lift)) return false;
-        const ready = pair.every(car => car.manualOverride && car.state === 'IDLE' &&
-            Math.abs(car.pos - car.targetFloor * this.floorHeight) <= 1);
-        if (!ready) return false;
-        pair.forEach(car => {
-            car.manualOverride = false;
-            car.counterweightManualOverride = false;
-        });
-        return true;
-    },
-    isCounterweightPolicy: function(lift) {
-        return Boolean(Registry.counterweightEnabled && lift && this.getCounterweightPolicyRank(lift.automation) > 0);
-    },
-    getCounterweightPairTarget: function(lift, dir = 1, priorityOnly = false, weighted = false, includeCurrentFloor = false) {
-        if (!this.isCounterweightPolicy(lift)) return -1;
-        const driver = this.getCounterweightPolicyDriver(lift);
-        const partner = Registry.lifts[driver.counterweightPartner];
-        if (!partner) return -1;
-        const maxFloor = Math.max(0, Config.numFloors - 1);
-        const current = Math.round(driver.pos / Registry.floorHeight);
-        const direction = Number(dir) === -1 ? -1 : 1;
-        const circuitPolicy = ['sweep', 'priority-sweep', 'zoned-low', 'zoned-high'].includes(driver.automation);
-        const hasServiceReasonAt = (targetLift, floor) => {
-            const isDouble = targetLift.isDoubleDecker || targetLift.doubleDeckerTimer > 0;
-            if (targetLift.passengers.some(passenger => passenger.dest === floor || (isDouble && passenger.dest === floor + 1))) return true;
-            const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
-            const isStinky = this.isLiftStinky(targetLift);
-            if (this.getLiftWeight(targetLift) >= capacity) return false;
-            // Pair routing examines the next physical leg. A stale direction
-            // from the previous leg must not reject a guest just as the pair
-            // reverses toward that guest.
-            const prospectiveDirection = targetLift.id === driver.id ? direction : -direction;
-            return Boolean(Registry.floors[floor]?.waitingGuests.some(guest => {
-                if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return false;
-                return typeof window.canGuestBoardLift === 'function'
-                    ? window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity, { directionOverride: prospectiveDirection })
-                    : this.canLiftDirectlyServe(targetLift, floor, guest.dest);
-            }));
-        };
-        const scoreAt = (targetLift, floor) => {
-            let score = targetLift.passengers.filter(passenger => passenger.dest === floor).length * 10;
-            const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(targetLift.id) : Config.liftCapacity;
-            const isStinky = this.isLiftStinky(targetLift);
-            if (this.getLiftWeight(targetLift) >= capacity) return score;
-            Registry.floors[floor]?.waitingGuests.forEach(guest => {
-                if (priorityOnly && guest.status !== 'critical' && guest.status !== 'annoyed') return;
-                if (typeof window.canGuestBoardLift === 'function' && window.canGuestBoardLift(targetLift, guest, floor, isStinky, capacity)) {
-                    score += weighted && guest.status === 'critical' ? 10 : (guest.status === 'annoyed' ? 3 : 1);
-                }
-            });
-            return score;
-        };
-        let best = -1;
-        let bestScore = 0;
-        // Sweep must inspect stops in the actual direction of travel. The old
-        // ground-to-roof loop selected the farthest valid down stop first,
-        // allowing a pair to sail past nearer board/alight demand.
-        for (let target = includeCurrentFloor ? current : current + direction;
-            target >= 0 && target <= maxFloor;
-            target += direction) {
-            const partnerTarget = maxFloor - target;
-            if (!this.isFloorInLiftZone(driver, target) || !this.isFloorInLiftZone(partner, partnerTarget)) continue;
-            // A paired Sweep is a physical circuit, not a demand auction:
-            // the first compatible board/alight stop for either car in the
-            // current paired direction wins. This makes every service stop
-            // predictable and prevents one side from sailing past demand.
-            if (circuitPolicy && (hasServiceReasonAt(driver, target) || hasServiceReasonAt(partner, partnerTarget))) {
-                return lift.id === driver.id ? target : partnerTarget;
-            }
-            if (!circuitPolicy) {
-                const score = scoreAt(driver, target) + scoreAt(partner, partnerTarget);
-                if (score > bestScore || (score === bestScore && score > 0 && (best < 0 || Math.abs(target - current) < Math.abs(best - current)))) {
-                    best = target;
-                    bestScore = score;
-                }
-            }
-        }
-        return best < 0 ? -1 : (lift.id === driver.id ? best : maxFloor - best);
-    },
     isLiftStinky: function(lift) {
         if (!lift) return false;
         const immune = lift.freshenerTimer > 0 ||
@@ -336,13 +263,11 @@ const Registry = {
         const gymStink = window.isRoundEventEnabled?.(Config.GAME_DATA.rounds[Registry.stats.round], 'gym') &&
             window.isRoundEventEnabled?.(Config.GAME_DATA.rounds[Registry.stats.round], 'stink') &&
             lift.passengers.filter(passenger => passenger.isGymBro).length >= Number(Config.gymBroStinkThreshold || 3);
-        return Boolean(lift.stinkTimer > 0 || gymStink);
+        const petStink = window.isRoundEventEnabled?.(Config.GAME_DATA.rounds[Registry.stats.round], 'pets') &&
+            lift.passengers.filter(passenger => passenger.petType).length >= Number(Config.petStinkThreshold || 5);
+        return Boolean(lift.stinkTimer > 0 || gymStink || petStink);
     },
     findSweepTarget: function(lift, dir, priorityOnly = false, includeCurrentFloor = false) {
-        if (this.isCounterweightPolicy(lift)) {
-            const pairTarget = this.getCounterweightPairTarget(lift, dir, priorityOnly, false, includeCurrentFloor);
-            if (pairTarget >= 0) return pairTarget;
-        }
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);
         let maxCap = (typeof PowerUps !== 'undefined') ? PowerUps.getLiftCapacity(lift.id) : (Config.liftCapacity || 10);
         let isStinky = this.isLiftStinky(lift);
@@ -377,10 +302,6 @@ const Registry = {
         return -1;
     },
     getBestFloor: function(lift, weighted) {
-        if (this.isCounterweightPolicy(lift)) {
-            const pairTarget = this.getCounterweightPairTarget(lift, lift.sweepDirection || 1, false, Boolean(weighted), false);
-            if (pairTarget >= 0) return pairTarget;
-        }
         let bestFloors = [];
         let maxScore = -1;
         let currentFloor = Math.round(lift.pos / Registry.floorHeight);

@@ -149,17 +149,6 @@ window.resumeGame = function() {
 window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
     const lift = Registry.lifts[liftIndex];
     if (!lift) return false;
-    const isPolicyCommand = options.manualOverride === false;
-    const pair = Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)
-        ? Registry.lifts[lift.counterweightPartner]
-        : null;
-    // A pair has one physical policy decision per animation frame. The first
-    // worker result wins; the mirrored target is then applied to both cars.
-    // Manual commands remain immediate overrides and are never suppressed.
-    if (isPolicyCommand && pair && Number.isFinite(Registry.counterweightLastPolicyFrame) &&
-        Registry.counterweightPolicyFrame === Registry.counterweightLastPolicyFrame) {
-        return false;
-    }
     const maxFloor = Math.max(0, Config.numFloors - 1);
     const target = Math.max(0, Math.min(maxFloor, Math.round(Number(targetFloor))));
     const setTarget = (targetLift, floor) => {
@@ -177,16 +166,6 @@ window.applyLiftTarget = function(liftIndex, targetFloor, options = {}) {
         }
     };
     setTarget(lift, target);
-    if (Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)) {
-        const partner = Registry.lifts[lift.counterweightPartner];
-        if (partner) setTarget(partner, maxFloor - target);
-        if (partner && options.manualOverride === true) {
-            lift.counterweightManualOverride = true;
-            partner.counterweightManualOverride = true;
-            Registry.beginCounterweightManualCommand?.(lift, target);
-        }
-    }
-    if (isPolicyCommand && pair) Registry.counterweightLastPolicyFrame = Registry.counterweightPolicyFrame;
     return true;
 };
 
@@ -200,12 +179,6 @@ window.setLiftTarget = function(liftIndex, targetFloor) {
     
     if (Registry.lifts[liftIndex]) {
         const lift = Registry.lifts[liftIndex];
-        const isActiveZonedPolicy = Boolean(lift.servicePolicy?.active);
-        if (typeof Registry.canLiftDirectlyServe === 'function' && !Registry.isFloorInLiftZone(lift, targetFloor) && !isActiveZonedPolicy) {
-            if (window.Game.Audio) window.Game.Audio.publish('ui_error', { reason: 'floor-outside-zone' });
-            if (typeof GameUI === 'function') GameUI().showToast?.(`Lift ${liftIndex + 1} is zoned for ${lift.serviceLower === 0 ? 'G' : lift.serviceLower}–${lift.serviceUpper}.`);
-            return;
-        }
         Registry.roundStats.manualClicks++;
         
         window.applyLiftTarget(liftIndex, targetFloor, { manualOverride: true });
@@ -216,24 +189,9 @@ window.setLiftAutomation = function(liftIndex, mode) {
     if (Registry.lifts[liftIndex]) {
         const lift = Registry.lifts[liftIndex];
         const VM = window.Game.Automation;
-        const pair = Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)
-            ? Registry.lifts[lift.counterweightPartner]
-            : null;
-        const pairOwned = Boolean(pair && (mode === 'manual' || Registry.getCounterweightPolicyRank?.(mode) > 0));
-        const targets = pairOwned ? [lift, pair] : [lift];
-        if (pair && mode !== 'manual') {
-            const commandKey = Registry.getCounterweightPairKey?.(lift);
-            if (commandKey) delete Registry.counterweightManualCommands[commandKey];
-            [lift, pair].forEach(car => {
-                car.manualOverride = false;
-                car.counterweightManualOverride = false;
-            });
-        }
-        targets.forEach(targetLift => {
-            targetLift.automation = mode;
-            if (mode !== 'manual') targetLift.manualOverride = false;
-            if (VM?.applyPolicyToLift) VM.applyPolicyToLift(targetLift, mode);
-        });
+        lift.automation = mode;
+        if (mode !== 'manual') lift.manualOverride = false;
+        if (VM?.applyPolicyToLift) VM.applyPolicyToLift(lift, mode);
 
         const ui = GameUI();
         if (typeof ui.updateLiftAutomationUI === 'function') {
@@ -254,7 +212,11 @@ window.createRoundStats = function() {
         manualClicks: 0, jammedLiftsFixed: 0, fullyLoadedLifts: 0, servedThisRound: 0,
         happyServed: 0, annoyedServed: 0, criticalServed: 0, vipServed: 0,
         defenestrationsThisRound: 0, totalWaitTimeServed: 0,
-        lateralTransfers: 0, doubleDeckerServed: 0, guestsSpawned: 0, livesLost: 0,
+        transfers: 0, directDeliveries: 0, transferWaitTotalSec: 0, transferWaits: [],
+        uncoveredPassengers: 0, routeRecalculations: 0,
+        petConflicts: 0, petConflictResolutions: 0, petConflictEjections: 0,
+        petStinkEpisodes: 0, petFilterChanges: 0, petsSpawned: 0, petsServed: 0,
+        doubleDeckerServed: 0, guestsSpawned: 0, livesLost: 0,
         journeyTimes: [], zoneRefusals: 0, uncoveredRoutes: 0,
         openingCredits: Math.max(0, Number(Registry.points) || 0), creditsSpent: 0
     };
@@ -353,12 +315,14 @@ window.getRoundChallengeIds = function(roundDefinition) {
 
 window.createLiftState = function(id) {
     return {
-        id, targetFloor: 0, pos: 0, passengers: [], counterweightPartner: null,
+        id, targetFloor: 0, pos: 0, passengers: [],
         lastActionTime: 0, automation: 'manual', sweepDirection: 1,
-        counterweightManualOverride: false,
-        manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0, gymStinkActive: false,
+        manualOverride: false, commandRevision: 0, isJammed: false, jamTimer: 0, stinkTimer: 0,
+        gymStinkActive: false, petStinkActive: false,
         tardisTimer: 0, tardisExpiryExodus: false, turboTimer: 0, freshenerTimer: 0,
-        musakTimer: 0, doubleDeckerTimer: 0, openPlanTimer: 0, wideDoorsTimer: 0, wideDoorsMultiplier: 1,
+        musakTimer: 0, doubleDeckerTimer: 0, petSnacksTimer: 0,
+        petConflictDeadline: 0, petConflictPending: false, petConflictEjectPending: false, petFilter: 'all',
+        wideDoorsTimer: 0, wideDoorsMultiplier: 1,
         sardineScored: false, isDoubleDecker: false,
         state: 'IDLE', stateProgress: 0, effects: [], lastAutomationTime: 0,
         serviceCycleId: 0, serviceBoarded: 0,
@@ -387,7 +351,6 @@ window.createRoundState = function(round, seed, options = {}) {
             : Config.roundTime,
         lives: Number.isFinite(options.restoredLives) ? options.restoredLives : Config.startingLives,
         currentSpawnChance: definition.spawnStart,
-        counterweightEnabled: Boolean(definition.counterweightEnabled),
         capsuleMode: Boolean(definition.capsuleMode),
         capsuleTravelSecPerFloor: Number(definition.capsuleTravelSecPerFloor || 0),
         lifts: Array.from({ length: definition.lifts }, (_, id) => window.createLiftState(id)),
@@ -408,10 +371,8 @@ window.createRoundState = function(round, seed, options = {}) {
         gymFloor: -1
     };
 
-    // Sweep is the normal operational baseline once the player has completed
-    // the Round 2 deployment lesson. Round 2 deliberately remains Manual so
-    // that its tutorial has a genuine action to teach.
-    if (definition.round >= Number(Config.GAME_DATA.automationUnlocks.sweep || 2) && definition.round !== 2) {
+    // Sweep is the normal operational baseline from its Round 2 introduction.
+    if (definition.round >= Number(Config.GAME_DATA.automationUnlocks.sweep || 2)) {
         state.lifts.forEach(lift => { lift.automation = 'sweep'; });
     }
 
@@ -431,29 +392,12 @@ window.createRoundState = function(round, seed, options = {}) {
         state.gymFloor = window.getRandomInt(1, definition.floors - 2);
     }
 
-    // Service zoning starts as full-building coverage. Players can narrow each
-    // lift's inclusive band in the Workshop once the scale rounds introduce it.
+    // Service zoning is independent from routing automation and begins with
+    // full-building coverage.
     state.lifts.forEach(lift => {
         lift.serviceLower = 0;
         lift.serviceUpper = definition.floors - 1;
     });
-
-    if (state.counterweightEnabled) {
-        const maxFloor = definition.floors - 1;
-        const lowerMiddle = Math.floor(maxFloor / 2);
-        const floorHeight = 600 / definition.floors;
-        for (let index = 0; index < state.lifts.length; index += 2) {
-            const first = state.lifts[index];
-            const second = state.lifts[index + 1];
-            if (!first || !second) continue;
-            first.counterweightPartner = second.id;
-            second.counterweightPartner = first.id;
-            first.pos = lowerMiddle * floorHeight;
-            first.targetFloor = lowerMiddle;
-            second.pos = (maxFloor - lowerMiddle) * floorHeight;
-            second.targetFloor = maxFloor - lowerMiddle;
-        }
-    }
 
     return state;
 };
@@ -467,7 +411,6 @@ window.applyRoundState = function(roundState, options = {}) {
     Registry.stats.lives = roundState.lives;
     Registry.stats.currentSpawnChance = roundState.currentSpawnChance;
     Registry.points = Number.isFinite(roundState.points) ? roundState.points : Registry.points;
-    Registry.counterweightEnabled = Boolean(roundState.counterweightEnabled);
     Registry.capsuleMode = Boolean(roundState.capsuleMode);
     Registry.capsuleTravelSecPerFloor = Number(roundState.capsuleTravelSecPerFloor || 0);
     if (options.resetCampaign) Registry.stats.served = 0;
@@ -502,7 +445,6 @@ window.initializeRound = function(round, options = {}) {
     window.Game.Audio?.publish('rooftop_released', { reason: 'round_initialized', round });
     window.clearAttemptInventory();
     Registry.activeOperation = options.operation || null;
-    Registry.counterweightManualCommands = {};
     const hasRoundOverride = options.seedOverride !== undefined ||
         (Registry.debugSeedOverrideRound === round && Registry.debugSeedOverride !== null);
     const overrideSeed = options.seedOverride !== undefined ? options.seedOverride : Registry.debugSeedOverride;

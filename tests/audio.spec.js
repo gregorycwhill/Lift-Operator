@@ -47,18 +47,18 @@ test('semantic gameplay audio events are accepted without changing game state', 
     ]);
 });
 
-test('rooftop music state survives PSI updates until the event releases', async ({ page }) => {
+test('rooftop events never activate dedicated music', async ({ page }) => {
     await page.goto(GAME_URL);
     const result = await page.evaluate(() => {
         const audio = window.Game.Audio;
         audio.publish('rooftop_started', { floor: 14 });
-        const activeBeforePsi = audio.getStatus().rooftopActive;
+        const activeBeforePsi = audio.getStatus().rooftopSourceActive;
         audio.setPsi(0.2); audio.setPsi(0.9);
-        const activeAfterPsi = audio.getStatus().rooftopActive;
+        const activeAfterPsi = audio.getStatus().rooftopSourceActive;
         audio.publish('rooftop_released', { floor: 14 });
-        return { activeBeforePsi, activeAfterPsi, activeAfterRelease: audio.getStatus().rooftopActive };
+        return { activeBeforePsi, activeAfterPsi, activeAfterRelease: audio.getStatus().rooftopSourceActive, enabled: audio.getStatus().rooftopMusicEnabled };
     });
-    expect(result).toEqual({ activeBeforePsi: true, activeAfterPsi: true, activeAfterRelease: false });
+    expect(result).toEqual({ activeBeforePsi: false, activeAfterPsi: false, activeAfterRelease: false, enabled: false });
 });
 
 test('production lifecycle transitions publish audio semantics', async ({ page }) => {
@@ -117,8 +117,7 @@ test('reset clears the previous round audio sources before retry', async ({ page
         const afterReset = audio.getStatus();
         return { beforeReset, afterReset };
     });
-    expect(result.beforeReset.rooftopActive).toBe(true);
-    expect(result.afterReset.rooftopActive).toBe(false);
+    expect(result.beforeReset.rooftopSourceActive).toBe(false);
     expect(result.afterReset.rooftopSourceActive).toBe(false);
     expect(result.afterReset.musicSourceCount).toBeLessThanOrEqual(2);
 });
@@ -198,7 +197,7 @@ test('audio reports hysteresis and supports explicit teardown', async ({ page })
     expect(result.afterTeardown.loadedAssetCount).toBe(0);
 });
 
-test('guest urgency, UI error, and victory use authoritative flows', async ({ page }) => {
+test('guest urgency and victory use authoritative flows while manual zone override stays valid', async ({ page }) => {
     await page.goto(GAME_URL);
     const events = await page.evaluate(() => {
         const audio = window.Game.Audio;
@@ -245,9 +244,8 @@ test('guest urgency, UI error, and victory use authoritative flows', async ({ pa
         audio.publish = originalPublish;
         return received;
     });
-    expect(events).toEqual(expect.arrayContaining([
-        'guest_urgency', 'ui_error', 'victory'
-    ]));
+    expect(events).toEqual(expect.arrayContaining(['guest_urgency', 'victory']));
+    expect(events).not.toContain('ui_error');
 });
 
 test('guest refusal is emitted from a controlled boarding frame', async ({ page }) => {
@@ -292,24 +290,7 @@ test('failed menu-music fetch is recorded without blocking the game', async ({ p
     expect(result.gamePresent).toBe(true);
 });
 
-test('invalid Rooftop music is recorded as a decode failure without blocking the game', async ({ page }) => {
-    await page.route('**/assets/audio/gameplay-rooftop-trance.mp3', route => route.fulfill({
-        status: 200,
-        contentType: 'audio/mpeg',
-        body: 'not-a-valid-audio-file'
-    }));
-    await page.goto(GAME_URL);
-    await page.waitForTimeout(500);
-    const result = await page.evaluate(() => ({
-        initialized: window.Game.Audio.getStatus().initialized,
-        failedAssetCount: window.Game.Audio.getStatus().failedAssetCount,
-        gamePresent: !!window.Registry && !!window.Game.Engine
-    }));
-    expect(result.failedAssetCount >= 1 || result.initialized === false).toBe(true);
-    expect(result.gamePresent).toBe(true);
-});
-
-test('context changes and mute stop active music sources without leaving rooftop state orphaned', async ({ page }) => {
+test('context changes and mute leave rooftop music disabled', async ({ page }) => {
     await page.goto(GAME_URL);
     const result = await page.evaluate(() => {
         const audio = window.Game.Audio;
@@ -323,7 +304,7 @@ test('context changes and mute stop active music sources without leaving rooftop
         const menu = audio.getStatus();
         return { beforeMute, muted, menu };
     });
-    expect(result.beforeMute.rooftopActive).toBe(true);
+    expect(result.beforeMute.rooftopSourceActive).toBe(false);
     expect(result.muted.musicSourceCount).toBe(0);
     expect(result.muted.rooftopSourceActive).toBe(false);
     expect(result.menu.context).toBe('menu');
@@ -440,9 +421,8 @@ test('Wrench uses the documented two-second CC-BY metal excerpt and does not shi
     expect((await request.get('http://127.0.0.1:5500/assets/audio/sfx/powerup-wrench-toolbox.wav')).status()).toBe(404);
 });
 
-test('verified imported audio assets are available at their production paths', async ({ request }) => {
+test('verified imported audio assets are available and retired tracks are absent', async ({ request }) => {
     for (const file of [
-        'gameplay-rooftop-trance.mp3',
         'sfx/powerup-rocket-launch.wav',
         'sfx/musak-electronic-jazz.mp3',
         'sfx/tardis-air-whoosh.wav',
@@ -452,7 +432,6 @@ test('verified imported audio assets are available at their production paths', a
         'sfx/dragon-studio-alien-song-323613.mp3',
           'sfx/powerup-wrench-metal.wav',
         'sfx/powerup-double-decker-robot-step.wav',
-        'sfx/powerup-open-plan-metal.wav',
         'sfx/hazard-metal-interaction.wav',
         'sfx/event-vip-fanfare.wav',
         'sfx/ui-purchase-coin.wav',
@@ -461,9 +440,11 @@ test('verified imported audio assets are available at their production paths', a
         const response = await request.get(`http://127.0.0.1:5500/assets/audio/${file}`);
         expect(response.ok(), file).toBe(true);
     }
+    expect((await request.get('http://127.0.0.1:5500/assets/audio/gameplay-rooftop-trance.mp3')).status()).toBe(404);
+    expect((await request.get('http://127.0.0.1:5500/assets/audio/sfx/powerup-open-plan-metal.wav')).status()).toBe(404);
 });
 
-test('RC1 disables ordinary gameplay background music while retaining menu, Rooftop, and VIP audio', async ({ page }) => {
+test('Birthday edition disables ordinary gameplay and Rooftop music while retaining VIP audio', async ({ page }) => {
     await page.goto(GAME_URL);
     const result = await page.evaluate(() => {
         const audio = window.Game.Audio;
@@ -477,8 +458,8 @@ test('RC1 disables ordinary gameplay background music while retaining menu, Roof
     });
     expect(result.gameplay.gameplayBackgroundMusicEnabled).toBe(false);
     expect(result.gameplay.musicSourceCount).toBe(0);
-    expect(result.rooftop.rooftopActive).toBe(true);
-    expect(result.rooftop.rooftopTrackGain).toBe(0.75);
+    expect(result.rooftop.rooftopMusicEnabled).toBe(false);
+    expect(result.rooftop.rooftopSourceActive).toBe(false);
     expect(result.vip.vipFanfareGain).toBe(0.675);
 });
 

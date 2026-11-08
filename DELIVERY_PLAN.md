@@ -1,214 +1,128 @@
-# Friends & Family Release Candidate Delivery Plan
+# Marie's Birthday Edition Delivery Plan
 
-**Document role:** Current delivery scope and release decision only
-**Status:** Active release-evidence slice
-**Release target:** Friends & Family RC1.0 minor release (no release tag has been created)
-**Owner class:** Product and engineering
-**Last reviewed:** 30 August 2026
-**Implementation baseline:** `master` at `3b31f07` — Friends & Family metadata build
+**Document role:** Current implementation scope and release decision  
+**Status:** Automated implementation complete; focused human acceptance pending  
+**Release target:** Marie's Birthday Edition  
+**Owner class:** Product and engineering  
+**Last reviewed:** 8 November 2026  
+**Implementation baseline:** `master` at `2e082dd`
 
 ## Outcome
 
-Place the complete 25-round desktop campaign in the hands of Friends & Family testers and gather feedback that is
-actionable, attributable to a build, and safe to interpret. This is an evidence and packaging slice, not a feature
-expansion. Product sequencing belongs in `ROADMAP.md`; durable rules belong in the design documents; test evidence and
-human acceptance belong in `TEST_PLAN.md`.
+Deliver a playable birthday release on time. Routine service begins in Sweep, while the player's interesting decisions
+come from manual intervention, lift zones, pet admission, power-ups, and one-transfer passenger networks. Remove the
+unreliable Counterweight/Open Plan experiment rather than repairing it again.
 
-## Current minor release — automation and zoned-flow clarity
+Delivery takes precedence over future extensibility. Do not build general party, topology, event-authoring, Lift
+Bouncer, or migration frameworks for this release.
 
-**Status:** Ready for Friends & Family replay — full automated gate passed 30 August 2026. It is superseded by the
-current service-stop reliability polish release below.
+## Locked product decisions
 
-This small Friends & Family release contains no roadmap functionality. It fixes the fresh playtest reports that obscure
-automation onboarding, make Zoning less valuable than intended, and leave Counterweight Sweep unreliable.
+1. Every eligible lift begins in Sweep from Round 2, including Round 2 itself.
+2. Alternative automation and the Workshop remain available but optional; no campaign round requires their use.
+3. Service Zone is independent of routing automation. Each lift may remain in Sweep while using All, Low, High, or
+   Custom service coverage. Zoning is introduced in Round 10.
+4. Rooftop music is disabled. Rooftop notices, visuals, and ordinary effects remain.
+5. Counterweights and Open Plan are removed completely from campaign, runtime, shop, tests, simulations, and current
+   documentation.
+6. Checkout occurs in fewer, stronger authored waves: introductory R7, recombination R10, and late network pressure in
+   R18 and R20. It is not a permanent every-second-round traffic mix.
+7. Zoned guests may complete a deterministic direct journey or one automatic transfer. Direct service is preferred;
+   original patience continues through the entire journey with no transfer allowance.
+8. Pets begin in R5 **Pet-Friendly Hotel**, recur from R5 onward, and receive a second focus in R22 **Best in Show**.
+9. Cats and dogs accompany otherwise ordinary guests. The owner consumes normal capacity; the pet consumes no extra
+   space or weight. Pet owners are never VIP, Checkout, Room Service, or Gym Bro guests in this release.
+10. Every lift has a compact pet-admission setting: All, Cats, Dogs, or No Pets.
+11. A cat and dog sharing a lift starts a five-second conflict warning. Pet Snacks may resolve or prevent it. If it is
+    unresolved, the lift clears at its next stop and both pet owners become Critical; original patience is retained.
+12. Five or more pets create threshold-based Stink. Pet owners are Stink-immune. Air Freshener suppresses Stink but not
+    conflict; Pet Snacks suppresses conflict but not Stink.
+13. R21-R23 use conventional independent lifts: transfer introduction, Best in Show, and advanced interchange mastery.
 
-| Workstream | Release outcome |
-| --- | --- |
-| Passenger display | Sort in-car tokens visually by VIP, Critical, Annoyed, Happy, then destination. The authoritative passenger array and all simulation/boarding order remain unchanged. |
-| Campaign tutorials | R2 remains Manual and teaches Sweep. R3 begins with both lifts on Sweep and teaches assigning Priority Sweep to one lift. Tutorial completion is scoped to the campaign seed, retained for retry/restore, and reset by New Campaign. |
-| Sweep baseline | Every post-R2 Sweep-eligible authored round begins with all lifts on Sweep; players may replace any assignment during countdown. |
-| Zoned transit | A zoned lift traverses no-service floors at `2×` its current movement speed. Counterweight pairs receive this boost only when both cars are in their own no-service sections. |
-| Counterweight Sweep | Use a canonical pair direction and stop at the first compatible pickup/drop-off for either car, then reverse only when the paired direction has no remaining service reason. Manual pair targets remain immediate exceptions. |
+## Delivery slices
 
-## Next Friends & Family polish release — service-stop reliability
+### A. Remove obsolete mechanics and friction
 
-**Status:** Ready for Friends & Family replay — full automated gate passed 31 August 2026. Release metadata is
-`RC1.0-friends-family-2026-08-31` / balance `0.2.12-service-stop-reliability`.
+- Default R2+ fleets to Sweep and replace the deployment tutorial with concise manual-override guidance.
+- Disable Rooftop music and remove it from the production audio manifest/package.
+- Remove Counterweight state, routing, presentation, authored data, screenshots, tests, and simulation profiles.
+- Remove Open Plan timers, transfers, shop entries, inventory, briefing terms, and tests.
+- Safely refund saved Open Plan inventory and restart incompatible in-progress late rounds at a round boundary.
 
-This minor release addresses PTF-042 without adding roadmap functionality. It anchors the shared notice rail over the
-building roof/headroom, removes sticky touch hover state from lift shafts, updates the R11 Gym Bros copy, and makes
-service allocation explicit when cars share a busy floor. Counterweight Sweep evaluates a candidate stop using the
-pair's prospective physical direction, so a reversing pair cannot reject a guest using the direction of its previous
-leg. Release metadata increments with the canonical balance source and is visible in Settings and feedback diagnostics.
+### B. Independent zoning and Checkout waves
 
-| Workstream | Acceptance outcome |
-| --- | --- |
-| Notice rail | VIP, Rooftop, Last Drinks, and teaching notices anchor above the shaft bank without covering the lobby, board controls, or active guests. |
-| Touch polish | Shaft hover feedback is limited to fine-pointer devices and cannot remain after a touchscreen tap. |
-| Shared-floor service | Only actively boarding, eligible cars participate in high-pressure allocation; an inactive/closing car cannot claim a guest from a car ready to board. |
-| Counterweight Sweep | Each paired candidate evaluates the direction it will travel to the stop. Compatible board/alight opportunities, including Critical guests, are serviced before the pair continues or reverses. |
-| Release identity | Settings and prefilled feedback identify the same current immutable build and balance versions. |
+- Add per-lift All/Low/High/Custom zone state independent of automation selection.
+- Preserve manual out-of-zone overrides; Sweep resumes inside the configured zone afterwards.
+- Unlock and teach zoning in R10; retain visual coverage feedback without adding a permanent panel.
+- Replace whole-round Checkout probability with configured wave windows in R7, R10, R18, and R20.
 
-## Current Friends & Family regression remediation — rail and paired Sweep
+### C. Functional pets
 
-**Status:** Implemented — full release gate pending. Release metadata is
-`RC1.0-friends-family-2026-08-31.1` / balance `0.2.13-rail-pair-regressions`.
+- Spawn deterministic cat/dog owners from R5 onward using per-round pet rates.
+- Render legible pet identity in queues and cars.
+- Add compact per-lift pet filter controls and boarding enforcement.
+- Add conflict warning, Pet Snacks, next-stop clearing, Critical consequence, and conflict-safe expiry behavior.
+- Reuse established threshold-Stink behavior for five-pet congregation and pet-owner immunity.
 
-This is a regression-hardening slice for reports that survived earlier targeted fixes. It removes the message rail's
-mixed parent-coordinate model, reserves stable roof headroom, retires sticky shaft hover feedback, expires abandoned
-tutorial glows after 30 seconds, and makes Counterweight Sweep scan stops in the actual direction of travel. It also
-normalises non-Gravity briefing language from mass/weight to space/bulk and lowers Rooftop/VIP audio.
+### D. One-transfer journeys
 
-| Workstream | Acceptance outcome |
-| --- | --- |
-| Notice rail | Rail remains a `#game-area` sibling across every board rebuild and is always above `#world`, clear of lobby and service cells. VIP, Rooftop, Last Drinks, and teaching notices share this invariant. |
-| Tutorials and touch | An abandoned numbered tutorial clears its targets/message after 30 seconds without recording completion. Shafts have no persistent hover-background state after touch. |
-| Counterweight Sweep | Pair candidates are iterated nearest-first in both directions; the next compatible pickup or drop-off for either car is serviced before the pair continues. |
-| Briefing/audio polish | Only active Gravity briefings use load/weight language. Rooftop music is `0.75×`; VIP fanfare is `0.675×` original effect gain. |
-| Regression evidence | Browser tests cover all rail-message categories, rebuild/resize parent stability, tutorial expiry, and an actual downward pair service cycle in addition to target selection. |
+- Prefer direct service; otherwise select a deterministic interchange covered by both legs.
+- Track final destination, current leg destination, transfer floor/count, and original spawn time on the same guest.
+- Requeue at the interchange without resetting patience and prohibit more than one transfer or any loop.
+- Recalculate a waiting connection when zones or pet filters change; visibly report uncovered traffic without silently
+  teleporting or deleting a guest.
 
-## In scope
+### E. Campaign, balance, and release
 
-- Publish and verify the public GitHub Pages build from the baseline commit.
-- Verify the unsigned Google Form feedback path, prefilled diagnostic string, copied diagnostic string, and optional
-  shareable media-link field.
-- Run the limited internal desktop/device confirmation defined in `TEST_PLAN.md`.
-- Build, open, and inspect the itch.io-compatible ZIP from the same commit.
-- Collect normal-campaign feedback first, then give selected testers the existing Debug manifest URI for higher-round
-  access.
-- Triage each report as a release blocker, a balance/polish candidate, or later-roadmap work.
+- R5 becomes Pet-Friendly Hotel. Voting remains optional.
+- R10 introduces basic zoning; Workshop remains optional.
+- R14-R20 deepen zoning, pets, failures, and the reduced Checkout cadence.
+- R21 introduces transfers, R22 is Best in Show, and R23 is advanced interchange mastery.
+- R24-R25 retain light pet-owner presence; single-passenger capsules naturally prevent cabin conflict/congregation.
+- Update deterministic simulations, economy, briefings, media references, and balance reports.
+- Run the test gate, focused human protocol, and package smoke before release.
 
-## Explicit release gates
+## Explicit non-goals
 
-| Gate | Acceptance evidence | Owner/state |
-| --- | --- | --- |
-| Build identity | Settings, Round Review, diagnostics, tester pack, and packaged `BUILD.txt` identify the same immutable commit/build. | Engineering — verify on deployed build |
-| Feedback access | A signed-out Chrome/Edge user can open the Form, see a prefilled diagnostic string, and submit without mandatory sign-in. | Product — human check |
-| Player surface | A new player can start, resume, find Settings/feedback, understand the first automation instruction, and distinguish normal from Debug access. | Internal 15-minute check |
-| Campaign arcs | Representative R9, R14+, R21–R23, and R24–R25 sessions are understandable and usable on supported desktop hardware. | Friends & Family evidence |
-| Distribution package | The itch-compatible ZIP contains the expected static build, licences/notices, and opens locally. | Engineering — human check |
-| Asset provenance | Every shipped audio file has an intentional manifest record and licence/provenance; retired files are not bundled. | Documentation/collateral blocker |
+- General passenger-party or family-group architecture.
+- General Lift Bouncer or passenger expulsion controls.
+- More than one transfer.
+- Workshop pet blocks/sensors or mandatory custom automation.
+- Generic event scheduler or topology engine.
+- Endless Operations, Mobile, evacuation, achievements, or player-authored-round support.
+- Optimising every round before the birthday deadline.
 
-## Known, accepted boundaries
+## Checkpoints
 
-- Chrome and Edge on desktop/laptop are the supported RC1 browsers; Firefox and mobile are outside this window.
-- The all-Sweep report is a negative-control diagnostic, not a Friends & Family release gate; the strict validator is
-  retained for later balance work.
-- Normal New Campaign uses a persisted random campaign seed; the supplied Debug URI provides controlled higher-round
-  and seed reproduction without changing the normal first-impression path.
-- Elapsed-time movement integration is deferred until after RC1.0. The current release may still address targeted
-  overlay/rendering issues.
-- Ordinary in-round background music is disabled for RC1.0. Menu and Rooftop music (controlled by the Music slider),
-  VIP fanfare, Musak, and SFX remain available.
-- Feedback is opt-in: opening the linked Google Form sends round, seed, browser, and viewport to Google as prefill URL
-  parameters; no feedback response is submitted unless the player presses Submit. The form does not collect email
-  addresses.
-- Settings provides a confirmed local-data deletion action for the browser's campaign, leaderboard, custom automations,
-  automation pins/teaching state, and audio settings.
-- Current polish slice: stabilise countdown/message layout, clear final-life warning state between rounds, refine audio
-  lifecycle and controls, group repeated power-up quantities, make Bronze Wide Doors lift-targeted, tighten promotion
-  presentation, increase R8 traffic by 20%, and update R11/R25 briefing titles.
-- Achievements, endless operations, Mobile, teleportation, polar lifts, Lift Bouncer, and player-authored rounds are
-  roadmap work, not release candidates.
-- Current lift-state remediation: Infinite Capacity expiry normalises an over-capacity car once at its next stop;
-  Weighted Voting prioritises onboard delivery over incompatible pickup demand; parked cars re-evaluate after direction
-  reversal; counterweight manual dispatch interrupts stale door/policy state; and R23 uses the reduced candidate spawn
-  curve `0.7125`–`0.90`. These changes require focused regression tests and fresh R11/R15/R23 playtest evidence.
+1. **Plan lock:** active docs contain the decisions above and no current gate requires Counterweights/Open Plan.
+2. **Removal/defaults:** R2+ starts in Sweep; Rooftop track never starts; no production Counterweight/Open Plan surface.
+3. **Zoning/Checkout:** zones can change without changing Sweep; authored Checkout waves start and stop deterministically.
+4. **Pets:** filters, conflicts, Pet Snacks, congregation Stink, immunity, and rendering pass focused tests.
+5. **Transfers:** direct/one-transfer routing, patience, filter compatibility, and loop prevention pass focused tests.
+6. **Campaign:** canonical/generated data, briefings, economy, simulations, and Debug Warp match the new 25-round arc.
+7. **Release:** `npm.cmd run test:release` passes; supported-browser manual checks and package smoke pass.
 
-## Current post-playtest remediation
+## Current delivery status — 8 November 2026
 
-- Counterweight manual stops are pair commands: the selected car owns its requested service cycle, so its partner
-  cannot release the command first and a competing parked car cannot claim its eligible pickup.
-- VIP, Rooftop, and Round 2 notices render as fixed non-lobby overlays, never as layout content that moves the board
-  or conceals the lobby. The R2 teaching rail is capped at 360px, may span beyond the lift shafts, and retains a clear
-  right gutter for readable instruction text.
-- Promotion interstitials and briefings without a Supply Closet use explicit content-sized modal geometry. Only the
-  shop briefing mode reserves the full-height internal shop layout.
-- Campaign checkpoints explicitly restore committed Credits and purchased inventory; an unpurchased cart is not saved.
-- The Supply Closet cart uses compact tier-coloured icon/count tokens with accessible tooltips.
-- Leaderboard is results-only. From Campaign Complete its close action returns to the completion modal without resuming
-  a terminal round. Every completed campaign seed is retained as one local score record, using total Credits earned
-  before spending so the active player's score is always visible at conclusion.
+- Checkpoints 1–6 are complete in the working tree.
+- The automated portion of checkpoint 7 passes: `npm.cmd run test:release` completed with 182/182 browser tests,
+  26/26 focused mechanics tests, and 3/3 containment integration tests.
+- The deterministic balance run and integrity check pass as evidence-generation commands. R2 and the new R21–R23
+  arc meet their birthday-release thresholds: all-Sweep fails on 5/5 seeds; intended play succeeds on 5/5, 4/5,
+  5/5, and 4/5 seeds respectively.
+- The wider campaign report remains deliberately diagnostic: 18/24 rounds meet the all-Sweep negative control and
+  13/24 meet the current intended-profile threshold. These pre-existing gaps are recorded for a later balance release,
+  not hidden or expanded into this time-bound delivery.
+- The itch candidate package builds successfully. Final release identity, supported-browser package smoke, and the
+  focused human checks in `TEST_PLAN.md` remain before publication.
 
-## Next remediation slice — service, guidance, and economy
+## Completion criteria
 
-**Status:** Implemented — targeted automated checks passed; human replay remains required.
+- No Counterweight/Open Plan code path or player-facing reference remains in active production.
+- All P0 behavior in `TEST_PLAN.md` is automated where deterministic and explicitly assigned to human playtest where
+  visual/experiential.
+- A clean campaign can reach and play every authored round; an older campaign cannot resume incompatible live state.
+- No pet owner separates from its pet, loses original patience, exceeds one transfer, or enters a route loop.
+- R2+ all-Sweep remains a workload baseline rather than guaranteed unattended completion.
+- Release build, balance version, docs, ZIP, and feedback diagnostics identify the same commit.
 
-This slice is a correctness and comprehension fix, not new gameplay content. It consolidates PTF-040 and the related
-earlier reports that reopening has shown to be incomplete. Gold Wide Doors now uses the bounded `0.20×`/20-second
-all-lift candidate; per-round Credit changes remain evidence-led.
-
-| Workstream | Implementation outcome | Feedback covered |
-| --- | --- | --- |
-| Shared-floor service | Replace per-guest “most-loaded car first” arbitration with a floor-level service session. Under genuine shared-queue pressure, compatible parked cars receive concurrent/rotating boarding allocations rather than one car monopolising demand. Preserve consolidated loading for ordinary low-pressure queues. | Rooftop/Infinite Capacity single-car loading; R11 capacity reports. |
-| Service-cycle correctness | Re-evaluate a stopped floor after direction, target, load, Group Think, or capacity changes. Bound a service cycle; prevent a guest who just alighted from immediately reboarding the same lift at that floor; commit a departure for an onboard VIP after its current service transaction. | Reversal non-pickup; VIP stranded under Weighted Voting; Group Think/TARDIS/Wide Doors loops; Gym Bro/ordinary loops. |
-| Manual-stop integrity | A manual target reserves a complete selected-car service stop, including VIP boarding, before normal policy can retarget it. | R23 manual VIP and ordinary pickup reports. |
-| Counterweight Sweep | Implement a deterministic pair itinerary that considers compatible demand for both cars, completes the current paired direction, then reverses. Keep manual pair commands highest priority. | R21 Sweep failure; R23 counterweight confusion and excessive manual burden. |
-| Guided tutorial framework | Add a durable, opportunity-led, numbered/glowing tutorial framework. R2 teaches display Sweep, arm it, and deploy it to its single controller; R3 repeats the sequence and deploys to both controllers. The reusable context API is ready for later first-use flows for power-ups, VIP, Jam, Stink, Counterweights, Zoning, and Open Plan. Dismissal is round-local; correct completion persists. | R3/Sweep failures and general first-use confusion. |
-| Player information | Explain guest destination numbers in initial instructions without changing guest appearance. Show fleet size in the briefing/closet and standardise power-up scope labels (`1 lift`, `All lifts`, `Building`, `Target floor`) in cards, tooltips, and cart. | Guest-number confusion; Silver scope; Wide Doors purchasing context. |
-| Message rail | Move informational event notices such as Last Drinks to a non-interactive toast treatment that cannot consume pointer input or block shaft controls. | Last Drinks blocking rooftop commands. |
-| Economy diagnosis and tuning | Produce compact per-round credit ledgers (opening, earned, spent, closing) and set target bands for R17, R18, and R23. Rebalance Gold Wide Doors from near-instant building-wide service toward a bounded high-throughput effect only after that evidence. | Gold Doors strength; R17 surplus; R18 hands-off inventory; R23 scarcity. |
-| Audio | Apply the current Rooftop/VIP gain multipliers of `0.75`/`0.675`. | Rooftop and VIP music volume. |
-
-### Delivery order
-
-1. Add focused service-cycle state/telemetry fixtures first; use them to reproduce the shared-rooftop, reversal,
-   Group Think, Infinite Capacity, VIP, and manual-target scenarios before changing arbitration.
-2. Implement shared-floor allocation and bounded service-cycle rules; then land manual-stop and counterweight Sweep
-   changes behind the same service invariants.
-3. Implement the tutorial framework, contextual information, non-blocking Last Drinks toast, and VIP gain adjustment.
-4. Generate compact credit-ledger evidence, select candidate Gold Wide Doors and round-credit values, and run the
-   focused balance/human replay protocol.
-5. Update feedback dispositions only after targeted automated checks and the named human replays pass.
-
-### Explicit non-goals
-
-- Do not alter guest-token appearance; destination-number clarity belongs in onboarding.
-- Do not introduce auto-dispatch for waiting VIPs.
-- Do not change carry-forward Credits; diagnose their source before tuning payouts or power-up potency.
-- Do not implement elapsed-time movement integration in this slice; it remains post-RC1.0 work.
-
-## Current collateral remediation before broad distribution
-
-1. Verify `assets/audio/manifest.json`, `assets/audio/ATTRIBUTION.md`, and `assets/audio/audio-review.csv` remain
-   synchronized after any asset change. The deliberate `NO SOUND` elevator-door and urgency assets are retired.
-2. Create a canonical media manifest, then move or retire superseded screenshot variants from the active media folder.
-3. Record a concise August release-history entry and keep completed implementation detail out of this plan.
-4. Decide a retention policy for the 48 MB balance trace: concise summary/digest in Git, bulky trace as an artifact or
-   otherwise explicitly justified.
-
-## Current polish slice
-
-- Compact the Supply Closet cart from its first item onward, with a single-line Credits total and tooltip-backed
-  icon/count items.
-- Keep the authored campaign rank visible in the live game sidebar, use the gold-star VIP icon consistently in
-  briefings, and return from Settings → Leaderboard to Settings without resuming play.
-- Apply the approved RC1.0 prices: Wide Doors `1/2/3`, Calming Musak `2/4/8`, Double-Decker `1/2/3`, Open Plan `2/3/5`,
-  and TARDIS `2/3/5` Credits.
-- Keep the Double-Decker and Open Plan tier headers, but remove redundant tier prefixes from their descriptions; use
-  the canonical `🪜` Double-Decker icon everywhere, including active lift overlays and activation feedback.
-- Keep only compact balance summaries in Git. Raw frame traces are opt-in local outputs and are excluded from release
-  commits.
-- Replace the first-dispatch, zoning, and capsule README captures with the supplied product screenshots and record
-  their provenance in `assets/media/README.md`.
-
-## Release sequence
-
-1. Complete the collateral remediation and baseline verification.
-2. Share the ordinary public URI and collect initial feedback.
-3. Share the existing Debug manifest URI only with selected follow-up testers.
-4. Triage evidence, update the feedback disposition index, and decide whether any finding blocks RC1.0 promotion.
-5. If accepted, tag/package the exact commit; if not, open a narrowly scoped follow-up delivery slice.
-
-## Exit criteria
-
-- No unresolved P0 correctness, distribution, or licence/provenance issue.
-- The current build, feedback endpoint, and packaged artifact are human-verified.
-- The test plan records the release-commit evidence distinctly from older runs.
-- The playtest log has a current disposition for each Friends & Family report.
-- The roadmap and release history accurately show whether RC1.0 is promoted, extended, or superseded.
-
-## Historical context
-
-Completed implementation slices, prior hardening checklists, and detailed remediation narratives are retained in
-`docs/archive/RELEASE_HISTORY.md`, `docs/archive/`, and Git history. They are not active delivery authority.

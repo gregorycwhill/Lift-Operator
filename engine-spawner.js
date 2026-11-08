@@ -11,7 +11,11 @@ window.createStandardGuest = function(roundDefinition, progress, now) {
     let start = pickFloor();
     let dest;
     let isCheckout = false;
-    if (window.isRoundEventEnabled(roundDefinition, 'checkout') && seededRandom() < Config.checkoutChance) {
+    const elapsedSec = Math.max(0, Math.min(Config.roundTime, Number(progress || 0) * Config.roundTime));
+    const checkoutWave = (roundDefinition.checkoutWaves || []).find(wave =>
+        elapsedSec >= Number(wave.startSec || 0) && elapsedSec < Number(wave.endSec || 0));
+    if (window.isRoundEventEnabled(roundDefinition, 'checkout') && checkoutWave &&
+        seededRandom() < Number(checkoutWave.chance ?? Config.checkoutChance)) {
         dest = 0;
         isCheckout = true;
         if (start === 0) start = window.getRandomInt(1, Config.numFloors - 1);
@@ -21,6 +25,11 @@ window.createStandardGuest = function(roundDefinition, progress, now) {
     }
     let isGym = window.isRoundEventEnabled(roundDefinition, 'gym') && !isCheckout && (start === Registry.gymFloor);
     let isRoomService = !isCheckout && window.isRoundEventEnabled(roundDefinition, 'roomService') && seededRandom() < (Config.roomServiceChance || 0.05);
+    let petType = null;
+    if (!isCheckout && !isGym && !isRoomService && window.isRoundEventEnabled(roundDefinition, 'pets') &&
+        seededRandom() < Number(roundDefinition.petChance || 0)) {
+        petType = seededRandom() < 0.5 ? 'cat' : 'dog';
+    }
     
     const guest = {
         id: `guest-${++Registry.guestSequence}`,
@@ -33,6 +42,7 @@ window.createStandardGuest = function(roundDefinition, progress, now) {
         isSunset: false, 
         isPartying: false, 
         isGymBro: isGym,
+        petType,
         isBulky: isGym || isRoomService,
         isRoomService: isRoomService,
         boardingWeight: isRoomService ? 3.0 : (isGym ? 2.0 : 1.0)
@@ -43,6 +53,15 @@ window.createStandardGuest = function(roundDefinition, progress, now) {
         guest.dest = Config.numFloors - 1;
         if (start === Config.numFloors - 1) guest.isPartying = true;
     }
+    guest.finalDestination = guest.dest;
+    guest.transferCount = 0;
+    guest.transferFloor = null;
+    guest.routePrepared = false;
+    guest.routeUncovered = false;
+    if (petType) {
+        Registry.roundStats.petsSpawned = (Registry.roundStats.petsSpawned || 0) + 1;
+    }
+    Registry.prepareGuestRoute?.(guest, start);
     return { start, guest };
 };
 

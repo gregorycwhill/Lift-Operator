@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.2.13-rail-pair-regressions
+// Balance version: 0.3.0-maries-birthday
 window.GameBalanceData = {
-  "balanceVersion": "0.2.13-rail-pair-regressions",
+  "balanceVersion": "0.3.0-maries-birthday",
   "events": {
     "jam": {
       "introducedRound": 6
@@ -24,6 +24,15 @@ window.GameBalanceData = {
     },
     "roomService": {
       "introducedRound": 3
+    },
+    "pets": {
+      "introducedRound": 5
+    },
+    "zoning": {
+      "introducedRound": 10
+    },
+    "transfers": {
+      "introducedRound": 21
     }
   },
   "payouts": {
@@ -80,10 +89,10 @@ window.GameBalanceData = {
       11,
       12
     ],
-    "openPlan": [
-      22,
-      22,
-      22
+    "petSnacks": [
+      5,
+      5,
+      12
     ]
   },
   "automationUnlocks": {
@@ -372,26 +381,25 @@ window.GameBalanceData = {
         }
       ]
     },
-    "openPlan": {
+    "petSnacks": {
       "tiers": [
         {
-          "cost": 2,
-          "duration": 20
+          "cost": 1,
+          "duration": 10
         },
         {
           "cost": 3,
-          "duration": 45
+          "duration": 30
         },
         {
           "cost": 5,
-          "duration": 60
+          "duration": 20
         }
       ]
     }
   },
   "system": {
     "showcaseLimit": 6,
-    "lateralTolerance": 0.2,
     "maxSpawnDelaySec": 3,
     "vipArrivalDelayMinRatio": 0.25,
     "vipArrivalDelayMaxRatio": 0.35,
@@ -401,9 +409,7 @@ window.GameBalanceData = {
       "secondsPerLift": 3,
       "minimumSeconds": 5,
       "maximumSeconds": 30,
-      "roundOverrides": {
-        "2": 10
-      }
+      "roundOverrides": {}
     },
     "startingLives": 20,
     "liftCapacity": 10,
@@ -424,8 +430,10 @@ window.GameBalanceData = {
     "stink": {
       "chancePerSec": 0.005,
       "durationSec": 20,
-      "gymBroThreshold": 3
+      "gymBroThreshold": 3,
+      "petThreshold": 5
     },
+    "petConflictWarningSec": 5,
     "checkoutChance": 0.5,
     "sunset": {
       "minSec": 30,
@@ -470,19 +478,19 @@ window.GameBalanceData = {
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.27,
-      "spawnEnd": 0.3375,
+      "spawnStart": 0.65,
+      "spawnEnd": 0.8,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [],
       "briefing": {
         "rank": "Trainee",
         "title": "Probation by Automation",
-        "narrative": "Management has installed an Automation Dock and confidently described it as “self-managing”. Use the extended countdown to deploy Sweep, then stay alert: automation can handle routine movement, but it cannot recognise every developing crisis for you.",
-        "learningFocus": "Automation Dock; Sweep; automation as assistance rather than autoplay.",
+        "narrative": "Management has switched on Sweep for you. It handles routine movement, but it cannot recognise every developing crisis. Click a floor whenever you need to intervene; after that stop, Sweep resumes automatically.",
+        "learningFocus": "Sweep by default; manual rescue; automation as assistance rather than autoplay.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Choose Sweep in the Automation Dock, then click a lift controller to deploy it. Sweep handles routine movement but still needs manual intervention."
+          "body": "Sweep is already active. Click any floor for an immediate manual stop; Sweep resumes after that service stop."
         },
         "promotion": null
       }
@@ -543,17 +551,19 @@ window.GameBalanceData = {
       "spawnEnd": 1.8,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "petChance": 0.15,
       "activeChallenges": [
-        "roomService"
+        "roomService",
+        "pets"
       ],
       "briefing": {
         "rank": "Operator",
-        "title": "The Guests Have Spoken",
-        "narrative": "Three lifts now serve floors that all believe their queue is the most important in the hotel. Voting responds to concentrated demand; Weighted Voting listens more closely to urgency. Decide how much democracy the transport system can withstand.",
-        "learningFocus": "Voting; Weighted Voting; allocating policies across three lifts.",
+        "title": "Pet-Friendly Hotel",
+        "narrative": "The hotel now welcomes cats and dogs. Give lifts simple pet rules to keep rivals apart, use Pet Snacks when tempers flare, and avoid packing five furry companions into one increasingly fragrant cabin.",
+        "learningFocus": "Cats and dogs; pet admission; Pet Snacks; pet congregation Stink.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Voting targets concentrated demand. Weighted Voting gives urgency more influence. Assign policies across the fleet instead of giving every lift the same job."
+          "body": "Cats and dogs sharing a lift will fight after a short warning. Pet Snacks keep the peace. Five pets make a cabin stinky; pet owners tolerate the smell, but ordinary guests do not."
         },
         "promotion": null
       }
@@ -565,8 +575,10 @@ window.GameBalanceData = {
       "spawnEnd": 1.5,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "petChance": 0.08,
       "activeChallenges": [
         "roomService",
+        "pets",
         "jam"
       ],
       "briefing": {
@@ -592,8 +604,17 @@ window.GameBalanceData = {
       "spawnEnd": 1.4,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "petChance": 0.08,
+      "checkoutWaves": [
+        {
+          "startSec": 35,
+          "endSec": 80,
+          "chance": 0.8
+        }
+      ],
       "activeChallenges": [
         "roomService",
+        "pets",
         "checkout",
         "jam"
       ],
@@ -616,8 +637,10 @@ window.GameBalanceData = {
       "spawnEnd": 1.5,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "petChance": 0.08,
       "activeChallenges": [
         "roomService",
+        "pets",
         "vip",
         "jam"
       ],
@@ -641,8 +664,10 @@ window.GameBalanceData = {
       "spawnEnd": 1.7,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "petChance": 0.12,
       "activeChallenges": [
         "roomService",
+        "pets",
         "rooftop",
         "jam",
         "stink"
@@ -666,21 +691,32 @@ window.GameBalanceData = {
       "spawnEnd": 1.75,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "zoningEnabled": true,
+      "petChance": 0.12,
+      "checkoutWaves": [
+        {
+          "startSec": 90,
+          "endSec": 140,
+          "chance": 0.85
+        }
+      ],
       "activeChallenges": [
         "roomService",
+        "pets",
         "checkout",
         "vip",
         "jam",
-        "stink"
+        "stink",
+        "zoning"
       ],
       "briefing": {
         "rank": "Engineer",
-        "title": "Build It Yourself",
-        "narrative": "Standard policies have taken you this far. The Automation Workshop is now open, and management expects you to turn operational insight into actual logic. Build or adapt a custom policy while Checkout traffic, a VIP, breakdowns and contaminated cabins compete for attention.",
-        "learningFocus": "Custom Workshop automation; TARDIS Mode; Group Think.",
+        "title": "Divide the Work",
+        "narrative": "Five Sweep lifts no longer need to chase every floor. Give each car All, Low or High service coverage, then intervene manually when the network needs an exception. The Automation Workshop is also open for anyone who wants deeper control.",
+        "learningFocus": "Independent service zones; Sweep inside zones; optional Workshop.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Use the Automation Workshop to copy or build a custom policy. TARDIS Mode and Group Think are temporary tools for exceptional operational pressure."
+          "body": "A lift's zone and routing are separate. Keep Sweep running while assigning All, Low or High coverage. Ground remains shared, and manual commands may temporarily leave a zone."
         },
         "promotion": {
           "rank": "Engineer",
@@ -696,8 +732,10 @@ window.GameBalanceData = {
       "spawnEnd": 1.15,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
+      "petChance": 0.12,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "rooftop",
         "jam",
@@ -724,8 +762,10 @@ window.GameBalanceData = {
       "spawnEnd": 2.6,
       "objective": "ENDURANCE",
       "gravityScalar": 0,
+      "petChance": 0.1,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "jam",
         "stink",
@@ -751,8 +791,10 @@ window.GameBalanceData = {
       "objective": "PEDAL_SURVIVAL",
       "gravityScalar": 1.12,
       "creditMultiplier": 0.15,
+      "petChance": 0.12,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "gravity",
         "jam",
@@ -779,10 +821,11 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.15,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
-        "checkout",
         "vip",
         "jam",
         "stink",
@@ -791,11 +834,11 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Director",
         "title": "Divide and Conquer",
-        "narrative": "The tower is now too large for every lift to serve every floor effectively. Service Zoning lets you assign Low and High service bands, reducing wasteful cross-building travel. Ground remains part of every zone, and a poor boundary can strand demand as effectively as no plan at all.",
-        "learningFocus": "Service Zoning; Zoned Low; Zoned High; zone boundaries.",
+        "narrative": "The tower is now too large for every lift to serve every floor effectively. Extend the Low and High service patterns you learned earlier, reducing wasteful travel while preserving enough overlap to rescue a failing zone.",
+        "learningFocus": "Scaled Service Zoning; overlap; zone boundaries.",
         "ruleCard": {
-          "heading": "New operating rule",
-          "body": "Service Zoning assigns a lift a direct-service floor band. Ground is included in every zone. Passenger transfers are not supported outside timed Open Plan."
+          "heading": "Operating challenge",
+          "body": "Ground remains shared by every zone. Until transfer service begins later, each guest still needs one lift that covers both origin and destination."
         },
         "promotion": {
           "rank": "Director",
@@ -813,10 +856,12 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.15,
       "vipEvent": true,
       "rooftopEvent": true,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "rooftop",
         "vip",
@@ -842,12 +887,13 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.18,
       "jamEvent": true,
       "stinkEvent": true,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
-        "checkout",
         "vip",
         "jam",
         "stink",
@@ -856,8 +902,8 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Director",
         "title": "No Zone Is an Island",
-        "narrative": "Maintenance failures are striking inside a carefully divided fleet. A perfect zone with one working lift is not a resilient zone. Build overlapping coverage, preserve recovery paths and keep Checkout traffic moving when a jam removes the car your plan depended on most.",
-        "learningFocus": "Overlapping zones; resilient coverage; recovery design.",
+        "narrative": "Maintenance failures are striking inside a carefully divided fleet. A perfect zone with one working lift is not resilient. Build overlapping coverage, preserve recovery paths and keep cat, dog and ordinary service moving when a jam removes the car your plan depended on most.",
+        "learningFocus": "Overlapping zones; pet-aware resilience; recovery design.",
         "ruleCard": null,
         "promotion": null
       }
@@ -871,9 +917,10 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
-      "checkoutEvent": true,
+      "petChance": 0.18,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "rooftop",
         "vip",
@@ -899,12 +946,21 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.2,
+      "checkoutWaves": [
+        {
+          "startSec": 45,
+          "endSec": 105,
+          "chance": 0.9
+        }
+      ],
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "checkout",
         "vip",
@@ -930,12 +986,14 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "petChance": 0.2,
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "rooftop",
         "vip",
@@ -964,12 +1022,21 @@ window.GameBalanceData = {
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "zoningEnabled": true,
+      "petChance": 0.22,
+      "checkoutWaves": [
+        {
+          "startSec": 70,
+          "endSec": 145,
+          "chance": 0.95
+        }
+      ],
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "checkout",
         "vip",
@@ -987,91 +1054,99 @@ window.GameBalanceData = {
       }
     },
     "21": {
-      "floors": 11,
-      "lifts": 2,
-      "spawnStart": 0.25,
-      "spawnEnd": 0.4,
+      "floors": 20,
+      "lifts": 6,
+      "spawnStart": 1.35,
+      "spawnEnd": 1.75,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "counterweightEnabled": true,
-      "counterweightIntro": true,
+      "zoningEnabled": true,
+      "transfersEnabled": true,
+      "petChance": 0.15,
       "activeChallenges": [
-        "counterweights",
+        "roomService",
+        "pets",
+        "gym",
         "jam",
-        "stink"
+        "stink",
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Executive",
-        "title": "Joined at the Cable",
-        "narrative": "Engineering has installed a counterweight pair. Move one lift upward and its neighbour moves down, whether that helps your plan or ruins it. The cabins remain independent, but a jam stops travel for the pair. Learn the geometry while demand is restrained and mistakes are still educational.",
-        "learningFocus": "Counterweighted pairs; complementary motion; paired jam behaviour.",
+        "title": "Changing Lifts",
+        "narrative": "The hotel is too tall for every route to remain direct. Guests may now leave at one shared interchange and join a connecting queue, keeping their original patience throughout the trip. Build overlapping zones that create useful connections instead of dead ends.",
+        "learningFocus": "One-transfer journeys; interchange coverage; continuous patience.",
         "ruleCard": {
           "heading": "New operating rule",
-          "body": "Counterweight partners move in opposite directions. Their cabins board independently, but a jam stops travel for both cars until the jammed lift is repaired."
+          "body": "A guest uses direct service when possible. Otherwise they may change lifts once at a floor served by both legs. Their patience never resets."
         },
         "promotion": {
           "rank": "Executive",
           "label": "PROMOTION",
-          "copy": "Conventional lift operations are now beneath your pay grade. Safety has been informed."
+          "copy": "You now manage a transport network rather than a collection of shafts."
         }
       }
     },
     "22": {
-      "floors": 15,
-      "lifts": 4,
-      "spawnStart": 0.55,
-      "spawnEnd": 0.75,
+      "floors": 25,
+      "lifts": 7,
+      "spawnStart": 1.3,
+      "spawnEnd": 1.65,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "counterweightEnabled": true,
-      "openPlanIntro": true,
+      "zoningEnabled": true,
+      "transfersEnabled": true,
+      "petChance": 0.3,
       "activeChallenges": [
+        "roomService",
+        "pets",
         "gym",
-        "counterweights",
         "jam",
         "stink",
-        "openPlan"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Executive",
-        "title": "Meet in the Middle",
-        "narrative": "Four paired lifts have created a passenger-placement problem: the right guest can easily end up in the wrong car. Open Plan temporarily permits destination-aware transfers between adjacent lifts stopped at the same floor. Use it to repair the network, not to avoid planning one.",
-        "learningFocus": "Open Plan; timed adjacent-lift transfers; passenger redistribution.",
+        "title": "Best in Show",
+        "narrative": "The Grand Hotel pet show has filled every zone. Cats and dogs need reliable connections without sharing the wrong cabins, while five furry passengers can make even a peaceful lift unbearable. Design species-aware routes and spend recovery tools carefully.",
+        "learningFocus": "Pet filters across transfers; Pet Snacks; congregation Stink; resilient interchanges.",
         "ruleCard": {
-          "heading": "New operating rule",
-          "body": "Open Plan temporarily permits compatible guests to transfer between adjacent lifts stopped at the same floor. The effect expires, so use it to repair placement deliberately."
+          "heading": "Operating challenge",
+          "body": "Pet filters apply to both legs of a journey. A connection is useful only when the owner can board every lift required to reach the final destination."
         },
         "promotion": null
       }
     },
     "23": {
-      "floors": 29,
+      "floors": 30,
       "lifts": 8,
-      "spawnStart": 0.7125,
-      "spawnEnd": 0.9,
+      "spawnStart": 1.25,
+      "spawnEnd": 1.6,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
-      "counterweightEnabled": true,
       "zoningEnabled": true,
-      "openPlanIntro": true,
+      "transfersEnabled": true,
+      "petChance": 0.25,
       "activeChallenges": [
         "roomService",
+        "pets",
         "gym",
         "vip",
-        "counterweights",
         "jam",
         "stink",
         "zoning",
-        "openPlan"
+        "transfers"
       ],
       "briefing": {
         "rank": "Executive",
-        "title": "The Entangled Hotel",
-        "narrative": "The prototype is now an eight-lift counterweight network carrying real hotel traffic. Zoning determines where cars should serve; linked motion determines where they can be; Open Plan provides a brief chance to correct passenger placement. The laboratory conditions are officially over.",
-        "learningFocus": "Counterweights, Zoning and Open Plan at fleet scale.",
+        "title": "The Grand Interchange",
+        "narrative": "Eight independent lifts now form a thirty-floor network. Pets, VIP service, failures and dense connecting traffic will expose every uncovered route and fragile interchange. Keep the plan legible enough to repair while it is under pressure.",
+        "learningFocus": "Advanced zoning; transfer-network resilience; pet-aware recovery.",
         "ruleCard": null,
         "promotion": null
       }
@@ -1090,7 +1165,9 @@ window.GameBalanceData = {
       "jamMinSec": 6,
       "jamMaxSec": 10,
       "demandCurrents": 2,
+      "petChance": 0.1,
       "activeChallenges": [
+        "pets",
         "vip",
         "capsule",
         "jam"
@@ -1126,7 +1203,9 @@ window.GameBalanceData = {
       "jamMinSec": 6,
       "jamMaxSec": 10,
       "demandCurrents": 2.5,
+      "petChance": 0.12,
       "activeChallenges": [
+        "pets",
         "rooftop",
         "vip",
         "capsule",

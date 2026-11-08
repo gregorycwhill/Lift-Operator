@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "production-assets-verified",
-  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Ordinary gameplay background tracks are intentionally disabled for RC1.0; menu, Rooftop, VIP, Musak, and SFX remain available.",
+  "notes": "Only assets with a verified local file and documented redistribution license may be enabled in production. Ordinary gameplay and Rooftop background tracks are intentionally disabled; menu, VIP, Musak, and SFX remain available.",
   "assets": {
     "menu": {
       "title": "Somewhere in the Elevator",
@@ -28,14 +28,6 @@
       "author": "Matthew Pablo",
       "license": "CC-BY 3.0",
       "modification": "None; looped playback only",
-      "attribution": ""
-    },
-    "rooftop": {
-      "file": "assets/audio/gameplay-rooftop-trance.mp3",
-      "source": "https://opengameart.org/content/trance-boss-battle",
-      "author": "MintoDog",
-      "license": "CC0",
-      "modification": "None; loopable MP3 retained",
       "attribution": ""
     },
     "victory": {
@@ -122,14 +114,6 @@
       "modification": "Selected robot step WAV retained",
       "attribution": "Robotic mechanic step sounds by Lee Barkovich"
     },
-    "openPlan": {
-      "file": "assets/audio/sfx/powerup-open-plan-metal.wav",
-      "source": "https://opengameart.org/content/27-metal-audio-samples-sfx",
-      "author": "blacklodgegames",
-      "license": "CC0",
-      "modification": "Selected metal collision WAV retained",
-      "attribution": ""
-    },
     "jam": {
       "file": "assets/audio/sfx/hazard-metal-interaction.wav",
       "source": "https://opengameart.org/content/metal-interactions",
@@ -188,8 +172,7 @@
         "tardis": "assets/audio/sfx/tardis-air-whoosh.wav",
         "doors": "assets/audio/sfx/wide-doors-old-elevator.mp3",
         "groupThink": "assets/audio/sfx/dragon-studio-alien-song-323613.mp3",
-        "doubleDecker": "assets/audio/sfx/powerup-double-decker-robot-step.wav",
-        "openPlan": "assets/audio/sfx/powerup-open-plan-metal.wav"
+        "doubleDecker": "assets/audio/sfx/powerup-double-decker-robot-step.wav"
       },
       "fallback": "powerup",
       "uniquePerPayloadId": true
@@ -220,7 +203,7 @@
     "resume": { "asset": null, "role": "context-only" },
     "reset": { "asset": null, "role": "context-only" },
     "victory": { "asset": "assets/audio/victory.mp3", "fallback": "victory" },
-    "rooftop_started": { "asset": "assets/audio/gameplay-rooftop-trance.mp3", "role": "loop" },
-    "rooftop_released": { "asset": null, "role": "stop-loop" }
+    "rooftop_started": { "asset": null, "role": "context-only" },
+    "rooftop_released": { "asset": null, "role": "context-only" }
   }
 }

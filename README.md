@@ -6,7 +6,7 @@ Lift Operator is an elevator management game about dispatching a growing hotel f
 
 ## [▶ Play Now — GitHub Pages](https://gregorycwhill.github.io/Lift-Operator/)
 
-**Status:** RC1.0 desktop playtest · 25-round campaign · supported on current Chrome or Edge on a desktop/laptop.
+**Status:** Marie's Birthday Edition in release validation · 25-round campaign · supported on current Chrome or Edge on a desktop/laptop.
 Firefox is not currently a supported browser.
 
 | First dispatch | Supply Closet |
@@ -19,18 +19,18 @@ Firefox is not currently a supported browser.
 | ![Automation Workshop: Blockly policy editor](assets/media/campaign-workshop.png) | ![Zoned fleet: wide building with visible service zones](assets/media/campaign-zoning-fleet.png) |
 | Turn operational ideas into lift policies with Blockly. | Assign a growing fleet to overlapping service zones. |
 
-| Counterweight puzzle | Capsule dispatch at scale |
-| --- | --- |
-| ![Counterweight round: paired lift cars and pulley loops](assets/media/campaign-counterweights-live.png) | ![Capsule dispatch: wide dashboard and high-speed tubes](assets/media/campaign-capsule-operations.png) |
-| Paired cars move in opposition; Open Plan becomes a lifeline. | Twenty single-passenger capsules reward smart automation over frantic clicking. |
+![Capsule dispatch: wide dashboard and high-speed tubes](assets/media/campaign-capsule-operations.png)
+
+Late rounds build conventional zoned interchange puzzles before twenty single-passenger capsules reward smart fleet
+coordination over frantic clicking.
 
 ## What’s in the campaign
 
 - Fast, readable lift dispatch that grows into fleet-management puzzles.
-- Built-in and Workshop-authored automations, including Service Zoning.
-- Power-ups, VIP journeys, Checkout demand, Rooftop Parties, counterweights, and capsule tubes.
+- Sweep by default from Round 2, direct manual intervention, independent Service Zoning, and optional Workshop automation.
+- Persistent cats and dogs, Pet Snacks, pet admission, VIP journeys, strong Checkout waves, Rooftop Parties, one-transfer networks, and capsule tubes.
 - Persistent Credits, deterministic seeds, and local pre-round campaign resume for repeatable problem-solving.
-- Welcome, How to Play, Credits & Licences, menu/Rooftop music and SFX controls, and an in-game feedback action that pre-fills the form with game details and copies them locally.
+- Welcome, How to Play, Credits & Licences, menu music and SFX controls, and an in-game feedback action that pre-fills the form with game details and copies them locally. Rooftop Party music is deliberately disabled.
 
 ## Help improve it
 

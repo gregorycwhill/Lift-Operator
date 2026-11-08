@@ -109,6 +109,21 @@ window.Game.Simulator = {
                 traceEvent('automation', { lift: Number(liftIndex), mode: scripts[liftIndex] });
             }
         });
+        if (options.strategy === 'zoned-dispatch' && Registry.isZoningEnabled?.()) {
+            const maxFloor = Math.max(0, Config.numFloors - 1);
+            const boundary = Math.ceil(maxFloor / 2);
+            const petsActive = window.isRoundEventEnabled?.(Config.GAME_DATA.rounds[round], 'pets');
+            Registry.lifts.forEach((lift, index) => {
+                const low = index % 2 === 0;
+                lift.serviceLower = low ? 0 : boundary;
+                lift.serviceUpper = low ? boundary : maxFloor;
+                lift.zoneMode = low ? 'low' : 'high';
+                // Give both service zones cat and dog coverage. Pairing filter
+                // roles by adjacent low/high cars prevents conflicts without
+                // making either species impossible to route from one zone.
+                if (petsActive) lift.petFilter = Math.floor(index / 2) % 2 === 0 ? 'cats' : 'dogs';
+            });
+        }
         if (Array.isArray(options.loadout)) {
             PowerUps.inventory = options.loadout.map(item => ({ ...item }));
         }
@@ -268,9 +283,8 @@ window.Game.Simulator = {
                     targetFloor = target && target.floorIndex;
 
                     if (Number.isInteger(targetFloor)) {
-                        // Use the production command path so counterweight partner
-                        // consequences and target clamping are exercised by the
-                        // idealized comparator too.
+                        // Use the production command path so target clamping and
+                        // manual-override behaviour are exercised by the comparator.
                         dispatchTarget(lift.id, targetFloor, 'queue-selection');
                         claimedFloors.add(targetFloor);
                     }
@@ -278,7 +292,7 @@ window.Game.Simulator = {
                 return;
             }
 
-            if (['event-aware', 'zoned-dispatch', 'counterweight-dispatch'].includes(options.strategy)) {
+            if (['event-aware', 'zoned-dispatch'].includes(options.strategy)) {
                 const interval = options.interventionIntervalSec || 12;
                 if (second - lastInterventionSecond < interval) return;
                 if (Number.isFinite(options.manualTargetLimit) && manualInterventions >= options.manualTargetLimit) return;
@@ -327,18 +341,13 @@ window.Game.Simulator = {
                 // visible queue/anger pressure only.
                 if (!vipWaiting && criticalCount === 0 && peakQueue < 8 && !jammedLift && !stinkyLift) return;
 
-                const chooseIdleLift = (targetFloor, requirePair = false) => Registry.lifts
+                const chooseIdleLift = targetFloor => Registry.lifts
                     .filter(lift => lift.passengers.length === 0 && lift.jamTimer <= 0 && !lift.manualOverride)
                     // A competent player can redirect an empty car that is
                     // already travelling. Do not wait for it to become idle,
                     // but never steal a car that is boarding or carrying a
                     // guest to their destination.
                     .filter(lift => lift.state !== 'BOARDING')
-                    .filter(lift => {
-                        if (!requirePair) return true;
-                        const partner = Registry.lifts[lift.counterweightPartner];
-                        return partner && partner.passengers.length === 0 && partner.jamTimer <= 0 && partner.state !== 'BOARDING';
-                    })
                     .sort((a, b) => {
                         const aDistance = Math.abs(Math.round(a.pos / Registry.floorHeight) - targetFloor);
                         const bDistance = Math.abs(Math.round(b.pos / Registry.floorHeight) - targetFloor);
@@ -356,7 +365,7 @@ window.Game.Simulator = {
                             .sort((a, b) => Math.abs(Math.round(a.pos / Registry.floorHeight) - target.floorIndex) - Math.abs(Math.round(b.pos / Registry.floorHeight) - target.floorIndex))[0];
                         selectedLift = zonedLift || chooseIdleLift(target.floorIndex);
                     } else {
-                        selectedLift = chooseIdleLift(target.floorIndex, options.strategy === 'counterweight-dispatch');
+                        selectedLift = chooseIdleLift(target.floorIndex);
                     }
                 }
 
@@ -366,7 +375,6 @@ window.Game.Simulator = {
                     (stinkyLift && findItem(['freshener'])) ||
                     (criticalCount >= 2 && findItem(['musak'])) ||
                     (peakQueue >= 8 && findItem(['doors', 'tardis', 'doubleDecker'])) ||
-                    (options.strategy === 'counterweight-dispatch' && selectedLift && peakQueue >= 5 && findItem(['openPlan'])) ||
                     null;
                 if (item) {
                     const ability = PowerUps.catalog[item.id] && PowerUps.catalog[item.id].tiers[item.tier];

@@ -95,7 +95,8 @@ window.getRandomFloor = function() {
 
 window.getRandomGuestFloor = function() {
     const floorCount = Math.max(1, Number(window.Config.numFloors) || 1);
-    const zoningEnabled = typeof Registry !== 'undefined' && Number(Registry.stats?.round || 0) >= 14;
+    const round = typeof Registry !== 'undefined' ? Number(Registry.stats?.round || 0) : 0;
+    const zoningEnabled = Boolean(window.Config?.GAME_DATA?.rounds?.[round]?.zoningEnabled);
     if (!zoningEnabled || floorCount === 1) return window.getRandomFloor();
     const roll = Math.floor(seededRandom() * (floorCount + 2));
     return roll < 3 ? 0 : roll - 2;
@@ -180,6 +181,8 @@ window.Config = {
     sunsetMinSec: BalanceSystem.sunset.minSec, sunsetMaxSec: BalanceSystem.sunset.maxSec, sunsetDurationSec: BalanceSystem.sunset.durationSec, sunsetGuestRatio: BalanceSystem.sunset.guestRatio,
     
     gymBroStinkThreshold: BalanceSystem.stink.gymBroThreshold,
+    petStinkThreshold: BalanceSystem.stink.petThreshold,
+    petConflictWarningSec: BalanceSystem.petConflictWarningSec,
     roomServiceChance: BalanceSystem.roomServiceChance,
     gravityConstant: BalanceSystem.gravityFallbackScalar,
     

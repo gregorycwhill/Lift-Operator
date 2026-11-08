@@ -2,7 +2,7 @@
 
 **Status:** Active collateral inventory
 **Owner class:** Product and release
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 8 November 2026
 
 This folder contains player-facing media for the README and live social preview. The names below are the canonical
 current assets; a file not listed here is a capture candidate or superseded variant and must not be added to release
@@ -15,7 +15,6 @@ is the repository-retained record of superseded captures.
 | `campaign-supply-closet.png` | README gallery | Supply Closet | Curated replacement supplied by product |
 | `campaign-workshop.png` | README gallery | Automation Workshop | Curated capture supplied by product |
 | `campaign-zoning-fleet.png` | README gallery | Zoned fleet | Curated replacement supplied by product |
-| `campaign-counterweights-live.png` | README gallery | Counterweight puzzle | Curated live capture |
 | `campaign-capsule-operations.png` | README gallery | Capsule dispatch at scale | Curated replacement supplied by product |
 | `social-preview.png` | Open Graph/social preview | 1200×630 project preview | Canonical generated/curated preview |
 

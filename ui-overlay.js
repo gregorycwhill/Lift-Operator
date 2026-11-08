@@ -79,9 +79,7 @@ window.Game.Tutorial = (function () {
             { selector: '.automation-carousel-card[data-policy="priority-sweep"]', text: '2. Click Priority Sweep to activate it.' },
             { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the first glowing lift controller to deploy Priority Sweep. The other lift remains on Sweep.' }
         ] : [
-            { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Sweep is displayed.' },
-            { selector: '.automation-carousel-card[data-policy="sweep"]', text: '2. Click Sweep to activate it.' },
-            { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the glowing lift controller to deploy Sweep.' }
+            { selector: '.automation-status[data-lift-index="0"]', text: 'Sweep is already on. Click this lift and a floor when you need to intervene; Sweep resumes after the stop.' }
         ];
         const definition = definitions[state.step];
         if (!definition) return;
@@ -121,6 +119,7 @@ window.Game.Tutorial = (function () {
         },
         action(action, detail = {}) {
             if (state.id !== 'automation-sweep' || state.suppressed) return;
+            if (Registry.stats.round === 2) return;
             const policy = Registry.stats.round === 3 ? 'priority-sweep' : 'sweep';
             const matches = (state.step === 0 && action === 'browse' && detail.policy === policy) ||
                 (state.step === 1 && action === 'arm' && detail.policy === policy) ||

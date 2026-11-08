@@ -79,26 +79,6 @@ window.buildWorld = function() {
         world.appendChild(row);
     }
 
-    if (Registry.counterweightEnabled) {
-        for (let index = 0; index < Registry.lifts.length - 1; index += 2) {
-            const pair = document.createElement('div');
-            pair.className = 'counterweight-pair-visual';
-            pair.dataset.pairStart = String(index);
-            pair.style.left = `${layout.baseLeft + index * layout.shaftWidth}px`;
-            pair.style.width = `${layout.shaftWidth * 2}px`;
-            pair.style.height = `${FIXED_BOARD_HEIGHT}px`;
-            const cableFrame = document.createElement('span');
-            cableFrame.className = 'counterweight-cable-frame';
-            const pulleys = ['top-left', 'top-right', 'bottom-left', 'bottom-right'].map(position => {
-                const pulley = document.createElement('span');
-                pulley.className = `counterweight-pulley ${position}`;
-                return pulley;
-            });
-            pair.append(cableFrame, ...pulleys);
-            world.appendChild(pair);
-        }
-    }
-
     // Global Event Delegation for Shaft Clicks
     if (!world.dataset.hasListener) {
         world.addEventListener('click', (e) => {
@@ -116,7 +96,9 @@ window.buildWorld = function() {
 
     const controlRow = document.createElement('div');
     controlRow.className = 'floor automation-control-row';
-    controlRow.style.height = '40px';
+    const roundDefinition = Config.GAME_DATA.rounds[Registry.stats.round] || {};
+    const hasOperationalSettings = Boolean(roundDefinition.zoningEnabled || window.isRoundEventEnabled?.(roundDefinition, 'pets'));
+    controlRow.style.height = hasOperationalSettings ? '56px' : '40px';
     controlRow.style.background = '#e8ecf1';
     controlRow.style.borderTop = '2px solid #333';
     
@@ -157,11 +139,10 @@ window.buildWorld = function() {
         if (lift.isJammed) extraClass += ' jammed';
         
         let gymBroCount = lift.passengers.filter(p => p.isGymBro).length;
-        if (lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold) extraClass += ' stinky';
+        let petCount = lift.passengers.filter(p => p.petType).length;
+        if (lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold || petCount >= Config.petStinkThreshold) extraClass += ' stinky';
         
         car.className = `lift ${extraClass}${Registry.capsuleMode ? ' capsule-car' : ''}`;
-        if (Registry.counterweightEnabled) car.classList.add('counterweight-car');
-        if (Number.isInteger(lift.counterweightPartner)) car.dataset.counterweightPartner = String(lift.counterweightPartner);
         car.style.setProperty('--lift-index', index);
         car.style.pointerEvents = 'none'; 
         
@@ -273,15 +254,16 @@ window.updateLiftVisualState = function(lift, index, carEl) {
     if (!car) return;
 
     car.classList.toggle('jammed', lift.jamTimer > 0 || lift.isJammed);
-    car.classList.toggle('counterweight-car', Boolean(Registry.counterweightEnabled && Number.isInteger(lift.counterweightPartner)));
     const capacity = typeof PowerUps !== 'undefined' ? PowerUps.getLiftCapacity(index) : Config.liftCapacity;
     car.classList.toggle('capacity-full', Registry.getLiftWeight(lift) >= capacity);
 
     const gymBroCount = lift.passengers.filter(p => p.isGymBro).length;
-    let isStinky = lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold;
+    const petCount = lift.passengers.filter(p => p.petType).length;
+    let isStinky = lift.stinkTimer > 0 || gymBroCount >= Config.gymBroStinkThreshold || petCount >= Config.petStinkThreshold;
     const hasStinkImmunity = lift.freshenerTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.stinkImmunity > 0);
     if (hasStinkImmunity) isStinky = false;
     car.classList.toggle('stinky', isStinky);
+    car.classList.toggle('pet-conflict', Boolean(lift.petConflictPending || lift.petConflictEjectPending));
     
     // State-based classes
     car.classList.toggle('transit', lift.state === 'TRANSIT');
@@ -292,10 +274,8 @@ window.updateLiftVisualState = function(lift, index, carEl) {
 
     // Phase 2.5: Power-up Expansions Rendering
     const isDouble = !Registry.capsuleMode && (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
-    const isOpenPlan = lift.openPlanTimer > 0;
 
     car.classList.toggle('double-decker', isDouble);
-    car.classList.toggle('open-plan', isOpenPlan);
 
     const baseLiftHeight = Registry.capsuleMode
         ? Math.min(28, Registry.floorHeight * 0.65)
@@ -401,7 +381,7 @@ window.draw = function() {
         if (car) {
             // OPTIMIZATION: Only update if passenger state has changed
             const displayPassengers = window.getPassengerDisplayOrder(lift.passengers);
-            const guestStateKey = displayPassengers.map(p => `${p.dest}-${p.status}-${p.isVip ? 1 : 0}`).join('|');
+            const guestStateKey = displayPassengers.map(p => `${p.dest}-${p.finalDestination}-${p.status}-${p.isVip ? 1 : 0}-${p.petType || ''}`).join('|');
             const isDouble = !Registry.capsuleMode && (lift.isDoubleDecker || lift.doubleDeckerTimer > 0);
             const stateHash = `${guestStateKey}-${isDouble}`;
 
@@ -465,7 +445,7 @@ window.draw = function() {
                         String.fromCodePoint(0x1fa9c)
                 });
             }
-            if (lift.openPlanTimer > 0) activeIcons.push({type: 'emoji', val: '↔️'});
+            if (lift.petSnacksTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.petSnacksImmunity > 0)) activeIcons.push({type: 'emoji', val: '🦴'});
             if (lift.wideDoorsTimer > 0 || (typeof PowerUps !== 'undefined' && PowerUps.timers.wideDoors > 0)) activeIcons.push({type: 'emoji', val: '🚪'});
             if (typeof PowerUps !== 'undefined' && PowerUps.timers.jamImmunity > 0) activeIcons.push({type: 'emoji', val: '🔧'});
             if (lift.jamTimer > 0 || lift.isJammed) activeIcons.push({type: 'jam', val: '⚠️'});
@@ -523,7 +503,7 @@ window.draw = function() {
         if (lobby && Registry.floors[actualFloorId]) {
             const guests = Registry.floors[actualFloorId].waitingGuests;
             const visibleGuests = guests.slice(0, 18);
-            const guestStateKey = `${guests.length}:` + visibleGuests.map(g => `${g.dest}-${g.status}-${g.isVip ? 1 : 0}-${g.isGymBro ? 1 : 0}-${g.isRoomService ? 1 : 0}`).join('|');
+            const guestStateKey = `${guests.length}:` + visibleGuests.map(g => `${g.dest}-${g.finalDestination}-${g.status}-${g.isVip ? 1 : 0}-${g.isGymBro ? 1 : 0}-${g.isRoomService ? 1 : 0}-${g.petType || ''}`).join('|');
             
             if (lobby.dataset.guestState !== guestStateKey) {
                 lobby.dataset.guestState = guestStateKey;
@@ -646,10 +626,14 @@ window.getGuestText = function(g) {
     if (g.status === GuestStatus.RAGE) return '💀';
     if (g.isVip) return '⭐';
     
-    let txt = g.isCheckout && g.dest === 0 ? '💼︎' : (g.dest === 0 ? 'G' : g.dest);
+    const finalDestination = Number.isInteger(g.finalDestination) ? g.finalDestination : g.dest;
+    const transferPrefix = Number.isInteger(g.transferFloor) && g.dest !== finalDestination ? '↪' : '';
+    let txt = g.isCheckout && g.dest === 0 ? '💼︎' : `${transferPrefix}${finalDestination === 0 ? 'G' : finalDestination}`;
     
     if (g.isRoomService) return `🍽️${txt}`;
     if (g.isGymBro) return `💪${txt}`;
+    if (g.petType === 'cat') return `🐈${txt}`;
+    if (g.petType === 'dog') return `🐕${txt}`;
     if (g.isSunset) return 'R';
     
     return txt;

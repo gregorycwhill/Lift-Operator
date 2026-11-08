@@ -2,7 +2,7 @@
 
 **Document role:** Authoritative intake and disposition record for playtest feedback  
 **Status:** Active, append-only source record  
-**Coverage:** Reconstructed from the available project chat through 17 August 2026
+**Coverage:** Reconstructed from the available project chat through 8 November 2026
 **Companion records:** `../CHAT_DECISION_LOG.md`, `../../DELIVERY_PLAN.md`, `../../TEST_PLAN.md`
 
 ## How to use this log
@@ -14,18 +14,18 @@ and the delivery/test reference once known. This is the feedback source, not the
 The older `../archive/PLAYTEST_ARCHIVE.md` preserves imported verbatim excerpts. It is historical evidence; new
 feedback belongs here.
 
-## Current disposition index — 8 August 2026
+## Current disposition index — 8 November 2026
 
 The register below remains the source evidence. This index is the current-status view and takes precedence over an
 older row where a later correction exists.
 
 | IDs | Current disposition | Current evidence needed |
 | --- | --- | --- |
+| PTF-044 | Birthday release implementation | R2, R5, R10, R21–R25 supported-browser acceptance and aggregate fixed-seed evidence. |
 | PTF-013, PTF-019, PTF-020, PTF-022, PTF-035, PTF-036 | Implemented — awaiting Friends & Family replay | Published-build visual/behaviour confirmation. |
 | PTF-023 | Implemented canonical tuning | Human R11 difficulty observation against the canonical `0.96`–`1.15` curve. |
 | PTF-040 | Implemented — awaiting human replay | Focused automated service invariants passed; replay R2–R3/R11/R15/R17–R18/R21/R23. |
-| PTF-041 | Implemented — awaiting Friends & Family replay | Replay R2–R3 onboarding, R14+ zoning transit, and R21–R23 counterweight Sweep. |
-| PTF-042 | Implemented — awaiting Friends & Family replay | Replay notice placement, touchscreen shaft state, R11 copy, shared-floor loading, and Counterweight Sweep in R21–R23. |
+| PTF-041, PTF-042 | Partly retained; paired-car portions superseded by PTF-044 | Replay R2–R3 onboarding, R10+ zoning, notices, touchscreen shafts, R11 copy, and shared-floor loading. |
 | PTF-024 | Implemented | Rooftop and R11 briefing observation only. |
 | PTF-028 | Implemented — awaiting balance replay | Endurance evidence with VIP/Rooftop excluded and hazards retained. |
 | PTF-030, PTF-033, PTF-034 | Implemented — awaiting replay | Published-build routing, R13 balance, and seed-reproduction observations. |
@@ -175,3 +175,12 @@ Implementation update: PTF-019 (black briefcase), PTF-020 (pink heart and compac
 work. PTF-022 is implemented in code and canonical data; visual/playtest confirmation remains the only follow-up.
 
 All other entries are implemented historically, explicitly deferred, or retained as regression-sensitive observations.
+
+## Marie's Birthday Edition intake — 8 November 2026
+
+| ID | Source | Observation/request | Disposition |
+|---|---|---|---|
+| PTF-044 | Marie birthday request | Sweep should already be on; Rooftop music is unpleasant; the paired-car rounds do not work; Checkout is too repetitive; zoning needs more prominence; guests should change lifts; pets should be functional and prominent. | **Approved and in implementation.** Birthday scope defaults R2+ to Sweep, removes dedicated Rooftop music and the retired paired-car experiment, limits Checkout to four strong waves, introduces zoning in R10, adds one-transfer R21–R23 networks, and introduces persistent pets in R5 with R22 **Best in Show**. Acceptance is governed by `TEST_PLAN.md`. |
+
+Historical paired-car remediation entries above remain evidence of why that experiment was retired. They are not open
+requirements and must not be used to revive the removed implementation.

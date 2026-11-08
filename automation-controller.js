@@ -44,12 +44,10 @@ window.Game = window.Game || {};
                 sys_sweep: ['sweep', unlocks.sweep],
                 sys_priority: ['priority-sweep', unlocks.priority],
                 sys_voting: ['voting', unlocks.voting],
-                sys_weighted: ['weighted-voting', unlocks.voting],
-                sys_zoned_low: ['zoned-low', 14],
-                sys_zoned_high: ['zoned-high', 14]
+                sys_weighted: ['weighted-voting', unlocks.voting]
             };
             const customUnlocked = debug || reachedRound >= (unlocks.custom || 999);
-            const zoningUnlocked = debug || reachedRound >= 14;
+            const zoningUnlocked = debug || reachedRound >= (Config.GAME_DATA.events?.zoning?.introducedRound || 10);
             (vm?.scripts || []).forEach(script => {
                 const system = systemValues[script.id];
                 const zoneVisible = !script.serviceZone || zoningUnlocked;
@@ -86,6 +84,82 @@ window.Game = window.Game || {};
                 else window.setLiftAutomation(index, item.value);
             });
             return { ok: true, policy: item, liftIndexes: targets };
+        },
+
+        setLiftZone(liftIndex, mode) {
+            const lift = Registry.lifts[liftIndex];
+            if (!lift || !Registry.isZoningEnabled?.()) return false;
+            const maxFloor = Math.max(0, Config.numFloors - 1);
+            const boundary = Math.ceil(maxFloor / 2);
+            if (mode === 'low') {
+                lift.serviceLower = 0;
+                lift.serviceUpper = boundary;
+            } else if (mode === 'high') {
+                lift.serviceLower = boundary;
+                lift.serviceUpper = maxFloor;
+            } else {
+                lift.serviceLower = 0;
+                lift.serviceUpper = maxFloor;
+                mode = 'all';
+            }
+            lift.zoneMode = mode;
+            window.Game.UI?.showToast?.(`Lift ${liftIndex + 1}: ${mode === 'all' ? 'all floors' : `${mode} zone`}.`);
+            return true;
+        },
+
+        setPetFilter(liftIndex, filter) {
+            const lift = Registry.lifts[liftIndex];
+            if (!lift || !['all', 'cats', 'dogs', 'none'].includes(filter)) return false;
+            if (lift.petFilter !== filter) Registry.roundStats.petFilterChanges++;
+            lift.petFilter = filter;
+            const label = { all: 'all guests', cats: 'cats welcome', dogs: 'dogs welcome', none: 'no pets' }[filter];
+            window.Game.UI?.showToast?.(`Lift ${liftIndex + 1}: ${label}.`);
+            return true;
+        },
+
+        renderOperationsControls(controlRow) {
+            const definition = Config.GAME_DATA.rounds[Registry.stats.round] || {};
+            const zoning = Registry.isZoningEnabled?.();
+            const pets = window.isRoundEventEnabled?.(definition, 'pets');
+            if (!zoning && !pets) return;
+            Registry.lifts.forEach((lift, index) => {
+                const group = controlRow.querySelector(`.lift-status-cell[data-lift-index="${index}"]`);
+                if (!group) return;
+                const settings = document.createElement('div');
+                settings.className = 'lift-operation-controls';
+                if (zoning) {
+                    const zone = document.createElement('button');
+                    zone.type = 'button';
+                    zone.className = 'lift-setting-btn zone-setting-btn';
+                    const modes = ['all', 'low', 'high'];
+                    const renderZone = () => { zone.textContent = `Zone: ${(lift.zoneMode || 'all').replace(/^./, c => c.toUpperCase())}`; };
+                    zone.onclick = event => {
+                        event.stopPropagation();
+                        const current = modes.indexOf(lift.zoneMode || 'all');
+                        this.setLiftZone(index, modes[(current + 1) % modes.length]);
+                        renderZone();
+                    };
+                    renderZone();
+                    settings.appendChild(zone);
+                }
+                if (pets) {
+                    const pet = document.createElement('button');
+                    pet.type = 'button';
+                    pet.className = 'lift-setting-btn pet-setting-btn';
+                    const filters = ['all', 'cats', 'dogs', 'none'];
+                    const symbols = { all: '🐾 All', cats: '🐈 Cats', dogs: '🐕 Dogs', none: '🚫 Pets' };
+                    const renderPet = () => { pet.textContent = symbols[lift.petFilter || 'all']; };
+                    pet.onclick = event => {
+                        event.stopPropagation();
+                        const current = filters.indexOf(lift.petFilter || 'all');
+                        this.setPetFilter(index, filters[(current + 1) % filters.length]);
+                        renderPet();
+                    };
+                    renderPet();
+                    settings.appendChild(pet);
+                }
+                group.appendChild(settings);
+            });
         },
 
         renderDock({ autoLobby, controlRow }) {
@@ -178,6 +252,7 @@ window.Game = window.Game || {};
 
             const statusRow = document.createElement('div'); statusRow.className = 'automation-status-row';
             Registry.lifts.forEach((lift, index) => {
+                const cell = document.createElement('div'); cell.className = 'lift-status-cell'; cell.dataset.liftIndex = index;
                 const status = document.createElement('button'); status.type = 'button'; status.className = 'automation-status'; status.dataset.liftIndex = index;
                 status.textContent = `${this.getPolicy(lift.automation)?.name || lift.automation}`;
                 status.setAttribute('aria-pressed', 'false');
@@ -190,9 +265,10 @@ window.Game = window.Game || {};
                     if (!state.committedPolicy && state.lifts.size) requestGuidance('policy');
                     else { clearGuidance(); renderInteraction(); }
                 });
-                statusRow.appendChild(status);
+                cell.appendChild(status); statusRow.appendChild(cell);
             });
             controlRow.appendChild(statusRow);
+            this.renderOperationsControls(controlRow);
             renderPreview();
 
             applyButton.addEventListener('click', event => {

@@ -70,6 +70,12 @@ document after the decision is applied there.
 
 | DEC-050 | 31 August 2026 | Persistent rail and Counterweight reports require behavioural regression coverage. The rail has one stable `#game-area` coordinate system and permanent roof headroom; it never falls back into a live floor. Tutorials time out after 30 seconds without consuming future teaching eligibility. Paired Sweep inspects stops nearest-first in its actual travel direction. Non-Gravity briefings use bulk/space language. Rooftop music is `0.75×`; VIP fanfare is `0.675×` original gain. | `DELIVERY_PLAN.md`, `TEST_PLAN.md`, PTF-043. |
 
+| DEC-051 | 8 November 2026 | Marie's Birthday Edition defaults every eligible R2+ lift to Sweep; other automation and the Workshop remain optional. Zoning becomes an independent lift property introduced in R10. | GDD, Game Play Map, canonical balance, runtime controls. |
+| DEC-052 | 8 November 2026 | Dedicated Rooftop music is removed. The Rooftop event, notices, traffic, and ordinary SFX remain. | Audio runtime, manifest, assets, tests, attribution. |
+| DEC-053 | 8 November 2026 | The former paired-car experiment and its lateral-transfer power-up are retired completely. Old saved purchases receive a narrow refund. R21–R23 become conventional zoned one-transfer networks. | Delivery/test plans, campaign migration, canonical balance, runtime, docs. |
+| DEC-054 | 8 November 2026 | Pets begin in R5 Pet-Friendly Hotel, recur thereafter, and peak in R22 **Best in Show**. Cats/dogs accompany ordinary guests; filters are All/Cats/Dogs/No Pets; mixed species warn for five seconds; Pet Snacks handles conflict; five pets create Stink handled by Freshener; pet owners tolerate Stink. | GDD, Game Play Map, Economy, canonical balance, runtime/tests. |
+| DEC-055 | 8 November 2026 | Checkout becomes a strong temporary wave only in R7, R10, R18, and R20. Delivery speed takes precedence over unused future-state architecture. | Canonical balance, roadmap, delivery plan. |
+
 ## Chat persistence limitation
 
 The complete source conversation is retained by the chat service, outside this repository. This file is a curated

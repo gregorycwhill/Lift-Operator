@@ -9,7 +9,7 @@ const output = path.join(root, 'assets', 'media');
 const captures = [
     { round: 1, name: 'campaign-onboarding.png' },
     { round: 9, name: 'campaign-rooftop.png' },
-    { round: 21, name: 'campaign-counterweights.png' },
+    { round: 22, name: 'campaign-best-in-show.png' },
     { round: 25, name: 'campaign-capsules.png' }
 ];
 

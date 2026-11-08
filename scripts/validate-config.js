@@ -55,7 +55,7 @@ for (let round = 1; round <= 25; round++) {
     assert(value.spawnEnd >= value.spawnStart, `Round ${round}: spawn curve decreases.`);
     assert(['SURVIVAL', 'ENDURANCE', 'PEDAL_SURVIVAL', 'QUOTA'].includes(value.objective), `Round ${round}: invalid objective.`);
     const challengeIds = new Set(value.activeChallenges || []);
-    const allowedChallenges = new Set(['roomService', 'gym', 'checkout', 'rooftop', 'vip', 'gravity', 'counterweights', 'capsule', 'jam', 'stink', 'zoning', 'openPlan', 'endurance']);
+    const allowedChallenges = new Set(['roomService', 'gym', 'checkout', 'rooftop', 'vip', 'gravity', 'capsule', 'jam', 'stink', 'zoning', 'transfers', 'pets', 'endurance']);
     assert(Array.isArray(value.activeChallenges), `Round ${round}: activeChallenges must be explicit.`);
     const briefing = value.briefing;
     assert(briefing && typeof briefing.title === 'string' && briefing.title.trim(), `Round ${round}: briefing title is required.`);
@@ -85,14 +85,10 @@ for (let round = 1; round <= 25; round++) {
         assert(challengeIds.has('capsule'), `Round ${round}: capsule mode must be listed as a challenge.`);
         assert(!challengeIds.has('roomService') && !challengeIds.has('gym'), `Round ${round}: capsule rounds exclude Room Service and Gym Bros.`);
     }
-    if (value.counterweightEnabled) {
-        assert(value.floors % 2 === 1, `Round ${round}: counterweight buildings must have an odd floor count.`);
-        assert(value.lifts % 2 === 0, `Round ${round}: counterweight lifts must form complete pairs.`);
-    }
     if (value.capsuleMode) assert(value.liftCapacity === 1, `Round ${round}: capsule lifts must have capacity one.`);
 }
 
-const eventIds = new Set(['jam', 'checkout', 'vip', 'rooftop', 'stink', 'gym', 'roomService']);
+const eventIds = new Set(['jam', 'checkout', 'vip', 'rooftop', 'stink', 'gym', 'roomService', 'pets', 'zoning', 'transfers']);
 Object.entries(design.events || {}).forEach(([id, rule]) => {
     assert(eventIds.has(id), `${id}: unknown event rule.`);
     assert(Number.isInteger(rule.introducedRound) && rule.introducedRound >= 1 && rule.introducedRound <= 25,

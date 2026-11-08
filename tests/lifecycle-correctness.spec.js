@@ -21,8 +21,8 @@ test('every authored round renders its canonical briefing title and active chall
         const labels = {
             roomService: 'Room Service', checkout: 'Checkout', vip: 'VIP', rooftop: 'Rooftop Party',
             jam: 'Jams', stink: 'Stink', gym: 'Gym Bros', gravity: 'Gravity',
-            counterweights: 'Counterweights', capsule: 'Capsule lifts', zoning: 'Zoning',
-            openPlan: 'Open Plan', endurance: 'Endurance'
+            capsule: 'Capsule lifts', zoning: 'Zoning', transfers: 'Transfers',
+            pets: 'Pets', endurance: 'Endurance'
         };
         return Object.entries(Config.GAME_DATA.rounds).map(([round, definition]) => {
             showRoundModal(Number(round));
@@ -342,7 +342,7 @@ test('Friends and Family onboarding keeps developer identifiers out of normal pl
     expect(result.gameId).toBe(false);
     expect(result.welcome).toContain('desktop Chrome or Edge');
     expect(result.howTo).toContain('Ground is marked G');
-    expect(result.howTo).toContain('Progress saves between rounds');
+    expect(result.howTo).toContain('Progress saves at round boundaries');
     expect(result.seedHidden).toBe(true);
     expect(result.newCampaign).toBe('New Campaign');
     expect(result.workshopHint).toBe('Unlocks at Round 10');
@@ -1274,7 +1274,7 @@ test('short and tall standard buildings use the accepted speed bands while speci
         threshold: Config.GAME_DATA.system.shortBuildingMaxFloors,
         r11Floors: Config.GAME_DATA.rounds[11].floors,
         r20Floors: Config.GAME_DATA.rounds[20].floors,
-        r21Counterweight: Config.GAME_DATA.rounds[21].counterweightEnabled,
+        r21Transfers: Config.GAME_DATA.rounds[21].transfersEnabled,
         r24Capsule: Config.GAME_DATA.rounds[24].capsuleMode
     }));
     expect(result).toEqual({
@@ -1284,7 +1284,7 @@ test('short and tall standard buildings use the accepted speed bands while speci
         threshold: 15,
         r11Floors: 15,
         r20Floors: 30,
-        r21Counterweight: true,
+        r21Transfers: true,
         r24Capsule: true
     });
 });
@@ -1391,45 +1391,271 @@ test('Weighted Voting delivers an onboard VIP before selecting incompatible wait
     expect(result).toBe(3);
 });
 
-test('R23 uses the reduced candidate spawn curve', async ({ page }) => {
+test('R23 uses the authored interchange spawn curve', async ({ page }) => {
     const result = await page.evaluate(() => ({
         start: Config.GAME_DATA.rounds[23].spawnStart,
         end: Config.GAME_DATA.rounds[23].spawnEnd
     }));
-    expect(result).toEqual({ start: 0.7125, end: 0.9 });
+    expect(result).toEqual({ start: 1.25, end: 1.6 });
 });
 
-test('counterweight trilogy has canonical scale and Open Plan timing', async ({ page }) => {
-    const result = await page.evaluate(() => ({
-        rounds: [21, 22, 23].map(round => {
-            const definition = Config.GAME_DATA.rounds[round];
-            return { round, floors: definition.floors, lifts: definition.lifts, counterweight: definition.counterweightEnabled };
-        }),
-        unlock: Config.GAME_DATA.shopUnlocks.openPlan,
-        durations: Config.GAME_DATA.powerups.openPlan.tiers.map(tier => tier.duration)
-    }));
+test('Round 2 onward starts every eligible lift in Sweep', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const modes = {};
+        [1, 2, 5, 10, 22, 25].forEach(round => {
+            initializeRound(round, { showBriefing: false });
+            modes[round] = Registry.lifts.map(lift => lift.automation);
+        });
+        return modes;
+    });
+    expect(result[1].every(mode => mode === 'manual')).toBe(true);
+    for (const round of [2, 5, 10, 22, 25]) {
+        expect(result[round].every(mode => mode === 'sweep'), `Round ${round}`).toBe(true);
+    }
+});
 
-    expect(result.rounds).toEqual([
-        { round: 21, floors: 11, lifts: 2, counterweight: true },
-        { round: 22, floors: 15, lifts: 4, counterweight: true },
-        { round: 23, floors: 29, lifts: 8, counterweight: true }
+test('zoning changes service coverage without changing Sweep automation', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(10, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        const before = lift.automation;
+        const low = Game.AutomationController.setLiftZone(0, 'low');
+        const lowState = { automation: lift.automation, lower: lift.serviceLower, upper: lift.serviceUpper };
+        const high = Game.AutomationController.setLiftZone(0, 'high');
+        return { before, low, lowState, high, after: lift.automation, max: Config.numFloors - 1 };
+    });
+    expect(result.before).toBe('sweep');
+    expect(result.low).toBe(true);
+    expect(result.high).toBe(true);
+    expect(result.lowState.automation).toBe('sweep');
+    expect(result.lowState.lower).toBe(0);
+    expect(result.lowState.upper).toBeLessThan(result.max);
+    expect(result.after).toBe('sweep');
+});
+
+test('pet filters enforce Cats, Dogs, No Pets, and All independently of automation', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(5, { showBriefing: false });
+        const lift = Registry.lifts[0];
+        const cat = { petType: 'cat' };
+        const dog = { petType: 'dog' };
+        const ordinary = { petType: null };
+        return ['all', 'cats', 'dogs', 'none'].map(filter => {
+            Game.AutomationController.setPetFilter(0, filter);
+            return {
+                filter,
+                automation: lift.automation,
+                cat: Registry.canLiftAcceptPet(lift, cat),
+                dog: Registry.canLiftAcceptPet(lift, dog),
+                ordinary: Registry.canLiftAcceptPet(lift, ordinary)
+            };
+        });
+    });
+    expect(result).toEqual([
+        { filter: 'all', automation: 'sweep', cat: true, dog: true, ordinary: true },
+        { filter: 'cats', automation: 'sweep', cat: true, dog: false, ordinary: true },
+        { filter: 'dogs', automation: 'sweep', cat: false, dog: true, ordinary: true },
+        { filter: 'none', automation: 'sweep', cat: false, dog: false, ordinary: true }
     ]);
-    expect(result.unlock).toEqual([22, 22, 22]);
-    expect(result.durations).toEqual([20, 45, 60]);
+});
+
+test('mixed pets warn once and Pet Snacks resolves conflict without suppressing pet Stink', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(5, { showBriefing: false });
+        Registry.gameActive = true;
+        const lift = Registry.lifts[0];
+        const now = Date.now();
+        const guest = petType => ({ petType, dest: 1, status: GuestStatus.HAPPY, spawnTime: now, boardingWeight: 1 });
+        lift.passengers = [guest('cat'), guest('dog'), guest('cat'), guest('dog'), guest('cat')];
+        lift.targetFloor = 1;
+        gameTick(now);
+        const warned = {
+            pending: lift.petConflictPending,
+            conflicts: Registry.roundStats.petConflicts,
+            stinky: Registry.isLiftStinky(lift),
+            petCount: lift.passengers.filter(passenger => passenger.petType).length,
+            petEvent: isRoundEventEnabled(Config.GAME_DATA.rounds[Registry.stats.round], 'pets'),
+            freshener: lift.freshenerTimer,
+            immunity: PowerUps.timers.stinkImmunity,
+            threshold: Config.petStinkThreshold
+        };
+        PowerUps.catalog.petSnacks.tiers[0].execute(0, 0);
+        gameTick(now + 1000);
+        return {
+            warned,
+            resolved: Registry.roundStats.petConflictResolutions,
+            pending: lift.petConflictPending,
+            snacks: lift.petSnacksTimer,
+            stillStinky: Registry.isLiftStinky(lift)
+        };
+    });
+    expect(result.warned).toEqual({ pending: true, conflicts: 1, stinky: true, petCount: 5, petEvent: true, freshener: 0, immunity: 0, threshold: 5 });
+    expect(result.resolved).toBe(1);
+    expect(result.pending).toBe(false);
+    expect(result.snacks).toBeGreaterThan(0);
+    expect(result.stillStinky).toBe(true);
+});
+
+test('one-transfer routing prefers direct service and chooses a deterministic pet-compatible interchange', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        Registry.lifts.forEach((lift, index) => {
+            lift.serviceLower = index % 2 === 0 ? 0 : 10;
+            lift.serviceUpper = index % 2 === 0 ? 10 : 19;
+            lift.petFilter = 'cats';
+        });
+        const cat = { dest: 18, finalDestination: 18, transferCount: 0, petType: 'cat', spawnTime: 1234 };
+        const transfer = Registry.findGuestRoute(2, 18, cat);
+        const prepared = Registry.prepareGuestRoute(cat, 2);
+        Registry.lifts[0].serviceUpper = 19;
+        const direct = Registry.findGuestRoute(2, 18, { ...cat, dest: 18, transferFloor: null, transferCount: 0 });
+        Registry.lifts[0].serviceUpper = 10;
+        Registry.lifts.filter((_, index) => index % 2 === 1).forEach(lift => { lift.petFilter = 'dogs'; });
+        const blocked = Registry.findGuestRoute(2, 18, { ...cat, dest: 18, transferFloor: null, transferCount: 0 });
+        return { transfer, prepared, cat, direct, blocked };
+    });
+    expect(result.transfer).toMatchObject({ legDestination: 10, transferFloor: 10, direct: false });
+    expect(result.prepared).toBe(true);
+    expect(result.cat).toMatchObject({ dest: 10, finalDestination: 18, transferFloor: 10, transferCount: 0, spawnTime: 1234 });
+    expect(result.direct).toMatchObject({ legDestination: 18, transferFloor: null, direct: true });
+    expect(result.blocked).toBeNull();
+});
+
+test('transfer alighting requeues the same guest once without resetting patience', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(21, { showBriefing: false });
+        Registry.gameActive = true;
+        const [low, high] = Registry.lifts;
+        Registry.lifts.forEach((lift, index) => {
+            lift.serviceLower = index === 0 ? 0 : 10;
+            lift.serviceUpper = index === 0 ? 10 : 19;
+        });
+        const spawnTime = 123456;
+        const guest = {
+            id: 'transfer-test', dest: 10, finalDestination: 18, transferFloor: 10, transferCount: 0,
+            status: GuestStatus.HAPPY, spawnTime, boardingWeight: 1, routePrepared: true
+        };
+        low.passengers = [guest];
+        low.pos = 10 * Registry.floorHeight;
+        low.targetFloor = 10;
+        low.state = 'BOARDING';
+        low.stateProgress = 1;
+        low.serviceCycleId = 1;
+        Game.virtualTime = 200000;
+        Game.Engine.animationTick();
+        const queued = Registry.floors[10].waitingGuests.find(candidate => candidate.id === guest.id);
+        return {
+            sameObject: queued === guest,
+            queued: queued && {
+                dest: queued.dest, finalDestination: queued.finalDestination, transferFloor: queued.transferFloor,
+                transferCount: queued.transferCount, spawnTime: queued.spawnTime
+            },
+            transferCount: Registry.roundStats.transfers,
+            secondLegCompatible: queued ? Registry.canLiftServeGuest(high, 10, queued.dest, queued) : false
+        };
+    });
+    expect(result.sameObject).toBe(true);
+    expect(result.queued).toEqual({ dest: 18, finalDestination: 18, transferFloor: null, transferCount: 1, spawnTime: 123456 });
+    expect(result.transferCount).toBe(1);
+    expect(result.secondLegCompatible).toBe(true);
+});
+
+test('unresolved pet conflict clears the cabin at the next stop and only pet owners become Critical', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(5, { showBriefing: false });
+        Registry.gameActive = true;
+        const now = Date.now();
+        Game.virtualTime = now;
+        const lift = Registry.lifts[0];
+        const passengers = [
+            { id: 'cat', petType: 'cat', dest: 2, finalDestination: 2, status: GuestStatus.HAPPY, spawnTime: now, boardingWeight: 1 },
+            { id: 'dog', petType: 'dog', dest: 3, finalDestination: 3, status: GuestStatus.HAPPY, spawnTime: now, boardingWeight: 1 },
+            { id: 'ordinary', petType: null, dest: 4, finalDestination: 4, status: GuestStatus.HAPPY, spawnTime: now, boardingWeight: 1 }
+        ];
+        lift.passengers = passengers;
+        lift.pos = 0;
+        lift.targetFloor = 0;
+        lift.state = 'IDLE';
+        lift.petConflictPending = true;
+        lift.petConflictDeadline = now - 1;
+        gameTick(now);
+        for (let tick = 0; tick < 220 && lift.passengers.length; tick++) {
+            Game.virtualTime = now + tick * 16;
+            Game.Engine.animationTick();
+        }
+        const queue = Registry.floors[0].waitingGuests.filter(guest => ['cat', 'dog', 'ordinary'].includes(guest.id));
+        return {
+            remaining: lift.passengers.length,
+            queue: queue.map(guest => ({ id: guest.id, status: guest.status, spawnTime: guest.spawnTime, finalDestination: guest.finalDestination })),
+            ejections: Registry.roundStats.petConflictEjections
+        };
+    });
+    expect(result.remaining).toBe(0);
+    expect(result.ejections).toBe(1);
+    expect(result.queue.map(guest => guest.id).sort()).toEqual(['cat', 'dog', 'ordinary']);
+    expect(result.queue.filter(guest => guest.id !== 'ordinary').every(guest => guest.status === 'critical')).toBe(true);
+    expect(result.queue.find(guest => guest.id === 'ordinary').status).toBe('happy');
+    expect(result.queue.every(guest => Number.isFinite(guest.spawnTime) && Number.isInteger(guest.finalDestination))).toBe(true);
+});
+
+test('generated pet owners remain ordinary one-capacity guests', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(10, { showBriefing: false });
+        const definition = Config.GAME_DATA.rounds[10];
+        const guests = Array.from({ length: 1000 }, (_, index) => createStandardGuest(definition, 0.6, index * 1000).guest);
+        const pets = guests.filter(guest => guest.petType);
+        return {
+            petCount: pets.length,
+            invalidRole: pets.some(guest => guest.isCheckout || guest.isVip || guest.isGymBro || guest.isRoomService),
+            invalidWeight: pets.some(guest => guest.boardingWeight !== 1),
+            species: [...new Set(pets.map(guest => guest.petType))].sort()
+        };
+    });
+    expect(result.petCount).toBeGreaterThan(0);
+    expect(result.invalidRole).toBe(false);
+    expect(result.invalidWeight).toBe(false);
+    expect(result.species).toEqual(['cat', 'dog']);
+});
+
+test('legacy Open Plan inventory is removed and refunded during the narrow campaign migration', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        const legacy = {
+            schemaVersion: 1,
+            balanceVersion: '0.2.13-rail-pair-regressions',
+            playerName: 'Legacy Player', seed: 1234, round: 22, highestUnlockedRound: 22,
+            lives: 20, points: 10, campaignScore: 100,
+            inventory: [{ id: 'openPlan', tier: 0 }, { id: 'openPlan', tier: 2 }, { id: 'wrench', tier: 0 }]
+        };
+        Game.Storage.set(Game.Keys.CAMPAIGN, JSON.stringify(legacy));
+        return Game.Campaign.load();
+    });
+    expect(result.balanceVersion).toBe('0.3.0-maries-birthday');
+    expect(result.points).toBe(17);
+    expect(result.campaignScore).toBe(100);
+    expect(result.inventory).toEqual([{ id: 'wrench', tier: 0 }]);
+    expect(result.round).toBe(22);
+});
+
+test('Checkout appears only in the four authored strong-wave rounds', async ({ page }) => {
+    const result = await page.evaluate(() => Object.entries(Config.GAME_DATA.rounds)
+        .filter(([, definition]) => definition.activeChallenges.includes('checkout'))
+        .map(([round, definition]) => ({ round: Number(round), waves: definition.checkoutWaves })));
+    expect(result.map(item => item.round)).toEqual([7, 10, 18, 20]);
+    expect(result.every(item => item.waves.length === 1 && item.waves[0].chance >= 0.8)).toBe(true);
 });
 
 test('capsule dispatch rounds have canonical scale, travel, and exclusions', async ({ page }) => {
     const result = await page.evaluate(() => ({
         r24: Config.GAME_DATA.rounds[24],
         r25: Config.GAME_DATA.rounds[25],
-        available: ['turbo', 'openPlan', 'freshener', 'tardis', 'doubleDecker']
+        available: ['turbo', 'petSnacks', 'freshener', 'tardis', 'doubleDecker']
             .map(id => [id, PowerUps.isPowerUpAvailableForRound(id, 24)])
     }));
 
     expect(result.r24).toMatchObject({ floors: 15, lifts: 10, liftCapacity: 1, capsuleMode: true, capsuleTravelSecPerFloor: 0.2, jamMinSec: 6, jamMaxSec: 10 });
     expect(result.r25).toMatchObject({ floors: 30, lifts: 20, liftCapacity: 1, capsuleMode: true, capsuleTravelSecPerFloor: 0.2, jamMinSec: 6, jamMaxSec: 10 });
     expect(result.available).toEqual([
-        ['turbo', true], ['openPlan', true], ['freshener', false],
+        ['turbo', true], ['petSnacks', false], ['freshener', false],
         ['tardis', false], ['doubleDecker', false]
     ]);
 });
@@ -1474,217 +1700,6 @@ test('capsule rounds render narrow cars and use seeded continuous demand current
     expect(result.groundPresent).toBe(true);
     expect(result.varied).toBe(true);
     expect(result.replay).toEqual(result.first);
-});
-
-test('counterweight pairs start complementary and mirror commanded targets', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
-        Registry.gameActive = true;
-        const before = Registry.lifts.map(lift => ({ partner: lift.counterweightPartner, floor: Math.round(lift.pos / Registry.floorHeight) }));
-        setLiftTarget(0, 10);
-        const after = Registry.lifts.map(lift => ({ target: lift.targetFloor, direction: lift.sweepDirection }));
-        initializeRound(20, { showBriefing: false });
-        Registry.gameActive = true;
-        setLiftTarget(0, 10);
-        return { before, after, unpairedTarget: Registry.lifts[0].targetFloor, unpairedPartner: Registry.lifts[0].counterweightPartner };
-    });
-
-    expect(result.before).toEqual([
-        { partner: 1, floor: 5 },
-        { partner: 0, floor: 5 }
-    ]);
-    expect(result.after).toEqual([
-        { target: 10, direction: 1 },
-        { target: 0, direction: -1 }
-    ]);
-    expect(result.unpairedTarget).toBe(10);
-    expect(result.unpairedPartner).toBe(null);
-});
-
-test('zoned no-service transit doubles speed only when a counterweight pair is jointly outside service', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        const measure = (round, setup) => {
-            initializeRound(round, { showBriefing: false });
-            const lifts = Registry.lifts;
-            setup(lifts);
-            const before = lifts.map(lift => lift.pos);
-            animationTick(1000);
-            return lifts.map((lift, index) => Math.abs(lift.pos - before[index]));
-        };
-        const standard = measure(14, ([lift]) => {
-            lift.serviceLower = 5; lift.serviceUpper = 19; lift.pos = 2 * Registry.floorHeight; lift.targetFloor = 10; lift.automation = 'zoned-high';
-        })[0];
-        const served = measure(14, ([lift]) => {
-            lift.serviceLower = 5; lift.serviceUpper = 19; lift.pos = 6 * Registry.floorHeight; lift.targetFloor = 10; lift.automation = 'zoned-high';
-        })[0];
-        const pairBoost = measure(23, ([left, right]) => {
-            left.serviceLower = 8; left.serviceUpper = 28; right.serviceLower = 8; right.serviceUpper = 28;
-            left.pos = 2 * Registry.floorHeight; left.targetFloor = 10;
-            right.pos = 3 * Registry.floorHeight; right.targetFloor = 12;
-        })[0];
-        const pairHeld = measure(23, ([left, right]) => {
-            left.serviceLower = 8; left.serviceUpper = 28; right.serviceLower = 0; right.serviceUpper = 28;
-            left.pos = 2 * Registry.floorHeight; left.targetFloor = 10;
-            right.pos = 3 * Registry.floorHeight; right.targetFloor = 12;
-        })[0];
-        return { standard, served, pairBoost, pairHeld };
-    });
-    expect(result.standard).toBeCloseTo(result.served * 2, 5);
-    expect(result.pairBoost).toBeCloseTo(result.pairHeld * 2, 5);
-});
-
-test('counterweight Sweep selects the first compatible stop for either car in paired direction', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
-        const [left, right] = Registry.lifts;
-        left.automation = 'sweep'; right.automation = 'sweep';
-        left.pos = 5 * Registry.floorHeight; right.pos = 5 * Registry.floorHeight;
-        left.targetFloor = 10; right.targetFloor = 0;
-        left.sweepDirection = 1; right.sweepDirection = -1;
-        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
-        Registry.floors[7].waitingGuests.push({ id: 'left-up', dest: 9, status: GuestStatus.HAPPY, boardingWeight: 1 });
-        Registry.floors[2].waitingGuests.push({ id: 'right-down', dest: 1, status: GuestStatus.HAPPY, boardingWeight: 1 });
-        const sharedFirstStop = Registry.findSweepTarget(left, 1);
-        Registry.floors[7].waitingGuests = [];
-        const partnerOnlyStop = Registry.findSweepTarget(left, 1);
-        return { sharedFirstStop, partnerOnlyStop };
-    });
-    expect(result).toEqual({ sharedFirstStop: 7, partnerOnlyStop: 8 });
-});
-
-test('counterweight built-in policy precedence selects one pair driver', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(22, { showBriefing: false });
-        const left = Registry.lifts[0];
-        const right = Registry.lifts[left.counterweightPartner];
-        left.automation = 'sweep';
-        right.automation = 'priority-sweep';
-        const builtIn = Registry.getCounterweightPolicyDriver(left).id;
-        right.automation = 'custom_example';
-        const custom = Registry.getCounterweightPolicyDriver(left).id;
-        return {
-            builtIn,
-            custom,
-            rankOrder: ['custom_example', 'weighted-voting', 'priority-sweep', 'zoned-low', 'voting', 'sweep'].map(policy => Registry.getCounterweightPolicyRank(policy))
-        };
-    });
-    expect(result.builtIn).toBe(1);
-    expect(result.custom).toBe(1);
-    expect(result.rankOrder).toEqual([6, 5, 4, 3, 2, 1]);
-});
-
-test('counterweight built-ins assign symmetrically and retain manual commands until selected service completes', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
-        Registry.gameActive = true;
-        setLiftAutomation(1, 'sweep');
-        const assigned = Registry.lifts.slice(0, 2).map(lift => lift.automation);
-        setLiftTarget(1, 10);
-        const manual = Registry.lifts.slice(0, 2).map(lift => ({ target: lift.targetFloor, override: lift.manualOverride }));
-        Registry.lifts.slice(0, 2).forEach(lift => { lift.pos = lift.targetFloor * Registry.floorHeight; lift.state = 'IDLE'; });
-        const releasedBeforeService = Registry.releaseCounterweightManualOverride(Registry.lifts[1]);
-        Registry.lifts[1].state = 'DOORS_CLOSING';
-        const releasedAfterService = Registry.completeCounterweightManualCommand(Registry.lifts[1]);
-        return { assigned, manual, releasedBeforeService, releasedAfterService, remaining: Registry.lifts.slice(0, 2).map(lift => lift.manualOverride) };
-    });
-    expect(result.assigned).toEqual(['sweep', 'sweep']);
-    expect(result.manual).toEqual([{ target: 0, override: true }, { target: 10, override: true }]);
-    expect(result.releasedBeforeService).toBe(false);
-    expect(result.releasedAfterService).toBe(true);
-    expect(result.remaining).toEqual([false, false]);
-});
-
-test('selected counterweight manual stop owns boarding against its earlier-processed partner', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
-        Registry.gameActive = true;
-        setLiftAutomation(1, 'sweep');
-        setLiftTarget(1, 5);
-        const [left, right] = Registry.lifts;
-        [left, right].forEach(lift => {
-            lift.pos = 5 * Registry.floorHeight;
-            lift.targetFloor = 5;
-            lift.state = 'BOARDING';
-            lift.stateProgress = 1;
-        });
-        right.passengers = [{ id: 'downbound', dest: 0, status: GuestStatus.HAPPY, boardingWeight: 1 }];
-        Registry.floors[5].waitingGuests = [{ id: 'manual-upbound', dest: 8, status: GuestStatus.HAPPY, boardingWeight: 1 }];
-        animationTick();
-        return {
-            leftBoarded: left.passengers.some(guest => guest.id === 'manual-upbound'),
-            rightBoarded: right.passengers.some(guest => guest.id === 'manual-upbound'),
-            commandActive: Boolean(Registry.getCounterweightManualCommand(right)),
-            overrides: Registry.lifts.map(lift => lift.manualOverride)
-        };
-    });
-    expect(result).toEqual({ leftBoarded: false, rightBoarded: true, commandActive: true, overrides: [true, true] });
-});
-
-test('Open Plan uses one active hub to transfer a compatible guest between adjacent lifts', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(22, { showBriefing: false });
-        const [source, target, nonAdjacent] = Registry.lifts;
-        const floor = 5;
-        [source, target, nonAdjacent].forEach(lift => {
-            lift.pos = floor * Registry.floorHeight;
-            lift.state = 'BOARDING';
-            lift.openPlanTimer = 0;
-        });
-        source.openPlanTimer = 20;
-        source.targetFloor = 0;
-        target.targetFloor = 10;
-        nonAdjacent.targetFloor = floor;
-        source.passengers = [{ id: 'transfer-guest', dest: 10, target: { targetFloor: 10 }, status: GuestStatus.HAPPY, boardingWeight: 1 }];
-        target.passengers = [];
-        Registry.roundStats = createRoundStats();
-        processOpenPlanTransfers();
-        return {
-            sourcePassengers: source.passengers.length,
-            targetPassengers: target.passengers.length,
-            transfers: Registry.roundStats.lateralTransfers,
-            partnerPairs: Registry.lifts.map(lift => lift.counterweightPartner)
-        };
-    });
-
-    expect(result.sourcePassengers).toBe(0);
-    expect(result.targetPassengers).toBe(1);
-    expect(result.transfers).toBe(1);
-    expect(result.partnerPairs).toEqual([1, 0, 3, 2]);
-});
-
-test('counterweight visual uses fixed rounded-square cables and four exterior pulleys per pair', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(23, { showBriefing: false });
-        const pairs = [...document.querySelectorAll('.counterweight-pair-visual')];
-        return {
-            pairCount: pairs.length,
-            frameCount: document.querySelectorAll('.counterweight-cable-frame').length,
-            pulleyCount: document.querySelectorAll('.counterweight-pulley').length,
-            pulleyPositions: [...document.querySelectorAll('.counterweight-pulley')].map(node => node.className),
-            cableBorderRadius: pairs[0] ? getComputedStyle(pairs[0].querySelector('.counterweight-cable-frame')).borderRadius : '',
-            cableStyle: pairs[0] ? getComputedStyle(pairs[0].querySelector('.counterweight-cable-frame')).borderStyle : '',
-            legacyOvalCount: document.querySelectorAll('.counterweight-pair-visual > .counterweight-cable').length
-        };
-    });
-
-    expect(result).toEqual({
-        pairCount: 4,
-        frameCount: 4,
-        pulleyCount: 16,
-        pulleyPositions: [
-            'counterweight-pulley top-left', 'counterweight-pulley top-right',
-            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right',
-            'counterweight-pulley top-left', 'counterweight-pulley top-right',
-            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right',
-            'counterweight-pulley top-left', 'counterweight-pulley top-right',
-            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right',
-            'counterweight-pulley top-left', 'counterweight-pulley top-right',
-            'counterweight-pulley bottom-left', 'counterweight-pulley bottom-right'
-        ],
-        cableBorderRadius: '18px',
-        cableStyle: 'solid',
-        legacyOvalCount: 0
-    });
 });
 
 test('automation-native zoning scales, assigns, overrides, and preserves existing passengers', async ({ page }) => {
@@ -1817,9 +1832,9 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
-    expect(result.r2SpawnStart).toBe(0.27);
-    expect(result.r2SpawnEnd).toBe(0.3375);
-    expect(result.version).toBe('0.2.12-service-stop-reliability');
+    expect(result.r2SpawnStart).toBe(0.65);
+    expect(result.r2SpawnEnd).toBe(0.8);
+    expect(result.version).toBe('0.3.0-maries-birthday');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -1911,9 +1926,9 @@ test('shop visibility follows canonical round and tier unlocks', async ({ page }
 
     expect(await visibleButtons(2)).toBe(0);
     expect(await visibleButtons(3)).toBe(1);
-    expect(await visibleButtons(6)).toBe(4);
-    expect(await visibleButtons(12)).toBe(24);
-    expect(await visibleButtons(13)).toBe(24);
+    expect(await visibleButtons(6)).toBe(6);
+    expect(await visibleButtons(12)).toBe(27);
+    expect(await visibleButtons(13)).toBe(27);
 
     const debugCount = await page.evaluate(() => {
         Registry.stats.round = 1;
@@ -1995,35 +2010,31 @@ test('explicit round challenge matrix drives runtime event activation', async ({
         return { r5: snapshot(5), r14: snapshot(14), r23: snapshot(23), r24: snapshot(24) };
     });
     expect(result.r5).toEqual({ jam: false, checkout: false, vip: false, rooftop: false, stink: false, gym: false, roomService: true });
-    expect(result.r14).toEqual({ jam: true, checkout: true, vip: true, rooftop: false, stink: true, gym: true, roomService: true });
+    expect(result.r14).toEqual({ jam: true, checkout: false, vip: true, rooftop: false, stink: true, gym: true, roomService: true });
     expect(result.r23).toEqual({ jam: true, checkout: false, vip: true, rooftop: false, stink: true, gym: true, roomService: true });
     expect(result.r24).toEqual({ jam: true, checkout: false, vip: true, rooftop: false, stink: false, gym: false, roomService: false });
 });
 
-test('persistent Checkout remains a 50 percent guest mix instead of replacing ordinary destinations', async ({ page }) => {
+test('Checkout is a strong temporary wave that leaves ordinary traffic outside the window', async ({ page }) => {
     const result = await page.evaluate(() => {
-        const sampleRound = round => {
+        const sampleRound = (round, progress) => {
             skipToRound(round, { showBriefing: false });
             Registry.sunsetTargetTime = Number.MAX_SAFE_INTEGER;
-            const guests = [];
-            for (let index = 0; index < 120; index++) {
-                forceFirstSpawn(index * 1000);
-                guests.push(...Registry.floors.flatMap(floor => floor.waitingGuests.splice(0)));
-            }
+            const definition = Config.GAME_DATA.rounds[round];
+            const guests = Array.from({ length: 120 }, (_, index) => createStandardGuest(definition, progress, index * 1000).guest);
             return {
                 checkout: guests.filter(guest => guest.isCheckout && guest.dest === 0).length,
-                ordinary: guests.filter(guest => !guest.isCheckout && guest.dest > 0).length
+                ordinary: guests.filter(guest => !guest.isCheckout).length
             };
         };
-        return { r7: sampleRound(7), r9: sampleRound(9) };
+        return { r7Wave: sampleRound(7, 0.3), r7Outside: sampleRound(7, 0.95), r9: sampleRound(9, 0.3) };
     });
 
-    for (const mix of [result.r7]) {
-        expect(mix.checkout).toBeGreaterThan(0);
-        expect(mix.ordinary).toBeGreaterThan(0);
-        expect(mix.checkout / (mix.checkout + mix.ordinary)).toBeGreaterThan(0.35);
-        expect(mix.checkout / (mix.checkout + mix.ordinary)).toBeLessThan(0.65);
-    }
+    expect(result.r7Wave.checkout).toBeGreaterThan(0);
+    expect(result.r7Wave.ordinary).toBeGreaterThan(0);
+    expect(result.r7Wave.checkout / 120).toBeGreaterThan(0.65);
+    expect(result.r7Outside.checkout).toBe(0);
+    expect(result.r9.checkout).toBe(0);
 });
 
 test('Rooftop redirect applies equally to runtime and max-delay fallback spawns without erasing ordinary traffic', async ({ page }) => {
@@ -2343,7 +2354,7 @@ test('checkout guests heading to Ground use suitcase text only when marked check
         checkoutUpper: getGuestText({ dest: 4, isCheckout: true, status: GuestStatus.HAPPY })
     }));
 
-    expect(result).toEqual({ checkout: '💼︎', ordinaryGround: 'G', checkoutUpper: 4 });
+    expect(result).toEqual({ checkout: '💼︎', ordinaryGround: 'G', checkoutUpper: '4' });
 });
 
 test('Settings links to the scoreboard without presenting deferred achievements', async ({ page }) => {
@@ -2441,15 +2452,15 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=RC1.0-friends-family-2026-08-31');
-    expect(result.copied).toContain('balance=0.2.12-service-stop-reliability');
+    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.1');
+    expect(result.copied).toContain('balance=0.3.0-maries-birthday');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
     expect(result.copied).toContain('seed=');
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('RC1.0-friends-family-2026-08-31');
+    expect(result.build).toContain('Maries-Birthday-2026-11-08.1');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
@@ -2467,21 +2478,6 @@ test('zoning shares Ground and post-R14 guest traffic weights Ground threefold',
     expect(result.ground).toBeGreaterThan(result.maxUpperFloor * 2);
     expect(result.ground).toBeLessThan(result.maxUpperFloor * 4);
     expect(result.floors).toBe(20);
-});
-
-test('Open Plan timer expires after the canonical duration', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(22, { showBriefing: false });
-        Registry.gameActive = true;
-        const lift = Registry.lifts[0];
-        lift.openPlanTimer = Config.GAME_DATA.powerups.openPlan.tiers[0].duration;
-        const before = lift.openPlanTimer;
-        gameTick(Date.now());
-        const afterOneTick = lift.openPlanTimer;
-        for (let i = 0; i < before - 1; i++) gameTick(Date.now() + (i + 1) * 1000);
-        return { before, afterOneTick, expired: lift.openPlanTimer };
-    });
-    expect(result).toEqual({ before: 20, afterOneTick: 19, expired: 0 });
 });
 
 test('Room Service display width is reduced without changing height', async ({ page }) => {
@@ -2522,7 +2518,7 @@ test('timed power-ups expire from wall-clock time rather than callback count', a
         const lift = Registry.lifts[0];
         const timers = [
             ['turboTimer', 10], ['freshenerTimer', 10], ['musakTimer', 10],
-            ['tardisTimer', 10], ['doubleDeckerTimer', 10], ['openPlanTimer', 10]
+            ['tardisTimer', 10], ['doubleDeckerTimer', 10], ['petSnacksTimer', 10]
         ];
         timers.forEach(([key, duration]) => PowerUps.setLiftTimer(lift, key, duration));
         PowerUps.setGlobalTimer('globalTurbo', 10);
@@ -2646,7 +2642,7 @@ test('countdown start-now control begins the round immediately', async ({ page }
     expect(result.timer).toBe(null);
 });
 
-test('round-start countdown uses the Round 2 teaching override and bounded three-seconds-per-lift rule', async ({ page }) => {
+test('round-start countdown gives Round 2 five seconds and later fleets bounded setup time', async ({ page }) => {
     const result = await page.evaluate(() => {
         const requested = [];
         const original = window.startRoundCountdown;
@@ -2662,13 +2658,13 @@ test('round-start countdown uses the Round 2 teaching override and bounded three
         window.startRoundCountdown = original;
         return requested;
     });
-    expect(result).toEqual([10, 6, 24, 30]);
+    expect(result).toEqual([5, 6, 24, 30]);
 });
 
-test('Round 2 shows the basement automation instruction during its extended countdown', async ({ page }) => {
+test('Round 2 announces that Sweep is already active during orientation', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(2, { showBriefing: false });
-        startRoundCountdown(10);
+        startRoundCountdown(5);
         return {
             countdownVisible: !document.getElementById('roundCountdown').classList.contains('hidden'),
             message: document.getElementById('game-message-text')?.innerText || '',
@@ -2676,7 +2672,7 @@ test('Round 2 shows the basement automation instruction during its extended coun
         };
     });
     expect(result.countdownVisible).toBe(true);
-    expect(result.message).toBe('1. Use the arrows in the basement Automation Dock until Sweep is displayed.');
+    expect(result.message).toBe('Sweep is already on. Click this lift and a floor when you need to intervene; Sweep resumes after the stop.');
     expect(result.railVisible).toBe(true);
     await page.evaluate(() => document.getElementById('roundCountdownSkip').click());
     await expect(page.locator('#game-message-rail')).toBeHidden();
@@ -2704,33 +2700,23 @@ test('Round 3 starts in Sweep and teaches Priority Sweep assignment to one lift'
     expect(result.automation).toEqual(['priority-sweep', 'sweep']);
 });
 
-test('Sweep onboarding is campaign-scoped and post-R2 fleets begin in Sweep', async ({ page }) => {
+test('Round 2 guidance presents active Sweep and later fleets retain the default', async ({ page }) => {
     const result = await page.evaluate(() => {
-        Registry.campaignSeed = 111;
         initializeRound(2, { showBriefing: false });
-        startRoundCountdown(10);
-        const r2Manual = Registry.lifts.map(lift => lift.automation);
-        document.querySelector('.automation-carousel-arrow[aria-label="Next automation"]')?.click();
-        document.querySelector('.automation-carousel-card[data-policy="sweep"]')?.click();
-        document.querySelector('.automation-status[data-lift-index="0"]')?.click();
-        const completedMessage = document.getElementById('game-message-rail')?.hidden;
-        initializeRound(2, { showBriefing: false });
-        startRoundCountdown(10);
-        const hiddenInSameCampaign = document.getElementById('game-message-rail')?.hidden;
-        Registry.campaignSeed = 222;
-        initializeRound(2, { showBriefing: false });
-        startRoundCountdown(10);
-        const shownInNewCampaign = !document.getElementById('game-message-rail')?.hidden;
+        startRoundCountdown(5);
+        const r2 = Registry.lifts.map(lift => lift.automation);
+        const message = document.getElementById('game-message-text')?.textContent;
         initializeRound(3, { showBriefing: false });
         const r3 = Registry.lifts.map(lift => lift.automation);
         initializeRound(21, { showBriefing: false });
         const r21 = Registry.lifts.map(lift => lift.automation);
-        return { r2Manual, completedMessage, hiddenInSameCampaign, shownInNewCampaign, r3, r21 };
+        return { r2, message, r3, r21 };
     });
-    expect(result).toEqual({
-        r2Manual: ['manual'], completedMessage: true, hiddenInSameCampaign: true, shownInNewCampaign: true,
-        r3: ['sweep', 'sweep'], r21: ['sweep', 'sweep']
-    });
+    expect(result.r2).toEqual(['sweep']);
+    expect(result.message).toContain('Sweep is already on');
+    expect(result.r3).toEqual(['sweep', 'sweep']);
+    expect(result.r21).toHaveLength(6);
+    expect(result.r21.every(mode => mode === 'sweep')).toBe(true);
 });
 
 test('passenger display prioritises urgency without changing service order', async ({ page }) => {
@@ -2857,61 +2843,6 @@ test('abandoned tutorial clears numbered targets after its 30-second opportunity
     expect(result).toMatchObject({ after: 0, railHidden: true, active: false, persisted: '0' });
 });
 
-test('counterweight Sweep checks a proposed leg rather than its stale previous direction', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
-        const [left, right] = Registry.lifts;
-        const maxFloor = Config.numFloors - 1;
-        left.automation = 'sweep'; right.automation = 'sweep';
-        left.pos = 5 * Registry.floorHeight;
-        right.pos = (maxFloor - 5) * Registry.floorHeight;
-        left.targetFloor = 5; right.targetFloor = maxFloor - 5;
-        left.sweepDirection = 1; right.sweepDirection = -1;
-        left.passengers = [{ id: 'onboard-other-leg', dest: 9, boardingWeight: 1 }];
-        right.passengers = [];
-        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
-        Registry.floors[3].waitingGuests.push({ id: 'critical-down', dest: 1, status: GuestStatus.CRITICAL, boardingWeight: 1 });
-        return Registry.findSweepTarget(left, -1);
-    });
-    expect(result).toBe(3);
-});
-
-test('counterweight Sweep takes the nearest service stop in both directions and services its live down leg', async ({ page }) => {
-    const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
-        Registry.gameActive = true;
-        const [left, right] = Registry.lifts;
-        const maxFloor = Config.numFloors - 1;
-        left.automation = 'sweep'; right.automation = 'sweep';
-        left.pos = 8 * Registry.floorHeight;
-        right.pos = (maxFloor - 8) * Registry.floorHeight;
-        left.targetFloor = 8; right.targetFloor = maxFloor - 8;
-        left.state = 'IDLE'; right.state = 'IDLE';
-        left.sweepDirection = -1; right.sweepDirection = 1;
-        left.passengers = [{ id: 'alight-near', dest: 7, boardingWeight: 1, isVip: false, isGymBro: false }];
-        right.passengers = [];
-        Registry.floors.forEach(floor => { floor.waitingGuests = []; });
-        Registry.floors[3].waitingGuests.push({ id: 'farther-down', dest: 1, status: GuestStatus.CRITICAL, boardingWeight: 1, isVip: false, isGymBro: false, isPartying: false });
-        const downTarget = Registry.findSweepTarget(left, -1);
-
-        left.passengers = [];
-        Registry.floors[7].waitingGuests.push({ id: 'nearer-down', dest: 2, status: GuestStatus.HAPPY, boardingWeight: 1, isVip: false, isGymBro: false, isPartying: false });
-        const pickupTarget = Registry.findSweepTarget(left, -1);
-        window.applyLiftTarget(left.id, pickupTarget, { manualOverride: false });
-        const now = 1000000;
-        for (let tick = 0; tick < 500 && Registry.floors[7].waitingGuests.some(guest => guest.id === 'nearer-down'); tick++) {
-            Game.Engine.animationTick(now + tick * 16);
-        }
-        return {
-            downTarget,
-            pickupTarget,
-            boardedNearer: left.passengers.some(guest => guest.id === 'nearer-down'),
-            stoppedAtNearer: left.serviceCycleId > 0
-        };
-    });
-    expect(result).toEqual({ downTarget: 7, pickupTarget: 7, boardedNearer: true, stoppedAtNearer: true });
-});
-
 test('same-service-cycle alighting blocks an immediate reboard to the same car', async ({ page }) => {
     const result = await page.evaluate(() => {
         const lift = { id: 0, automation: 'manual', manualOverride: false, sweepDirection: 1, passengers: [], serviceCycleId: 4 };
@@ -2961,7 +2892,7 @@ test('critical notices queue in the roof overlay without obscuring the lobby or 
     expect(result.keepsLobbyClear).toBe(true);
 });
 
-test('Round 2 is Manual while every later Sweep-eligible fleet starts in Sweep', async ({ page }) => {
+test('Round 2 and every later eligible fleet start in Sweep', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(2, { showBriefing: false });
         const tutorialFleet = Registry.lifts.map(lift => lift.automation);
@@ -2973,7 +2904,7 @@ test('Round 2 is Manual while every later Sweep-eligible fleet starts in Sweep',
         const largerFleet = Registry.lifts.map(lift => lift.automation);
         return { tutorialFleet, firstFleet, laterFleet, largerFleet };
     });
-    expect(result.tutorialFleet).toEqual(['manual']);
+    expect(result.tutorialFleet).toEqual(['sweep']);
     expect(result.firstFleet.every(mode => mode === 'sweep')).toBe(true);
     expect(result.laterFleet.every(mode => mode === 'sweep')).toBe(true);
     expect(result.largerFleet).toHaveLength(4);
@@ -3369,7 +3300,7 @@ test('R22 manual stop boards a compatible waiting guest before Sweep resumes', a
         Registry.gameActive = true;
         const floor = 5;
         const lift = Registry.lifts[0];
-        const partner = Registry.lifts[lift.counterweightPartner];
+        const otherLift = Registry.lifts[1];
         const now = 1000000;
         setLiftAutomation(lift.id, 'sweep');
         lift.pos = floor * Registry.floorHeight;
@@ -3377,16 +3308,14 @@ test('R22 manual stop boards a compatible waiting guest before Sweep resumes', a
         lift.state = 'IDLE';
         lift.stateProgress = 0;
         lift.passengers = [];
-        partner.pos = (Config.numFloors - 1 - floor) * Registry.floorHeight;
-        partner.targetFloor = Config.numFloors - 1 - floor;
-        partner.state = 'IDLE';
-        partner.stateProgress = 0;
+        otherLift.targetFloor = 9;
         Registry.floors[floor].waitingGuests = [{
             id: 'manual-stop-guest', dest: 10, status: GuestStatus.HAPPY,
             spawnTime: now, boardingWeight: 1, isVip: false, isGymBro: false
         }];
 
         setLiftTarget(lift.id, floor);
+        const otherTargetAfterClick = otherLift.targetFloor;
         for (let tick = 0; tick < 160 && lift.passengers.length === 0; tick++) {
             Game.Engine.animationTick(now + tick * 16);
         }
@@ -3394,14 +3323,14 @@ test('R22 manual stop boards a compatible waiting guest before Sweep resumes', a
             boarded: lift.passengers.map(guest => guest.id),
             waiting: Registry.floors[floor].waitingGuests.map(guest => guest.id),
             manualOverride: lift.manualOverride,
-            partnerTarget: partner.targetFloor
+            otherTargetAfterClick
         };
     });
 
     expect(result.boarded).toEqual(['manual-stop-guest']);
     expect(result.waiting).toEqual([]);
     expect(result.manualOverride).toBe(true);
-    expect(result.partnerTarget).toBe(9);
+    expect(result.otherTargetAfterClick).toBe(9);
 });
 
 test('deferred achievement storage cannot add campaign Credits', async ({ page }) => {
@@ -3443,13 +3372,13 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
             ),
             selectedPrices: {
                 doubleDecker: PowerUps.catalog.doubleDecker.tiers.map(tier => tier.cost),
-                openPlan: PowerUps.catalog.openPlan.tiers.map(tier => tier.cost),
+                petSnacks: PowerUps.catalog.petSnacks.tiers.map(tier => tier.cost),
                 tardis: PowerUps.catalog.tardis.tiers.map(tier => tier.cost)
             },
             doubleDeckerIcon: PowerUps.catalog.doubleDecker.icon,
             activeDoubleDeckerIcon: document.getElementById('lift-effects-0')?.textContent,
             doubleDeckerDescriptions: PowerUps.catalog.doubleDecker.tiers.map(tier => tier.desc),
-            openPlanDescriptions: PowerUps.catalog.openPlan.tiers.map(tier => tier.desc),
+            petSnacksDescriptions: PowerUps.catalog.petSnacks.tiers.map(tier => tier.desc),
             jamTimer: lift.jamTimer,
             stinkTimer: lift.stinkTimer,
             freshenerTimer: lift.freshenerTimer,
@@ -3460,11 +3389,11 @@ test('runtime power-up catalog uses canonical prices and core effects', async ({
     });
 
     expect(result.pricesMatch).toBe(true);
-    expect(result.selectedPrices).toEqual({ doubleDecker: [1, 2, 3], openPlan: [2, 3, 5], tardis: [2, 3, 5] });
+    expect(result.selectedPrices).toEqual({ doubleDecker: [1, 2, 3], petSnacks: [1, 3, 5], tardis: [2, 3, 5] });
     expect(result.doubleDeckerIcon).toBe('🪜');
     expect(result.activeDoubleDeckerIcon).toContain('🪜');
     expect(result.doubleDeckerDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
-    expect(result.openPlanDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
+    expect(result.petSnacksDescriptions.every(desc => !/^(Bronze|Silver|Gold):/.test(desc))).toBe(true);
     expect(result.jamTimer).toBe(0);
     expect(result.stinkTimer).toBe(0);
     expect(result.freshenerTimer).toBeGreaterThan(0);
