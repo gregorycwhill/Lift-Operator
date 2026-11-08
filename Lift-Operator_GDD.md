@@ -67,6 +67,9 @@ compact controls are the primary late-game strategy surface for a Sweep-focused 
 Cats and dogs accompany ordinary guests. Their owner consumes normal capacity; the pet consumes no additional space or
 weight. Pet owners cannot simultaneously be VIP, Checkout, Room Service, or Gym Bro traffic.
 
+The destination remains the primary guest token. Pet identity is a cat-face or dog-face badge overlaid at the token's
+upper corner, like a Supply Closet count bubble; it must not widen the token or displace the destination.
+
 - Mixed cat/dog cabins start a five-second conflict warning.
 - Pet Snacks prevent or resolve conflict but do not suppress Stink.
 - An unresolved conflict clears the entire cabin at the next stop. All passengers requeue; pet owners become Critical;

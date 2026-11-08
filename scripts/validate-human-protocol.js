@@ -7,4 +7,4 @@ const protocol = {
     capture: ['completion', 'retry count', 'failure reason', 'loadout', 'manual interventions', 'credits before/after', 'pet/filter/transfer observations', 'free-form clarity/fun notes'],
     rule: 'Keep the seed fixed between retries; record why the player changed strategy. Do not delay the birthday build for non-P0 balance polish.'
 };
-console.log(JSON.stringify({ schemaVersion: 2, release: "Maries-Birthday-2026-11-08.1", protocol }));
+console.log(JSON.stringify({ schemaVersion: 2, release: "Maries-Birthday-2026-11-08.2", protocol }));

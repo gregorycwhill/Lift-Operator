@@ -2,7 +2,7 @@
 
 **Status:** Canonical campaign intent  
 **Runtime authority:** `design/game-balance.v1.json`  
-**Release:** `0.3.0-maries-birthday` / `Maries-Birthday-2026-11-08.1`
+**Release:** `0.3.0-maries-birthday` / `Maries-Birthday-2026-11-08.2`
 
 ## Progression contract
 
@@ -75,6 +75,9 @@ mechanics merely to defeat it.
 Pets accompany normal guests and consume no capacity beyond their owner. Pet owners are mutually exclusive with VIP,
 Checkout, Room Service, and Gym Bro roles. Each lift exposes All, Cats, Dogs, or No Pets; this filter is independent of
 automation and zoning.
+
+Pet identity uses an overlaid `🐱` or `🐶` face badge. The destination number or `G` remains centred and unobstructed;
+the badge never consumes queue or cabin layout width.
 
 A cat and dog together start one five-second warning. Pet Snacks prevent or resolve conflict but do not prevent Stink.
 If unresolved, the cabin clears at its next stop; every passenger is requeued, pet owners become Critical, and original

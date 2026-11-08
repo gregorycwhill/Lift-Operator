@@ -23,7 +23,7 @@ build version, balance version, commands, and results in `docs/archive/RELEASE_H
 
 ## Current automated evidence — 8 November 2026
 
-- `npm.cmd run test:release` — pass: 182/182 full browser tests, 26/26 focused mechanics tests, 3/3 containment
+- `npm.cmd run test:release` — pass: 183/183 full browser tests, 27/27 focused mechanics tests, 3/3 containment
   integration tests, plus syntax, documentation, configuration, generated-balance, economy, UTF-8, and unit checks.
 - `npm.cmd run balance:acceptance` — completed for R2–R25 using five fixed seeds per strategy.
 - `npm.cmd run balance:acceptance:integrity` — pass: JSON and Markdown evidence match canonical balance and acceptance
@@ -76,6 +76,8 @@ package smoke and supported-browser checks are recorded.
    ends below five or while Freshener protection is active.
 7. Pet owners can board a stinky lift and do not receive onboard Stink patience acceleration.
 8. Pet Snacks expiry with an incompatible pair aboard begins a normal warning rather than immediately ejecting them.
+9. Cat/dog faces render as overlay badges in queues and cabins; the destination remains a separate centred label and
+   the guest token retains its ordinary width.
 
 ### One-transfer journeys
 

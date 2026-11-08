@@ -1617,6 +1617,46 @@ test('generated pet owners remain ordinary one-capacity guests', async ({ page }
     expect(result.species).toEqual(['cat', 'dog']);
 });
 
+test('pet faces render as overlay badges without displacing destination labels', async ({ page }) => {
+    const result = await page.evaluate(() => {
+        initializeRound(5, { showBriefing: false });
+        const makeGuest = (petType, dest) => ({
+            id: `${petType}-${dest}`,
+            petType,
+            dest,
+            finalDestination: dest,
+            status: GuestStatus.HAPPY,
+            spawnTime: performance.now(),
+            boardingWeight: 1
+        });
+        Registry.floors[0].waitingGuests = [makeGuest('cat', 9)];
+        Registry.lifts[0].passengers = [makeGuest('dog', 7)];
+        Registry.lastLobbyRenderTime = -Infinity;
+        draw();
+
+        const lobbyGuest = document.querySelector('#lobby-0 .guest');
+        const liftGuest = document.querySelector('#lift-el-0 .guest');
+        const describe = element => ({
+            width: Math.round(element.getBoundingClientRect().width),
+            destination: element.querySelector('.guest-destination')?.textContent,
+            badge: element.querySelector('.guest-pet-badge')?.textContent,
+            badgePosition: getComputedStyle(element.querySelector('.guest-pet-badge')).position,
+            aria: element.getAttribute('aria-label')
+        });
+        return {
+            catText: getGuestText(Registry.floors[0].waitingGuests[0]),
+            dogText: getGuestText(Registry.lifts[0].passengers[0]),
+            lobby: describe(lobbyGuest),
+            lift: describe(liftGuest)
+        };
+    });
+
+    expect(result.catText).toBe('9');
+    expect(result.dogText).toBe('7');
+    expect(result.lobby).toEqual({ width: 20, destination: '9', badge: '🐱', badgePosition: 'absolute', aria: 'Cat owner, destination 9' });
+    expect(result.lift).toEqual({ width: 20, destination: '7', badge: '🐶', badgePosition: 'absolute', aria: 'Dog owner, destination 7' });
+});
+
 test('legacy Open Plan inventory is removed and refunded during the narrow campaign migration', async ({ page }) => {
     const result = await page.evaluate(() => {
         const legacy = {
@@ -2452,7 +2492,7 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.1');
+    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.2');
     expect(result.copied).toContain('balance=0.3.0-maries-birthday');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
@@ -2460,7 +2500,7 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('Maries-Birthday-2026-11-08.1');
+    expect(result.build).toContain('Maries-Birthday-2026-11-08.2');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {

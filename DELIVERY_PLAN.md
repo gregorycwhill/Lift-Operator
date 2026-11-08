@@ -105,8 +105,8 @@ Bouncer, or migration frameworks for this release.
 ## Current delivery status — 8 November 2026
 
 - Checkpoints 1–6 are complete in the working tree.
-- The automated portion of checkpoint 7 passes: `npm.cmd run test:release` completed with 182/182 browser tests,
-  26/26 focused mechanics tests, and 3/3 containment integration tests.
+- The automated portion of checkpoint 7 passes: `npm.cmd run test:release` completed with 183/183 browser tests,
+  27/27 focused mechanics tests, and 3/3 containment integration tests.
 - The deterministic balance run and integrity check pass as evidence-generation commands. R2 and the new R21–R23
   arc meet their birthday-release thresholds: all-Sweep fails on 5/5 seeds; intended play succeeds on 5/5, 4/5,
   5/5, and 4/5 seeds respectively.

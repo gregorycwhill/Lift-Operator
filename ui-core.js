@@ -360,6 +360,28 @@ window.applyAutomationTeachingCue = function() {
 
 
 
+window.renderGuestToken = function(element, guest, ui = GameUI()) {
+    if (!element) return;
+    const destination = (typeof ui.getGuestText === 'function') ? ui.getGuestText(guest) : window.getGuestText(guest);
+    element.replaceChildren();
+
+    const destinationLabel = document.createElement('span');
+    destinationLabel.className = 'guest-destination';
+    destinationLabel.innerText = destination;
+    element.appendChild(destinationLabel);
+
+    if (guest.petType === 'cat' || guest.petType === 'dog') {
+        const petBadge = document.createElement('span');
+        petBadge.className = `guest-pet-badge ${guest.petType}`;
+        petBadge.innerText = guest.petType === 'cat' ? '🐱' : '🐶';
+        petBadge.setAttribute('aria-hidden', 'true');
+        element.appendChild(petBadge);
+        element.setAttribute('aria-label', `${guest.petType === 'cat' ? 'Cat' : 'Dog'} owner, destination ${destination}`);
+    } else {
+        element.removeAttribute('aria-label');
+    }
+};
+
 window.draw = function() {
     const ui = GameUI();
     const topFloorRow = document.getElementById(`floor-row-${Config.numFloors - 1}`);
@@ -408,7 +430,7 @@ window.draw = function() {
                         if (p.isRoomService) classList += ' room-service';
                         if (p.isCheckout && p.dest === 0) classList += ' checkout-ground';
                         guest.className = classList;
-                        guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
+                        window.renderGuestToken(guest, p, ui);
                         
                         // Roughly split passengers between decks
                         if (i % 2 === 0) topDeck.appendChild(guest);
@@ -424,7 +446,7 @@ window.draw = function() {
                         if (p.isRoomService) classList += ' room-service';
                         if (p.isCheckout && p.dest === 0) classList += ' checkout-ground';
                         guest.className = classList;
-                        guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(p) : window.getGuestText(p);
+                        window.renderGuestToken(guest, p, ui);
                         car.appendChild(guest);
                     });
                 }
@@ -518,7 +540,7 @@ window.draw = function() {
                     if (g.isRoomService) classList += ' room-service';
                     if (g.isCheckout && g.dest === 0) classList += ' checkout-ground';
                     guest.className = classList;
-                    guest.innerText = (typeof ui.getGuestText === 'function') ? ui.getGuestText(g) : window.getGuestText(g);
+                    window.renderGuestToken(guest, g, ui);
                     lobby.appendChild(guest);
                 });
                 if (guests.length > visibleGuests.length) {
@@ -632,8 +654,7 @@ window.getGuestText = function(g) {
     
     if (g.isRoomService) return `🍽️${txt}`;
     if (g.isGymBro) return `💪${txt}`;
-    if (g.petType === 'cat') return `🐈${txt}`;
-    if (g.petType === 'dog') return `🐕${txt}`;
+    if (g.petType === 'cat' || g.petType === 'dog') return txt;
     if (g.isSunset) return 'R';
     
     return txt;
@@ -646,6 +667,7 @@ window.getGuestText = function(g) {
 window.UI = window.UI || {};
 window.UI.buildWorld = window.buildWorld;
 window.UI.draw = window.draw;
+window.UI.renderGuestToken = window.renderGuestToken;
 window.UI.triggerDefenestration = window.triggerDefenestration;
 window.UI.updateScoreboardUI = window.updateScoreboardUI;
 window.UI.getGuestText = window.getGuestText;
