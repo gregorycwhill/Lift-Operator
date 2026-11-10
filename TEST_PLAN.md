@@ -23,7 +23,7 @@ build version, balance version, commands, and results in `docs/archive/RELEASE_H
 
 ## Current automated evidence — 8 November 2026
 
-- `npm.cmd run test:release` — pass: 183/183 full browser tests, 27/27 focused mechanics tests, 3/3 containment
+- `npm.cmd run test:release` — pass: 183/183 full browser tests, 29/29 focused mechanics tests, 3/3 containment
   integration tests, plus syntax, documentation, configuration, generated-balance, economy, UTF-8, and unit checks.
 - `npm.cmd run balance:acceptance` — completed for R2–R25 using five fixed seeds per strategy.
 - `npm.cmd run balance:acceptance:integrity` — pass: JSON and Markdown evidence match canonical balance and acceptance
@@ -41,11 +41,13 @@ package smoke and supported-browser checks are recorded.
 ### Removal and defaults
 
 1. Every configured R2+ lift begins in Sweep unless a test deliberately changes it.
-2. R2 has no Sweep-deployment requirement; manual targeting overrides and then returns control to Sweep.
-3. Rooftop events never start a dedicated music source. Notices, release, and ordinary effects still work.
-4. Production data, runtime state, shop, briefing chips, simulation profiles, and UI expose neither Counterweights nor
+2. R2 has no Sweep-deployment requirement and displays only “Sweep is already on; click a floor to intervene.” Manual
+   targeting overrides and then returns control to Sweep.
+3. R3 starts both lifts in Sweep with no mandatory tutorial; Priority Sweep is available through ordinary discovery.
+4. Rooftop events never start a dedicated music source. Notices, release, and ordinary effects still work.
+5. Production data, runtime state, shop, briefing chips, simulation profiles, and UI expose neither Counterweights nor
    Open Plan.
-5. A saved Open Plan purchase is refunded or converted without losing Credits; incompatible active late-round state is
+6. A saved Open Plan purchase is refunded or converted without losing Credits; incompatible active late-round state is
    not resumed inside the removed mechanic.
 
 ### Independent zoning
@@ -81,14 +83,15 @@ package smoke and supported-browser checks are recorded.
 
 ### One-transfer journeys
 
-1. Direct service is always preferred when available.
-2. With no direct lift, a deterministic valid interchange creates exactly two legs.
-3. Transfer alighting requeues the same guest state with final destination intact and no spawn-time reset.
-4. A guest never transfers more than once, returns to a visited floor, or selects its current floor as final delivery.
-5. Pet-filter compatibility is checked for both legs. A pet owner is never sent into a connection it cannot board under
+1. R14 remains direct-only; R15–R23 enable transfers and R15 presents their first-use rule.
+2. Direct service is always preferred when available.
+3. With no direct lift, a deterministic valid interchange creates exactly two legs.
+4. Transfer alighting requeues the same guest state with final destination intact and no spawn-time reset.
+5. A guest never transfers more than once, returns to a visited floor, or selects its current floor as final delivery.
+6. Pet-filter compatibility is checked for both legs. A pet owner is never sent into a connection it cannot board under
    the current configuration.
-6. Waiting connection routes recalculate after zone/filter changes; uncovered guests remain visible and age normally.
-7. Delivery scoring and average wait occur only at the final destination, not at the interchange.
+7. Waiting connection routes recalculate after zone/filter changes; uncovered guests remain visible and age normally.
+8. Delivery scoring and average wait occur only at the final destination, not at the interchange.
 
 ### Regression
 
@@ -113,19 +116,22 @@ package smoke and supported-browser checks are recorded.
 
 Use current Chrome or Edge desktop. Record build, balance version, round, seed, viewport, and result.
 
-1. **R2:** Sweep is visibly active and may win unattended; a player can still manually rescue a floor and see Sweep
+1. **R1:** the `0.08→0.18` curve gives a novice enough space to learn manual pickup, destinations, and patience.
+2. **R2:** Sweep is visibly active and may win unattended; the only instruction is “Sweep is already on; click a floor
+   to intervene.” A player can still manually rescue a floor and see Sweep
    resume without learning the Automation Dock workflow.
-2. **R5 Pet-Friendly Hotel:** cat/dog identity, four filters, conflict warning, Pet Snacks, and five-pet Stink are
+3. **R3:** both lifts begin in Sweep, no mandatory automation tutorial appears, and Priority Sweep remains discoverable.
+4. **R5 Pet-Friendly Hotel:** cat/dog identity, four filters, conflict warning, Pet Snacks, and five-pet Stink are
    understandable without permanently cluttering the board.
-3. **R7/R10/R18/R20:** Checkout is a noticeable temporary surge rather than the entire round's repetitive solution.
-4. **R10:** a Sweep-only player can set Low/High zones without changing automation or opening the Workshop.
-5. **R21:** a player understands why a guest leaves at an interchange and where it is ultimately going.
-6. **R22 Best in Show:** pet filters and transfer coverage produce deliberate network decisions rather than random
+5. **R7/R10/R18/R20:** Checkout is a noticeable temporary surge rather than the entire round's repetitive solution.
+6. **R10:** a Sweep-only player can set Low/High zones without changing automation or opening the Workshop.
+7. **R15:** a player understands why a guest leaves at an interchange and where it is ultimately going.
+8. **R22 Best in Show:** pet filters and transfer coverage produce deliberate network decisions rather than random
    unavoidable conflicts.
-7. **R23:** the large conventional network is playable and legible without Counterweight/Open Plan knowledge.
-8. **R24-R25:** capsules remain readable and performant with pet-owner rendering.
-9. Rooftop events contain no Rooftop music; Settings/Mute and remaining audio behave normally.
-10. Load an older campaign containing Open Plan or an active R21-R23 attempt and confirm safe recovery/refund.
+9. **R23:** the large conventional network is playable and legible without Counterweight/Open Plan knowledge.
+10. **R24-R25:** capsules remain readable and performant with pet-owner rendering.
+11. Rooftop events contain no Rooftop music; Settings/Mute and remaining audio behave normally.
+12. Load an older campaign containing Open Plan or an active R21-R23 attempt and confirm safe recovery/refund.
 
 ## Release package gates
 

@@ -2,7 +2,7 @@
 
 **Document role:** Tester-facing session guide and distribution checklist
 **Status:** Active Birthday release guide  
-**Build:** `Maries-Birthday-2026-11-08.3`; confirm the matching identifier in Settings or Round Review.
+**Build:** `Maries-Birthday-2026-11-08.4`; confirm the matching identifier in Settings or Round Review.
 
 ## First session: normal campaign
 
@@ -23,8 +23,8 @@ After initial feedback, selected testers may receive the existing Debug URI. Acc
 Playtest Tools, Warp, and seed replay for support reproduction. This is the same game with temporary testing access;
 normal campaign progress remains separate. Do not share or use this URI for a first impression.
 
-Useful later checks include pets in R5, zoning in R10, Checkout waves in R7/R10/R18/R20, one-transfer journeys in
-R21-R23, **Best in Show** specifically in R22, and capsule responsiveness in R24-R25. Report what you expected, tried, and observed rather
+Useful later checks include pets in R5, zoning in R10/R14, Checkout waves in R7/R10/R18/R20, one-transfer journeys in
+R15-R23, **Best in Show** specifically in R22, and capsule responsiveness in R24-R25. Report what you expected, tried, and observed rather
 than trying to optimise for an automated test.
 
 ## What to include in feedback

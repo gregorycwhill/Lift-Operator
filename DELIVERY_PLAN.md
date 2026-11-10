@@ -37,7 +37,10 @@ Bouncer, or migration frameworks for this release.
     unresolved, the lift clears at its next stop and both pet owners become Critical; original patience is retained.
 12. Five or more pets create threshold-based Stink. Pet owners are Stink-immune. Air Freshener suppresses Stink but not
     conflict; Pet Snacks suppresses conflict but not Stink.
-13. R21-R23 use conventional independent lifts: transfer introduction, Best in Show, and advanced interchange mastery.
+13. R14 establishes scaled direct-service zoning. R15 introduces one-transfer journeys, which remain active through
+    R23; R22 is Best in Show and R23 is advanced interchange mastery.
+14. R1 uses a gentle `0.08→0.18` curve. R2 uses only “Sweep is already on; click a floor to intervene.” Priority Sweep
+    remains discoverable from R3 but is never a mandatory tutorial or campaign requirement.
 
 ## Delivery slices
 
@@ -76,8 +79,9 @@ Bouncer, or migration frameworks for this release.
 
 - R5 becomes Pet-Friendly Hotel. Voting remains optional.
 - R10 introduces basic zoning; Workshop remains optional.
-- R14-R20 deepen zoning, pets, failures, and the reduced Checkout cadence.
-- R21 introduces transfers, R22 is Best in Show, and R23 is advanced interchange mastery.
+- R14 deepens direct-service zoning and overlap.
+- R15 introduces transfers; R16-R21 deepen transfer resilience, events, and scale; R22 is Best in Show and R23 is
+  advanced interchange mastery.
 - R24-R25 retain light pet-owner presence; single-passenger capsules naturally prevent cabin conflict/congregation.
 - Update deterministic simulations, economy, briefings, media references, and balance reports.
 - Run the test gate, focused human protocol, and package smoke before release.
@@ -106,12 +110,12 @@ Bouncer, or migration frameworks for this release.
 
 - Checkpoints 1–6 are complete in the working tree.
 - The automated portion of checkpoint 7 passes: `npm.cmd run test:release` completed with 183/183 browser tests,
-  27/27 focused mechanics tests, and 3/3 containment integration tests.
+  29/29 focused mechanics tests, and 3/3 containment integration tests.
 - The deterministic balance run and integrity check pass as evidence-generation commands. R2 is an explicit accessible
-  onboarding exception where unattended Sweep may succeed. The new R21–R23 arc retains its birthday-release threshold:
+  onboarding exception where unattended Sweep may succeed. The transfer arc now begins in R15; the R21–R23 focus band retains its birthday-release threshold:
   all-Sweep fails on 5/5 seeds and intended play succeeds on at least 4/5.
 - The wider campaign report remains deliberately diagnostic: 18/24 rounds meet the all-Sweep negative control and
-  13/24 meet the current intended-profile threshold. These pre-existing gaps are recorded for a later balance release,
+  15/24 meet the current intended-profile threshold. These pre-existing gaps are recorded for a later balance release,
   not hidden or expanded into this time-bound delivery.
 - The itch candidate package builds successfully. Final release identity, supported-browser package smoke, and the
   focused human checks in `TEST_PLAN.md` remain before publication.

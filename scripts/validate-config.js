@@ -36,7 +36,7 @@ assert(
 const rounds = design.rounds;
 const briefingTitles = new Set();
 const promotionRounds = new Set([1, 3, 6, 10, 14, 19, 21, 24]);
-const firstUseRuleRounds = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22, 24]);
+const firstUseRuleRounds = new Set([1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 21, 22, 24]);
 const rankForRound = (round) => round <= 2 ? 'Trainee'
     : round <= 5 ? 'Operator'
         : round <= 9 ? 'Manager'

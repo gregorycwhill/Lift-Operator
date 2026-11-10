@@ -1169,7 +1169,7 @@ test('canonical balance data drives runtime compatibility values', async ({ page
     expect(result.roundThirteenSpawn).toEqual(result.canonicalRoundThirteenSpawn);
 });
 
-test('R14-R20 expose scale definitions and direct single-lift zoning', async ({ page }) => {
+test('R14 is direct-only zoning and R15-R20 enable one-transfer networks', async ({ page }) => {
     const result = await page.evaluate(() => {
         const expected = {
             14: [20, 5], 15: [20, 6], 16: [20, 6], 17: [25, 6],
@@ -1184,6 +1184,7 @@ test('R14-R20 expose scale definitions and direct single-lift zoning', async ({ 
             return {
                 round: Number(round), floors: definition.floors, lifts: definition.lifts,
                 zoning: definition.zoningEnabled,
+                transfers: Boolean(definition.transfersEnabled),
                 local: Registry.canLiftDirectlyServe(lift, 4, 9),
                 outside: Registry.canLiftDirectlyServe(lift, 4, 12)
             };
@@ -1194,6 +1195,7 @@ test('R14-R20 expose scale definitions and direct single-lift zoning', async ({ 
         expect([20, 25, 30]).toContain(row.floors);
         expect(row.lifts).toBeGreaterThanOrEqual(5);
         expect(row.zoning).toBe(true);
+        expect(row.transfers).toBe(row.round >= 15);
         expect(row.local).toBe(true);
         expect(row.outside).toBe(false);
     });
@@ -1274,7 +1276,8 @@ test('short and tall standard buildings use the accepted speed bands while speci
         threshold: Config.GAME_DATA.system.shortBuildingMaxFloors,
         r11Floors: Config.GAME_DATA.rounds[11].floors,
         r20Floors: Config.GAME_DATA.rounds[20].floors,
-        r21Transfers: Config.GAME_DATA.rounds[21].transfersEnabled,
+        r14Transfers: Boolean(Config.GAME_DATA.rounds[14].transfersEnabled),
+        r15Transfers: Config.GAME_DATA.rounds[15].transfersEnabled,
         r24Capsule: Config.GAME_DATA.rounds[24].capsuleMode
     }));
     expect(result).toEqual({
@@ -1284,7 +1287,8 @@ test('short and tall standard buildings use the accepted speed bands while speci
         threshold: 15,
         r11Floors: 15,
         r20Floors: 30,
-        r21Transfers: true,
+        r14Transfers: false,
+        r15Transfers: true,
         r24Capsule: true
     });
 });
@@ -1496,9 +1500,9 @@ test('mixed pets warn once and Pet Snacks resolves conflict without suppressing 
     expect(result.stillStinky).toBe(true);
 });
 
-test('one-transfer routing prefers direct service and chooses a deterministic pet-compatible interchange', async ({ page }) => {
+test('R15 one-transfer routing prefers direct service and chooses a deterministic pet-compatible interchange', async ({ page }) => {
     const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
+        initializeRound(15, { showBriefing: false });
         Registry.lifts.forEach((lift, index) => {
             lift.serviceLower = index % 2 === 0 ? 0 : 10;
             lift.serviceUpper = index % 2 === 0 ? 10 : 19;
@@ -1521,9 +1525,9 @@ test('one-transfer routing prefers direct service and chooses a deterministic pe
     expect(result.blocked).toBeNull();
 });
 
-test('transfer alighting requeues the same guest once without resetting patience', async ({ page }) => {
+test('R15 transfer alighting requeues the same guest once without resetting patience', async ({ page }) => {
     const result = await page.evaluate(() => {
-        initializeRound(21, { showBriefing: false });
+        initializeRound(15, { showBriefing: false });
         Registry.gameActive = true;
         const [low, high] = Registry.lifts;
         Registry.lifts.forEach((lift, index) => {
@@ -1669,7 +1673,7 @@ test('legacy Open Plan inventory is removed and refunded during the narrow campa
         Game.Storage.set(Game.Keys.CAMPAIGN, JSON.stringify(legacy));
         return Game.Campaign.load();
     });
-    expect(result.balanceVersion).toBe('0.3.1-maries-birthday');
+    expect(result.balanceVersion).toBe('0.3.2-maries-birthday');
     expect(result.points).toBe(17);
     expect(result.campaignScore).toBe(100);
     expect(result.inventory).toEqual([{ id: 'wrench', tier: 0 }]);
@@ -1855,7 +1859,7 @@ test('RC1.0 excludes deferred Endless Alpha and achievement systems from the pla
     });
 });
 
-test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-3', async ({ page }) => {
+test('onboarding capacity and gentle Round 1/2 spawn tuning are canonical', async ({ page }) => {
     const result = await page.evaluate(() => {
         const capacities = [1, 2, 3, 4].map(round => {
             initializeRound(round, { showBriefing: false });
@@ -1863,6 +1867,8 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         });
         return {
             capacities,
+            r1SpawnEnd: Config.GAME_DATA.rounds[1].spawnEnd,
+            r1SpawnStart: Config.GAME_DATA.rounds[1].spawnStart,
             r2SpawnEnd: Config.GAME_DATA.rounds[2].spawnEnd,
             r2SpawnStart: Config.GAME_DATA.rounds[2].spawnStart,
             version: Config.balanceVersion
@@ -1872,9 +1878,11 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
+    expect(result.r1SpawnStart).toBe(0.08);
+    expect(result.r1SpawnEnd).toBe(0.18);
     expect(result.r2SpawnStart).toBe(0.27);
     expect(result.r2SpawnEnd).toBe(0.3375);
-    expect(result.version).toBe('0.3.1-maries-birthday');
+    expect(result.version).toBe('0.3.2-maries-birthday');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -2158,6 +2166,7 @@ test('automation menus follow canonical progression unlocks', async ({ page }) =
 
     expect(await optionsAtRound(1)).toEqual(['manual']);
     expect(await optionsAtRound(2)).toEqual(['manual', 'sweep']);
+    expect(await optionsAtRound(3)).toEqual(['manual', 'sweep', 'priority-sweep']);
     expect(await optionsAtRound(4)).toEqual(['manual', 'sweep', 'priority-sweep']);
     expect(await optionsAtRound(5)).toEqual(['manual', 'sweep', 'priority-sweep', 'voting', 'weighted-voting']);
 });
@@ -2492,15 +2501,15 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.3');
-    expect(result.copied).toContain('balance=0.3.1-maries-birthday');
+    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.4');
+    expect(result.copied).toContain('balance=0.3.2-maries-birthday');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
     expect(result.copied).toContain('seed=');
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('Maries-Birthday-2026-11-08.3');
+    expect(result.build).toContain('Maries-Birthday-2026-11-08.4');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
@@ -2712,32 +2721,29 @@ test('Round 2 announces that Sweep is already active during orientation', async 
         };
     });
     expect(result.countdownVisible).toBe(true);
-    expect(result.message).toBe('Sweep is already on. Click this lift and a floor when you need to intervene; Sweep resumes after the stop.');
+    expect(result.message).toBe('Sweep is already on; click a floor to intervene.');
     expect(result.railVisible).toBe(true);
     await page.evaluate(() => document.getElementById('roundCountdownSkip').click());
     await expect(page.locator('#game-message-rail')).toBeHidden();
 });
 
-test('Round 3 starts in Sweep and teaches Priority Sweep assignment to one lift', async ({ page }) => {
+test('Round 3 starts in Sweep without a mandatory tutorial while Priority Sweep remains discoverable', async ({ page }) => {
     const result = await page.evaluate(() => {
         initializeRound(3, { showBriefing: false });
         startRoundCountdown(5);
-        const next = document.querySelector('.automation-carousel-arrow:last-of-type');
-        next.click();
-        next.click();
-        const afterBrowse = document.getElementById('game-message-text').textContent;
-        document.querySelector('.automation-carousel-card[data-policy="priority-sweep"]').click();
-        const afterArm = document.getElementById('game-message-text').textContent;
-        document.querySelector('.automation-status[data-lift-index="0"]').click();
         return {
-            afterBrowse,
-            afterArm,
-            automation: Registry.lifts.map(lift => lift.automation)
+            automation: Registry.lifts.map(lift => lift.automation),
+            tutorialActive: Game.Tutorial.isActive(),
+            tutorialTargets: document.querySelectorAll('.tutorial-step-target').length,
+            message: document.getElementById('game-message-text')?.textContent || '',
+            policies: Game.AutomationController.getCatalog().map(item => item.value)
         };
     });
-    expect(result.afterBrowse).toContain('2. Click Priority Sweep');
-    expect(result.afterArm).toContain('3. Click the first');
-    expect(result.automation).toEqual(['priority-sweep', 'sweep']);
+    expect(result.automation).toEqual(['sweep', 'sweep']);
+    expect(result.tutorialActive).toBe(false);
+    expect(result.tutorialTargets).toBe(0);
+    expect(result.message).toBe('');
+    expect(result.policies).toContain('priority-sweep');
 });
 
 test('Round 2 guidance presents active Sweep and later fleets retain the default', async ({ page }) => {

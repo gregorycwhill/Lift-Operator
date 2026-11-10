@@ -1,5 +1,5 @@
 {
-  "balanceVersion": "0.3.1-maries-birthday",
+  "balanceVersion": "0.3.2-maries-birthday",
   "events": {
     "jam": { "introducedRound": 6 },
     "checkout": { "introducedRound": 7 },
@@ -10,7 +10,7 @@
     "roomService": { "introducedRound": 3 },
     "pets": { "introducedRound": 5 },
     "zoning": { "introducedRound": 10 },
-    "transfers": { "introducedRound": 21 }
+    "transfers": { "introducedRound": 15 }
   },
   "payouts": {
     "standard": {
@@ -394,8 +394,8 @@
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.15,
-      "spawnEnd": 0.3,
+      "spawnStart": 0.08,
+      "spawnEnd": 0.18,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [],
@@ -410,7 +410,7 @@
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [],
-      "briefing": {"rank": "Trainee", "title": "Probation by Automation", "narrative": "Management has switched on Sweep for you. It handles routine movement, but it cannot recognise every developing crisis. Click a floor whenever you need to intervene; after that stop, Sweep resumes automatically.", "learningFocus": "Sweep by default; manual rescue; automation as assistance rather than autoplay.", "ruleCard": {"heading": "New operating rule", "body": "Sweep is already active. Click any floor for an immediate manual stop; Sweep resumes after that service stop."}, "promotion": null}
+      "briefing": {"rank": "Trainee", "title": "Probation by Automation", "narrative": "Sweep is already on; click a floor to intervene.", "learningFocus": "Sweep by default; optional manual intervention.", "ruleCard": null, "promotion": null}
     },
     "3": {
       "floors": 10,
@@ -550,7 +550,7 @@
       "zoningEnabled": true,
       "petChance": 0.15,
       "activeChallenges": ["roomService", "pets", "gym", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Director", "title": "Divide and Conquer", "narrative": "The tower is now too large for every lift to serve every floor effectively. Extend the Low and High service patterns you learned earlier, reducing wasteful travel while preserving enough overlap to rescue a failing zone.", "learningFocus": "Scaled Service Zoning; overlap; zone boundaries.", "ruleCard": {"heading": "Operating challenge", "body": "Ground remains shared by every zone. Until transfer service begins later, each guest still needs one lift that covers both origin and destination."}, "promotion": {"rank": "Director", "label": "PROMOTION", "copy": "You no longer operate lifts. You operate the people, policies and machinery that operate lifts."}}
+      "briefing": {"rank": "Director", "title": "Divide and Conquer", "narrative": "The tower is now too large for every lift to serve every floor effectively. Extend the Low and High service patterns you learned earlier, reducing wasteful travel while preserving enough overlap to rescue a failing zone.", "learningFocus": "Scaled Service Zoning; overlap; zone boundaries.", "ruleCard": {"heading": "Operating challenge", "body": "Ground remains shared by every zone. Each guest still needs one lift that covers both origin and destination; changing lifts begins next round."}, "promotion": {"rank": "Director", "label": "PROMOTION", "copy": "You no longer operate lifts. You operate the people, policies and machinery that operate lifts."}}
     },
     "15": {
       "floors": 20,
@@ -561,11 +561,12 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.15,
       "vipEvent": true,
       "rooftopEvent": true,
-      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
-      "briefing": {"rank": "Director", "title": "The Sky Lounge Gala", "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, bulky gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.", "learningFocus": "Scaling zoning to six lifts; shared rooftop and VIP pressure.", "ruleCard": null, "promotion": null}
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning", "transfers"],
+      "briefing": {"rank": "Director", "title": "The Sky Lounge Gala", "narrative": "A six-lift zoned fleet should have made tonight easy. Guests may now change lifts once at an overlapping floor, keeping their original patience throughout the journey. Build useful connections while VIP and Rooftop traffic test the network.", "learningFocus": "One-transfer journeys; interchange coverage; continuous patience; shared Rooftop and VIP pressure.", "ruleCard": {"heading": "New operating rule", "body": "A guest uses direct service when possible. Otherwise they may change lifts once at a floor served by both legs. Their patience never resets."}, "promotion": null}
     },
     "16": {
       "floors": 20,
@@ -576,10 +577,11 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.18,
       "jamEvent": true,
       "stinkEvent": true,
-      "activeChallenges": ["roomService", "pets", "gym", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "vip", "jam", "stink", "zoning", "transfers"],
       "briefing": {"rank": "Director", "title": "No Zone Is an Island", "narrative": "Maintenance failures are striking inside a carefully divided fleet. A perfect zone with one working lift is not resilient. Build overlapping coverage, preserve recovery paths and keep cat, dog and ordinary service moving when a jam removes the car your plan depended on most.", "learningFocus": "Overlapping zones; pet-aware resilience; recovery design.", "ruleCard": null, "promotion": null}
     },
     "17": {
@@ -591,8 +593,9 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.18,
-      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning", "transfers"],
       "briefing": {"rank": "Director", "title": "Rooftop Express", "narrative": "Twenty-five floors now stand between the lobby and the party. The VIP expects priority, rooftop guests expect speed and everyone else expects not to be abandoned midway. Create local service and express coverage without allowing your fastest route to consume the whole fleet.", "learningFocus": "Express roles inside a zoned fleet; long-distance service.", "ruleCard": null, "promotion": null}
     },
     "18": {
@@ -604,13 +607,14 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.2,
       "checkoutWaves": [{"startSec": 45, "endSec": 105, "chance": 0.9}],
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
-      "activeChallenges": ["roomService", "pets", "gym", "checkout", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "checkout", "vip", "jam", "stink", "zoning", "transfers"],
       "briefing": {"rank": "Director", "title": "Festival Weekend", "narrative": "The city festival has filled every room, reception is buried in Checkout traffic and every operational exception has arrived at once. Your zones must survive VIP priority, bulky passengers, slow carts, breakdowns and contaminated cabins without collapsing into frantic manual rescue.", "learningFocus": "Exception-safe zoning; large-scale recombination.", "ruleCard": null, "promotion": null}
     },
     "19": {
@@ -622,12 +626,13 @@
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.2,
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
-      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "rooftop", "vip", "jam", "stink", "zoning", "transfers"],
       "briefing": {"rank": "Architect", "title": "The Vertical City", "narrative": "Thirty floors and eight lifts have turned the hotel into a small city standing on end. Local service, rooftop demand and VIP movement now require an architecture rather than a collection of settings. Design roles that remain legible when failures begin tearing holes in the plan.", "learningFocus": "Eight-lift zone architecture; legible fleet roles.", "ruleCard": null, "promotion": {"rank": "Architect", "label": "PROMOTION", "copy": "The hotel has expanded your remit to include several parts of the skyline."}}
     },
     "20": {
@@ -638,13 +643,14 @@
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.22,
       "checkoutWaves": [{"startSec": 70, "endSec": 145, "chance": 0.95}],
       "vipEvent": true,
       "rooftopEvent": true,
       "stinkEvent": true,
       "gymEvent": true,
-      "activeChallenges": ["roomService", "pets", "gym", "checkout", "vip", "jam", "stink", "zoning"],
+      "activeChallenges": ["roomService", "pets", "gym", "checkout", "vip", "jam", "stink", "zoning", "transfers"],
       "briefing": {"rank": "Architect", "title": "The Grand Network", "narrative": "This is the largest conventional lift system the Grand Hotel can build: ten cars serving a tower under full commercial pressure. Checkout, VIP priority, dense traffic and failures will expose every vague assignment and duplicated role. Make the fleet behave like a network rather than ten lifts sharing a postcode.", "learningFocus": "Ten-lift conventional fleet mastery; whole-network design.", "ruleCard": null, "promotion": null}
     },
     "21": {

@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.3.1-maries-birthday
+// Balance version: 0.3.2-maries-birthday
 window.GameBalanceData = {
-  "balanceVersion": "0.3.1-maries-birthday",
+  "balanceVersion": "0.3.2-maries-birthday",
   "events": {
     "jam": {
       "introducedRound": 6
@@ -32,7 +32,7 @@ window.GameBalanceData = {
       "introducedRound": 10
     },
     "transfers": {
-      "introducedRound": 21
+      "introducedRound": 15
     }
   },
   "payouts": {
@@ -453,8 +453,8 @@ window.GameBalanceData = {
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.15,
-      "spawnEnd": 0.3,
+      "spawnStart": 0.08,
+      "spawnEnd": 0.18,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [],
@@ -486,12 +486,9 @@ window.GameBalanceData = {
       "briefing": {
         "rank": "Trainee",
         "title": "Probation by Automation",
-        "narrative": "Management has switched on Sweep for you. It handles routine movement, but it cannot recognise every developing crisis. Click a floor whenever you need to intervene; after that stop, Sweep resumes automatically.",
-        "learningFocus": "Sweep by default; manual rescue; automation as assistance rather than autoplay.",
-        "ruleCard": {
-          "heading": "New operating rule",
-          "body": "Sweep is already active. Click any floor for an immediate manual stop; Sweep resumes after that service stop."
-        },
+        "narrative": "Sweep is already on; click a floor to intervene.",
+        "learningFocus": "Sweep by default; optional manual intervention.",
+        "ruleCard": null,
         "promotion": null
       }
     },
@@ -838,7 +835,7 @@ window.GameBalanceData = {
         "learningFocus": "Scaled Service Zoning; overlap; zone boundaries.",
         "ruleCard": {
           "heading": "Operating challenge",
-          "body": "Ground remains shared by every zone. Until transfer service begins later, each guest still needs one lift that covers both origin and destination."
+          "body": "Ground remains shared by every zone. Each guest still needs one lift that covers both origin and destination; changing lifts begins next round."
         },
         "promotion": {
           "rank": "Director",
@@ -856,6 +853,7 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.15,
       "vipEvent": true,
       "rooftopEvent": true,
@@ -867,14 +865,18 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink",
-        "zoning"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Director",
         "title": "The Sky Lounge Gala",
-        "narrative": "A six-lift zoned fleet should have made tonight easy. Then the VIP booked the rooftop venue. Ordinary guests, bulky gym traffic and gala passengers now share the same architecture, so zones must concentrate service without becoming walls around the wrong demand.",
-        "learningFocus": "Scaling zoning to six lifts; shared rooftop and VIP pressure.",
-        "ruleCard": null,
+        "narrative": "A six-lift zoned fleet should have made tonight easy. Guests may now change lifts once at an overlapping floor, keeping their original patience throughout the journey. Build useful connections while VIP and Rooftop traffic test the network.",
+        "learningFocus": "One-transfer journeys; interchange coverage; continuous patience; shared Rooftop and VIP pressure.",
+        "ruleCard": {
+          "heading": "New operating rule",
+          "body": "A guest uses direct service when possible. Otherwise they may change lifts once at a floor served by both legs. Their patience never resets."
+        },
         "promotion": null
       }
     },
@@ -887,6 +889,7 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.18,
       "jamEvent": true,
       "stinkEvent": true,
@@ -897,7 +900,8 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink",
-        "zoning"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Director",
@@ -917,6 +921,7 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.18,
       "activeChallenges": [
         "roomService",
@@ -926,7 +931,8 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink",
-        "zoning"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Director",
@@ -946,6 +952,7 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.2,
       "checkoutWaves": [
         {
@@ -966,7 +973,8 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink",
-        "zoning"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Director",
@@ -986,6 +994,7 @@ window.GameBalanceData = {
       "gravityScalar": 0,
       "creditMultiplier": 0.15,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.2,
       "vipEvent": true,
       "rooftopEvent": true,
@@ -999,7 +1008,8 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink",
-        "zoning"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Architect",
@@ -1022,6 +1032,7 @@ window.GameBalanceData = {
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "zoningEnabled": true,
+      "transfersEnabled": true,
       "petChance": 0.22,
       "checkoutWaves": [
         {
@@ -1042,7 +1053,8 @@ window.GameBalanceData = {
         "vip",
         "jam",
         "stink",
-        "zoning"
+        "zoning",
+        "transfers"
       ],
       "briefing": {
         "rank": "Architect",

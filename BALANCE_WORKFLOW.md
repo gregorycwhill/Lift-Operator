@@ -62,7 +62,7 @@ waves, stalled transfers, or instrumentation defects.
 Correctness always outranks balance:
 
 - zero crashes, NaN/invalid state, disappearing guests, route loops, second transfers, or seed divergence;
-- zero final uncovered routes for the accepted R21–R23 authored starting configuration;
+- zero final uncovered routes for the accepted transfer-enabled R15–R23 authored starting configuration;
 - direct service always preferred; original spawn time retained across transfer/ejection;
 - pet role exclusions, filter compatibility, conflict timer, Stink threshold, and power-up separation pass all seeds;
 - Checkout is active only inside its authored R7/R10/R18/R20 wave;
@@ -70,7 +70,8 @@ Correctness always outranks balance:
 
 Balance satisficing thresholds:
 
-- intended profiles complete at least 80% of the fixed seed set for R21–R23;
+- intended profiles complete at least 80% of the fixed seed set for the focused R21–R23 comparator band; R15–R20 are
+  additionally checked for transfer correctness and anomalous route coverage;
 - intended profile materially improves survival/delivery over unattended Sweep in each reviewed band;
 - no reviewed standard-round seed produces an unavoidable loss before the player has a plausible response window;
 - R12 competent survival is 240–480 seconds; runs above 480 seconds are boredom risks;

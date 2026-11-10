@@ -28,6 +28,8 @@ Early rounds are frenetic and novel. Later rounds reduce dependence on novel haz
 ## Input and service rules
 
 - Round 1 begins Manual. All eligible lifts from R2 onward begin in Sweep.
+- Round 1 uses a deliberately gentle `0.08→0.18` arrival curve. Round 2 gives one instruction only: “Sweep is already
+  on; click a floor to intervene.” Priority Sweep unlocks in Round 3 but remains optional and has no mandatory tutorial.
 - Clicking a lift and floor is an explicit service instruction. On that stop, previous Sweep direction does not reject
   otherwise-compatible waiting guests. Sweep resumes afterward.
 - Capacity, VIP exclusivity, rage, zones, pet admission, and active hazards remain binding.
@@ -82,7 +84,8 @@ persistent traffic class like Gym Bros or VIPs, not a two-round novelty or repla
 
 ## Transfers
 
-R21–R23 are conventional independent-lift networks. A guest prefers direct service. If zones prevent it and transfers
+R15–R23 are conventional independent-lift networks. R14 first establishes scaled direct-service zoning; R15 introduces
+connections. A guest prefers direct service. If zones prevent it and transfers
 are enabled, the engine chooses a deterministic interchange served by a compatible first and second leg. The same
 guest may change lifts once, with original patience retained. Pet admission must be compatible on both legs.
 

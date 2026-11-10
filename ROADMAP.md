@@ -15,7 +15,7 @@ The current delivery plan is `DELIVERY_PLAN.md`; acceptance authority is `TEST_P
 5. Replace repetitive Checkout traffic with strong waves in R7, R10, R18, and R20.
 6. Ship functional pets from R5 onward: filters, conflict warning, Pet Snacks, five-pet Stink, immunity, clear visuals,
    telemetry, and focused rounds R5 **Pet-Friendly Hotel** and R22 **Best in Show**.
-7. Ship deterministic direct-or-one-transfer journeys for conventional zoned fleets in R21–R23.
+7. Ship deterministic direct-or-one-transfer journeys from R15 through R23, after R14 establishes scaled direct zoning.
 8. Preserve R24–R25 capsule play and all established retry, Credits, Endurance, performance, and containment behavior.
 9. Complete automated gates, supported-browser playtest, package smoke, provenance update, commit, and deployment.
 
@@ -31,7 +31,7 @@ The current delivery plan is `DELIVERY_PLAN.md`; acceptance authority is `TEST_P
 
 Only begin after the birthday build is delivered and Marie has played it.
 
-- Tune R5, R10, and R21–R23 from human observations and fixed-seed aggregates.
+- Tune R5, R10, and the R15–R23 transfer arc from human observations and fixed-seed aggregates.
 - Improve pet/filter and transfer legibility where playtest evidence shows confusion.
 - Review pet frequency by band without making pets vanish outside their focus rounds.
 - Improve the intended-strategy simulator so it understands pet filters, transfer coverage, and temporary Checkout waves.

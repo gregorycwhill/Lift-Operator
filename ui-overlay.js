@@ -30,7 +30,7 @@ window.Game.Tutorial = (function () {
         const seed = Number.isInteger(Registry.campaignSeed) ? Registry.campaignSeed : Registry.seed;
         return `liftOp_teaching_campaign_${Number(seed) || 'session'}_${id}_v1`;
     };
-    const automationKey = round => campaignKey(round === 3 ? 'automation_priority_sweep' : 'automation_sweep');
+    const automationKey = () => campaignKey('automation_sweep');
     const clearTargets = () => document.querySelectorAll('.tutorial-step-target').forEach(node => {
         node.classList.remove('tutorial-step-target');
         delete node.dataset.tutorialStep;
@@ -74,12 +74,8 @@ window.Game.Tutorial = (function () {
             return;
         }
         if (state.id !== 'automation-sweep') return;
-        const definitions = Registry.stats.round === 3 ? [
-            { selector: '.automation-carousel-arrow', text: '1. Use the arrows in the basement Automation Dock until Priority Sweep is displayed.' },
-            { selector: '.automation-carousel-card[data-policy="priority-sweep"]', text: '2. Click Priority Sweep to activate it.' },
-            { selector: '.automation-status[data-lift-index="0"]', text: '3. Click the first glowing lift controller to deploy Priority Sweep. The other lift remains on Sweep.' }
-        ] : [
-            { selector: '.automation-status[data-lift-index="0"]', text: 'Sweep is already on. Click this lift and a floor when you need to intervene; Sweep resumes after the stop.' }
+        const definitions = [
+            { selector: '.automation-status[data-lift-index="0"]', text: 'Sweep is already on; click a floor to intervene.' }
         ];
         const definition = definitions[state.step];
         if (!definition) return;
@@ -91,7 +87,7 @@ window.Game.Tutorial = (function () {
     };
     const complete = () => {
         clearTutorialTimeout();
-        window.Game.Storage.set(automationKey(Registry.stats.round), '1');
+        window.Game.Storage.set(automationKey(), '1');
         state.id = null;
         clearTargets();
         clearOwnMessage();
@@ -99,8 +95,8 @@ window.Game.Tutorial = (function () {
     return {
         startAutomationSweep() {
             const round = Registry.stats.round;
-            const key = automationKey(round);
-            if (![2, 3].includes(round) || window.Game.Storage.get(key, '0') === '1') return false;
+            const key = automationKey();
+            if (round !== 2 || window.Game.Storage.get(key, '0') === '1') return false;
             state.id = 'automation-sweep'; state.step = 0; state.suppressed = false; render(); return true;
         },
         startContext(id, options = {}) {
@@ -120,7 +116,7 @@ window.Game.Tutorial = (function () {
         action(action, detail = {}) {
             if (state.id !== 'automation-sweep' || state.suppressed) return;
             if (Registry.stats.round === 2) return;
-            const policy = Registry.stats.round === 3 ? 'priority-sweep' : 'sweep';
+            const policy = 'sweep';
             const matches = (state.step === 0 && action === 'browse' && detail.policy === policy) ||
                 (state.step === 1 && action === 'arm' && detail.policy === policy) ||
                 (state.step === 2 && action === 'deploy' && detail.index === 0);
@@ -255,7 +251,7 @@ window.startRoundCountdown = function(seconds = 5) {
         if (typeof ui.showLiftCapacity === 'function') ui.showLiftCapacity(index, Math.max(1800, remaining * 1000 - 150));
     });
     if (typeof ui.applyAutomationTeachingCue === 'function') ui.applyAutomationTeachingCue();
-    if ([2, 3].includes(Registry.stats.round)) window.Game.Tutorial?.startAutomationSweep();
+    if (Registry.stats.round === 2) window.Game.Tutorial?.startAutomationSweep();
 
     const begin = () => {
         if (Registry.roundCountdownTimer) clearInterval(Registry.roundCountdownTimer);

@@ -2,7 +2,7 @@
 
 **Status:** Canonical campaign intent  
 **Runtime authority:** `design/game-balance.v1.json`  
-**Release:** `0.3.1-maries-birthday` / `Maries-Birthday-2026-11-08.3`
+**Release:** `0.3.2-maries-birthday` / `Maries-Birthday-2026-11-08.4`
 
 ## Progression contract
 
@@ -18,6 +18,10 @@ Round 2 is the onboarding exception: unattended Sweep may win while the player w
 manual intervention is available. From Round 3 onward, unattended all-Sweep remains a diagnostic baseline rather than
 the intended solution. Balance work compares it with competent intervention and human play rather than distorting an
 introductory round merely to defeat automation.
+
+Round 2 uses one instruction only: “Sweep is already on; click a floor to intervene.” Priority Sweep unlocks in Round 3
+but has no mandatory tutorial; it remains an optional, discoverable alternative for players who explore the Automation
+Dock.
 
 ## Mechanic introductions
 
@@ -35,8 +39,9 @@ introductory round merely to defeat automation.
 | 11 | Gym Bros; threshold Stink | Manage heavy traffic and cabin congregation |
 | 12 | Endurance | Last until the twentieth life is lost; target 4–8 minutes |
 | 13 | Gravity | Manage weight-sensitive travel |
-| 14–20 | Large zoned fleets | Combine hazards, pets, events, resources, and manual rescue |
-| 21 | One-transfer journeys | Design zone overlap so guests can change lifts once |
+| 14 | Large direct-service zoning | Scale zones and overlap before introducing connections |
+| 15 | One-transfer journeys | Design zone overlap so guests can change lifts once |
+| 16–21 | Transfer networks | Combine connections with hazards, events, recovery, and scale |
 | 22 | **Best in Show** | Solve a pet-heavy zoned interchange |
 | 23 | Advanced interchange | Operate a large conventional transfer network |
 | 24–25 | Capsule dispatch | Coordinate many independent single-capacity cars |
@@ -45,7 +50,7 @@ introductory round merely to defeat automation.
 
 | R | Title | Floors / lifts | Spawn curve | Active pressure |
 |---:|---|---:|---:|---|
-| 1 | First Shift | 10 / 1 | 0.15→0.30 | Manual basics |
+| 1 | First Shift | 10 / 1 | 0.08→0.18 | Gentle manual basics |
 | 2 | Probation by Automation | 10 / 1 | 0.27→0.3375 | Sweep orientation; unattended win acceptable |
 | 3 | Room Service, Going Up | 10 / 2 | 1.00→1.30 | Room Service |
 | 4 | Code Red | 10 / 2 | 0.99→1.17 | Triage |
@@ -59,13 +64,13 @@ introductory round merely to defeat automation.
 | 12 | The Longest Shift | 15 / 4 | 0.50→2.60 | Endurance |
 | 13 | Uphill Battle | 15 / 4 | 1.08→1.26 | Gravity |
 | 14 | Divide and Conquer | 20 / 5 | 1.50→1.90 | Zoned scale |
-| 15 | The Sky Lounge Gala | 20 / 6 | 1.55→2.00 | Zoned Rooftop/VIP |
-| 16 | No Zone Is an Island | 20 / 6 | 1.60→2.10 | Overlap and recovery |
-| 17 | Rooftop Express | 25 / 6 | 1.65→2.20 | Tall zoned Rooftop |
-| 18 | Festival Weekend | 25 / 7 | 1.70→2.30 | Strong Checkout wave |
-| 19 | The Vertical City | 30 / 8 | 1.75→2.40 | Large mixed fleet |
-| 20 | The Grand Network | 30 / 10 | 1.80→2.50 | Strong Checkout finale |
-| 21 | Changing Lifts | 20 / 6 | 1.35→1.75 | First one-transfer network |
+| 15 | The Sky Lounge Gala | 20 / 6 | 1.55→2.00 | First transfer network; Rooftop/VIP |
+| 16 | No Zone Is an Island | 20 / 6 | 1.60→2.10 | Transfer overlap and recovery |
+| 17 | Rooftop Express | 25 / 6 | 1.65→2.20 | Tall transfer network; Rooftop |
+| 18 | Festival Weekend | 25 / 7 | 1.70→2.30 | Transfer network; strong Checkout wave |
+| 19 | The Vertical City | 30 / 8 | 1.75→2.40 | Large mixed transfer network |
+| 20 | The Grand Network | 30 / 10 | 1.80→2.50 | Transfer network; Checkout finale |
+| 21 | Changing Lifts | 20 / 6 | 1.35→1.75 | Focused interchange challenge |
 | 22 | **Best in Show** | 25 / 7 | 1.30→1.65 | Pet-heavy interchange (30%) |
 | 23 | The Grand Interchange | 30 / 8 | 1.25→1.60 | Advanced transfer network |
 | 24 | Welcome to the Future | 15 / 10 | 2.80→3.60 | Capsules; light pets |
@@ -93,7 +98,7 @@ and transfers. Capsule capacity naturally prevents mixed-pet conflict while reta
 Zoning begins in R10. All/Low/High is an operating property of a lift, not an automation policy. Ground remains shared.
 Changing a zone must never silently change Sweep or another selected automation.
 
-Transfers begin in R21. A guest always prefers a direct lift. If no direct route exists, the engine deterministically
+Transfers begin in R15 and remain enabled through R23. A guest always prefers a direct lift. If no direct route exists, the engine deterministically
 selects one valid interchange covered by both legs and compatible with the owner's pet. The same guest object is
 requeued at the interchange; patience and final destination are preserved. A guest may transfer at most once and may
 never loop. If filters/zones remove its route, it waits visibly until coverage returns.
