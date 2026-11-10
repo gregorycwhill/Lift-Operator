@@ -107,9 +107,9 @@ Bouncer, or migration frameworks for this release.
 - Checkpoints 1–6 are complete in the working tree.
 - The automated portion of checkpoint 7 passes: `npm.cmd run test:release` completed with 183/183 browser tests,
   27/27 focused mechanics tests, and 3/3 containment integration tests.
-- The deterministic balance run and integrity check pass as evidence-generation commands. R2 and the new R21–R23
-  arc meet their birthday-release thresholds: all-Sweep fails on 5/5 seeds; intended play succeeds on 5/5, 4/5,
-  5/5, and 4/5 seeds respectively.
+- The deterministic balance run and integrity check pass as evidence-generation commands. R2 is an explicit accessible
+  onboarding exception where unattended Sweep may succeed. The new R21–R23 arc retains its birthday-release threshold:
+  all-Sweep fails on 5/5 seeds and intended play succeeds on at least 4/5.
 - The wider campaign report remains deliberately diagnostic: 18/24 rounds meet the all-Sweep negative control and
   13/24 meet the current intended-profile threshold. These pre-existing gaps are recorded for a later balance release,
   not hidden or expanded into this time-bound delivery.
@@ -123,6 +123,7 @@ Bouncer, or migration frameworks for this release.
   visual/experiential.
 - A clean campaign can reach and play every authored round; an older campaign cannot resume incompatible live state.
 - No pet owner separates from its pet, loses original patience, exceeds one transfer, or enters a route loop.
-- R2+ all-Sweep remains a workload baseline rather than guaranteed unattended completion.
+- R2 may complete unattended as a Sweep orientation round. From R3 onward all-Sweep remains a workload baseline rather
+  than guaranteed unattended completion.
 - Release build, balance version, docs, ZIP, and feedback diagnostics identify the same commit.
 

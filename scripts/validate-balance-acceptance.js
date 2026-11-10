@@ -37,7 +37,8 @@ report.rounds.forEach(entry => {
         assert(entry.allSweep.accepted, `R${entry.round}: all-Sweep acceptance failed.`);
         // Intended profiles remain diagnostic until human playtesting supplies
         // round-level difficulty evidence. The hard simulator gate is the
-        // deliberate all-Sweep negative-control failure only.
+        // authored all-Sweep expectation only (R2 may succeed; later rounds
+        // retain the diagnostic negative-control expectation).
     }
 });
 
@@ -48,5 +49,5 @@ if (errors.length) {
 console.log(integrityOnly
     ? `Balance acceptance evidence is current: ${report.rounds.length} rounds, ${report.seedCount} seeds.`
     : strict
-        ? `Balance acceptance valid: ${report.rounds.length} rounds, ${report.seedCount} seeds; all-Sweep negative-control gate met.`
+        ? `Balance acceptance valid: ${report.rounds.length} rounds, ${report.seedCount} seeds; all-Sweep expectations met.`
         : `Balance acceptance evidence is valid: ${report.rounds.length} rounds, ${report.seedCount} seeds.`);

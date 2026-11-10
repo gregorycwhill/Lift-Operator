@@ -1,8 +1,8 @@
 // GENERATED FILE - DO NOT EDIT.
 // Source: design/game-balance.v1.json
-// Balance version: 0.3.0-maries-birthday
+// Balance version: 0.3.1-maries-birthday
 window.GameBalanceData = {
-  "balanceVersion": "0.3.0-maries-birthday",
+  "balanceVersion": "0.3.1-maries-birthday",
   "events": {
     "jam": {
       "introducedRound": 6
@@ -478,8 +478,8 @@ window.GameBalanceData = {
       "floors": 10,
       "lifts": 1,
       "liftCapacity": 15,
-      "spawnStart": 0.65,
-      "spawnEnd": 0.8,
+      "spawnStart": 0.27,
+      "spawnEnd": 0.3375,
       "objective": "SURVIVAL",
       "gravityScalar": 0,
       "activeChallenges": [],

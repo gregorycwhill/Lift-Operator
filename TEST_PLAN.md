@@ -28,8 +28,8 @@ build version, balance version, commands, and results in `docs/archive/RELEASE_H
 - `npm.cmd run balance:acceptance` — completed for R2–R25 using five fixed seeds per strategy.
 - `npm.cmd run balance:acceptance:integrity` — pass: JSON and Markdown evidence match canonical balance and acceptance
   inputs, contain all 24 tested rounds, and agree on every per-round classification.
-- Birthday-release focused thresholds — pass: R2 and R21–R23 fail unattended all-Sweep on every seed; intended play
-  succeeds on 5/5, 4/5, 5/5, and 4/5 seeds respectively.
+- Birthday-release focused thresholds — R2 is expected to permit unattended Sweep completion. R21–R23 continue to fail
+  unattended all-Sweep on every seed while intended play succeeds on at least 4/5.
 - `npm.cmd run package:itch` — pass: candidate ZIP produced. Repeat after the release commit so its filename and
   `BUILD.txt` identify the final source exactly.
 
@@ -106,15 +106,15 @@ package smoke and supported-browser checks are recorded.
 - R5 exposes each pet rule across the focused seed set without requiring a purchase to avoid immediate failure.
 - R22 exercises both pet filtering and transfers across every focused seed.
 - Intended profiles complete at least 80% of fixed seeds for newly authored R21-R23 after correctness stabilises.
-- Unattended all-Sweep remains a negative control from R2 onward; a changed result is reviewed rather than blindly
-  tuned to a specific death time.
+- R2 unattended Sweep is allowed to win as onboarding. From R3 onward unattended all-Sweep remains a diagnostic
+  negative control; a changed result is reviewed rather than blindly tuned to a specific death time.
 
 ## Focused human acceptance
 
 Use current Chrome or Edge desktop. Record build, balance version, round, seed, viewport, and result.
 
-1. **R2:** Sweep is visibly active; a player can manually rescue a floor and see Sweep resume without learning the
-   Automation Dock workflow.
+1. **R2:** Sweep is visibly active and may win unattended; a player can still manually rescue a floor and see Sweep
+   resume without learning the Automation Dock workflow.
 2. **R5 Pet-Friendly Hotel:** cat/dog identity, four filters, conflict warning, Pet Snacks, and five-pet Stink are
    understandable without permanently cluttering the board.
 3. **R7/R10/R18/R20:** Checkout is a noticeable temporary surge rather than the entire round's repetitive solution.

@@ -75,6 +75,7 @@ document after the decision is applied there.
 | DEC-053 | 8 November 2026 | The former paired-car experiment and its lateral-transfer power-up are retired completely. Old saved purchases receive a narrow refund. R21–R23 become conventional zoned one-transfer networks. | Delivery/test plans, campaign migration, canonical balance, runtime, docs. |
 | DEC-054 | 8 November 2026 | Pets begin in R5 Pet-Friendly Hotel, recur thereafter, and peak in R22 **Best in Show**. Cats/dogs accompany ordinary guests; filters are All/Cats/Dogs/No Pets; mixed species warn for five seconds; Pet Snacks handles conflict; five pets create Stink handled by Freshener; pet owners tolerate Stink. | GDD, Game Play Map, Economy, canonical balance, runtime/tests. |
 | DEC-055 | 8 November 2026 | Checkout becomes a strong temporary wave only in R7, R10, R18, and R20. Delivery speed takes precedence over unused future-state architecture. | Canonical balance, roadmap, delivery plan. |
+| DEC-056 | 10 November 2026 | Marie's live playtest supersedes DEC-014 for R2 only: restore the earlier `0.27→0.3375` spawn curve and allow unattended Sweep to win the first automation round. R1 and the R2/R3 guidance remain unchanged in this patch. | Canonical balance, Game Play Map, balance/test policy, PTF-046. |
 
 ## Chat persistence limitation
 

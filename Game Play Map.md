@@ -2,7 +2,7 @@
 
 **Status:** Canonical campaign intent  
 **Runtime authority:** `design/game-balance.v1.json`  
-**Release:** `0.3.0-maries-birthday` / `Maries-Birthday-2026-11-08.2`
+**Release:** `0.3.1-maries-birthday` / `Maries-Birthday-2026-11-08.3`
 
 ## Progression contract
 
@@ -14,9 +14,10 @@ Round 1 is manual. Every lift from Round 2 onward starts in Sweep. A clicked flo
 otherwise-compatible guest at that floor may board regardless of the car's previous Sweep direction, then Sweep
 resumes. The Workshop and other algorithms are optional; Marie's intended path is Sweep plus manual intervention.
 
-Unattended all-Sweep is a negative-control strategy, not the intended solution. It must not be treated as a guaranteed
-win. Balance work compares it with a bounded, competent intervention profile and human play rather than adding more
-mechanics merely to defeat it.
+Round 2 is the onboarding exception: unattended Sweep may win while the player watches how it behaves and learns that
+manual intervention is available. From Round 3 onward, unattended all-Sweep remains a diagnostic baseline rather than
+the intended solution. Balance work compares it with competent intervention and human play rather than distorting an
+introductory round merely to defeat automation.
 
 ## Mechanic introductions
 
@@ -45,7 +46,7 @@ mechanics merely to defeat it.
 | R | Title | Floors / lifts | Spawn curve | Active pressure |
 |---:|---|---:|---:|---|
 | 1 | First Shift | 10 / 1 | 0.15→0.30 | Manual basics |
-| 2 | Probation by Automation | 10 / 1 | 0.65→0.80 | Sweep plus minimal rescue |
+| 2 | Probation by Automation | 10 / 1 | 0.27→0.3375 | Sweep orientation; unattended win acceptable |
 | 3 | Room Service, Going Up | 10 / 2 | 1.00→1.30 | Room Service |
 | 4 | Code Red | 10 / 2 | 0.99→1.17 | Triage |
 | 5 | Pet-Friendly Hotel | 10 / 3 | 1.47→1.80 | First pets (15%) |

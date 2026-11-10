@@ -49,8 +49,10 @@ function loadoutFor(round) {
 
 function metrics(result, round, mode) {
     const endurance = round === 12;
+    const allSweepSuccessAllowed = acceptance.allSweep.successAllowedRounds?.includes(round);
     const accepted = mode === 'all-sweep'
-        ? endurance ? !result.success && result.elapsedSeconds < acceptance.intended.r12.allSweepMaxSeconds : !result.success
+        ? allSweepSuccessAllowed ? result.success
+            : endurance ? !result.success && result.elapsedSeconds < acceptance.intended.r12.allSweepMaxSeconds : !result.success
         : endurance
             ? result.elapsedSeconds >= acceptance.intended.r12.intendedMinSeconds && result.elapsedSeconds <= acceptance.intended.r12.intendedMaxSeconds
             : result.success;
@@ -105,7 +107,7 @@ function markdown(report) {
     report.rounds.forEach(entry => lines.push(
         `| ${entry.round} | ${entry.allSweep.accepted ? 'yes' : 'NO'} | ${entry.intended.acceptedRate >= report.policy.intended.minimumSurvivalRate ? 'yes' : 'NO'} | ${entry.allSweep.survivors}/${report.seedCount} | ${entry.intended.survivors}/${report.seedCount} |`
     ));
-    lines.push('', `- All-Sweep failures accepted: ${report.summary.allSweepAccepted}/${report.summary.allSweepRequired}`);
+    lines.push('', `- All-Sweep expectations accepted: ${report.summary.allSweepAccepted}/${report.summary.allSweepRequired}`);
     lines.push(`- Intended-strategy comparator rounds currently positive (diagnostic only): ${report.summary.intendedAccepted}/${report.summary.intendedRequired}`);
     lines.push('', "This report is internal balance diagnostic evidence. Marie's Birthday Edition does not require every all-Sweep classification to pass; use the strict gate when evaluating a later balance release.");
     return `${lines.join('\n')}\n`;

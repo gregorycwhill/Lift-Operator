@@ -28,7 +28,8 @@ the before/after balance version.
 
 ## Required profiles
 
-- **Unattended all-Sweep:** every lift Sweep, no clicks, zone/filter changes, Workshop, or power-ups. Negative control.
+- **Unattended all-Sweep:** every lift Sweep, no clicks, zone/filter changes, Workshop, or power-ups. R2 onboarding may
+  succeed; from R3 onward this is a negative-control diagnostic.
 - **Bounded target-player:** Sweep plus a documented maximum of high-leverage manual decisions and operating changes.
 - **Resource-supported:** target-player profile plus declared purchasable inventory.
 - **Mechanic focus:** a deterministic profile that actively exercises the new mechanic (pet filters/conflict or zoned

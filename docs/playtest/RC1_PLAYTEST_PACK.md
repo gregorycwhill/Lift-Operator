@@ -2,7 +2,7 @@
 
 **Document role:** Tester-facing session guide and distribution checklist
 **Status:** Active Birthday release guide  
-**Build:** `Maries-Birthday-2026-11-08.2`; confirm the matching identifier in Settings or Round Review.
+**Build:** `Maries-Birthday-2026-11-08.3`; confirm the matching identifier in Settings or Round Review.
 
 ## First session: normal campaign
 

@@ -108,9 +108,10 @@ Assertions should include:
 - No crash or `NaN`.
 - Same inputs produce identical results.
 - Intended specialist strategy materially outperforms poor strategy.
-- Unattended all-Sweep fails every fixed gate seed in every campaign round from Round 2 through Round 25. It assigns
-  Sweep to every lift and uses no manual targets, policy changes, custom automation, or power-ups.
-- Round 2 hybrid Sweep survives with minimal, high-leverage manual intervention while unattended Sweep fails late.
+- Round 2 unattended Sweep may complete every fixed seed so the first automation round remains an accessible
+  orientation. It assigns Sweep to the lift and uses no manual targets, policy changes, custom automation, or power-ups.
+- From Round 3 onward, unattended all-Sweep remains the negative-control diagnostic; changed results are reviewed
+  against human evidence rather than treated as an unconditional release gate.
 - Round 12 all-Sweep loses its twentieth life before 240 seconds; a competent strategy survives 240–480 seconds.
 - Intended strategies are measured across the fixed seed set for diagnostic traces and human-evidence comparison; their
   survival rate is not a release gate.

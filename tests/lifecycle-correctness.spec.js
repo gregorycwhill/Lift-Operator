@@ -1669,7 +1669,7 @@ test('legacy Open Plan inventory is removed and refunded during the narrow campa
         Game.Storage.set(Game.Keys.CAMPAIGN, JSON.stringify(legacy));
         return Game.Campaign.load();
     });
-    expect(result.balanceVersion).toBe('0.3.0-maries-birthday');
+    expect(result.balanceVersion).toBe('0.3.1-maries-birthday');
     expect(result.points).toBe(17);
     expect(result.campaignScore).toBe(100);
     expect(result.inventory).toEqual([{ id: 'wrench', tier: 0 }]);
@@ -1872,9 +1872,9 @@ test('playtest capacity and current Round 2 spawn tuning are scoped to Rounds 1-
         { round: 1, capacity: 15 }, { round: 2, capacity: 15 },
         { round: 3, capacity: 15 }, { round: 4, capacity: 10 }
     ]);
-    expect(result.r2SpawnStart).toBe(0.65);
-    expect(result.r2SpawnEnd).toBe(0.8);
-    expect(result.version).toBe('0.3.0-maries-birthday');
+    expect(result.r2SpawnStart).toBe(0.27);
+    expect(result.r2SpawnEnd).toBe(0.3375);
+    expect(result.version).toBe('0.3.1-maries-birthday');
 });
 
 test('jammed lifts remain stationary and cannot enter boarding during animation ticks', async ({ page }) => {
@@ -2492,15 +2492,15 @@ test('Give Feedback copies local diagnostics and opens only the configured exter
     expect(feedbackUrl.origin + feedbackUrl.pathname).toBe('https://docs.google.com/forms/d/e/test-form/viewform');
     expect(feedbackUrl.searchParams.get('usp')).toBe('pp_url');
     expect(feedbackUrl.searchParams.get('entry.1033382669')).toBe(result.copied);
-    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.2');
-    expect(result.copied).toContain('balance=0.3.0-maries-birthday');
+    expect(result.copied).toContain('build=Maries-Birthday-2026-11-08.3');
+    expect(result.copied).toContain('balance=0.3.1-maries-birthday');
     expect(result.copied).toContain('context=settings');
     expect(result.copied).toContain('round=9');
     expect(result.copied).toContain('seed=');
     expect(result.copied).toContain('viewport=');
     expect(result.settingsButton).toBe('Give Feedback');
     expect(result.reviewButton).toBe('Give Feedback');
-    expect(result.build).toContain('Maries-Birthday-2026-11-08.2');
+    expect(result.build).toContain('Maries-Birthday-2026-11-08.3');
 });
 
 test('zoning shares Ground and post-R14 guest traffic weights Ground threefold', async ({ page }) => {
