@@ -3,10 +3,11 @@
 **Document role:** Current automated and human acceptance authority  
 **Status:** Automated acceptance passed; focused human acceptance pending  
 **Owner class:** Engineering and playtest  
-**Last reviewed:** 8 November 2026  
+**Last reviewed:** 13 November 2026
 **Delivery scope:** `DELIVERY_PLAN.md`  
 **Test principles:** `TESTING_STRATEGY.md`  
-**Baseline:** `master` at `2e082dd`
+**Baseline:** `master` at `2b51728`
+**Release:** `v0.3.2-maries-birthday`
 
 ## Required commands
 
@@ -21,7 +22,7 @@ npm.cmd run package:itch
 The balance report remains diagnostic unless a deterministic correctness invariant below fails. Record the exact commit,
 build version, balance version, commands, and results in `docs/archive/RELEASE_HISTORY.md` when the release closes.
 
-## Current automated evidence — 8 November 2026
+## Current automated evidence — 13 November 2026
 
 - `npm.cmd run test:release` — pass: 183/183 full browser tests, 29/29 focused mechanics tests, 3/3 containment
   integration tests, plus syntax, documentation, configuration, generated-balance, economy, UTF-8, and unit checks.
@@ -32,21 +33,23 @@ build version, balance version, commands, and results in `docs/archive/RELEASE_H
   unattended all-Sweep on every seed while intended play succeeds on at least 4/5.
 - `npm.cmd run package:itch` — pass: candidate ZIP produced. Repeat after the release commit so its filename and
   `BUILD.txt` identify the final source exactly.
+- GitHub Test and Pages workflows — pass for implementation commit `2b51728`; build `Maries-Birthday-2026-11-08.4`
+  is live on GitHub Pages.
 
 This evidence does not substitute for the focused human acceptance below. Do not mark the release published until the
 package smoke and supported-browser checks are recorded.
 
 ## P0 automated acceptance
 
-### Removal and defaults
+### Current-release suspension and defaults
 
 1. Every configured R2+ lift begins in Sweep unless a test deliberately changes it.
 2. R2 has no Sweep-deployment requirement and displays only “Sweep is already on; click a floor to intervene.” Manual
    targeting overrides and then returns control to Sweep.
 3. R3 starts both lifts in Sweep with no mandatory tutorial; Priority Sweep is available through ordinary discovery.
 4. Rooftop events never start a dedicated music source. Notices, release, and ordinary effects still work.
-5. Production data, runtime state, shop, briefing chips, simulation profiles, and UI expose neither Counterweights nor
-   Open Plan.
+5. Production data, runtime state, shop, briefing chips, simulation profiles, and UI expose neither of the suspended
+   Counterweight or Open Plan mechanics. This asserts current-release isolation, not product retirement.
 6. A saved Open Plan purchase is refunded or converted without losing Credits; incompatible active late-round state is
    not resumed inside the removed mechanic.
 
@@ -128,7 +131,8 @@ Use current Chrome or Edge desktop. Record build, balance version, round, seed, 
 7. **R15:** a player understands why a guest leaves at an interchange and where it is ultimately going.
 8. **R22 Best in Show:** pet filters and transfer coverage produce deliberate network decisions rather than random
    unavoidable conflicts.
-9. **R23:** the large conventional network is playable and legible without Counterweight/Open Plan knowledge.
+9. **R23:** the large conventional network is playable and legible without knowledge of the suspended Counterweight or
+   Open Plan mechanics.
 10. **R24-R25:** capsules remain readable and performant with pet-owner rendering.
 11. Rooftop events contain no Rooftop music; Settings/Mute and remaining audio behave normally.
 12. Load an older campaign containing Open Plan or an active R21-R23 attempt and confirm safe recovery/refund.
@@ -136,8 +140,19 @@ Use current Chrome or Edge desktop. Record build, balance version, round, seed, 
 ## Release package gates
 
 - `npm.cmd run test:release` passes on the candidate commit.
-- The itch ZIP opens locally and contains current licences/notices, no retired Rooftop track, and matching `BUILD.txt`.
+- The itch ZIP opens locally and contains current licences/notices, no Rooftop track, and matching `BUILD.txt`.
 - Settings, Round Review, feedback diagnostic, packaged build, and deployed GitHub Pages identify the same release.
 - Signed-out feedback submission remains optional and functional.
 - No unresolved P0 correctness, save-loss, packaging, or provenance issue remains.
+
+## Gate for any future reintroduction
+
+Counterweight Lifts and Open Plan are suspended, not retired. Reintroduction is not part of this release and must not
+restore legacy code implicitly. A future delivery plan must define and validate:
+
+- the player problem, teaching sequence, Open Plan role, and legible paired-movement model;
+- symmetric manual override and dependable Sweep behaviour from either controller;
+- deterministic simulation coverage, fixed-seed replay, route/capacity invariants, and performance limits;
+- save compatibility from both the legacy and Birthday release formats; and
+- novice human acceptance demonstrating that the mechanic is understandable and strategically worthwhile.
 

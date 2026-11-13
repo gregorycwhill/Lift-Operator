@@ -22,8 +22,8 @@ the before/after balance version.
 | Onboarding | 1–4 | Are manual basics, Sweep, rescue, and Room Service legible and recoverable? |
 | Pet/event introduction | 5–9 | Do pets persist without dominating; do jams, Checkout, VIP, and Rooftop create distinct responses? |
 | Operating systems | 10–13 | Are zoning, Gym/Stink, Endurance, and Gravity understandable with Sweep/manual play? |
-| Zoned scale | 14–20 | Do overlap, resources, strong Checkout waves, and manual rescue outperform unattended Sweep? |
-| Interchange | 21–23 | Are direct/one-transfer routes correct, legible, pet-compatible, and strategically useful? |
+| Zoned foundation | 14 | Is scaled direct zoning and overlap legible before transfers begin? |
+| Interchange | 15–23 | Are direct/one-transfer routes correct, legible, pet-compatible, and strategically useful? |
 | Capsules | 24–25 | Does independent high-volume dispatch remain readable and performant? |
 
 ## Required profiles

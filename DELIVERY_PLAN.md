@@ -4,14 +4,15 @@
 **Status:** Automated implementation complete; focused human acceptance pending  
 **Release target:** Marie's Birthday Edition  
 **Owner class:** Product and engineering  
-**Last reviewed:** 8 November 2026  
-**Implementation baseline:** `master` at `2e082dd`
+**Last reviewed:** 13 November 2026
+**Implementation baseline:** `master` at `2b51728`
+**Release:** `v0.3.2-maries-birthday`
 
 ## Outcome
 
 Deliver a playable birthday release on time. Routine service begins in Sweep, while the player's interesting decisions
-come from manual intervention, lift zones, pet admission, power-ups, and one-transfer passenger networks. Remove the
-unreliable Counterweight/Open Plan experiment rather than repairing it again.
+come from manual intervention, lift zones, pet admission, power-ups, and one-transfer passenger networks. Suspend the
+unreliable Counterweight/Open Plan implementation in this release rather than repairing it again.
 
 Delivery takes precedence over future extensibility. Do not build general party, topology, event-authoring, Lift
 Bouncer, or migration frameworks for this release.
@@ -23,8 +24,9 @@ Bouncer, or migration frameworks for this release.
 3. Service Zone is independent of routing automation. Each lift may remain in Sweep while using All, Low, High, or
    Custom service coverage. Zoning is introduced in Round 10.
 4. Rooftop music is disabled. Rooftop notices, visuals, and ordinary effects remain.
-5. Counterweights and Open Plan are removed completely from campaign, runtime, shop, tests, simulations, and current
-   documentation.
+5. Counterweight Lifts and Open Plan are temporarily suspended and unavailable in this release. Their legacy
+   implementation is absent from campaign, runtime, shop, tests, simulations, and current player surfaces; the product
+   concepts are not retired.
 6. Checkout occurs in fewer, stronger authored waves: introductory R7, recombination R10, and late network pressure in
    R18 and R20. It is not a permanent every-second-round traffic mix.
 7. Zoned guests may complete a deterministic direct journey or one automatic transfer. Direct service is preferred;
@@ -44,12 +46,13 @@ Bouncer, or migration frameworks for this release.
 
 ## Delivery slices
 
-### A. Remove obsolete mechanics and friction
+### A. Suspend unreliable mechanics and remove friction
 
 - Default R2+ fleets to Sweep and replace the deployment tutorial with concise manual-override guidance.
 - Disable Rooftop music and remove it from the production audio manifest/package.
-- Remove Counterweight state, routing, presentation, authored data, screenshots, tests, and simulation profiles.
-- Remove Open Plan timers, transfers, shop entries, inventory, briefing terms, and tests.
+- Keep legacy Counterweight state, routing, presentation, authored data, screenshots, tests, and simulation profiles
+  out of the current release while preserving the concept as suspended.
+- Keep legacy Open Plan timers, transfers, shop entries, inventory, briefing terms, and tests out of the current release.
 - Safely refund saved Open Plan inventory and restart incompatible in-progress late rounds at a round boundary.
 
 ### B. Independent zoning and Checkout waves
@@ -99,14 +102,15 @@ Bouncer, or migration frameworks for this release.
 ## Checkpoints
 
 1. **Plan lock:** active docs contain the decisions above and no current gate requires Counterweights/Open Plan.
-2. **Removal/defaults:** R2+ starts in Sweep; Rooftop track never starts; no production Counterweight/Open Plan surface.
+2. **Suspension/defaults:** R2+ starts in Sweep; Rooftop track never starts; no production Counterweight/Open Plan
+   surface.
 3. **Zoning/Checkout:** zones can change without changing Sweep; authored Checkout waves start and stop deterministically.
 4. **Pets:** filters, conflicts, Pet Snacks, congregation Stink, immunity, and rendering pass focused tests.
 5. **Transfers:** direct/one-transfer routing, patience, filter compatibility, and loop prevention pass focused tests.
 6. **Campaign:** canonical/generated data, briefings, economy, simulations, and Debug Warp match the new 25-round arc.
 7. **Release:** `npm.cmd run test:release` passes; supported-browser manual checks and package smoke pass.
 
-## Current delivery status — 8 November 2026
+## Current delivery status — 13 November 2026
 
 - Checkpoints 1–6 are complete in the working tree.
 - The automated portion of checkpoint 7 passes: `npm.cmd run test:release` completed with 183/183 browser tests,
@@ -117,12 +121,12 @@ Bouncer, or migration frameworks for this release.
 - The wider campaign report remains deliberately diagnostic: 18/24 rounds meet the all-Sweep negative control and
   15/24 meet the current intended-profile threshold. These pre-existing gaps are recorded for a later balance release,
   not hidden or expanded into this time-bound delivery.
-- The itch candidate package builds successfully. Final release identity, supported-browser package smoke, and the
-  focused human checks in `TEST_PLAN.md` remain before publication.
+- The release is live on GitHub Pages as build `Maries-Birthday-2026-11-08.4`; the Test and Pages workflows passed for
+  implementation commit `2b51728`. Focused human checks in `TEST_PLAN.md` continue as live-release evidence.
 
 ## Completion criteria
 
-- No Counterweight/Open Plan code path or player-facing reference remains in active production.
+- No suspended Counterweight/Open Plan code path or player-facing surface appears in active production.
 - All P0 behavior in `TEST_PLAN.md` is automated where deterministic and explicitly assigned to human playtest where
   visual/experiential.
 - A clean campaign can reach and play every authored round; an older campaign cannot resume incompatible live state.

@@ -80,7 +80,8 @@ upper corner, like a Supply Closet count bubble; it must not widen the token or 
 - Air Freshener suppresses Stink but does not resolve cat/dog conflict.
 
 Pets start in R5 **Pet-Friendly Hotel**, recur through the campaign, and peak in R22 **Best in Show**. They are a
-persistent traffic class like Gym Bros or VIPs, not a two-round novelty or replacement for a retired mechanic.
+persistent traffic class like Gym Bros or VIPs, not a two-round novelty or replacement for the temporarily suspended
+Counterweight concept.
 
 ## Transfers
 
@@ -91,6 +92,13 @@ guest may change lifts once, with original patience retained. Pet admission must
 
 Transfer behavior must be legible, loop-free, and conservative: no teleportation, no hidden patience allowance, no
 second transfer, and no silent deletion when coverage changes. An uncovered guest remains visible and waits.
+
+## Suspended mechanics
+
+Counterweight Lifts and the Open Plan power-up are unavailable in Marie's Birthday Edition. Their legacy
+implementation was removed from the current runtime, campaign, shop, media, and tests, but the product concepts are
+**suspended, not retired**. Any return requires a fresh design and acceptance proposal; legacy behaviour must not be
+restored implicitly.
 
 ## Traffic and hazards
 
@@ -130,3 +138,4 @@ LLM to reason over every replay. See `BALANCE_WORKFLOW.md` and `TEST_PLAN.md` fo
 - Pet boosts, extra capacity cost, species beyond cats/dogs, or pet achievements.
 - Generic topology, event-authoring, or save-migration frameworks.
 - Player-facing Survival Index or design telemetry.
+- Reintroducing suspended Counterweight Lifts or Open Plan without an approved redesign.

@@ -28,7 +28,7 @@ Dogs, or No Pets. Changing either setting must preserve the current automation. 
 with the lift status so a Sweep-focused player need not enter the Workshop.
 
 Custom automation may still define service ranges through the validated bridge, but the ordinary Zone button is the
-campaign teaching surface. Direct service is preferred. From R21, runtime routing may give a waiting guest one
+campaign teaching surface. Direct service is preferred. From R15, runtime routing may give a waiting guest one
 deterministic transfer when two compatible zones overlap.
 
 ## Custom program lifecycle

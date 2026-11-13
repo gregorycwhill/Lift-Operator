@@ -1,7 +1,8 @@
 # Marie's Birthday Edition Playtest Pack
 
 **Document role:** Tester-facing session guide and distribution checklist
-**Status:** Active Birthday release guide  
+**Status:** Active live-release guide
+**Release:** `v0.3.2-maries-birthday`
 **Build:** `Maries-Birthday-2026-11-08.4`; confirm the matching identifier in Settings or Round Review.
 
 ## First session: normal campaign
@@ -50,3 +51,4 @@ than trying to optimise for an automated test.
 - R24/R25 have automated layout coverage; real-device responsiveness feedback remains valuable.
 - Pets and transfers are new. Report any pet/owner separation, invisible route, second transfer, lost patience history,
   or control that changes Sweep unexpectedly.
+- Counterweight Lifts and Open Plan are temporarily suspended and unavailable in this release.

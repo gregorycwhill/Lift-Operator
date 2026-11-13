@@ -2,7 +2,7 @@
 
 **Status:** Active enduring test strategy  
 **Owner class:** Engineering and playtest  
-**Last reviewed:** 1 August 2026
+**Last reviewed:** 13 November 2026
 
 **Objective:** Produce trustworthy evidence that the engine is correct, deterministic, resilient to accidental misuse, and suitable for balance iteration.
 

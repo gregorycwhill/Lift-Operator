@@ -2,7 +2,7 @@
 
 **Status:** Active documentation governance reference
 **Owner class:** Product and engineering
-**Last reviewed:** 8 November 2026
+**Last reviewed:** 13 November 2026
 
 ## Purpose
 
@@ -63,6 +63,11 @@ captures belong in `assets/media/archive/` or Git history rather than the active
 - **Later:** product direction without implementation commitment.
 - **Deferred:** intentionally outside current scope.
 - **Historical:** retained for context only.
+- **Available:** present in the current production release.
+- **Suspended:** unavailable in the current release, while the product concept remains eligible for a future redesign.
+- **Retired:** no planned return; retained only as history.
+- **Removed implementation:** code or assets were deleted. This describes repository state, not the product concept's
+  future status.
 
 Avoid ambiguous labels such as “partially implemented” without naming the missing behavior or evidence.
 
@@ -71,18 +76,20 @@ Avoid ambiguous labels such as “partially implemented” without naming the mi
 1. Start a material feature by updating `DELIVERY_PLAN.md` and its matching section in `TEST_PLAN.md`.
 2. Append new playtest feedback to `docs/playtest/PLAYTEST_FEEDBACK_LOG.md` before planning its remedy. Append a
    material chat instruction or decision to `docs/CHAT_DECISION_LOG.md` when it changes durable intent or process.
-2. Keep product intent in design documents; do not add implementation checklists there.
-3. Remove completed items from the active delivery/test plans at the end of a slice. Record the outcome, commit, and
+3. Keep product intent in design documents; do not add implementation checklists there.
+4. Remove completed items from the active delivery/test plans at the end of a slice. Record the outcome, commit, and
    remaining follow-up in a short completion note instead of retaining stale checkboxes.
-4. Update `ROADMAP.md` only when the product sequencing or outcome changes.
-5. Update links and document status in the same change as any authority change.
-6. Before release, run the documented gate and ensure no historical document is described as the current authority.
-7. Keep release notes/history out of `ROADMAP.md`, implementation design out of `TEST_PLAN.md`, and future product
+5. Update `ROADMAP.md` only when the product sequencing or outcome changes.
+6. Update links and document status in the same change as any authority change.
+7. Before release, run the documented gate and ensure no historical document is described as the current authority.
+8. Keep release notes/history out of `ROADMAP.md`, implementation design out of `TEST_PLAN.md`, and future product
    concepts out of `DELIVERY_PLAN.md` until they are selected for delivery.
-8. Treat `assets/audio/manifest.json` as the per-file shipping authority. Every bundled audio file must have a
+9. Treat `assets/audio/manifest.json` as the per-file shipping authority. Every bundled audio file must have a
    provenance/licence/status record; `ATTRIBUTION.md` is a human-readable rendering, not a competing source.
-9. Keep full generated traces out of Git unless their retention is explicitly justified. Commit concise summaries and
+10. Keep full generated traces out of Git unless their retention is explicitly justified. Commit concise summaries and
    reproducibility metadata; retain bulky raw evidence as release artifacts where possible.
+11. State current implementation absence separately from product status. A removed implementation may support a
+   suspended concept; it does not make that concept retired.
 
 `npm.cmd run docs:check` verifies local Markdown links, the required live-plan files, and obsolete authority claims.
 

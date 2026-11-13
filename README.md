@@ -6,7 +6,8 @@ Lift Operator is an elevator management game about dispatching a growing hotel f
 
 ## [▶ Play Now — GitHub Pages](https://gregorycwhill.github.io/Lift-Operator/)
 
-**Status:** Marie's Birthday Edition in release validation · 25-round campaign · supported on current Chrome or Edge on a desktop/laptop.
+**Status:** Marie's Birthday Edition live playtest release · 25-round campaign · supported on current Chrome or Edge on a desktop/laptop.
+**Release:** `v0.3.2-maries-birthday`
 Firefox is not currently a supported browser.
 
 | First dispatch | Supply Closet |

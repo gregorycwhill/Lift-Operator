@@ -2,7 +2,7 @@
 
 **Document role:** Authoritative intake and disposition record for playtest feedback  
 **Status:** Active, append-only source record  
-**Coverage:** Reconstructed from the available project chat through 8 November 2026
+**Coverage:** Reconstructed from the available project chat through 13 November 2026
 **Companion records:** `../CHAT_DECISION_LOG.md`, `../../DELIVERY_PLAN.md`, `../../TEST_PLAN.md`
 
 ## How to use this log
@@ -14,14 +14,15 @@ and the delivery/test reference once known. This is the feedback source, not the
 The older `../archive/PLAYTEST_ARCHIVE.md` preserves imported verbatim excerpts. It is historical evidence; new
 feedback belongs here.
 
-## Current disposition index — 8 November 2026
+## Current disposition index — 13 November 2026
 
 The register below remains the source evidence. This index is the current-status view and takes precedence over an
 older row where a later correction exists.
 
 | IDs | Current disposition | Current evidence needed |
 | --- | --- | --- |
-| PTF-044 | Birthday release implementation | R2, R5, R10, R21–R25 supported-browser acceptance and aggregate fixed-seed evidence. |
+| PTF-044, PTF-047 | Birthday release implementation | R2, R5, R10, R15–R25 supported-browser acceptance and aggregate fixed-seed evidence. |
+| PTF-048 | Product status corrected | Confirm current docs describe Counterweight Lifts and Open Plan as suspended, not retired. |
 | PTF-013, PTF-019, PTF-020, PTF-022, PTF-035, PTF-036 | Implemented — awaiting Friends & Family replay | Published-build visual/behaviour confirmation. |
 | PTF-023 | Implemented canonical tuning | Human R11 difficulty observation against the canonical `0.96`–`1.15` curve. |
 | PTF-040 | Implemented — awaiting human replay | Focused automated service invariants passed; replay R2–R3/R11/R15/R17–R18/R21/R23. |
@@ -180,10 +181,12 @@ All other entries are implemented historically, explicitly deferred, or retained
 
 | ID | Source | Observation/request | Disposition |
 |---|---|---|---|
-| PTF-044 | Marie birthday request | Sweep should already be on; Rooftop music is unpleasant; the paired-car rounds do not work; Checkout is too repetitive; zoning needs more prominence; guests should change lifts; pets should be functional and prominent. | **Implemented—human replay in progress.** Birthday scope defaults R2+ to Sweep, removes dedicated Rooftop music and the retired paired-car experiment, limits Checkout to four strong waves, introduces zoning in R10, adds one-transfer R21–R23 networks, and introduces persistent pets in R5 with R22 **Best in Show**. Acceptance is governed by `TEST_PLAN.md`. |
+| PTF-044 | Marie birthday request | Sweep should already be on; Rooftop music is unpleasant; the paired-car rounds do not work; Checkout is too repetitive; zoning needs more prominence; guests should change lifts; pets should be functional and prominent. | **Implemented—human replay in progress.** Birthday scope defaults R2+ to Sweep, removes dedicated Rooftop music, suspends the paired-car/Open Plan implementation, limits Checkout to four strong waves, introduces zoning in R10, adds one-transfer R15–R23 networks, and introduces persistent pets in R5 with R22 **Best in Show**. Acceptance is governed by `TEST_PLAN.md`. |
 | PTF-045 | Marie birthday live playtest | Full-body cat/dog emoji are difficult to distinguish and push the target floor aside. | **Implemented—awaiting live replay.** Pet identity now uses larger `🐱`/`🐶` face badges overlaid at the upper corner of an unchanged destination bubble, following the Supply Closet count-badge pattern. Automated layout coverage verifies that the destination remains separate and the token stays 20px wide. |
 | PTF-046 | Marie birthday live playtest | R1/R2 felt too busy and R2 was unplayable; Sweep descriptions appeared in R2/R3. | **Partially implemented by explicit decision.** Restore only R2's earlier `0.27→0.3375` spawn curve and allow unattended Sweep to win. Marie approved leaving R1 and the existing R2/R3 guidance unchanged for now. |
 | PTF-047 | Marie birthday live playtest follow-up | R1 needs a much gentler curve; R2 should have one concise instruction; the mandatory R3 Priority Sweep tutorial should be removed; three late transfer rounds are insufficient. | **Implemented—awaiting human replay.** R1 is `0.08→0.18`; R2 uses the exact approved sentence; R3 has no mandatory tutorial while Priority Sweep remains available; R14 remains direct-only and transfers run from R15 through R23. The full automated release gate and balance evidence pass. |
+| PTF-048 | Project owner — 13 November 2026 | Counterweight Lifts and Open Plan are suspended, not retired. Preferred release tag is `v0.3.2-maries-birthday`. | **Accepted and documented.** Both mechanics remain absent from the Birthday release. Any future return requires an approved fresh design and acceptance plan rather than implicit restoration of the legacy implementation. |
 
-Historical paired-car remediation entries above remain evidence of why that experiment was retired. They are not open
-requirements and must not be used to revive the removed implementation.
+Historical paired-car remediation entries above remain evidence of why the legacy implementation was suspended. They
+are not current implementation requirements. A future return requires an approved redesign and must not silently
+restore the legacy implementation.

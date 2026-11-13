@@ -50,10 +50,14 @@ pet solution; admission filters and five-pet Stink remain meaningful.
 
 ## Save compatibility
 
-The Birthday release contains a narrow migration from `0.2.x` campaign checkpoints. Removed inventory is filtered and
+The Birthday release contains a narrow migration from `0.2.x` campaign checkpoints. Unavailable legacy Open Plan
+inventory is filtered and
 its purchase cost is refunded (`2/3/5` by stored tier) to spendable Credits. Campaign score is unchanged because a
 refund is not new earning. Checkpoints are pre-round, so a late campaign resumes at the same round under the new
-conventional-lift rules rather than inside removed live state.
+conventional-lift rules rather than inside suspended legacy live state.
+
+Open Plan remains a suspended product concept. The compatibility refund records its absence from this release; it does
+not declare the concept retired or schedule its return.
 
 This migration is intentionally specific. Do not build a general migration framework for the time-bound release.
 

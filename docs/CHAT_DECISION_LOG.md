@@ -77,6 +77,7 @@ document after the decision is applied there.
 | DEC-055 | 8 November 2026 | Checkout becomes a strong temporary wave only in R7, R10, R18, and R20. Delivery speed takes precedence over unused future-state architecture. | Canonical balance, roadmap, delivery plan. |
 | DEC-056 | 10 November 2026 | Marie's live playtest supersedes DEC-014 for R2 only: restore the earlier `0.27→0.3375` spawn curve and allow unattended Sweep to win the first automation round. R1 and the R2/R3 guidance remain unchanged in this patch. | Canonical balance, Game Play Map, balance/test policy, PTF-046. |
 | DEC-057 | 10 November 2026 | Subsequent onboarding and progression decision supersedes DEC-046's mandatory R3 tutorial and DEC-056's unchanged-guidance scope: R1 becomes `0.08→0.18`; R2 uses only “Sweep is already on; click a floor to intervene.”; Priority Sweep remains optional and discoverable from R3; R14 teaches scaled direct zoning and transfers begin in R15 and persist through R23. | Canonical balance, tutorial runtime, Game Play Map, GDD, delivery/test plans, PTF-047. |
+| DEC-058 | 13 November 2026 | DEC-053 is superseded only on permanent product status: Counterweight Lifts and Open Plan remain absent from Marie's Birthday Edition but are temporarily suspended, not retired. Any return requires a new design, implementation, and acceptance proposal; the legacy implementation must not be restored implicitly. The preferred release tag is `v0.3.2-maries-birthday`. | Roadmap, GDD, delivery/test plans, release history, PTF-048. |
 
 ## Chat persistence limitation
 

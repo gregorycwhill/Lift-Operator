@@ -2,11 +2,25 @@
 
 **Status:** Historical release record; not a current plan
 **Owner class:** Product and engineering
-**Last reviewed:** 8 August 2026
+**Last reviewed:** 13 November 2026
 **Use instead for current work:** `ROADMAP.md`, `DELIVERY_PLAN.md`, and `TEST_PLAN.md`
 
 This file preserves concise outcomes from completed delivery slices. Git history remains the detailed implementation
 record; obsolete checklists are not copied here.
+
+## Marie's Birthday Edition — 10–13 November 2026
+
+- Release tag: `v0.3.2-maries-birthday`; production implementation commit: `2b51728`; build:
+  `Maries-Birthday-2026-11-08.4`; balance: `0.3.2-maries-birthday`.
+- R1 received a gentler learning curve, R2 starts in Sweep with one concise intervention prompt, and R3 leaves Priority
+  Sweep discoverable rather than mandatory.
+- Functional cats and dogs begin in R5 and culminate in R22 **Best in Show**. Zoning begins in R10 and conventional
+  direct-or-one-transfer networks run from R15 through R23.
+- Dedicated Rooftop music is absent. Counterweight Lifts and Open Plan are unavailable in this release; their legacy
+  implementation was removed, while the product concepts remain suspended rather than retired.
+- The release gate passed 183/183 browser tests, 29/29 focused mechanics tests, and 3/3 containment integration tests,
+  plus deterministic balance-integrity checks and package construction. GitHub Test and Pages workflows passed for
+  `2b51728`; focused live human replay remains ongoing.
 
 ## Friends & Family playtest build — 8 August 2026
 
